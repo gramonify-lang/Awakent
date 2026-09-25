@@ -38,11 +38,17 @@
   #prompt { position: absolute; left: 50%; top: calc(50% + 18px); transform: translateX(-50%); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); white-space: nowrap; }
   #thought { position: absolute; left: 50%; bottom: max(11vh, calc(40px + env(safe-area-inset-bottom, 0px))); transform: translateX(-50%); width: min(62ch, calc(100% - 32px)); margin: 0; text-align: center; font-family: var(--display); font-style: italic; font-size: clamp(17px, 2.1vw, 23px); line-height: 1.35; color: var(--bone); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9); opacity: 0; transition: opacity 0.7s ease; text-wrap: balance; }
   #thought.on { opacity: 0.94; }
+  #voice { position: absolute; left: 50%; bottom: max(19vh, calc(98px + env(safe-area-inset-bottom, 0px))); transform: translateX(-50%); width: min(58ch, calc(100% - 32px)); margin: 0; text-align: center; font-family: var(--display); font-size: clamp(16px, 1.9vw, 21px); line-height: 1.35; color: #e9e1cf; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9); opacity: 0; transition: opacity 0.35s ease; text-wrap: balance; }
+  #voice.sys { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #bdb4a4; }
+  #voice.on { opacity: 1; }
   #hint { position: absolute; left: max(16px, 3vw); bottom: max(16px, calc(3vh + env(safe-area-inset-bottom, 0px))); font-size: 11px; letter-spacing: 0.08em; color: rgba(230, 223, 210, 0.72); display: flex; gap: 14px; flex-wrap: wrap; align-items: center; max-width: calc(100% - 32px); transition: opacity 1s ease; }
   #hint span { display: inline-flex; gap: 6px; align-items: center; }
   #hint.fade { opacity: 0; }
   #clockPanel { position: absolute; inset: 0; --r: 100px; }
   #clockInfo { position: absolute; left: 50%; top: calc(50% + var(--r) + 14px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; width: max-content; max-width: calc(100% - 32px); }
+  #clockMirror { font-family: var(--display); font-style: italic; font-size: 18px; color: #cfc6b4; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9); }
+  #clockMirror b { font-style: normal; font-weight: 400; font-size: 24px; color: var(--bone); font-variant-numeric: tabular-nums; margin-left: 4px; }
+  #clockMirror.ok b { color: #e8c98a; }
   #clockTime { font-family: var(--display); font-size: 30px; line-height: 1; color: var(--bone); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9); font-variant-numeric: tabular-nums; }
   #clockPanel .keys { font-size: 10.5px; letter-spacing: 0.1em; color: rgba(230, 223, 210, 0.75); text-transform: uppercase; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: center; }
 
@@ -54,6 +60,28 @@
   .overlay figure { margin: 0; display: flex; flex-direction: column; gap: 14px; align-items: center; max-width: 100%; }
   .overlay canvas { max-width: min(520px, 100%); max-height: 62vh; height: auto; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6); border: 10px solid #2a2019; }
   .overlay figcaption { font-family: var(--display); font-style: italic; font-size: 19px; color: var(--bone); text-align: center; text-wrap: balance; }
+  /* documents found in the house */
+  .doc { width: min(560px, 100%); max-height: 76vh; overflow: auto; color: #24211f; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 2px 0 rgba(0, 0, 0, 0.2); }
+  .doc .pr { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #5b554a; }
+  .doc .hd { margin: 0 0 2px; font-family: var(--display); font-size: 26px; line-height: 1.1; color: #24211f; }
+  .doc .pen { margin: 14px 0 0; font-family: var(--hand); font-size: clamp(28px, 4.4vw, 36px); line-height: 1; color: #28306a; transform: rotate(-3deg); transform-origin: left center; }
+  .doc.diary { background: #ebe5d4; padding: 26px 24px 28px; transform: rotate(0.7deg); }
+  .doc.diary table { width: 100%; margin-top: 14px; border-collapse: collapse; table-layout: fixed; }
+  .doc.diary th { padding: 4px 6px; border-bottom: 1.5px solid #7d7566; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-align: left; color: #5b554a; }
+  .doc.diary th:nth-child(1) { width: 15%; } .doc.diary th:nth-child(2), .doc.diary th:nth-child(3) { width: 15%; }
+  .doc.diary td { padding: 1px 6px 0; height: min(38px, 5.6vh); border-bottom: 1px solid rgba(91, 85, 74, 0.32); font-family: var(--hand); font-size: min(clamp(21px, 3.3vw, 27px), 4.4vh); line-height: 1; color: #29305e; vertical-align: bottom; overflow-wrap: anywhere; }
+  .doc.diary tr.new td { color: #1f3f2a; }
+  .doc.letter { background: #f3f1ea; padding: 32px 38px 30px; transform: rotate(-0.6deg); }
+  .doc.letter p.t { margin: min(12px, 1.6vh) 0 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.62; white-space: pre-line; color: #2c2a27; }
+  .doc.letter .re { margin: 14px 0 0; font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: #2c2a27; }
+  .doc.card { width: min(400px, 100%); background: #f1ece0; padding: 44px 36px 40px; text-align: center; outline: 1.5px solid #2b2926; outline-offset: -16px; transform: rotate(-1deg); }
+  .doc.card .top { margin: 0; font-family: var(--display); font-style: italic; font-size: 17px; color: #4a453d; }
+  .doc.card .nm { margin: 10px 0 4px; font-family: var(--display); font-size: clamp(28px, 5vw, 36px); line-height: 1.05; color: #1e1c1a; }
+  .doc.card .dt { margin: 0; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.12em; color: #5b554a; }
+  .doc.card .ln { margin: 22px 0 0; font-family: var(--display); font-size: 18px; line-height: 1.45; white-space: pre-line; color: #2c2a27; }
+  .doc.card .ft { margin: 22px 0 0; font-family: var(--display); font-style: italic; font-size: 17px; color: #4a453d; }
+  .doc.mom { width: min(420px, 100%); background: #f2ead4; padding: 28px 32px 32px; transform: rotate(1.3deg); }
+  .doc.mom p { margin: 0; font-family: var(--hand); font-size: min(clamp(27px, 4.6vw, 35px), 4.6vh); line-height: 1.08; white-space: pre-line; color: #23407a; }
   .close { margin: 0; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dust); }
 
   /* ---------- title / pause / end ---------- */
@@ -143,12 +171,14 @@
   <div id="hud" hidden>
     <div id="reticle"></div>
     <div id="prompt" hidden><span id="promptText"></span></div>
+    <p id="voice" aria-live="polite"></p>
     <p id="thought" aria-live="polite"></p>
     <div id="hint"></div>
     <div id="clockPanel" hidden>
       <div id="clockRing"><div id="clockDot"></div></div>
       <div id="clockInfo">
         <span id="clockTime">0:00</span>
+        <span id="clockMirror" hidden><span data-i18n="clock_mirror">in de spiegel</span> <b id="clockMirrorTime">0:00</b></span>
         <span class="help" data-i18n="clock_help">Beweeg de muis rond de klok om de wijzers te draaien</span>
         <span class="keys"><kbd>E</kbd>&nbsp;<span data-i18n="done">klaar</span></span>
       </div>
@@ -157,6 +187,10 @@
 
   <div id="note" class="overlay" hidden>
     <div class="paper"><p id="noteText"></p></div>
+    <p class="close" data-i18n="note_close">E of klik om weg te leggen</p>
+  </div>
+  <div id="doc" class="overlay" hidden>
+    <div id="docBody" class="doc"></div>
     <p class="close" data-i18n="note_close">E of klik om weg te leggen</p>
   </div>
   <div id="image" class="overlay" hidden>
@@ -341,7 +375,7 @@ const STR = {
     perf_off: 'Uit', perf_on: 'Aan (toets P)',
     resume: 'Verder spelen', restart: 'Opnieuw beginnen', restart_confirm: 'Zeker weten? Klik nog eens',
     the_end: 'Einde', play_again: 'Opnieuw spelen',
-    clock_help: 'Beweeg de muis rond de klok om de wijzers te draaien', done: 'klaar',
+    clock_help: 'Beweeg de muis rond de klok om de wijzers te draaien', done: 'klaar', clock_mirror: 'in de spiegel',
     drag_note: 'Klik in het beeld om rond te kijken', drag_note2: '· of houd de muisknop ingedrukt en sleep',
     note_close: 'E of klik om weg te leggen', img_close: 'E of klik om terug te gaan',
     cal_eyebrow: 'Voor je begint', cal_title: 'Helderheid',
@@ -380,13 +414,37 @@ const STR = {
     mirror_text: 'JE SLAAPT', aria_view: 'Spelwereld', res_label: 'beeld', perf_mode_auto: 'auto',
     // objectives: [goal, hint]
     o_intro: ['Ga naar buiten.', 'De voordeur zit aan het eind van de gang, links, tegenover de spiegel bij de kapstok.'],
-    o_p1: ['De voordeur gaat niet open. Zoek uit wat er niet klopt.', 'Alle digitale klokken zeggen 3:33. Zet de vier wandklokken ook op 3:33: in de gang, de woonkamer, de keuken en in de kelder (de deur in de keuken). Kijk naar een klok, druk op E en draai de wijzers met de muis. De kelderklok telt zoals de spiegel tegenover hem hem laat zien: in de spiegel moet hij 3:33 aangeven, dus echt staat hij dan op 8:27.'],
+    o_p1: ['De voordeur gaat niet open. Zoek uit wat er niet klopt.', 'Alle digitale klokken zeggen 3:33. Zet de vier wandklokken ook op 3:33: in de gang, de woonkamer, de keuken en in de kelder (de deur in de keuken). Kijk naar een klok, druk op E en draai de wijzers met de muis. De kelderklok telt zoals de spiegel tegenover hem hem laat zien. Als je hem verzet, staat onder de tijd ook wat de spiegel ziet: draai tot daar 3:33 staat (echt staat hij dan op 8:27).'],
     o_p2: ['Het is stil. Er loopt ergens water.', 'Ga naar de badkamer. Op de muur naast de deur staat iets in spiegelschrift. Ga voor de spiegel boven de wastafel staan en lees het daar.'],
     o_p2b: ['Er speelt muziek in de kleine kamer.', 'De kleine kamer blijft je terugsturen. Wat verandert hoort er wél. Er staat iets dat uit een andere kamer komt, maar je ziet het alleen in de spiegel naast de deur. Kijk in de spiegel, zoek die plek op het bureau en gebruik het daar.'],
     o_p3: ['Word wakker.', 'De kelderdeur in de keuken bestaat alleen in het donker. Doe het keukenlicht uit (schakelaar bij de deuropening), doe je zaklamp uit en kijk naar de muur waar de deur zat.'],
     o_descent: ['Naar beneden.', 'Blijf de trap afdalen.'],
     o_final: ['…', 'Deze keer moet je niet wegkijken. Loop naar hem toe.'],
     o_black: ['…', ''], o_morning: ['Ga naar buiten.', 'De voordeur gaat nu open.'], o_end: ['', ''],
+    // story: the house remembers
+    lbl_play: 'Afspelen', lbl_machine: 'Antwoordapparaat', lbl_drawing: 'Tekening',
+    diary_title: 'Slaapdagboek', diary_sub: 'Slaapcentrum De Duinen · elke ochtend invullen',
+    diary_cols: ['datum', 'naar bed', 'wakker', 'bijzonderheden'],
+    diary_rows: [['14/3', '—', '—', 'mama.'], ['21/3', '23:40', '3:33', 'kon me niet bewegen. iemand bij de deur.'], ['22/3', '0:15', '3:33', 'weer.'], ['23/3', '1:30', '3:33', 'hij stond aan het voeteneind.'], ['24/3', '—', '—', 'niet geslapen.'], ['25/3', '23:50', '3:33', 'dichterbij. ik heb niet gekeken.'], ['26/3', '', '', 'vannacht blijf ik wakker.']],
+    diary_morning: ['27/3', '23:10', '7:14', 'doorgeslapen.'],
+    letter_head: 'Slaapcentrum De Duinen', letter_re: 'Betreft: uitslag slaaponderzoek',
+    letter_body: ['Beste,', 'Uit de metingen blijkt dat u elke nacht rond hetzelfde tijdstip half wakker wordt. Uw lichaam slaapt dan nog, uw hoofd niet meer. Dit heet slaapverlamming.', 'In die toestand zien veel mensen een gestalte in de kamer. Soms lijkt hij dichterbij te komen. Hij kan u niets doen: hij bestaat alleen zolang u half wakker bent.', 'Probeer er niet tegen te vechten. Het gaat vanzelf voorbij.', 'Met vriendelijke groet,\ndr. M. Verhoef, somnoloog'],
+    letter_pen: 'het gaat niet voorbij.',
+    card_top: 'In liefdevolle herinnering aan', card_name: 'Marijke van Dam', card_dates: '2 juni 1956  ·  14 maart',
+    card_line: 'Zij is om 3:33 rustig ingeslapen,\nthuis, in haar eigen bed.', card_foot: 'Slaap zacht, mama.',
+    mom_note: 'voor als je weer niet\nkunt slapen.\n\nals hij er weer staat:\nkijk hem gewoon aan.\ndan gaat hij weg.\n\nhij is niet eng, lieverd.\nhij let alleen op.\n\nx mama',
+    draw_title: 'mijn nachtman', draw_note: 'hij let op',
+    cap_draw0: 'Die heb ik getekend. Toen ik klein was.', cap_draw1: 'Ik lig er niet meer in.',
+    vm1: [['s', 'Bericht één. Dinsdag, 23:12.'], ['v', '„Hé, met Lies. Je neemt nooit meer op.”'], ['v', '„Ik weet dat je daar slaapt om dicht bij haar te zijn. Maar het is niet goed voor je.”'], ['v', '„Kom een paar nachtjes bij ons slapen. Oké? …Bel me.”']],
+    vm2: [['s', 'Bericht twee. Vandaag, 3:33.'], ['b', '[ademhaling]'], ['w', '„…ben je wakker?”']],
+    vm3: [['s', 'Bericht drie. Vandaag, 7:02.'], ['v', '„Goedemorgen, met Lies. Ik kom vanmiddag langs.”'], ['v', '„Ik neem koffie mee. …Tot straks.”']],
+    vm_end: 'Einde van de berichten.', vm_none: 'Geen nieuwe berichten.',
+    t_diary: 'Elke nacht dezelfde tijd.', t_letter: 'Half wakker.', t_card1: '3:33.', t_card2: 'Daarom.',
+    t_mom: 'Mama.', t_vm1: 'Ik had haar terug moeten bellen.', t_vm2: 'Dat is nu.', t_vm3: 'Ik bel haar terug.',
+    t_sleepNow: '„Slaap maar, lieverd.”', t_flashDead: 'Kom op…',
+    wall_tally: 'IIII IIII IIII IIII IIII II',
+    wall_l0: ['3:33', 'nacht 41', 'niet omkijken'], wall_l1: ['hij let op', 'kijk hem aan', 'dan gaat hij weg'], wall_l2: ['hij gaat niet meer weg', 'hij is niet eng', 'hij let alleen op'],
+    wall_end: ['loop naar hem toe', 'ik ben het.'],
   },
   en: {
     lede: "You wake up in your own house. It's 3:33. Everything is where it belongs. Almost everything.",
@@ -401,7 +459,7 @@ const STR = {
     perf_off: 'Off', perf_on: 'On (key P)',
     resume: 'Resume', restart: 'Start over', restart_confirm: 'Are you sure? Click again',
     the_end: 'The end', play_again: 'Play again',
-    clock_help: 'Move the mouse around the clock to turn the hands', done: 'done',
+    clock_help: 'Move the mouse around the clock to turn the hands', done: 'done', clock_mirror: 'in the mirror',
     drag_note: 'Click the view to look around', drag_note2: '· or hold the mouse button and drag',
     note_close: 'E or click to put it down', img_close: 'E or click to go back',
     cal_eyebrow: 'Before you start', cal_title: 'Brightness',
@@ -437,13 +495,36 @@ const STR = {
     note_door: 'not the front door.\n\nthe way out is downstairs.',
     mirror_text: "YOU'RE ASLEEP", aria_view: 'Game world', res_label: 'render', perf_mode_auto: 'auto',
     o_intro: ['Get outside.', 'The front door is at the end of the hallway, on the left, across from the mirror by the coat rack.'],
-    o_p1: ["The front door won't open. Find out what's wrong.", 'Every digital clock says 3:33. Set the four wall clocks to 3:33 as well: in the hallway, the living room, the kitchen and the basement (the door in the kitchen). Look at a clock, press E and turn the hands with the mouse. The basement clock counts the way the mirror opposite shows it: in the mirror it has to read 3:33, so really it shows 8:27.'],
+    o_p1: ["The front door won't open. Find out what's wrong.", 'Every digital clock says 3:33. Set the four wall clocks to 3:33 as well: in the hallway, the living room, the kitchen and the basement (the door in the kitchen). Look at a clock, press E and turn the hands with the mouse. The basement clock counts the way the mirror opposite shows it. While you turn it, the time the mirror sees is shown under the real time: turn until that says 3:33 (the clock itself then shows 8:27).'],
     o_p2: ['It has gone quiet. Water is running somewhere.', 'Go to the bathroom. Something is written in mirror writing on the wall next to the door. Stand in front of the mirror above the sink and read it there.'],
     o_p2b: ['Music is playing in the small room.', 'The small room keeps sending you back. What changes does belong there. Something from another room is there, but you only see it in the mirror next to the door. Look in the mirror, find that spot on the desk and use it there.'],
     o_p3: ['Wake up.', "The basement door in the kitchen only exists in the dark. Turn off the kitchen light (switch by the doorway), turn off your flashlight and look at the wall where the door used to be."],
     o_descent: ['Go down.', 'Keep going down the stairs.'],
     o_final: ['…', "This time, don't look away. Walk up to it."],
     o_black: ['…', ''], o_morning: ['Get outside.', 'The front door opens now.'], o_end: ['', ''],
+    lbl_play: 'Play', lbl_machine: 'Answering machine', lbl_drawing: 'Drawing',
+    diary_title: 'Sleep diary', diary_sub: 'De Duinen Sleep Centre · fill in every morning',
+    diary_cols: ['date', 'to bed', 'woke', 'notes'],
+    diary_rows: [['14/3', '—', '—', 'mom.'], ['21/3', '23:40', '3:33', "couldn't move. someone by the door."], ['22/3', '0:15', '3:33', 'again.'], ['23/3', '1:30', '3:33', 'he was standing at the foot of the bed.'], ['24/3', '—', '—', "didn't sleep."], ['25/3', '23:50', '3:33', "closer. i didn't look."], ['26/3', '', '', "tonight i'm staying awake."]],
+    diary_morning: ['27/3', '23:10', '7:14', 'slept through.'],
+    letter_head: 'De Duinen Sleep Centre', letter_re: 'Re: results of your sleep study',
+    letter_body: ['Dear patient,', 'The recordings show that you wake up halfway at around the same time every night. Your body is still asleep, but your mind is not. This is called sleep paralysis.', 'In that state, many people see a figure in the room. Sometimes it seems to come closer. It cannot hurt you: it only exists while you are half awake.', 'Try not to fight it. It will pass on its own.', 'Kind regards,\nDr M. Verhoef, sleep specialist'],
+    letter_pen: "it doesn't pass.",
+    card_top: 'In loving memory of', card_name: 'Marijke van Dam', card_dates: '2 June 1956  ·  14 March',
+    card_line: 'She passed away peacefully in her sleep at 3:33,\nat home, in her own bed.', card_foot: 'Sleep well, mom.',
+    mom_note: "for when you can't\nsleep again.\n\nif he's standing there again,\njust look at him.\nthen he goes away.\n\nhe's not scary, sweetheart.\nhe's only keeping watch.\n\nx mom",
+    draw_title: 'my night man', draw_note: 'he watches',
+    cap_draw0: 'I drew that. When I was little.', cap_draw1: "I'm not in it anymore.",
+    vm1: [['s', 'Message one. Tuesday, 11:12 p.m.'], ['v', '"Hey, it\'s Lies. You never pick up anymore."'], ['v', '"I know you sleep there to feel close to her. But it isn\'t good for you."'], ['v', '"Come and sleep at ours for a few nights. Okay? …Call me."']],
+    vm2: [['s', 'Message two. Today, 3:33 a.m.'], ['b', '[breathing]'], ['w', '"…are you awake?"']],
+    vm3: [['s', 'Message three. Today, 7:02 a.m.'], ['v', '"Good morning, it\'s Lies. I\'m coming over this afternoon."'], ['v', '"I\'ll bring coffee. …See you soon."']],
+    vm_end: 'End of messages.', vm_none: 'No new messages.',
+    t_diary: 'Every night, the same time.', t_letter: 'Half awake.', t_card1: '3:33.', t_card2: "That's why.",
+    t_mom: 'Mom.', t_vm1: 'I should have called her back.', t_vm2: "That's now.", t_vm3: "I'll call her back.",
+    t_sleepNow: '"Go to sleep, sweetheart."', t_flashDead: 'Come on…',
+    wall_tally: 'IIII IIII IIII IIII IIII II',
+    wall_l0: ['3:33', 'night 41', "don't look back"], wall_l1: ['he watches', 'look at him', 'then he goes away'], wall_l2: ["he doesn't go away anymore", "he isn't scary", "he's only keeping watch"],
+    wall_end: ['walk up to him', "it's me."],
   },
 };
 let LANG = (() => { const s = Store.get('lang'); if (s === 'nl' || s === 'en') return s; return ((navigator.language || '') + '').toLowerCase().startsWith('nl') ? 'nl' : 'en'; })();
@@ -460,6 +541,7 @@ function setLang(l) {
   LANG = l; Store.set('lang', l);
   applyLangDOM();
   if (typeof Story !== 'undefined' && Story.notes) Story.buildLangTextures();
+  if (typeof Lore !== 'undefined' && Lore.ready) Lore.langTextures();
   if (typeof UI !== 'undefined' && UI.el && UI.el.objText) UI.objective(G.stage === 'title' ? 'intro' : G.stage);
   if (typeof Interact !== 'undefined') Interact.cur = undefined;
 }
@@ -1058,6 +1140,7 @@ void main(){
 #endif
   vec3 emis = uEmissive;
   vec3 an = abs(n);
+  float alphaK = 1.0;
 #ifdef HAS_MAP
   vec2 uv;
   #ifdef WORLD_UV
@@ -1066,7 +1149,11 @@ void main(){
   #else
     uv = vUv * uTexScale + uTexOff;
   #endif
-  vec3 tx = pow(texture2D(uMap, uv).rgb, vec3(2.2));
+  vec4 tx4 = texture2D(uMap, uv);
+  vec3 tx = pow(tx4.rgb, vec3(2.2));
+  #ifdef MAP_ALPHA
+    alphaK = tx4.a;
+  #endif
   #ifdef EMAP
     emis *= tx;
   #else
@@ -1102,7 +1189,7 @@ void main(){
   float f = 1.0 - exp(-uFogDensity * uFogDensity * dot(dv, dv));
   col = mix(col, uFogColor, clamp(f, 0.0, 1.0));
   col = 1.0 - exp(-col * uExposure);
-  gl_FragColor = vec4(pow(col, vec3(0.4545)), uOpacity);
+  gl_FragColor = vec4(pow(col, vec3(0.4545)), uOpacity * alphaK);
 }`;
 
 function lin(hex) { return new THREE.Color(hex).convertSRGBToLinear(); }
@@ -1125,10 +1212,12 @@ function M(o = {}) {
   if (o.emap) defines.EMAP = '';
   if (o.holes) defines.HOLES = '';
   if (o.vcolor) defines.VCOLOR = '';
+  if (o.alphaMap) { defines.MAP_ALPHA = ''; o.transparent = true; }
   const m = new THREE.ShaderMaterial({
     uniforms: u, defines, vertexShader: WORLD_VS, fragmentShader: WORLD_FS,
     transparent: !!o.transparent, depthWrite: o.depthWrite ?? !o.transparent, side: o.side ?? THREE.FrontSide,
   });
+  if (o.alphaMap) { m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -2; }
   m.userData.o = o; m.userData.world = true;
   return m;
 }
@@ -1322,7 +1411,7 @@ function canSee(p, r = 0.35) { return inFrustum(p, r) && losClear(camera.positio
 
 /* ---------- post ---------- */
 const POST_FS = `
-uniform sampler2D tScene; uniform vec2 uRes; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma;
+uniform sampler2D tScene; uniform vec2 uRes; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma, uPulse, uFear;
 varying vec2 vUv;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y)*p3.z); }
 void main(){
@@ -1331,14 +1420,18 @@ void main(){
     uv += uWarp*vec2(sin(uv.y*9.0 + uTime*0.9)*0.007, cos(uv.x*7.0 + uTime*0.7)*0.006);
     vec2 d0 = uv - 0.5; uv = 0.5 + d0*(1.0 - uWarp*0.05*dot(d0,d0));
   }
+  // heartbeat: the picture throbs inward a hair on every beat
+  uv = 0.5 + (uv - 0.5) * (1.0 - uPulse * 0.01);
   vec2 d = uv - 0.5;
-  float ca = (uChroma*0.004 + uWarp*0.012) * dot(d,d) * 4.0;
+  float ca = (uChroma*0.004 + uWarp*0.012 + uPulse*0.012) * dot(d,d) * 4.0;
   vec3 c;
   c.r = texture2D(tScene, uv + d*ca).r; c.g = texture2D(tScene, uv).g; c.b = texture2D(tScene, uv - d*ca).b;
   float l = dot(c, vec3(0.299, 0.587, 0.114));
   c = mix(c, vec3(l), uDesat);
   vec2 q = d*vec2(uRes.x/uRes.y, 1.0);
   c *= mix(1.0, smoothstep(1.05, 0.18, length(q)), uVig);
+  // fear narrows the view; each beat squeezes it a little more
+  c *= 1.0 - clamp(uFear * 0.55 + uPulse * 0.4, 0.0, 0.85) * smoothstep(0.32, 1.0, length(q));
   c = pow(max(c, vec3(0.0)), vec3(uGamma));
   float g = h12(gl_FragCoord.xy + fract(uTime*7.13)*917.0) - 0.5;
   c += g * uGrain * (0.55 + 0.45*(1.0 - l));
@@ -1408,7 +1501,7 @@ function initRenderer() {
   nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.magFilter = THREE.LinearFilter; nt.minFilter = THREE.LinearMipmapLinearFilter; nt.generateMipmaps = true; nt.needsUpdate = true;
   SU.uNoiseTex.value = nt;
   postMat = new THREE.ShaderMaterial({
-    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 } },
+    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: POST_FS, depthTest: false, depthWrite: false,
   });
@@ -2836,7 +2929,7 @@ void main(){
   vA = aAlpha; float d = length(mv.xyz); vFog = 1.0 - exp(-uFogDensity * uFogDensity * d * d);
 }`;
 const SMOKE_FS = `
-uniform vec3 uFogColor; uniform float uFade, uExposure, uAlbedo;
+uniform vec3 uFogColor; uniform float uSFade, uExposure, uAlbedo;
 varying float vA; varying float vFog; varying vec3 vLit;
 void main(){
   vec2 p = gl_PointCoord * 2.0 - 1.0; float r = dot(p, p); if (r > 1.0) discard;
@@ -2844,7 +2937,7 @@ void main(){
   vec3 col = vLit * uAlbedo;
   col = mix(col, uFogColor, clamp(vFog, 0.0, 1.0));
   col = 1.0 - exp(-col * uExposure);
-  gl_FragColor = vec4(pow(col, vec3(0.4545)), a * vA * uFade);
+  gl_FragColor = vec4(pow(col, vec3(0.4545)), a * vA * uSFade);
 }`;
 function makeShade(o) {
   const P = Object.assign({ h: 1.08, arm: 1.38, neck: 2.0, head: 1.05, sh: 0.84 }, o);
@@ -2899,13 +2992,44 @@ function makeShade(o) {
   const sm = new THREE.ShaderMaterial({
     uniforms: { uLPos: SU.uLPos, uLCol: SU.uLCol, uLMin: SU.uLMin, uLMax: SU.uLMax, uLMin2: SU.uLMin2, uLMax2: SU.uLMax2, uNumLights: SU.uNumLights, uAmbient: SU.uAmbient,
       uFlashPos: SU.uFlashPos, uFlashDir: SU.uFlashDir, uFlashOn: SU.uFlashOn, uFlashCol: SU.uFlashCol, uFogColor: SU.uFogColor, uFogDensity: SU.uFogDensity, uExposure: SU.uExposure,
-      uFade: mat.uniforms.uFade, uScale: { value: 500 }, uAlbedo: { value: 0.016 } },
+      uSFade: { value: 1 }, uScale: { value: 500 }, uAlbedo: { value: 0.016 } },
     vertexShader: SMOKE_VS, fragmentShader: SMOKE_FS, transparent: true, depthWrite: false,
   });
   const pts = new THREE.Points(geo, sm); pts.frustumCulled = false; pts.visible = false;
   const A = segs.map(() => V(0, 0, 0)), B = segs.map(() => V(0, 0, 0)), q = V(0, 0, 0);
+  const vel = new Float32Array(n * 3), a0 = new Float32Array(n), s0 = new Float32Array(n);
+  const flush = () => { geo.attributes.position.needsUpdate = true; geo.attributes.aAlpha.needsUpdate = true; geo.attributes.aSize.needsUpdate = true; sm.uniforms.uScale.value = RH / (2 * Math.tan(camera.fov * DEG * 0.5)); };
   const smoke = {
-    pts,
+    pts, gather: 1, dis: null,
+    /* come apart: every wisp keeps its place, then drifts off, pushed by what broke it */
+    dissolve(c, push) {
+      for (let i = 0; i < n; i++) {
+        const x = pos[i * 3] - c.x, z = pos[i * 3 + 2] - c.z, h = Math.hypot(x, z) || 1, out = 0.3 + Math.random() * 0.8, k = 0.5 + Math.random() * 1.3;
+        vel[i * 3] = x / h * out + push.x * k + (Math.random() - 0.5) * 0.45;
+        vel[i * 3 + 1] = 0.08 + Math.random() * 0.5 + push.y * k;
+        vel[i * 3 + 2] = z / h * out + push.z * k + (Math.random() - 0.5) * 0.45;
+        a0[i] = alpha[i] * (0.7 + Math.random() * 0.4); s0[i] = size[i];
+      }
+      sm.uniforms.uSFade.value = 1;
+      this.dis = { t: 0, dur: 1.5 + Math.random() * 0.4 };
+    },
+    stepDissolve(dt) {
+      const D = this.dis; D.t += dt;
+      const k = Math.min(1, D.t / D.dur), drag = Math.exp(-dt * 1.2), T = D.t;
+      for (let i = 0; i < n; i++) {
+        const j = i * 3, x = pos[j], y = pos[j + 1], z = pos[j + 2];
+        let vx = vel[j] * drag, vy = vel[j + 1] * drag + 0.2 * dt, vz = vel[j + 2] * drag;
+        vx += Math.sin(y * 2.6 + T * 1.9 + i * 0.37) * 0.5 * dt; vz += Math.cos(x * 2.2 + T * 1.5 + i * 0.61) * 0.5 * dt;   // curling
+        vel[j] = vx; vel[j + 1] = vy; vel[j + 2] = vz;
+        pos[j] = x + vx * dt; pos[j + 1] = y + vy * dt; pos[j + 2] = z + vz * dt;
+        const kk = clamp(k * (0.75 + (i % 7) * 0.07), 0, 1);   // not all at once
+        alpha[i] = a0[i] * Math.pow(1 - kk, 2.2);
+        size[i] = s0[i] * (1 + k * 1.5);
+      }
+      flush();
+      if (k >= 1) { this.dis = null; return false; }
+      return true;
+    },
     update(t) {
       for (let k = 0; k < segs.length; k++) { const sg = segs[k]; A[k].copy(sg[1]).applyMatrix4(sg[0].matrixWorld); B[k].copy(sg[2]).applyMatrix4(sg[0].matrixWorld); }
       for (let i = 0; i < n; i++) {
@@ -2923,8 +3047,19 @@ function makeShade(o) {
         alpha[i] = (0.38 + 0.5 * (1 - p.rf)) * fade * (p.si === 0 ? 1 - p.t * 0.45 : 1);
         size[i] = p.sz * (1 + life * 0.8);
       }
-      geo.attributes.position.needsUpdate = true; geo.attributes.aAlpha.needsUpdate = true; geo.attributes.aSize.needsUpdate = true;
-      sm.uniforms.uScale.value = RH / (2 * Math.tan(camera.fov * DEG * 0.5));
+      // gathering: while it fades in, the wisps are still scattered and drawing together
+      const g = 1 - this.gather;
+      if (g > 0.001) {
+        const gg = g * g;
+        for (let i = 0; i < n; i++) {
+          const p = PT[i], sp = (0.7 + p.ph * 1.1) * gg;
+          pos[i * 3] += (p.d.x * 1.3 + Math.sin(i * 1.3 + t * 0.7) * 0.35) * sp;
+          pos[i * 3 + 1] += (p.d.y * 0.5 + 0.25 * g + Math.sin(i * 0.7 + t) * 0.15) * sp;
+          pos[i * 3 + 2] += (p.d.z * 1.3 + Math.cos(i * 1.1 + t * 0.6) * 0.35) * sp;
+          size[i] *= 1 + g * 1.2;
+        }
+      }
+      flush();
     },
   };
   return { root, hips, chest, neck, head, headMesh, mFace: null, lHip, rHip, legs, arms, lens: null, torch: null, eyes: null, P, hipY, smoke, face };
@@ -3221,6 +3356,7 @@ const Sound = {
     });
     B.drip = this.buf(0.3, (d, sr, n) => { let ph = 0; for (let i = 0; i < n; i++) { const t = i / sr; const f = t < 0.03 ? lerp(1700, 700, t / 0.03) : 700; ph += f / sr; d[i] = Math.sin(TAU * ph) * Math.exp(-t * 24); } });
     B.clank = this.buf(1.8, (d, sr, n) => { const P = [[233, 0.5, 3], [587, 0.35, 4], [1123, 0.3, 6], [1811, 0.2, 8], [2690, 0.12, 12]]; const bp = new BQ('bp', 1500, 1, sr); for (let i = 0; i < n; i++) { const t = i / sr; let v = bp.p(wn()) * Math.exp(-t * 120) * 0.6; for (const [f, a, k] of P) v += Math.sin(TAU * f * (1 + 0.002 * Math.sin(t * 20)) * t) * a * Math.exp(-t * k); d[i] = v; } });
+    B.beep = this.buf(0.34, (d, sr, n) => { for (let i = 0; i < n; i++) { const t = i / sr; d[i] = (Math.sin(TAU * 1020 * t) + Math.sin(TAU * 2040 * t) * 0.15) * Math.min(1, t / 0.006) * Math.min(1, (0.34 - t) / 0.012); } });
     B.switch = this.buf(0.06, (d, sr, n) => { click(d, sr, n, 0, 1); click(d, sr, n, 0.014, 0.5); });
     B.flick = this.buf(0.1, (d, sr, n) => { const bp = new BQ('bp', 3500, 2, sr); for (let i = 0; i < n; i++) { const t = i / sr; d[i] = bp.p(wn()) * Math.exp(-t * 200) * 0.6 + Math.sign(Math.sin(TAU * 100 * t)) * 0.15 * Math.exp(-t * 40); } });
     B.pop = this.buf(0.6, (d, sr, n) => { const hp = new BQ('hp', 2000, 0.7, sr); for (let i = 0; i < n; i++) { const t = i / sr; d[i] = hp.p(wn()) * Math.exp(-t * 60) + Math.sin(TAU * 4200 * t) * Math.exp(-t * 35) * 0.3 + Math.sin(TAU * 6100 * t) * Math.exp(-t * 50) * 0.2; } });
@@ -3335,7 +3471,7 @@ const Sound = {
   tinnitus(v, tc = 0.4) { this.tinBase = v; this.tinTc = tc; },
   presence(v) { this.presT = v; },
   heart(bpm, level) { this.hb.bpm = bpm; this.hb.level = level; },
-  shepard(level) { this.shep.level = level; if (this.ok) this.shepG.gain.setTargetAtTime(level * 0.2, this.ctx.currentTime, 1.5); },
+  shepard(level) { this.shep.level = level; if (this.ok) this.shepG.gain.setTargetAtTime(level * 0.13, this.ctx.currentTime, 1.5); },
   breathe(a) { this.breatheAmt = a; },
   duckTo(v, tc = 0.05) { if (this.duck) this.duck.gain.setTargetAtTime(v, this.ctx.currentTime, tc); },
   /* the whole world slows down like a tape running out, then stops */
@@ -3404,7 +3540,7 @@ const Sound = {
     this.droneG = c.createGain(); this.droneG.gain.value = 0; this.droneG.connect(this.bus);
     const ds = c.createGain(); ds.gain.value = 0.4; this.droneG.connect(ds); ds.connect(this.revIn);
     this.droneO = [];
-    for (const [f, type, a] of [[55, 'sine', 0.5], [55.6, 'sine', 0.45], [77.8, 'triangle', 0.16], [110.7, 'sine', 0.08]]) {
+    for (const [f, type, a] of [[55, 'sine', 0.055], [55.6, 'sine', 0.05], [77.8, 'triangle', 0.045], [110.7, 'sine', 0.035]]) {
       const o = c.createOscillator(); o.type = type; o.frequency.value = f; const g = c.createGain(); g.gain.value = a; o.connect(g); g.connect(this.droneG); o.start(); this.droneO.push([o, f]);
     }
     this.musicE = this.emitter(W.musicPos, { ref: 1.2, roll: 1.3, rev: 0.45 }); this.musicE.base = 1; this.persist.push(this.musicE);
@@ -3440,10 +3576,14 @@ const Sound = {
     if (this.lulOut || !this.ok) return;
     const c = this.ctx;
     this.lulIn = c.createGain();
+    // no sub-bass into the distortion: that is what made it boom
+    this.lulHP = c.createBiquadFilter(); this.lulHP.type = 'highpass'; this.lulHP.frequency.value = 85; this.lulHP.Q.value = 0.6;
     this.lulShaper = c.createWaveShaper(); this.lulShaper.oversample = '2x';
     this.lulLP = c.createBiquadFilter(); this.lulLP.type = 'lowpass'; this.lulLP.frequency.value = 2000; this.lulLP.Q.value = 0.7;
+    // a leveller after the distortion, so breaking it up does not also make it louder
+    this.lulComp = c.createDynamicsCompressor(); this.lulComp.threshold.value = -30; this.lulComp.knee.value = 12; this.lulComp.ratio.value = 6; this.lulComp.attack.value = 0.004; this.lulComp.release.value = 0.35;
     this.lulOut = c.createGain(); this.lulOut.gain.value = 0;
-    this.lulIn.connect(this.lulShaper); this.lulShaper.connect(this.lulLP); this.lulLP.connect(this.lulOut);
+    this.lulIn.connect(this.lulHP); this.lulHP.connect(this.lulShaper); this.lulShaper.connect(this.lulLP); this.lulLP.connect(this.lulComp); this.lulComp.connect(this.lulOut);
     const send = c.createGain(); send.gain.value = 0.7; this.lulOut.connect(send); send.connect(this.revIn);
     this.lulRoute(null); this.lulCurve(0);
   },
@@ -3461,7 +3601,7 @@ const Sound = {
   lulCurve(k) {
     this.lul.shK = k;
     if (k < 0.03) { this.lulShaper.curve = null; return; }
-    const n = 1024, cv = new Float32Array(n), a = k * k * 40;
+    const n = 1024, cv = new Float32Array(n), a = k * k * 14;
     for (let i = 0; i < n; i++) { const x = i / (n - 1) * 2 - 1; cv[i] = ((1 + a) * x) / (1 + a * Math.abs(x)) * (1 - 0.25 * k); }
     this.lulShaper.curve = cv;
   },
@@ -3504,7 +3644,7 @@ const Sound = {
     }
     setTimeout(() => { try { g.disconnect(); } catch (e) { /* */ } }, (len + (o.delay || 0) + 0.6) * 1000);
   },
-  lulBass(midi, delay = 0) { this.lulNote(midi - 12, { amp: 0.32 + this.lul.c * 0.1, len: 2.8, delay }); },
+  lulBass(midi, delay = 0) { this.lulNote(midi, { amp: 0.16 + this.lul.c * 0.05, len: 2.4, delay }); },
   lulStep() {
     const L = this.lul, k = L.c, M = this.LUL, [n, d] = M[L.i % M.length];
     if (L.beat % 3 < 0.01 || L.beat % 3 > 2.99) this.lulBass(this.LUL_BASS[Math.floor(L.beat / 3) % this.LUL_BASS.length] + (Math.random() < k * 0.2 ? 1 : 0));
@@ -3525,13 +3665,13 @@ const Sound = {
     if (!this.ok) return;
     this.lulInit(); if (this.lul.on) return;
     const L = this.lul; L.c = L.cT = c; this.lulCurve(c); this.lulRoute(pos);
-    const t = this.ctx.currentTime; this.lulOut.gain.cancelScheduledValues(t); this.lulOut.gain.setTargetAtTime(0.5, t, 0.05);
+    const t = this.ctx.currentTime; this.lulOut.gain.cancelScheduledValues(t); this.lulOut.gain.setTargetAtTime(0.26, t, 0.05);
     let acc = 0; const start = irand(0, this.LUL.length - notes);
     for (let j = 0; j < notes; j++) { const [n, d] = this.LUL[start + j]; this.lulNote(n, { delay: acc, rev: Math.random() < 0.55, amp: 0.5, hum: 0.2, dur: d * 0.6 }); acc += d * 0.62 * rand(0.9, 1.4); }
     this.lulOut.gain.setTargetAtTime(0, t + acc + 1.5, 0.4);
   },
   /* the small room's music: the same lullaby, from the record player */
-  musicBox(on) { if (on) this.lullaby(true, { c: 0.6, g: 0.42, pos: W.musicPos, from: 0, fadeFrom: 0.42 }); else this.lullaby(false); },
+  musicBox(on) { if (on) this.lullaby(true, { c: 0.6, g: 0.24, pos: W.musicPos, from: 0, fadeFrom: 0.24 }); else this.lullaby(false); },
   mbSkip() { const L = this.lul; if (!L.on) return; for (let r = 0; r < 3; r++) this.lulNote(this.LUL[(L.i + 19) % this.LUL.length][0], { delay: r * 0.08, detune: -35 * r, amp: 0.5 }); L.t = 0.6; L.cT = Math.min(0.95, L.cT + 0.05); },
 
   update(dt) {
@@ -3559,7 +3699,7 @@ const Sound = {
     const presOn = this.pres * 0.45 > this.tinBase;
     this.tinG.gain.setTargetAtTime(Math.max(this.tinBase, this.pres * 0.45) * 0.055, now, presOn ? 0.2 : (this._presWas ? 0.01 : (this.tinTc ?? 0.3)));
     this._presWas = presOn;
-    this.subG.gain.setTargetAtTime(this.pres * 0.3, now, pt === 0 ? 0.02 : 0.3);
+    this.subG.gain.setTargetAtTime(this.pres * 0.02, now, pt === 0 ? 0.02 : 0.3);
     // the house breathes
     if (this.toneL) { const a = this.breatheAmt; if (a > 0) this.toneL.vg.gain.setTargetAtTime(this.toneBase * (1 + a * Math.sin(G.t * 1.35)) + a * 0.03, now, 0.2); }
     // heartbeat
@@ -3597,7 +3737,7 @@ const _sv1 = new THREE.Vector3(), _sv2 = new THREE.Vector3();
 const Player = {
   pos: V3(3.3, 0, 1.35), vel: V3(), yaw: -0.36, pitch: -0.2, roll: 0,
   seated: true, standT: 0, phase: 0, amp: 0, stepDist: 0, still: 0,
-  flashOn: false, flashK: 0, flashDir: V3(0, 0, -1), flashFlicker: 0,
+  flashOn: false, flashK: 0, flashDir: V3(0, 0, -1), shake: 0,
   enabled: true, look: true, speedMul: 1, fovT: 72, hist: [], room: 'bedroom', prevRoom: '',
   autoLook: null, stepCount: 0, onStep: null, lastMoveDir: V3(),
   reset(x, y, z, yaw, pitch, seated) {
@@ -3606,7 +3746,7 @@ const Player = {
     this.room = roomOf(x, y + 1, z); this.prevRoom = this.room;
     this.applyCamera(0);
   },
-  pose() { return { x: this.pos.x, y: this.pos.y, z: this.pos.z, yaw: this.yaw, pitch: this.pitch, phase: this.phase, amp: Math.min(1, this.amp), flash: this.flashOn && this.flashK > 0.5 }; },
+  pose() { return { x: this.pos.x, y: this.pos.y, z: this.pos.z, yaw: this.yaw, pitch: this.pitch, phase: this.phase, amp: Math.min(1, this.amp), flash: this.flashOn && this.flashK > 0.5 && Flash.mul > 0.3 }; },
   poseAt(t) {
     const h = this.hist;
     for (let i = h.length - 1; i >= 0; i--) if (h[i].t <= t) return h[i];
@@ -3686,15 +3826,19 @@ const Player = {
     // flashlight
     if (Input.fPress && !ClockUI.active && !UI.overlay && G.stage !== 'black') this.toggleFlash();
     this.flashK = damp(this.flashK, this.flashOn ? 1 : 0, 18, dt);
+    Flash.update(dt);
+    if (this.shake > 0) this.shake = Math.max(0, this.shake - dt);
     this.applyCamera(dt);
     this.room = roomOf(this.pos.x, this.pos.y + 1, this.pos.z);
     this.hist.push(this.pose()); this.hist[this.hist.length - 1].t = G.t;
     while (this.hist.length && this.hist[0].t < G.t - 3) this.hist.shift();
   },
   toggleFlash(force) {
+    // dead in your hand: pressing the switch only gets you a knock against your palm
+    if (force === undefined && this.flashOn && Flash.dead()) { Flash.tap(); return; }
     this.flashOn = force === undefined ? !this.flashOn : force;
     Sound.play('switch', null, { gain: 0.35, rate: this.flashOn ? 1.1 : 0.9 });
-    if (this.flashOn) this.flashFlicker = 0.25;
+    if (this.flashOn) { Flash.mode = null; Flash.stutter(0.22, 0.5); }
     G.flags.usedFlash = true;
   },
   applyCamera(dt) {
@@ -3704,6 +3848,9 @@ const Player = {
     this.roll = Math.sin(this.phase) * 0.005 * a;
     camera.position.set(this.pos.x, this.pos.y + eye + bob, this.pos.z);
     camera.rotation.set(this.pitch, this.yaw, this.roll);
+    // a knock on the flashlight, and your pulse in your eyes when it is bad
+    const sh = this.shake * 0.05 + (typeof Fear !== 'undefined' ? Fear.pulse * Fear.level * 0.004 : 0);
+    if (sh > 0) { camera.rotation.x += (Math.random() - 0.5) * sh; camera.rotation.y += (Math.random() - 0.5) * sh; }
     if (dt > 0) { camera.fov = damp(camera.fov, this.fovT, 5, dt); camera.updateProjectionMatrix(); }
     camera.updateMatrixWorld();
     // flashlight follows the view with a little lag
@@ -3712,17 +3859,86 @@ const Player = {
     const r = _tv2.set(1, 0, 0).applyQuaternion(camera.quaternion);
     SU.uFlashPos.value.copy(camera.position).addScaledVector(r, 0.16).y -= 0.14;
     SU.uFlashDir.value.copy(this.flashDir);
-    let k = this.flashK;
-    if (this.flashFlicker > 0) { this.flashFlicker -= dt; k *= Math.random() < 0.35 ? 0.2 : 1; }
+    let k = this.flashK * Flash.mul;
     if (G.flags.flashWeak) k *= 0.55 + Math.random() * 0.1;
     SU.uFlashOn.value = k;
   },
 };
 const _up = new THREE.Vector3(0, 1, 0);
 
+/* ---------------- the flashlight that falters ----------------
+   Fine while you are alone. When something is near it stutters, and
+   when something is close that you cannot see, it dies for a second or
+   two. Pressing F while it is dead knocks it back to life, sometimes. */
+const Flash = {
+  mul: 1, mode: null, t: 0, dur: 0, lead: 0, depth: 0, seg: 0, lv: 1, next: 0,
+  reset() { this.mode = null; this.mul = 1; this.t = 0; this.next = G.t + 8; },
+  dead() { return this.mode === 'dying' || this.mode === 'dead'; },
+  stutter(dur = 0.35, depth = 0.6) {
+    if (this.dead()) return;
+    if (this.mode === 'stutter') { this.dur = Math.max(this.dur, this.t + dur); this.depth = Math.max(this.depth, depth); return; }
+    this.mode = 'stutter'; this.t = 0; this.dur = dur; this.depth = depth; this.seg = 0;
+    this.crackle(0.1);
+  },
+  /* lead: seconds of stuttering before it goes out; dur: seconds of dark */
+  die(dur = 1.2, lead = 0.4) {
+    if (this.dead() || !Player.flashOn) return false;
+    this.mode = 'dying'; this.t = 0; this.lead = lead; this.dur = dur; this.seg = 0; this.depth = 0.9;
+    this.crackle(0.16);
+    if (!G.flags.flashDied) { G.flags.flashDied = true; after(lead + 0.45, () => { if (this.mode === 'dead') UI.thought(tr('t_flashDead'), 1.8); }); }
+    return true;
+  },
+  revive() { this.mode = 'stutter'; this.t = 0; this.dur = 0.5; this.depth = 0.75; this.seg = 0; this.crackle(0.14); },
+  tap() {
+    Sound.play('knock', null, { gain: 0.2, rate: 1.9, lp: 1500, pure: true, pri: 2 });
+    Player.shake = 0.14;
+    if (this.mode === 'dead') this.t = Math.max(this.t, this.dur - 0.1 - Math.random() * 0.35);
+    else if (this.mode === 'dying') this.t = Math.max(this.t, this.lead - 0.05);
+  },
+  crackle(g) { Sound.play('flick', null, { gain: g, rate: rand(1.3, 1.8), pure: true, pri: 1 }); },
+  /* on/off segments of random length, so the stutter does not depend on the frame rate */
+  segment(dt) {
+    this.seg -= dt;
+    if (this.seg <= 0) {
+      const off = Math.random() < this.depth * 0.55;
+      this.lv = off ? rand(0, 0.15) : rand(0.55, 1); this.seg = off ? rand(0.025, 0.09) : rand(0.03, 0.14);
+      if (off && Math.random() < 0.2) this.crackle(0.05);
+    }
+    return this.lv;
+  },
+  update(dt) {
+    if (!Player.flashOn) { this.mode = null; this.mul = 1; return; }
+    this.t += dt;
+    switch (this.mode) {
+      case 'stutter': this.mul = this.segment(dt); if (this.t > this.dur) { this.mode = null; this.mul = 1; } break;
+      case 'dying': this.mul = this.segment(dt) * (1 - 0.35 * sstep(0, this.lead, this.t)); if (this.t > this.lead) { this.mode = 'dead'; this.t = 0; this.mul = 0; Sound.play('switch', null, { gain: 0.22, rate: 0.55, pure: true }); } break;
+      case 'dead': this.mul = 0; if (this.t > this.dur) this.revive(); break;
+      default: this.mul = 1; this.hazard(dt);
+    }
+  },
+  /* the odds of a falter right now: a little in the dark, a lot with something near */
+  hazard(dt) {
+    if (G.t < this.next || Player.flashK < 0.9 || typeof Story === 'undefined') return;
+    const st = Story.stage;
+    let rate = { p2: 0.006, p2b: 0.01, p3: 0.018, descent: 0.03 }[st] || 0, near = 0, seen = false;
+    const E = typeof Ent !== 'undefined' ? Ent : null;
+    if (E && E.def && E.H.root.visible && !E.def.mirrorOnly && !E.def.noFalter) {
+      const r = E.H.root.position, d = Math.hypot(r.x - camera.position.x, r.z - camera.position.z);
+      near = clamp(1 - (d - 2) / 8, 0, 1);
+      seen = viewAngleTo(_tv3.set(r.x, r.y + 1.25, r.z)) < 0.7;
+      rate += near * (seen ? 0.45 : 0.9);
+    }
+    if (!rate || Math.random() > rate * dt) return;
+    this.next = G.t + rand(1.8, 3.5);
+    if (near > 0.5 && !seen && Math.random() < 0.45) this.die(rand(0.7, 1.4), rand(0.25, 0.5));
+    else if (st === 'descent' && Math.random() < 0.2) this.die(rand(0.5, 0.9), 0.3);
+    else this.stutter(rand(0.15, 0.5), 0.4 + near * 0.45);
+  },
+};
+
 /* is point p inside the flashlight beam? */
 function flashHits(p, range = 10, maxAng = 22 * DEG) {
-  if (!Player.flashOn || Player.flashK < 0.5) return false;
+  if (!Player.flashOn || Player.flashK < 0.5 || Flash.mul < 0.4) return false;
   const d = _tv3.subVectors(p, SU.uFlashPos.value); const dist = d.length();
   if (dist > range) return false;
   d.divideScalar(dist);
@@ -3870,8 +4086,8 @@ const Ent = {
   fade: 1, fadeSpeed: 99, out: 0, eyeT: 0, eyeOn: false, eye: 0, flickT: 0, snapT: 0, snapYaw: 0,
   init() { this.H = Actors.ent; },
   spawn(def) {
-    const H = this.H; this.def = def; this.t = 0; this.lookT = 0; this.seen = false; this.gone = 0; this.out = 0; this.snapT = 0;
-    H.root.visible = true;
+    const H = this.H; this.def = def; this.t = 0; this.lookT = 0; this.seen = false; this.gone = 0; this.out = 0; this.snapT = 0; this.flashT = 0;
+    H.root.visible = true; H.smoke.dis = null;
     setLayer(H.root, def.mirrorOnly ? 2 : 0);
     H.root.position.copy(def.pos);
     H.root.rotation.y = def.yaw ?? 0;
@@ -3887,10 +4103,22 @@ const Ent = {
   hide(reason) {
     if (!this.def) return;
     const d = this.def; this.def = null; this.lastEnd = G.t; Sound.presence(0); this.snapT = 0;
-    // looked at, lit or approached: it thins out instead of vanishing on the spot
-    if (this.H.root.visible && !d.mirrorOnly && (reason === 'look' || reason === 'flash' || reason === 'close' || reason === 'done')) this.out = reason === 'done' ? 0.4 : 0.16;
-    else this.H.root.visible = false;
+    // looked at, lit or approached: it comes apart into smoke instead of vanishing on the spot
+    if (this.H.root.visible && !d.mirrorOnly && (reason === 'look' || reason === 'flash' || reason === 'close' || reason === 'done')) {
+      this.out = reason === 'done' ? 0.4 : 0.16;
+      if (reason !== 'done' && this.fade > 0.3) this.dissolve(reason);
+    } else this.H.root.visible = false;
     if (d.onHide) d.onHide(reason);
+  },
+  dissolve(reason) {
+    const H = this.H, c = _dc.copy(H.root.position); c.y += 1.2;
+    const push = _dpush.set(0, 0, 0);
+    if (reason === 'flash') push.copy(Player.flashDir).multiplyScalar(1.25);                    // blown back by the beam
+    else if (reason === 'close') push.subVectors(camera.position, c).normalize().multiplyScalar(1.15);   // it rushes through you
+    else push.subVectors(c, camera.position).setY(0).normalize().multiplyScalar(0.3);
+    H.smoke.dissolve(c, push);
+    Sound.play(reason === 'close' ? 'exhale' : 'breathOut', c, { gain: reason === 'close' ? 0.55 : 0.28, rate: 0.62, hrtf: true, noOcc: true, pri: 2 });
+    Fear.kick(reason === 'close' ? 0.85 : 0.6);
   },
   /* the scare: the head turns to you, the room answers, then it is gone */
   startSnap(d) {
@@ -3902,7 +4130,7 @@ const Ent = {
       Sound.play('stinger', null, { gain: 0.75, pure: true, pri: 2 });
       Sound.tinnitus(0.5, 0.05); after(1.2, () => Sound.tinnitus(0, 0.8));
       const l = nearestLight(r); if (l && l.lit && !l.flick) { l.setFlicker('unstable'); after(1.2, () => { if (l.flick && l.flick.mode === 'unstable' && !l.keepFlicker) l.setFlicker(null); }); }
-      if (Player.flashOn) Player.flashFlicker = 0.5;
+      Flash.stutter(0.5, 0.85); Fear.kick(1);
     } else Sound.play('creaks', V3(r.x, r.y + 0.2, r.z), { gain: 0.4, rate: 0.7, hrtf: true });
   },
   /* the pale smudge of a face: only as bright as the light on it, and only from the front */
@@ -3919,13 +4147,16 @@ const Ent = {
     m.opacity = 0.85 * shadeMat().uniforms.uFade.value * sstep(-0.05, 0.45, facing);
   },
   /* the smoke lives in world space: follow the body, the layer and the visibility */
-  syncSmoke() {
-    const H = this.H, pts = H.smoke.pts;
+  syncSmoke(dt = 0) {
+    const H = this.H, S = H.smoke, pts = S.pts;
+    if (S.dis) { pts.visible = true; if (!S.stepDissolve(dt)) pts.visible = false; return; }
     pts.visible = H.root.visible;
     if (!pts.visible) return;
     pts.layers.mask = H.root.layers.mask;
     H.root.updateMatrixWorld(true);
-    H.smoke.update(G.t);
+    const f = shadeMat().uniforms.uFade.value;
+    S.gather = this.def ? f : 1; pts.material.uniforms.uSFade.value = f;
+    S.update(G.t);
   },
   shadeUniforms(dt) {
     const u = shadeMat().uniforms, H = this.H;
@@ -3937,7 +4168,7 @@ const Ent = {
       H.eyes.userData.mat.opacity = this.eye * u.uFade.value * 0.8;
     }
   },
-  update(dt) { this.step(dt); this.faceLight(dt); this.syncSmoke(); },
+  update(dt) { this.step(dt); this.faceLight(dt); this.syncSmoke(dt); },
   step(dt) {
     const H = this.H, d = this.def, u = shadeMat().uniforms;
     if (!d) {
@@ -3962,8 +4193,6 @@ const Ent = {
     if (d.mirrorOnly) { if (this.t > (d.timeout ?? 1.8)) this.hide('time'); return; }
     const vis = canSee(chest, 0.5);
     Sound.presence(vis ? 1 : 0);
-    // the flashlight falters now and then while you can see it
-    if (vis && Player.flashOn && dist < 8 && G.t > this.flickT && Math.random() < dt * 0.6) { this.flickT = G.t + 3; Player.flashFlicker = rand(0.12, 0.25); }
     if (vis) {
       this.seen = true; this.gone = 0;
       const thr = Math.max(7.5 * DEG, Math.atan2(0.38, dist));
@@ -3973,11 +4202,11 @@ const Ent = {
       } else this.lookT = 0;
     } else if (this.seen) { this.gone += dt; if (this.gone > (d.unseenGrace ?? 0.35)) { this.hide('unseen'); return; } }
     if (dist < (d.minDist ?? 3.4)) { if (d.snap && vis && this.fade > 0.5) { this.startSnap(d); return; } this.hide('close'); return; }
-    if (d.flashKill !== false && flashHits(chest, 11, 24 * DEG)) { this.hide('flash'); return; }
+    if (d.flashKill !== false && flashHits(chest, 11, 24 * DEG)) { this.flashT += dt; if (this.flashT > (d.flashDelay ?? 0)) { this.hide('flash'); return; } } else this.flashT = 0;
     if (!vis && (this.t > (d.timeout ?? 45) || (this.t > 15 && dist > 14))) this.hide('timeout');
   },
 };
-const _fl = new THREE.Vector3(), _fd = new THREE.Vector3(), _fp = new THREE.Vector3();
+const _fl = new THREE.Vector3(), _fd = new THREE.Vector3(), _fp = new THREE.Vector3(), _dc = new THREE.Vector3(), _dpush = new THREE.Vector3();
 /* only visible in mirrors (layer 2), or back to normal */
 function mirrorOnly(obj, on) { obj.traverse((o) => { if (o.isMesh) o.layers.mask = on ? 4 : (o.userData.rooms ?? 1); }); }
 
@@ -4024,7 +4253,7 @@ const Dir = {
     if (Math.abs(yv) > 4.2 && !F['turn_' + Story.stage] && this.turnaround(yv)) { F['turn_' + Story.stage] = true; this.schedule(lv); return; }
     if (G.t > this.pollNext) {
       this.pollNext = G.t + 0.6;
-      const ok = Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || this.peripheral();
+      const ok = (!F['bo_' + Story.stage] && Math.random() < 0.5 && this.blackout()) || (Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || this.peripheral());
       if (ok) this.schedule(lv);
     }
   },
@@ -4044,6 +4273,37 @@ const Dir = {
       const rel = angNorm(faceYaw(P.pos, spot) - (P.yaw + Math.PI));
       if (Math.sign(rel) !== Math.sign(yv) || Math.abs(rel) < 0.7) continue;
       Ent.spawn({ id: 'turn', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.3, roll: 0.45 }, lookDelay: 0.05, minDist: 1.4, timeout: 3, unseenGrace: 0.5, snap: true, stinger: true });
+      return true;
+    }
+    return false;
+  },
+  /* the flashlight stutters and dies; when it comes back on, it is standing in the beam */
+  blackout() {
+    const P = Player;
+    if (!P.flashOn || P.flashK < 0.9 || Flash.mode || lightLevel(camera.position) > 0.5) return false;
+    if (Story.stage === 'descent' && P.pos.x > 28.5) return false;   // leave the bottom of the stairs to the one waiting there
+    const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw);
+    for (const d of [3.1, 2.7, 3.6]) {
+      const x = P.pos.x + fx * d, z = P.pos.z + fz * d, gy = groundAt(x, z, P.pos.y + 0.5);
+      if (gy === null || Math.abs(gy - P.pos.y) > 0.6) continue;
+      const spot = V3(x, gy, z), chest = V3(x, gy + 1.25, z);
+      if (roomOf(x, gy + 1, z) === 'outside' || !this.free(spot) || !losClear(camera.position, chest)) continue;
+      const lead = rand(0.7, 1.0), dark = rand(1.3, 1.7);
+      if (!Flash.die(dark, lead)) return false;
+      F['bo_' + Story.stage] = true; Fear.kick(0.45);
+      let revealed = false, breathed = false;
+      Ent.spawn({ id: 'blackout', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.28, roll: 0.4, pitch: 0.05 }, forceFade: 0, fadeIn: 0.7,
+        lookDelay: 0.9, flashDelay: 0.3, minDist: 1.3, timeout: 6, unseenGrace: 1.2, noFalter: true,
+        update: (dt, E) => {
+          if (E.t > lead && E.def.forceFade === 0) E.def.forceFade = undefined;   // it is there once the light is gone
+          if (!breathed && E.t > lead + dark * 0.55) { breathed = true; const r = E.H.root.position; Sound.play('exhale', V3(r.x, r.y + 1.6, r.z), { gain: 0.4, ref: 0.6, hrtf: true, noOcc: true, pri: 2 }); }
+          if (Flash.dead() || E.t < lead) return false;
+          if (!revealed) {
+            revealed = true;
+            const r = E.H.root.position;
+            if (flashHits(V3(r.x, r.y + 1.25, r.z), 11, 26 * DEG)) { Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Fear.kick(1); }
+          }
+        } });
       return true;
     }
     return false;
@@ -4159,6 +4419,7 @@ const CHANGES = [
   { id: 'photo2', stage: 'p3', p: V3(2.55, 1.0, 7.0), room: 'living', fn: () => { W.photoPic.material.uniforms.uMap.value = T.photo2; F.photoV = 2; } },
   { id: 'brick', stage: 'p3', p: V3(7.0, 1.0, 10.9), room: 'living', fn: () => { W.brickDoor.visible = true; } },
   { id: 'duvet', stage: 'p3', p: V3(2.3, 0.6, 1.4), room: 'bedroom', fn: () => { W.duvet.visible = false; } },
+  { id: 'drawing', stage: 'p3', p: V3(10.12, 1.46, 0.1), room: 'study', fn: () => { Lore.setDrawing(1); } },
 ];
 
 /* ---------------- the director ---------------- */
@@ -4174,6 +4435,7 @@ const Story = {
     W.studyStrip = plane(0.8, 0.02, M({ color: '#000', emissive: '#ffcf8a', eI: 0.9, noise: 0 }), 9.875, 0.005, 4.4 + 0.075, -Math.PI / 2, 0);
     W.studyStrip.visible = false;
     Ent.init();
+    Lore.init();
     DOORS.front.onUse = () => { this.frontDoor(); return true; };
     DOORS.basement.onUse = () => { if (!DOORS.basement.exists) return true; return false; };
     LN.kitchen.onSwitch = () => { F.kitchenSwitched = true; };
@@ -4294,18 +4556,18 @@ const Story = {
       Sound.tone(at('p2') && !morning ? 0.03 : 0.08, 1);
       Sound.drone(morning ? 0 : at('final') ? 0.3 : at('descent') ? 0.2 : at('p3') ? 0.11 : 0, 2);
       if (s === 'p2b') Sound.musicBox(true);
-      else if (at('final')) Sound.lullaby(true, { c: 1, g: 0.2, trans: -7, pos: null });
-      else if (at('descent')) Sound.lullaby(true, { c: 0.9, g: 0.12, trans: -5, pos: null });
+      else if (at('final')) Sound.lullaby(true, { c: 1, g: 0.12, trans: -7, pos: null });
+      else if (at('descent')) Sound.lullaby(true, { c: 0.9, g: 0.075, trans: -5, pos: null });
       else Sound.lullaby(false);
       if (this.waterL) { this.waterL.stop(0.05); this.waterL = null; } F.water = false;
       if (s === 'p2' && F.waterStarted) this.startWater();
       Sound.setWrong({ intro: 0, p1: 0.04, p2: 0.14, p2b: 0.24, p3: 0.38, descent: 0.5, final: 0.55 }[s] ?? 0);
       Sound.breathe(s === 'p3' ? 0.7 : s === 'descent' ? 0.4 : 0);
       Sound.shepard(s === 'descent' ? 1 : 0);
-      Sound.heart({ p3: 62, descent: 84, final: 70 }[s] || 0, { p3: 0.08, descent: 0.2, final: 0.25 }[s] || 0);
       Sound.muffle(0, 0.5); Sound.tinnitus(0, 0.5); Sound.stretch(0);
     }
     Player.speedMul = at('p3') && !morning ? 0.9 : 1;
+    Lore.applyState(s);
   },
   setCeiling(h) {
     this.livingH = h;
@@ -4356,7 +4618,7 @@ const Story = {
     Player.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
     Player.flashOn = stage === 'descent'; Player.flashK = Player.flashOn ? 1 : 0;
     this.ambNext = G.t + rand(12, 20); this.chgNext = G.t + rand(18, 30); this.spawnNext = G.t + 8;
-    Dir.reset();
+    Dir.reset(); Flash.reset(); Fear.reset();
     postMat.uniforms.uFade.value = 1; postMat.uniforms.uWhite.value = 0; postMat.uniforms.uWarp.value = 0;
     UI.clearThoughts();
     this.fadeIn(stage === 'intro' || stage === 'morning' ? 3.5 : 1.2);
@@ -4432,7 +4694,6 @@ const Story = {
   u_p1(dt) {
     this.digitalLooks();
     const P = Player;
-    if (F.lul && Sound.lul) { const n = F.lulN || 0, cap = [0.04, 0.26, 0.48, 0.7, 0.85][n] + 0.14; Sound.lul.cT = Math.min(cap, Sound.lul.cT + dt * 0.0022); }
     this.baseMirrorHints(dt);
     if (!F.stairPop && P.room === 'stairs' && P.pos.z > 10.9 && LN.stairs.lit) {
       F.stairPop = true; Sound.play('pop', LN.stairs.pos, { gain: 0.9 }); LN.stairs.on = 0;
@@ -4494,15 +4755,15 @@ const Story = {
       if (n === 3 && !CLOCKS.basement.isSet() && !F.thirdHint) { F.thirdHint = true; after(0.8, () => UI.thought(tr('t_oneMore'), 3)); }
     } else { c.ticking = true; }
   },
-  /* the lullaby starts the first time you touch a clock, and gets worse with every clock you set */
-  onClockOpen(c) {
-    if (this.stage !== 'p1' || F.lul) return;
-    F.lul = true; Sound.lullaby(true, { c: 0.04, g: 0.055, pos: null, from: 0 });
-  },
+  /* the lullaby starts with the first clock you get right, and comes apart a little more with every
+     next one. Only a solved clock changes it; the loudness hardly grows, the distortion does. */
+  onClockOpen() {},
   lullabyLevel(n) {
-    if (!F.lul) return;
+    if (this.stage !== 'p1' || n < 1) return;
     F.lulN = n;
-    Sound.lullaby(true, { c: [0.04, 0.26, 0.48, 0.7, 0.85][n], g: [0.055, 0.08, 0.11, 0.14, 0.16][n] });
+    const c = [0, 0.15, 0.35, 0.55, 0.72][n], g = [0, 0.06, 0.06, 0.07, 0.085][n];
+    if (!F.lul) { F.lul = true; Sound.lullaby(true, { c, g, pos: null, from: 0 }); }
+    else Sound.lullaby(true, { c, g });
   },
   toP2() {
     F.p2 = true; F.silence = true;
@@ -4738,7 +4999,7 @@ const Story = {
     this.darkHint();
     if (!F.closeTop && P.pos.x > 19) { F.closeTop = true; after(1, () => { DOORS.basement.close(0.6, 'slow'); }); }
     if ((F.loops || 0) < 2 && P.pos.x > 26.4 && P.vel.x > 0) {
-      P.teleport(-5.6, 4.0, 0); F.loops = (F.loops || 0) + 1; Sound.wrongSpike(0.55, 0.9);
+      P.teleport(-5.6, 4.0, 0); F.loops = (F.loops || 0) + 1; Sound.wrongSpike(0.55, 0.9); Lore.onLoop(F.loops);
       if (F.loops === 1) after(2, () => Sound.play('whispers', V3(P.pos.x + 6, P.pos.y - 3, 8.85), { gain: 0.7 }));
       if (F.loops === 2) { this.echo = 12; }
     }
@@ -4748,7 +5009,7 @@ const Story = {
     LN.deepA.intensity = LN.deepB.intensity = 2.0; LN.deepA.radius = LN.deepB.radius = 5.5;
     if (!LN.deepA.flick) { LN.deepA.setFlicker('buzz'); }
     // the lullaby swells the deeper you go, and each loop of the stairs breaks it further
-    if (Sound.lul && Sound.lul.on) { Sound.lul.gT = 0.1 + clamp(-P.pos.y / 12.8, 0, 1) * 0.2; Sound.lul.cT = Math.min(1, 0.88 + (F.loops || 0) * 0.05); }
+    if (Sound.lul && Sound.lul.on) { Sound.lul.gT = 0.075 + clamp(-P.pos.y / 12.8, 0, 1) * 0.04; Sound.lul.cT = Math.min(1, 0.88 + (F.loops || 0) * 0.05); }
     if (P.pos.x > 33.4 && P.pos.y < -11) this.toFinal();
   },
 
@@ -4784,7 +5045,6 @@ const Story = {
           Sound.drone(0.3 + (1 - sstep(1.5, 8, dist)) * 0.5, 0.5);
           const near = 1 - sstep(1.5, 9, dist);
           Sound.setWrong(0.55 + near * 0.45); Sound.muffle(near * 0.7, 0.3); Sound.tinnitus(near * 0.9, 0.3);
-          Sound.heart(lerp(70, 150, near), 0.25 + near * 0.35);
           LN.final.dim = 0.6 + 0.4 * sstep(1.5, 5, dist) * (Math.random() < 0.9 ? 1 : 0.3);
           if (dist < 1.4) { this.blackout(); return false; }
         }
@@ -4801,6 +5061,7 @@ const Story = {
     Sound.cut();
     Player.enabled = false; Player.look = false; Player.flashOn = false; Player.flashK = 0;
     postMat.uniforms.uWarp.value = 0;
+    after(1.2, () => UI.thought(tr('t_sleepNow'), 2.4));
     after(2.2, () => Sound.play('heart', null, { gain: 0.5 }));
     after(4.2, () => this.startMorning());
   },
@@ -5012,6 +5273,377 @@ const Story = {
   },
 };
 
+/* ---- 08b_fear.js ---- */
+/* ============================================================
+   Fear: your own pulse
+   One number (0..1) for how bad it is right now. It rises fast and
+   comes down slowly, the way a pulse does after a fright. It drives the
+   heartbeat you hear, your own breathing, the throb at the edge of the
+   picture and how narrow the view gets.
+   ============================================================ */
+const Fear = {
+  level: 0, imp: 0, beatT: 0.5, pulse: 0, breathT: 0, breathIn: true, near: 0,
+  reset() { this.level = 0; this.imp = 0; this.pulse = 0; this.beatT = 0.5; this.breathT = 2; this.near = 0; },
+  /* a fright: at least this much, for a while */
+  kick(v) { this.imp = Math.max(this.imp, clamp(v, 0, 1)); },
+  base(s) { return { p1: 0.02, p2: 0.08, p2b: 0.12, p3: 0.18, descent: 0.28, final: 0.35 }[s] || 0; },
+  update(dt) {
+    const s = G.stage, live = ['p1', 'p2', 'p2b', 'p3', 'descent', 'final'].includes(s) && !G.paused;
+    if (!live) {
+      this.level = s === 'intro' ? this.level * Math.exp(-dt) : 0; this.imp = 0; this.pulse = 0;
+      if (postMat) { postMat.uniforms.uPulse.value = 0; postMat.uniforms.uFear.value = 0; }
+      return;
+    }
+    let t = this.base(s);
+    // the dark, without a working light
+    if (SI(s) >= SI('p2') && lightLevel(camera.position) < 0.25 && SU.uFlashOn.value < 0.3) t += 0.1;
+    if (Flash.dead()) t += 0.22;
+    // the entity: close counts even when you cannot see it (you feel it before you see it)
+    this.near = 0;
+    const E = Ent;
+    if (E.def && E.H.root.visible && !E.def.mirrorOnly && E.fade > 0.2) {
+      const r = E.H.root.position, ch = _fv.set(r.x, r.y + 1.3, r.z), d = ch.distanceTo(camera.position);
+      const near = clamp(1 - (d - 1.4) / 8.5, 0, 1); this.near = near;
+      const seen = viewAngleTo(ch) < 0.75 && losClear(camera.position, ch);
+      t = Math.max(t, seen ? 0.32 + 0.66 * near : 0.12 + 0.5 * near);
+    }
+    t = clamp(Math.max(t, this.imp), 0, 1);
+    this.imp = Math.max(0, this.imp - dt * 0.09);
+    this.level += (t - this.level) * (1 - Math.exp(-dt * (t > this.level ? 2.6 : 0.16)));
+    const L = this.level;
+    // heartbeat: inaudible when calm, pounding when it is close
+    const bpm = 58 + 88 * L, gain = sstep(0.12, 0.85, L) * 0.12;
+    this.beatT -= dt;
+    if (this.beatT <= 0) {
+      this.beatT = 60 / bpm;
+      if (gain > 0.015 && Sound.ok) {
+        Sound.playBuf(Sound.B.heart, null, { gain, lp: 260 + 520 * L, pure: true, pri: 2 });
+        this.pulse = 1;
+      }
+    }
+    this.pulse = Math.max(0, this.pulse - dt * 4.2);
+    // your own breathing, short and shallow once it gets bad
+    if (L > 0.5 && Sound.ok) {
+      this.breathT -= dt;
+      if (this.breathT <= 0) {
+        const g = sstep(0.5, 0.95, L) * 0.16;
+        Sound.play(this.breathIn ? 'breathIn' : 'breathOut', null, { gain: g, rate: 1.35 + L * 0.3, lp: 1700, pure: true, pri: 1 });
+        this.breathT = (this.breathIn ? 0.75 : 1.1) * (1.35 - L * 0.55);
+        this.breathIn = !this.breathIn;
+      }
+    } else this.breathT = 0.6;
+    const vis = sstep(0.25, 0.95, L);
+    postMat.uniforms.uPulse.value = this.pulse * this.pulse * vis;
+    postMat.uniforms.uFear.value = sstep(0.35, 1, L) * 0.6;
+  },
+};
+const _fv = new THREE.Vector3();
+
+/* ---- 08c_lore.js ---- */
+/* ============================================================
+   Lore: what the house remembers
+   A sleep diary by the bed, a letter from the sleep clinic, a funeral
+   card, an answering machine, a card in mum's handwriting by the music
+   box and a drawing from when you were small. None of it is needed to
+   finish; together it explains the night. Down the stairs, the walls
+   have been written on, and each time the stairs repeat, it says more.
+   ============================================================ */
+const Lore = {
+  ready: false, P: {}, C: {}, heard: {}, vm: null, vmId: 0, ledT: 0, drawV: 0, loop: 0, decals: [],
+
+  init() {
+    const P = this.P, dyn = (m) => { DYN.add(m); return m; };
+    const paper = (c) => M({ map: toTex(c, false), world: false, noise: 0 });
+    // --- sleep diary on the nightstand, with a pencil ---
+    this.C.diary = mkCanvas(256, 352);
+    const dm = paper(this.C.diary);
+    P.diary = box(0.15, 0.016, 0.21, M({ color: '#5e2f27', noise: 0.08 }), 3.53, 0.55, 0.45, { ry: 0.18 });
+    P.diaryTop = plane(0.148, 0.208, dm, 3.53, 0.5665, 0.45, -Math.PI / 2, 0.18);
+    { const pc = cyl(0.004, 0.004, 0.14, M({ color: '#c9a23a', noise: 0.1 }), 0, 0, 0); pc.position.set(3.55, 0.571, 0.47); pc.rotation.order = 'YXZ'; pc.rotation.set(0, 0.7, Math.PI / 2); }
+    for (const m of [P.diary, P.diaryTop]) use(m, 'lbl_read', () => this.read('diary'));
+    // --- letter from the sleep clinic on the kitchen table, with its envelope ---
+    this.C.letter = mkCanvas(256, 362);
+    P.letter = plane(0.21, 0.297, paper(this.C.letter), 11.18, 0.7715, 8.5, -Math.PI / 2, 0.32);
+    plane(0.22, 0.11, M({ color: '#e6e0d0', noise: 0.05 }), 11.3, 0.771, 8.18, -Math.PI / 2, -0.2);
+    use(P.letter, 'lbl_read', () => this.read('letter'));
+    // --- funeral card on the sideboard, next to the family photo ---
+    this.C.card = mkCanvas(240, 336);
+    const cg = new THREE.Group(); cg.position.set(2.52, 0.85, 7.42); cg.rotation.y = Math.PI / 2 - 0.22; scene.add(cg);
+    const front = new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.168), paper(this.C.card)); front.position.set(0, 0.082, 0.02); front.rotation.x = -0.24; cg.add(front);
+    const back = new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.168), M({ color: '#ece6d8', noise: 0.03, side: THREE.DoubleSide })); back.position.set(0, 0.082, -0.02); back.rotation.x = 0.24; cg.add(back);
+    P.card = front; use(front, 'lbl_read', () => this.read('card')); use(back, 'lbl_read', () => this.read('card'));
+    // --- answering machine on the hall console, next to the phone ---
+    P.machinePos = V3(13.7, 0.86, 5.46);
+    P.machine = box(0.17, 0.055, 0.21, M({ color: '#1d1e21', noise: 0.06 }), 13.7, 0.8, 5.46);
+    box(0.09, 0.006, 0.13, M({ color: '#2c2d31', noise: 0.04 }), 13.72, 0.855, 5.46);   // cassette lid
+    P.led = dyn(plane(0.012, 0.012, M({ color: '#000000', emissive: '#ff2a1a', eI: 2.2, noise: 0 }), 13.7 - 0.0855, 0.83, 5.39, 0, -Math.PI / 2));
+    P.led2 = dyn(plane(0.012, 0.012, M({ color: '#000000', emissive: '#4dff7a', eI: 0.5, noise: 0 }), 13.7 - 0.0855, 0.83, 5.42, 0, -Math.PI / 2));
+    use(P.machine, 'lbl_play', () => this.playMachine());
+    // --- mum's card, leaning against the wall behind the record player ---
+    this.C.mom = mkCanvas(200, 280);
+    P.mom = plane(0.1, 0.14, paper(this.C.mom), 9.47, 0.83, 0.115, -0.26, 0);
+    use(P.mom, 'lbl_read', () => this.read('mom'));
+    // --- the drawing, taped to the study wall above it ---
+    IMG.drawing0 = mkCanvas(480, 360); IMG.drawing1 = mkCanvas(480, 360);
+    T.drawing0 = toTex(IMG.drawing0, false); T.drawing1 = toTex(IMG.drawing1, false);
+    P.drawing = plane(0.4, 0.3, M({ map: T.drawing0, world: false, noise: 0 }), 10.12, 1.46, 0.079, 0, 0);
+    for (const [x, y] of [[-0.18, 0.13], [0.18, 0.13]]) plane(0.05, 0.02, M({ color: '#d8d0b0', opacity: 0.7, transparent: true, noise: 0 }), 10.12 + x, 1.46 + y, 0.081, 0, 0, undefined).rotation.z = x > 0 ? -0.5 : 0.5;
+    use(P.drawing, 'lbl_look', () => this.examineDrawing());
+    // --- the stairwell walls: scratched writing ---
+    const slope = 12.8 / 17.92, fy = (x) => -(x - 15.2) * slope;
+    const spots = [
+      ['tally', 18.1, 'n', 1.3, 0.34], ['a', 21.4, 'n', 1.7, 0.5], ['b', 23.3, 's', 1.7, 0.5], ['c', 25.3, 'n', 1.7, 0.5],
+      ['d', 28.6, 's', 1.7, 0.5], ['e', 31.9, 'n', 1.4, 0.52],
+    ];
+    for (const [id, x, side, w, h] of spots) {
+      const c = mkCanvas(512, 150), t = toTex(c, false);
+      const m = plane(w, h, M({ map: t, world: false, noise: 0, alphaMap: true, color: '#ffffff' }), x, fy(x) + 1.5, side === 'n' ? 8.2 + 0.078 : 9.5 - 0.078, 0, side === 'n' ? 0 : Math.PI, W.deep);
+      dyn(m); this.decals.push({ id, c, t, m });
+    }
+    this.langTextures();
+    this.ready = true;
+  },
+
+  /* everything that carries words or changes with the story */
+  langTextures() {
+    this.drawDiary(this.C.diary); this.drawLetter(this.C.letter); this.drawCard(this.C.card); this.drawMom(this.C.mom);
+    for (const k of ['diary', 'letter', 'card', 'mom']) { const m = this.P[k === 'diary' ? 'diaryTop' : k]; if (m) m.material.uniforms.uMap.value.needsUpdate = true; }
+    drawingCanvas(IMG.drawing0, 0); drawingCanvas(IMG.drawing1, 1); T.drawing0.needsUpdate = true; T.drawing1.needsUpdate = true;
+    this.setWall(this.loop);
+  },
+  applyState(s) {
+    this.vmId++; this.vm = null; if (UI.el.voice) UI.el.voice.classList.remove('on');
+    if (s === 'intro') this.heard = {};
+    const n = SI(s);
+    this.setDrawing(s === 'descent' || s === 'final' || (n === SI('p3') && F.chg_drawing) ? 1 : 0);
+    this.loop = 0; this.setWall(0);
+  },
+  setDrawing(v) { this.drawV = v; if (this.P.drawing) this.P.drawing.material.uniforms.uMap.value = v ? T.drawing1 : T.drawing0; },
+  setWall(n) {
+    this.loop = n;
+    const L = tr('wall_l' + clamp(n, 0, 2)), E = tr('wall_end');
+    const text = { tally: tr('wall_tally'), a: L[0], b: L[1], c: L[2], d: E[0], e: E[1] };
+    this.decals.forEach((d, i) => { wallWriting(d.c, text[d.id], 71 + i * 13 + n * 5, d.id === 'e' || n >= 2); d.t.needsUpdate = true; });
+  },
+  onLoop(n) { this.setWall(n); },
+  msgKey() {
+    const s = G.stage, n = SI(s);
+    if (s === 'morning') return 'vm3';
+    if (n >= SI('p3') && n <= SI('descent')) return 'vm2';
+    if (n <= SI('p2b')) return 'vm1';
+    return null;
+  },
+  update(dt) {
+    if (!this.ready) return;
+    this.ledT += dt;
+    const key = this.msgKey(), fresh = key && !this.heard[key] && !this.vm;
+    this.P.led.material.uniforms.uEmissive.value.copy(_ledRed).multiplyScalar(this.vm ? 2.2 : fresh ? (this.ledT % 1.1 < 0.55 ? 2.4 : 0.05) : 0.05);
+  },
+
+  /* ---------- the answering machine ---------- */
+  playMachine() {
+    if (this.vm) return;
+    const pos = this.P.machinePos, key = this.msgKey(), id = ++this.vmId;
+    const at = (t, fn) => after(t, () => { if (this.vmId === id) fn(); });
+    this.vm = true;
+    Sound.play('switch', pos, { gain: 0.45 });
+    if (!key) { at(0.4, () => { Sound.play('beep', pos, { gain: 0.3 }); UI.voice(tr('vm_none'), 2, true); }); at(2.4, () => { this.vm = null; }); return; }
+    let t = 0.45;
+    at(t, () => Sound.play('beep', pos, { gain: 0.32 })); t += 0.55;
+    for (const [k, txt] of tr(key)) {
+      const dur = clamp(1.3 + txt.length * 0.052, 2.2, 5.4);
+      at(t, () => { UI.voice(txt, dur - 0.2, k === 's'); this.lineAudio(k, pos, dur); });
+      t += dur + 0.2;
+    }
+    at(t, () => { Sound.play('beep', pos, { gain: 0.28 }); UI.voice(tr('vm_end'), 2, true); });
+    at(t + 2.4, () => {
+      this.vm = null;
+      const first = !this.heard[key]; this.heard[key] = true;
+      if (first) UI.thought(tr({ vm1: 't_vm1', vm2: 't_vm2', vm3: 't_vm3' }[key]), 3.2);
+    });
+  },
+  lineAudio(k, pos, dur) {
+    const o = { lp: 2900, ref: 0.8, pri: 2 };
+    if (k === 's') Sound.play('static', pos, Object.assign({}, o, { gain: 0.035, lp: 1800 }));
+    if (k === 'v') { const n = Math.max(1, Math.ceil(dur / 3.4)); for (let i = 0; i < n; i++) Sound.play('voices', pos, Object.assign({}, o, { gain: 0.5, rate: 1.17, delay: i * 3.1 })); }
+    if (k === 'b') { Sound.play('breathIn', pos, Object.assign({}, o, { gain: 0.42, lp: 2300 })); Sound.play('breathOut', pos, Object.assign({}, o, { gain: 0.38, lp: 2300, delay: 1.35 })); }
+    if (k === 'w') { Sound.play('name', pos, Object.assign({}, o, { gain: 0.55, rate: 0.9 })); Fear.kick(0.45); }
+  },
+
+  /* ---------- documents ---------- */
+  read(kind) {
+    const el = (tag, cls, text, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; parent.appendChild(e); return e; };
+    const once = (k, fn) => { if (F['lore_' + k]) return; F['lore_' + k] = true; UI.onClose = fn; };
+    if (kind === 'diary') {
+      const morning = G.stage === 'morning';
+      UI.showDoc('diary', (b) => {
+        el('p', 'pr', tr('diary_sub'), b); el('h2', 'hd', tr('diary_title'), b);
+        const tb = el('table', null, null, b), hr = el('tr', null, null, el('thead', null, null, tb)), body = el('tbody', null, null, tb);
+        for (const c of tr('diary_cols')) el('th', null, c, hr);
+        const rows = tr('diary_rows').slice(); if (morning) rows.push(tr('diary_morning'));
+        rows.forEach((r, i) => { const tr_ = el('tr', morning && i === rows.length - 1 ? 'new' : null, null, body); for (const c of r) el('td', null, c, tr_); });
+      });
+      if (!morning) once('diary', () => UI.thought(tr('t_diary'), 3));
+      return;
+    }
+    if (kind === 'letter') {
+      UI.showDoc('letter', (b) => {
+        el('h2', 'hd', tr('letter_head'), b); el('p', 're', tr('letter_re'), b);
+        for (const p of tr('letter_body')) el('p', 't', p, b);
+        el('p', 'pen', tr('letter_pen'), b);
+      });
+      once('letter', () => UI.thought(tr('t_letter'), 3));
+      return;
+    }
+    if (kind === 'card') {
+      UI.showDoc('card', (b) => {
+        el('p', 'top', tr('card_top'), b); el('p', 'nm', tr('card_name'), b); el('p', 'dt', tr('card_dates'), b);
+        el('p', 'ln', tr('card_line'), b); el('p', 'ft', tr('card_foot'), b);
+      });
+      once('card', () => { UI.thought(tr('t_card1'), 2.4); after(3.1, () => UI.thought(tr('t_card2'), 3)); });
+      return;
+    }
+    if (kind === 'mom') {
+      UI.showDoc('mom', (b) => el('p', null, tr('mom_note'), b));
+      once('mom', () => UI.thought(tr('t_mom'), 2.8));
+    }
+  },
+  examineDrawing() {
+    const v = this.drawV;
+    UI.showImage(v ? IMG.drawing1 : IMG.drawing0, tr(v ? 'cap_draw1' : 'cap_draw0'));
+  },
+
+  /* ---------- in-world paper ---------- */
+  drawDiary(c) {
+    const g = c.getContext('2d'), w = c.width, h = c.height;
+    g.fillStyle = '#6a3329'; g.fillRect(0, 0, w, h);
+    blotches(g, w, h, 10, 'rgba(20,6,4,A)', 20, 90, 0.35, 61);
+    g.fillStyle = 'rgba(0,0,0,0.25)'; g.fillRect(0, 0, 16, h);
+    g.fillStyle = '#e8e0cc'; g.fillRect(52, 70, w - 104, 96);
+    g.strokeStyle = '#3a342c'; g.lineWidth = 2; g.strokeRect(58, 76, w - 116, 84);
+    g.fillStyle = '#2a2622'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    let fs = 26; g.font = `500 ${fs}px "IBM Plex Mono", monospace`;
+    const t = tr('diary_title').toUpperCase(); while (fs > 12 && g.measureText(t).width > w - 130) { fs -= 1; g.font = `500 ${fs}px "IBM Plex Mono", monospace`; }
+    g.fillText(t, w / 2, 106);
+    g.font = '13px "IBM Plex Mono", monospace'; g.fillStyle = '#5a5248'; g.fillText('De Duinen', w / 2, 138);
+    grain(g, w, h, 14, 62);
+  },
+  drawLetter(c) {
+    const g = c.getContext('2d'), w = c.width, h = c.height, r = seeded(63);
+    g.fillStyle = '#f2efe6'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#2d4a5a'; g.fillRect(24, 26, 26, 26);
+    g.fillStyle = '#1e1e1e'; g.font = '15px "IM Fell English", Georgia, serif'; g.textBaseline = 'middle'; g.fillText(tr('letter_head'), 58, 40);
+    g.fillStyle = '#8a8680';
+    for (let y = 90; y < 290; y += 11) { if (r() < 0.12) { y += 6; continue; } g.fillRect(24, y, 120 + r() * 88, 3); }
+    g.strokeStyle = '#2a3070'; g.lineWidth = 2.2; g.beginPath();
+    let x = 130, y = 318; g.moveTo(x, y); for (let i = 0; i < 16; i++) { x += 5 + r() * 4; g.lineTo(x, y + (r() - 0.5) * 10 - (i % 2) * 4); } g.stroke();
+    grain(g, w, h, 8, 64);
+  },
+  drawCard(c) {
+    const g = c.getContext('2d'), w = c.width, h = c.height;
+    g.fillStyle = '#efeadd'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#2a2724'; g.lineWidth = 3; g.strokeRect(14, 14, w - 28, h - 28);
+    // a thin crescent moon
+    g.fillStyle = '#3a3632'; g.beginPath(); g.arc(w / 2, 78, 22, 0, TAU); g.fill();
+    g.fillStyle = '#efeadd'; g.beginPath(); g.arc(w / 2 + 9, 72, 20, 0, TAU); g.fill();
+    g.fillStyle = '#26231f'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    let fs = 24; g.font = `${fs}px "IM Fell English", Georgia, serif`; const nm = tr('card_name');
+    while (fs > 12 && g.measureText(nm).width > w - 50) { fs -= 1; g.font = `${fs}px "IM Fell English", Georgia, serif`; }
+    g.fillText(nm, w / 2, 150);
+    g.fillStyle = '#8a857c'; for (const [y, ww] of [[186, 110], [212, 150], [226, 140], [264, 90]]) g.fillRect(w / 2 - ww / 2, y, ww, 3);
+    grain(g, w, h, 6, 65);
+  },
+  drawMom(c) {
+    const g = c.getContext('2d'), w = c.width, h = c.height, r = seeded(66);
+    g.fillStyle = '#f1e9d2'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#27458a'; g.lineWidth = 2; g.lineCap = 'round';
+    for (let y = 36; y < h - 60; y += 22) {
+      if (r() < 0.18) continue;
+      let x = 18; const end = 60 + r() * 110; g.beginPath(); g.moveTo(x, y);
+      while (x < end) { x += 3 + r() * 5; g.lineTo(x, y + Math.sin(x * 0.6) * 3 + (r() - 0.5) * 3); }
+      g.stroke();
+    }
+    g.fillStyle = '#27458a'; g.font = '36px "Reenie Beanie", cursive'; g.fillText('x', 24, h - 26);
+    grain(g, w, h, 8, 67);
+  },
+};
+const _ledRed = new THREE.Color(1, 0.12, 0.05);
+
+/* crayon on paper: a bed, a small child in it, and the tall one standing next to it.
+   v = 1: the child is gone and the tall one lies in the bed. */
+function drawingCanvas(c, v) {
+  const g = c.getContext('2d'), w = c.width, h = c.height, r = seeded(90 + v);
+  g.fillStyle = '#f4efe1'; g.fillRect(0, 0, w, h);
+  blotches(g, w, h, 5, 'rgba(160,130,70,A)', 30, 90, 0.08, 91);
+  const crayon = (pts, col, width, passes = 3) => {
+    for (let k = 0; k < passes; k++) {
+      g.strokeStyle = col; g.globalAlpha = 0.35 + r() * 0.35; g.lineWidth = width * (0.7 + r() * 0.6); g.lineCap = 'round'; g.lineJoin = 'round';
+      g.beginPath(); pts.forEach(([x, y], i) => { const px = x + (r() - 0.5) * 3, py = y + (r() - 0.5) * 3; if (i) g.lineTo(px, py); else g.moveTo(px, py); }); g.stroke();
+    }
+    g.globalAlpha = 1;
+  };
+  // a child colouring in: one long zigzag, then over it again the other way
+  const scribble = (x0, y0, x1, y1, col, dens = 1, width = 4) => {
+    for (const dir of [0, 1, 2]) {
+      const pts = []; let y = y0 + r() * 4, left = dir === 1;
+      while (y < y1) { pts.push([left ? x0 + r() * 7 - 3 : x1 - r() * 7 + 3, y]); y += (3 + r() * 9) / dens; left = !left; }
+      crayon(pts, col, width * (dir === 2 ? 0.8 : 1), 2);
+    }
+  };
+  // window with the moon
+  crayon([[40, 40], [140, 40], [140, 130], [40, 130], [40, 40]], '#3d5a9a', 4);
+  crayon([[90, 40], [90, 130]], '#3d5a9a', 3); crayon([[40, 85], [140, 85]], '#3d5a9a', 3);
+  g.fillStyle = 'rgba(230,190,40,0.75)'; g.beginPath(); g.arc(115, 62, 13, 0, TAU); g.fill();
+  for (const [x, y] of [[55, 55], [70, 110], [120, 110]]) crayon([[x - 5, y], [x + 5, y]], '#d9b21c', 3), crayon([[x, y - 5], [x, y + 5]], '#d9b21c', 3);
+  // floor
+  crayon([[10, 318], [470, 322]], '#7a5a3a', 4);
+  // the bed
+  crayon([[150, 250], [360, 250], [360, 318], [150, 318], [150, 250]], '#8a5a2a', 5);
+  crayon([[150, 250], [150, 205]], '#8a5a2a', 5); crayon([[360, 250], [360, 230]], '#8a5a2a', 5);
+  scribble(160, 256, 350, 300, '#4a78c8', 1, 5);   // blanket
+  if (!v) {
+    // the child: a round head on the pillow, eyes open
+    g.fillStyle = 'rgba(240,200,160,0.9)'; g.beginPath(); g.arc(185, 238, 16, 0, TAU); g.fill();
+    crayon([[169, 238], [185, 222], [201, 238]], '#5a3a1a', 3, 2);
+    g.fillStyle = '#222'; g.fillRect(179, 236, 3, 3); g.fillRect(189, 236, 3, 3);
+    crayon([[180, 246], [190, 246]], '#aa3a3a', 2, 1);
+    // the tall one, standing by the bed: black scribble, too long, no face
+    scribble(392, 96, 432, 316, '#141414', 1.3, 5);
+    g.fillStyle = 'rgba(15,15,15,0.92)'; g.beginPath(); g.ellipse(412, 76, 17, 23, 0, 0, TAU); g.fill();
+    crayon([[396, 110], [362, 180], [352, 236]], '#141414', 5); crayon([[428, 110], [455, 190], [458, 250]], '#141414', 5);
+  } else {
+    // the tall one lies in the bed, its head where the child's was
+    g.fillStyle = 'rgba(15,15,15,0.92)'; g.beginPath(); g.ellipse(186, 234, 20, 16, 0, 0, TAU); g.fill();
+    scribble(205, 232, 352, 256, '#141414', 2, 5);
+    crayon([[210, 250], [260, 270], [330, 262]], '#141414', 5);
+  }
+  // the words, in big uneven letters
+  g.fillStyle = '#2a2a2a'; g.textBaseline = 'middle';
+  g.font = '42px "Reenie Beanie", "Comic Sans MS", cursive'; g.save(); g.translate(158, 58); g.rotate(-0.04); g.fillText(tr('draw_title'), 0, 0); g.restore();
+  if (!v) { g.font = '30px "Reenie Beanie", "Comic Sans MS", cursive'; g.save(); g.translate(196, 158); g.rotate(0.05); g.fillText(tr('draw_note'), 0, 0); g.restore(); crayon([[300, 164], [340, 158], [366, 146]], '#2a2a2a', 2, 1); }
+  grain(g, w, h, 10, 92 + v);
+  return c;
+}
+
+/* pale scratches in concrete: the same words gone over again and again */
+function wallWriting(c, text, seed, heavy) {
+  const g = c.getContext('2d'), w = c.width, h = c.height, r = seeded(seed);
+  g.clearRect(0, 0, w, h);
+  let fs = 118; const font = () => `${fs}px "Reenie Beanie", "Segoe Print", cursive`; g.font = font();
+  while (fs > 40 && g.measureText(text).width > w - 40) { fs -= 4; g.font = font(); }
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  const tilt = (r() - 0.5) * 0.08, n = heavy ? 7 : 4;
+  for (let k = 0; k < n; k++) {
+    g.save(); g.translate(w / 2 + (r() - 0.5) * 4, h / 2 + (r() - 0.5) * 4); g.rotate(tilt + (r() - 0.5) * 0.02);
+    g.globalAlpha = 0.28 + r() * 0.3; g.fillStyle = '#e4ddcc'; g.fillText(text, 0, 0);
+    g.globalAlpha = 0.18; g.strokeStyle = '#1a1714'; g.lineWidth = 1.5; g.strokeText(text, 1.5, 1.5);
+    g.restore();
+  }
+  g.globalAlpha = 0.25; g.strokeStyle = '#ddd6c6'; g.lineWidth = 1.2;
+  for (let i = 0; i < (heavy ? 14 : 6); i++) { const x = 30 + r() * (w - 60), y = 20 + r() * (h - 40); g.beginPath(); g.moveTo(x, y); g.lineTo(x + (r() - 0.5) * 60, y + (r() - 0.5) * 16); g.stroke(); }
+  g.globalAlpha = 1;
+}
+
 /* ---- 09_ui.js ---- */
 /* ============================================================
    UI: HUD, thoughts, notes, menus, touch
@@ -5019,7 +5651,7 @@ const Story = {
 const UI = {
   overlay: null, onClose: null, q: [], cur: null, tt: 0, gap: 0, el: {}, hintTO: 0, restartArm: 0,
   init() {
-    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot']) this.el[id] = $(id);
+    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime']) this.el[id] = $(id);
     applyLangDOM();
     const g = this.el.digits.getContext('2d');
     g.clearRect(0, 0, 340, 120); draw7(g, '03:33', 16, 16, 86, '#ff3a22', 'rgba(255,58,34,0.08)');
@@ -5111,12 +5743,30 @@ const UI = {
     c.getContext('2d').drawImage(canvas, 0, 0);
     this.el.imgCap.textContent = cap || ''; this.el.image.hidden = false; this.overlay = 'image';
   },
+  /* a found document: kind is the paper style, build(el) fills it */
+  showDoc(kind, build) {
+    const b = this.el.docBody; b.className = 'doc ' + kind; b.textContent = ''; build(b); b.scrollTop = 0;
+    this.el.doc.hidden = false; this.overlay = 'doc';
+    Sound.play('scrape', null, { gain: 0.1, rate: 2.2 });
+  },
+  /* a voice from a speaker: sys lines are the machine itself */
+  voice(text, dur, sys) {
+    const v = this.el.voice; v.textContent = text; v.classList.toggle('sys', !!sys); v.classList.add('on');
+    clearTimeout(this.voiceTO); this.voiceTO = setTimeout(() => v.classList.remove('on'), dur * 1000);
+  },
   closeOverlay() {
-    this.el.note.hidden = true; this.el.image.hidden = true; this.overlay = null;
+    this.el.note.hidden = true; this.el.image.hidden = true; this.el.doc.hidden = true; this.overlay = null;
     const f = this.onClose; this.onClose = null; if (f) f();
   },
   clockPanel(on) { this.el.clockPanel.hidden = !on; },
-  clockReadout(c) { const m = ((Math.round(c.min) % 720) + 720) % 720; const h = Math.floor(m / 60) || 12; this.el.clockTime.textContent = `${h}:${String(m % 60).padStart(2, '0')}`; },
+  clockReadout(c) {
+    const fmt = (m) => `${Math.floor(m / 60) || 12}:${String(m % 60).padStart(2, '0')}`;
+    const m = ((Math.round(c.min) % 720) + 720) % 720; this.el.clockTime.textContent = fmt(m);
+    // the basement clock counts the way the mirror across the room shows it: left and right swapped
+    const mir = c === CLOCKS.basement && G.stage === 'p1';
+    this.el.clockMirror.hidden = !mir;
+    if (mir) { const mm = (720 - m) % 720; this.el.clockMirrorTime.textContent = fmt(mm); this.el.clockMirror.classList.toggle('ok', Math.abs(mm - TARGET_MIN) <= 1); }
+  },
   objective(stage) { const o = tr('o_' + stage); if (!Array.isArray(o)) return; this.el.objText.textContent = o[0]; this.el.hintText.textContent = o[1]; this.el.stuck.open = false; },
   onEscape() {
     // Esc only ever pauses: resuming needs a click so the mouse can be captured again
@@ -5324,6 +5974,8 @@ function loop(now) {
     Player.update(dt);
     Interact.update();
     Story.update(dt);
+    Lore.update(dt);
+    Fear.update(dt);
     updateLights(dt);
     Sound.update(dt);
     UI.updateThought(dt);
