@@ -368,19 +368,21 @@ const STR = {
     t_handwriting: 'Dat is mijn handschrift.', t_dontRemember: 'Ik weet niet meer dat ik dat geschreven heb.', t_again: 'Weer mijn handschrift.',
     t_basement: 'Beneden. De kelder.', t_brick: 'Er zit niets achter. Alleen muur.', t_paintingBelongs: 'Het schilderij hoort hier wel.',
     t_someone: 'Is daar iemand?', t_notAlone: 'Ik ben niet alleen.',
+    t_baseMirrorNew: 'Die spiegel hing hier nooit.', t_baseDisbelief: 'Hij loopt gewoon door.', t_mirrorClock: 'In de spiegel wijst hij iets anders aan.', t_mirrorRight: 'In de spiegel is het 3:33.',
+    t_loopMirror: 'In de spiegel staat er iets op het bureau.', t_onlyMirror: 'Daar staat niets. Alleen in de spiegel.',
     cap_photo0: 'Zandvoort. Dat was een goede zomer.', cap_photo1: 'Wie staat daar, achteraan?', cap_photo2: 'Waar zijn wij?',
     cap_hall0: 'Dat schilderij hangt hier al jaren.', cap_hall1: 'Stond daar altijd al iemand in het veld?',
     cap_sea0: 'De zee bij Zandvoort.', cap_sea1: 'Dat was de zee.',
     photo_label: 'Zandvoort, zomer', photo_label2: 'Zandvoort, 3:33',
-    note_fridge: 'ze moeten allemaal\nhetzelfde zeggen.\n\nook die beneden.',
+    note_fridge: 'ze moeten allemaal\nhetzelfde zeggen.\n\nook die beneden,\nzoals de spiegel hem ziet.',
     note_study: 'ik ben hier al vaker geweest.\nelke keer is er iets anders.\n\néén ding hoort hier niet.',
     note_door: 'niet de voordeur.\n\nde uitgang is beneden.',
     mirror_text: 'JE SLAAPT', aria_view: 'Spelwereld', res_label: 'beeld', perf_mode_auto: 'auto',
     // objectives: [goal, hint]
     o_intro: ['Ga naar buiten.', 'De voordeur zit aan het eind van de gang, links, tegenover de spiegel bij de kapstok.'],
-    o_p1: ['De voordeur gaat niet open. Zoek uit wat er niet klopt.', 'Alle digitale klokken zeggen 3:33. Zet de vier wandklokken ook op 3:33: in de gang, de woonkamer, de keuken en in de kelder (de deur in de keuken). Kijk naar een klok, druk op E en draai de wijzers met de muis.'],
+    o_p1: ['De voordeur gaat niet open. Zoek uit wat er niet klopt.', 'Alle digitale klokken zeggen 3:33. Zet de vier wandklokken ook op 3:33: in de gang, de woonkamer, de keuken en in de kelder (de deur in de keuken). Kijk naar een klok, druk op E en draai de wijzers met de muis. De kelderklok telt zoals de spiegel tegenover hem hem laat zien: in de spiegel moet hij 3:33 aangeven, dus echt staat hij dan op 8:27.'],
     o_p2: ['Het is stil. Er loopt ergens water.', 'Ga naar de badkamer. Op de muur naast de deur staat iets in spiegelschrift. Ga voor de spiegel boven de wastafel staan en lees het daar.'],
-    o_p2b: ['Er speelt muziek in de kleine kamer.', 'De kleine kamer blijft je terugsturen. Wat verandert hoort er wél. Zoek het voorwerp dat uit een andere kamer komt en gebruik het.'],
+    o_p2b: ['Er speelt muziek in de kleine kamer.', 'De kleine kamer blijft je terugsturen. Wat verandert hoort er wél. Er staat iets dat uit een andere kamer komt, maar je ziet het alleen in de spiegel naast de deur. Kijk in de spiegel, zoek die plek op het bureau en gebruik het daar.'],
     o_p3: ['Word wakker.', 'De kelderdeur in de keuken bestaat alleen in het donker. Doe het keukenlicht uit (schakelaar bij de deuropening), doe je zaklamp uit en kijk naar de muur waar de deur zat.'],
     o_descent: ['Naar beneden.', 'Blijf de trap afdalen.'],
     o_final: ['…', 'Deze keer moet je niet wegkijken. Loop naar hem toe.'],
@@ -424,18 +426,20 @@ const STR = {
     t_handwriting: "That's my handwriting.", t_dontRemember: "I don't remember writing that.", t_again: 'My handwriting again.',
     t_basement: 'Downstairs. The basement.', t_brick: "There's nothing behind it. Just wall.", t_paintingBelongs: 'The painting belongs here.',
     t_someone: 'Is someone there?', t_notAlone: "I'm not alone.",
+    t_baseMirrorNew: 'That mirror was never here.', t_baseDisbelief: 'It just keeps going.', t_mirrorClock: 'In the mirror it shows a different time.', t_mirrorRight: "In the mirror it's 3:33.",
+    t_loopMirror: "In the mirror, there's something on the desk.", t_onlyMirror: "There's nothing there. Only in the mirror.",
     cap_photo0: 'Zandvoort. That was a good summer.', cap_photo1: 'Who is that, in the back?', cap_photo2: 'Where are we?',
     cap_hall0: "That painting has hung here for years.", cap_hall1: 'Was someone always standing in that field?',
     cap_sea0: 'The sea at Zandvoort.', cap_sea1: 'That used to be the sea.',
     photo_label: 'Zandvoort, summer', photo_label2: 'Zandvoort, 3:33',
-    note_fridge: 'they all have to\nsay the same thing.\n\nthe one downstairs too.',
+    note_fridge: 'they all have to\nsay the same thing.\n\nthe one downstairs too,\nthe way the mirror sees it.',
     note_study: "i've been here before.\nsomething is different every time.\n\none thing doesn't belong here.",
     note_door: 'not the front door.\n\nthe way out is downstairs.',
     mirror_text: "YOU'RE ASLEEP", aria_view: 'Game world', res_label: 'render', perf_mode_auto: 'auto',
     o_intro: ['Get outside.', 'The front door is at the end of the hallway, on the left, across from the mirror by the coat rack.'],
-    o_p1: ["The front door won't open. Find out what's wrong.", 'Every digital clock says 3:33. Set the four wall clocks to 3:33 as well: in the hallway, the living room, the kitchen and the basement (the door in the kitchen). Look at a clock, press E and turn the hands with the mouse.'],
+    o_p1: ["The front door won't open. Find out what's wrong.", 'Every digital clock says 3:33. Set the four wall clocks to 3:33 as well: in the hallway, the living room, the kitchen and the basement (the door in the kitchen). Look at a clock, press E and turn the hands with the mouse. The basement clock counts the way the mirror opposite shows it: in the mirror it has to read 3:33, so really it shows 8:27.'],
     o_p2: ['It has gone quiet. Water is running somewhere.', 'Go to the bathroom. Something is written in mirror writing on the wall next to the door. Stand in front of the mirror above the sink and read it there.'],
-    o_p2b: ['Music is playing in the small room.', 'The small room keeps sending you back. What changes does belong there. Find the object that comes from another room and use it.'],
+    o_p2b: ['Music is playing in the small room.', 'The small room keeps sending you back. What changes does belong there. Something from another room is there, but you only see it in the mirror next to the door. Look in the mirror, find that spot on the desk and use it there.'],
     o_p3: ['Wake up.', "The basement door in the kitchen only exists in the dark. Turn off the kitchen light (switch by the doorway), turn off your flashlight and look at the wall where the door used to be."],
     o_descent: ['Go down.', 'Keep going down the stairs.'],
     o_final: ['…', "This time, don't look away. Walk up to it."],
@@ -756,44 +760,77 @@ function faceCanvas(kind) {
   grain(g, W, W, 10, 3);
   return toTex(c, false);
 }
-/* wrap-around head texture for a sphere: the face sits at u = 0.25 (+z) */
+/* wrap-around head texture for a sphere: the face sits at u = 0.25 (+z).
+   A plain, tired face: small eyes, shadows under them, a day of stubble. */
 function headTex(kind) {
   const W = 512, H = 256, c = mkCanvas(W, H), g = c.getContext('2d');
-  const skin = '#c79f84', hair = '#2e2219', smile = kind === 'smile';
-  g.fillStyle = skin; g.fillRect(0, 0, W, H);
-  // soft shading: cheeks warm, under the jaw darker
-  let gr = g.createLinearGradient(0, 150, 0, 256); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(60,30,20,0.35)'); g.fillStyle = gr; g.fillRect(0, 150, W, 106);
-  for (const x of [92, 164]) { const rg = g.createRadialGradient(x, 150, 2, x, 150, 26); rg.addColorStop(0, 'rgba(190,90,80,0.18)'); rg.addColorStop(1, 'rgba(190,90,80,0)'); g.fillStyle = rg; g.fillRect(x - 30, 120, 60, 60); }
-  // hair: a cap, low at the back and sides, a hairline over the forehead
-  g.fillStyle = hair;
-  g.beginPath(); g.moveTo(0, 0); g.lineTo(W, 0); g.lineTo(W, 168);
-  g.bezierCurveTo(420, 176, 300, 176, 236, 118);    // back of the head down to the right temple
-  g.bezierCurveTo(214, 96, 200, 70, 180, 64);
-  g.bezierCurveTo(150, 56, 106, 56, 76, 64);        // hairline, slightly uneven
-  g.bezierCurveTo(56, 70, 42, 96, 20, 118);
-  g.bezierCurveTo(12, 140, 6, 160, 0, 168); g.closePath(); g.fill();
-  g.strokeStyle = 'rgba(20,14,10,0.5)'; g.lineWidth = 1.2;
-  for (let i = 0; i < 90; i++) { const x = (i * 57) % W, y = 10 + (i * 31) % 130; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 6, y + 14); g.stroke(); }
-  // brows
-  g.strokeStyle = '#3a2a1e'; g.lineCap = 'round'; g.lineWidth = 4.5;
-  g.beginPath(); g.moveTo(90, 101); g.quadraticCurveTo(103, 96, 116, 100); g.stroke();
-  g.beginPath(); g.moveTo(140, 100); g.quadraticCurveTo(153, 96, 166, 101); g.stroke();
-  // eyes
-  for (const x of [104, 152]) {
-    g.fillStyle = 'rgba(80,40,30,0.25)'; g.beginPath(); g.ellipse(x, 116, 13, 8, 0, 0, TAU); g.fill();
-    g.fillStyle = '#efe8df'; g.beginPath(); g.ellipse(x, 115, 10.5, smile ? 3.2 : 5.2, 0, 0, TAU); g.fill();
-    g.fillStyle = '#3b2a1f'; g.beginPath(); g.arc(x, 115, smile ? 3 : 4.2, 0, TAU); g.fill();
-    g.fillStyle = '#0c0908'; g.beginPath(); g.arc(x, 115, 1.8, 0, TAU); g.fill();
-    g.strokeStyle = '#2a1d16'; g.lineWidth = 1.6; g.beginPath(); g.ellipse(x, 115, 10.5, smile ? 3.2 : 5.2, 0, Math.PI, TAU); g.stroke();
+  const smile = kind === 'smile';
+  g.fillStyle = '#c09a86'; g.fillRect(0, 0, W, H);
+  const blob = (x, y, rx, ry, col) => { const rg = g.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry)); rg.addColorStop(0, col); rg.addColorStop(1, 'rgba(0,0,0,0)'); g.save(); g.translate(x, y); g.scale(rx / Math.max(rx, ry), ry / Math.max(rx, ry)); g.translate(-x, -y); g.fillStyle = rg; g.beginPath(); g.arc(x, y, Math.max(rx, ry), 0, TAU); g.fill(); g.restore(); };
+  // shading: jaw and neck darker, cheeks a touch warm, temples cooler
+  let gr = g.createLinearGradient(0, 140, 0, 256); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(50,28,22,0.4)'); g.fillStyle = gr; g.fillRect(0, 140, W, 116);
+  blob(96, 146, 22, 16, 'rgba(170,80,70,0.13)'); blob(160, 146, 22, 16, 'rgba(170,80,70,0.13)');
+  // a day of stubble along the jaw and upper lip
+  const r = seeded(71);
+  for (let i = 0; i < 1400; i++) {
+    const x = 78 + r() * 100, y = 150 + r() * 46, dx = (x - 128) / 52, dy = (y - 190) / 44;
+    if (dx * dx + dy * dy > 1 && y > 168) continue;
+    if (y < 158 && Math.abs(x - 128) > 20) continue;
+    g.fillStyle = `rgba(40,34,36,${0.08 + r() * 0.12})`; g.fillRect(x, y, 1.2, 1.2);
   }
-  // nose and mouth
-  g.strokeStyle = 'rgba(110,60,45,0.55)'; g.lineWidth = 2.2; g.beginPath(); g.moveTo(129, 118); g.quadraticCurveTo(133, 136, 126, 144); g.quadraticCurveTo(128, 147, 134, 145); g.stroke();
-  g.strokeStyle = '#8a4a40'; g.lineWidth = 3.2; g.beginPath();
-  if (smile) { g.moveTo(106, 158); g.quadraticCurveTo(128, 178, 150, 158); } else { g.moveTo(114, 163); g.quadraticCurveTo(128, 165, 142, 163); }
-  g.stroke();
-  if (smile) { g.fillStyle = '#efe6d8'; g.beginPath(); g.moveTo(110, 160); g.quadraticCurveTo(128, 173, 146, 160); g.quadraticCurveTo(128, 166, 110, 160); g.fill(); }
-  grain(g, W, H, 8, kind === 'smile' ? 31 : 30);
+  // eye sockets and tired shadows
+  for (const x of [101, 155]) { blob(x, 120, 17, 11, 'rgba(90,50,45,0.28)'); blob(x, 130, 13, 6, 'rgba(80,45,55,0.22)'); }
+  // hair: a cap, low at the back and sides, a hairline over the forehead
+  g.fillStyle = '#2a1f18';
+  g.beginPath(); g.moveTo(0, 0); g.lineTo(W, 0); g.lineTo(W, 166);
+  g.bezierCurveTo(420, 172, 300, 172, 232, 124);
+  g.bezierCurveTo(214, 98, 196, 76, 178, 70);
+  g.bezierCurveTo(150, 60, 104, 62, 80, 70);
+  g.bezierCurveTo(60, 78, 42, 98, 24, 124);
+  g.bezierCurveTo(14, 142, 6, 160, 0, 166); g.closePath(); g.fill();
+  g.strokeStyle = 'rgba(12,9,7,0.45)'; g.lineWidth = 1;
+  for (let i = 0; i < 160; i++) { const x = (i * 57) % W, y = 6 + (i * 31) % 150; if (y > 66 && Math.abs(x - 128) < 50) continue; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 4, y + 11); g.stroke(); }
+  // brows: straight, the inner ends slightly lowered
+  g.strokeStyle = '#33251c'; g.lineCap = 'round'; g.lineWidth = 3.2;
+  g.beginPath(); g.moveTo(88, 106); g.quadraticCurveTo(101, 103, 114, 108); g.stroke();
+  g.beginPath(); g.moveTo(142, 108); g.quadraticCurveTo(155, 103, 168, 106); g.stroke();
+  // eyes: small, a little heavy-lidded
+  for (const x of [101, 155]) {
+    g.fillStyle = '#d7ccc2'; g.beginPath(); g.ellipse(x, 121, 11, 4.3, 0, 0, TAU); g.fill();
+    g.fillStyle = '#4a3627'; g.beginPath(); g.arc(x, 121, 4, 0, TAU); g.fill();
+    g.fillStyle = '#0c0908'; g.beginPath(); g.arc(x, 121, 1.5, 0, TAU); g.fill();
+    g.strokeStyle = '#2a1c16'; g.lineWidth = 2.4; g.beginPath(); g.ellipse(x, 121.5, 11.5, 4.8, 0, Math.PI * 1.05, Math.PI * 1.95); g.stroke();
+    g.strokeStyle = 'rgba(70,40,35,0.5)'; g.lineWidth = 1; g.beginPath(); g.ellipse(x, 120.5, 9, 3.8, 0, Math.PI * 0.1, Math.PI * 0.9); g.stroke();
+  }
+  // nose
+  g.strokeStyle = 'rgba(100,58,45,0.35)'; g.lineWidth = 2; g.beginPath(); g.moveTo(124, 124); g.quadraticCurveTo(122, 138, 121, 145); g.stroke();
+  blob(128, 147, 9, 4, 'rgba(80,40,32,0.35)');
+  g.fillStyle = 'rgba(55,28,24,0.6)'; g.beginPath(); g.ellipse(123.5, 148, 2.4, 1.3, 0.3, 0, TAU); g.fill(); g.beginPath(); g.ellipse(132.5, 148, 2.4, 1.3, -0.3, 0, TAU); g.fill();
+  // mouth
+  if (smile) {
+    // too wide, and the eyes do not join in
+    g.strokeStyle = '#6e3c36'; g.lineWidth = 2.4; g.beginPath(); g.moveTo(106, 155); g.quadraticCurveTo(128, 170, 150, 155); g.stroke();
+    g.fillStyle = '#d8cdbd'; g.beginPath(); g.moveTo(111, 158); g.quadraticCurveTo(128, 167, 145, 158); g.quadraticCurveTo(128, 162, 111, 158); g.fill();
+  } else {
+    g.strokeStyle = '#7a4640'; g.lineWidth = 2.4; g.beginPath(); g.moveTo(115, 162); g.quadraticCurveTo(128, 160.5, 141, 162.5); g.stroke();
+    g.strokeStyle = 'rgba(150,90,80,0.35)'; g.lineWidth = 3; g.beginPath(); g.moveTo(119, 166); g.quadraticCurveTo(128, 168, 137, 166); g.stroke();
+  }
+  grain(g, W, H, 7, smile ? 31 : 30);
   const t = toTex(c, false); t.wrapS = THREE.RepeatWrapping; return t;
+}
+/* the entity's face: a pale smudge with two hollows and an open mouth, never sharp */
+function ghostSmudgeTex() {
+  const W = 256, c = mkCanvas(W, W), g = c.getContext('2d');
+  const rg = g.createRadialGradient(128, 118, 4, 128, 128, 118); rg.addColorStop(0, 'rgba(200,198,190,0.95)'); rg.addColorStop(0.55, 'rgba(170,168,160,0.6)'); rg.addColorStop(1, 'rgba(120,118,112,0)');
+  g.save(); g.translate(128, 128); g.scale(0.72, 1); g.translate(-128, -128); g.fillStyle = rg; g.beginPath(); g.arc(128, 128, 118, 0, TAU); g.fill(); g.restore();
+  const hole = (x, y, rx, ry, a) => { g.save(); g.translate(x, y); g.scale(rx, ry); const h = g.createRadialGradient(0, 0, 0, 0, 0, 1); h.addColorStop(0, `rgba(0,0,0,${a})`); h.addColorStop(0.6, `rgba(0,0,0,${a * 0.7})`); h.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = h; g.beginPath(); g.arc(0, 0, 1, 0, TAU); g.fill(); g.restore(); };
+  hole(100, 108, 26, 20, 0.8); hole(158, 112, 26, 22, 0.8); hole(130, 186, 16, 34, 0.7);
+  grain(g, W, W, 18, 44);
+  // fade everything out towards the edges, so the sprite never shows a border
+  const img = g.getImageData(0, 0, W, W), d = img.data;
+  for (let y = 0; y < W; y++) for (let x = 0; x < W; x++) { const dx = (x - 128) / 92, dy = (y - 132) / 124, r = Math.sqrt(dx * dx + dy * dy); const f = Math.max(0, Math.min(1, (1 - r) / 0.35)); d[(y * W + x) * 4 + 3] *= f; }
+  g.putImageData(img, 0, 0);
+  return toTex(c, false);
 }
 function pajamaTex() {
   const W = 128, H = 128, c = mkCanvas(W, H), g = c.getContext('2d');
@@ -846,6 +883,18 @@ function clockFaceTex(style) {
   g.setTransform(1, 0, 0, 1, 0, 0);
   if (style === 'dirty') blotches(g, W, W, 8, 'rgba(60,40,20,A)', 10, 50, 0.4, 61);
   grain(g, W, W, 12, 62);
+  return toTex(c, false);
+}
+/* luminous paint for the basement clock: only marks and numerals, on black */
+function clockLumeTex() {
+  const W = 256, c = mkCanvas(W, W), g = c.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, W, W);
+  g.translate(W / 2, W / 2); g.strokeStyle = '#fff'; g.fillStyle = '#fff';
+  for (let i = 0; i < 12; i++) { const a = i / 12 * TAU; g.lineWidth = 6; g.beginPath(); g.moveTo(Math.sin(a) * 98, -Math.cos(a) * 98); g.lineTo(Math.sin(a) * 112, -Math.cos(a) * 112); g.stroke(); }
+  g.font = 'bold 30px "IM Fell English", Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  for (let i = 1; i <= 12; i++) { const a = i / 12 * TAU; g.fillText(String(i), Math.sin(a) * 76, -Math.cos(a) * 76); }
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  grain(g, W, W, 30, 63);
   return toTex(c, false);
 }
 function skyTex(kind) {
@@ -907,7 +956,7 @@ function buildTextures() {
   T.static = texNoise('#777777', 250, 19);
   T.grass = texNoise('#2b3325', 30, 20, 20);
   T.sky = skyTex('night'); T.skyDay = skyTex('day');
-  T.clockFace = clockFaceTex('clean'); T.clockDirty = clockFaceTex('dirty');
+  T.clockFace = clockFaceTex('clean'); T.clockDirty = clockFaceTex('dirty'); T.clockLume = clockLumeTex();
   IMG.hall0 = paintLandscape(false); IMG.hall1 = paintLandscape(true);
   T.hall0 = toTex(IMG.hall0, false); T.hall1 = toTex(IMG.hall1, false);
   IMG.sea0 = paintSea(false); IMG.sea1 = paintSea(true);
@@ -915,7 +964,7 @@ function buildTextures() {
   IMG.photo0 = photoBeach(0); IMG.photo1 = photoBeach(1); IMG.photo2 = photoBeach(2);
   T.photo0 = toTex(IMG.photo0, false); T.photo1 = toTex(IMG.photo1, false); T.photo2 = toTex(IMG.photo2, false);
   T.facePlayer = faceCanvas('player'); T.faceSmile = faceCanvas('smile'); T.faceEntity = faceCanvas('entity');
-  T.headPlayer = headTex('player'); T.headSmile = headTex('smile'); T.pajama = pajamaTex();
+  T.headPlayer = headTex('player'); T.headSmile = headTex('smile'); T.pajama = pajamaTex(); T.ghostSmudge = ghostSmudgeTex();
   IMG.poster = posterCanvas(); T.poster = toTex(IMG.poster, false);
   IMG.doorText = doorTextCanvas(); T.doorText = toTex(IMG.doorText, false);
   T.d333r = digitsTex('03:33', '#ff3a22'); T.d334r = digitsTex('03:34', '#ff3a22'); T.d714r = digitsTex('07:14', '#ff3a22');
@@ -1036,14 +1085,14 @@ void main(){
     if(!(inBox(vW, mn.xyz, uLMax[i]) || inBox(vW, uLMin2[i], uLMax2[i]))) continue;
     vec3 L = uLPos[i] - vW; float d2 = dot(L, L); float d = sqrt(d2); L /= max(d, 1e-4);
     float q = clamp(1.0 - d2 / (mn.w * mn.w), 0.0, 1.0);
-    float att = q * q / (1.0 + 0.2 * d2);
-    lit += uLCol[i] * ((max(dot(n, L), 0.0) * 0.78 + 0.22) * att);
+    float att = q * q / (1.0 + 0.5 * d2);
+    lit += uLCol[i] * ((max(dot(n, L), 0.0) * 0.93 + 0.05) * att);
   }
   if(uFlashOn > 0.001){
     vec3 L = uFlashPos - vW; float d2 = dot(L, L); float d = sqrt(d2); L /= max(d, 1e-4);
     float c = dot(-L, uFlashDir);
-    if(c > 0.8){
-      float cone = smoothstep(0.83, 0.94, c) + smoothstep(0.965, 0.995, c) * 0.6;
+    if(c > 0.55){
+      float cone = smoothstep(0.83, 0.94, c) + smoothstep(0.965, 0.995, c) * 0.6 + smoothstep(0.55, 0.86, c) * 0.07;
       float ring = 0.92 + 0.08 * sin(c * 420.0);
       lit += uFlashCol * (uFlashOn * cone * ring * max(dot(n, L), 0.0) / (1.0 + 0.16 * d2));
     }
@@ -1129,6 +1178,7 @@ function boxDist(b, p) {
 }
 const _cand = [];
 /* only the lights near the camera go to the GPU, nearest first */
+const LIGHT_GAIN = 1.3;
 function updateLights(dt) {
   for (const l of LIGHTS) l.update(dt);
   const cp = camera.position; _cand.length = 0;
@@ -1143,7 +1193,7 @@ function updateLights(dt) {
   for (let s = 0; s < n; s++) {
     const l = _cand[s], e = l.eff;
     SU.uLPos.value[s].copy(l.pos);
-    SU.uLCol.value[s].set(l.color.r * e, l.color.g * e, l.color.b * e);
+    const k = e * LIGHT_GAIN; SU.uLCol.value[s].set(l.color.r * k, l.color.g * k, l.color.b * k);
     const b = l.box; SU.uLMin.value[s].set(b[0], b[1], b[2], l.radius); SU.uLMax.value[s].set(b[3], b[4], b[5]);
     if (l.box2) { const c = l.box2; SU.uLMin2.value[s].set(c[0], c[1], c[2]); SU.uLMax2.value[s].set(c[3], c[4], c[5]); }
     else { SU.uLMin2.value[s].set(1, 1, 1); SU.uLMax2.value[s].set(0, 0, 0); }
@@ -1301,26 +1351,32 @@ void main(){
 const QLEVELS = [220, 280, 340, 420, 500, 580, 680, 800];  // internal render height
 const QPRESET = { laag: 2, middel: 4, hoog: 6 };
 const Quality = {
-  mode: 'auto', idx: 3, acc: 0, n: 0, t: 0, good: 0, cool: 0,
+  mode: 'auto', idx: 3, acc: 0, n: 0, t: 0, good: 0, bad: 0, cool: 0, cap: 99, capT: 0,
   init() {
     const m = Store.get('quality');
     if (m && (m === 'auto' || QPRESET[m] !== undefined)) this.mode = m;
     this.idx = this.mode === 'auto' ? (isTouch ? 2 : 4) : QPRESET[this.mode];
   },
-  set(mode) { this.mode = mode; Store.set('quality', mode); if (mode !== 'auto') this.idx = QPRESET[mode]; this.reset(); resize(); },
-  reset() { this.acc = 0; this.n = 0; this.t = 0; this.good = 0; this.cool = 1.5; },
-  /* adapt the render size to the measured frame time */
+  set(mode) { this.mode = mode; Store.set('quality', mode); if (mode !== 'auto') this.idx = QPRESET[mode]; this.cap = 99; this.reset(); resize(); },
+  reset() { this.acc = 0; this.n = 0; this.t = 0; this.good = 0; this.bad = 0; this.cool = 2; },
+  /* adapt the render size to the measured frame time, without see-sawing:
+     every change costs a hitch, so only change when it clearly pays off */
   sample(dt) {
     if (this.mode !== 'auto') return;
     if (this.cool > 0) { this.cool -= dt; return; }
+    this.capT += dt;
+    if (this.cap < 99 && this.capT > 45) { this.cap++; this.capT = 0; }         // try a step higher again after a while
     this.acc += dt; this.n++; this.t += dt;
-    if (this.t < 1.5) return;
+    if (this.t < 2) return;
     const avg = this.acc / this.n;
-    if (avg > 1 / 45 && this.idx > 0) { this.idx--; resize(); this.reset(); return; }
-    if (avg < 1 / 57 && this.idx < QLEVELS.length - 2) { if (++this.good >= 3) { this.idx++; resize(); this.reset(); return; } }
-    else this.good = 0;
     this.acc = 0; this.n = 0; this.t = 0;
+    if (avg > 1 / 30 && this.idx > 0) { this.down(); return; }                  // clearly too slow: at once
+    if (avg > 1 / 44) { this.good = 0; if (++this.bad >= 2 && this.idx > 0) this.down(); return; }
+    this.bad = 0;
+    if (avg < 1 / 58 && this.idx < Math.min(this.cap - 1, QLEVELS.length - 2)) { if (++this.good >= 5) { this.idx++; resize(); this.reset(); } }
+    else this.good = 0;
   },
+  down() { this.cap = this.idx; this.capT = 0; this.idx--; resize(); this.reset(); },
 };
 
 function initRenderer() {
@@ -1552,13 +1608,23 @@ class Door {
     this.leaf = new THREE.Mesh(geo, o.mat);
     if (o.axis === 'x') this.leaf.position.set(-hinge * w / 2, this.h / 2, 0); else this.leaf.position.set(0, this.h / 2, -hinge * w / 2);
     this.pivot.add(this.leaf);
-    // handles
-    const hm = MT.brass;
+    // lever handles on both faces, near the free edge of the leaf
+    const hm = MT.brass, t2 = 0.0225, hx = -hinge * (w / 2 - 0.075), hy = 1.0 - this.h / 2;
     for (const s of [-1, 1]) {
-      const hdl = new THREE.Mesh(new THREE.BoxGeometry(o.axis === 'x' ? 0.12 : 0.03, 0.025, o.axis === 'x' ? 0.03 : 0.12), hm);
-      if (o.axis === 'x') hdl.position.set(-hinge * (w - 0.12) + hinge * 0.02, 1.0 - this.h / 2, s * 0.05);
-      else hdl.position.set(s * 0.05, 1.0 - this.h / 2, -hinge * (w - 0.12) + hinge * 0.02);
-      this.leaf.add(hdl);
+      const out = (d) => s * (t2 + d); // distance out from this face
+      const rose = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.01, 14), hm);
+      const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.05, 8), hm);
+      const lever = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.016, 0.02), hm);
+      if (o.axis === 'x') {
+        rose.rotation.x = Math.PI / 2; rose.position.set(hx, hy, out(0.005));
+        neck.rotation.x = Math.PI / 2; neck.position.set(hx, hy, out(0.03));
+        lever.position.set(hx + hinge * 0.05, hy, out(0.05));
+      } else {
+        rose.rotation.z = Math.PI / 2; rose.position.set(out(0.005), hy, hx);
+        neck.rotation.z = Math.PI / 2; neck.position.set(out(0.03), hy, hx);
+        lever.geometry = new THREE.BoxGeometry(0.02, 0.016, 0.12); lever.position.set(out(0.05), hy, hx + hinge * 0.05);
+      }
+      this.leaf.add(rose); this.leaf.add(neck); this.leaf.add(lever);
     }
     this.openSign = o.axis === 'x' ? hinge * o.swing : -hinge * o.swing;
     this.maxAng = o.maxAng || 1.45; this.ang = 0; this.target = 0; this.speed = 2; this.shake = 0; this.pending = null;
@@ -1609,24 +1675,27 @@ class AClock {
   constructor(name, o) {
     this.name = name;
     const g = new THREE.Group(); g.position.copy(o.pos); g.rotation.y = o.ry; (o.parent || scene).add(g); this.group = g; DYN.add(g);
-    const r = o.r || 0.16;
+    const r = o.r || 0.16; this.r = r;
     const face = new THREE.Mesh(new THREE.CircleGeometry(r, 36), M({ map: o.dirty ? T.clockDirty : T.clockFace, world: false, noise: 0.02 }));
     face.position.z = 0.012; g.add(face);
     const rim = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.016, r + 0.016, 0.05, 36, 1, true), o.rimMat || MT.darkWood);
     rim.rotation.x = Math.PI / 2; rim.position.z = 0.02; g.add(rim);
     const back = new THREE.Mesh(new THREE.CircleGeometry(r + 0.016, 36), o.rimMat || MT.darkWood); back.rotation.y = Math.PI; back.position.z = -0.004; g.add(back);
     const hand = (len, wid, mat, z) => { const p = new THREE.Group(); p.position.z = z; g.add(p); const hg = new THREE.BoxGeometry(wid, len, 0.004); hg.translate(0, len / 2 - 0.015, 0); p.add(new THREE.Mesh(hg, mat)); return p; };
-    this.hourP = hand(r * 0.52, 0.014, MT.black, 0.018);
-    this.minP = hand(r * 0.78, 0.009, MT.black, 0.022);
+    // luminous paint: the marks and the hands glow faintly in the dark
+    const handMat = o.lume ? M({ color: '#141414', emissive: '#8dffa8', eI: 1.2, noise: 0 }) : MT.black;
+    if (o.lume) { const lm = M({ map: T.clockLume, world: false, emap: true, emissive: '#8dffa8', eI: 1.0, color: '#000000', noise: 0, transparent: true, depthWrite: false }); lm.blending = THREE.AdditiveBlending; const ov = new THREE.Mesh(new THREE.CircleGeometry(r, 36), lm); ov.position.z = 0.0135; g.add(ov); }
+    this.hourP = hand(r * 0.52, 0.014, handMat, 0.018);
+    this.minP = hand(r * 0.78, 0.009, handMat, 0.022);
     this.secP = hand(r * 0.84, 0.003, MT.redPaint, 0.026);
-    this.min = o.start; this.sec = rand(0, 59); this.ticking = true; this.tock = false; this.solved = false;
+    this.min = o.start; this.sec = rand(0, 59); this.ticking = true; this.tock = false; this.solved = false; this.target = o.target ?? TARGET_MIN;
     this.emitPos = g.position.clone();
     for (const m of [face]) use(m, 'lbl_clock', () => ClockUI.open(this), { clock: this });
     CLOCKS[name] = this;
     this.shown = 0;
   }
   worldPos(v) { return this.group.getWorldPosition(v); }
-  isSet() { const m = ((Math.round(this.min) % 720) + 720) % 720; return Math.abs(m - TARGET_MIN) <= 1; }
+  isSet() { const m = ((Math.round(this.min) % 720) + 720) % 720; return Math.abs(m - this.target) <= 1; }
   update(dt) {
     if (this.ticking) {
       const b = Math.floor(this.sec); this.sec += dt; const a = Math.floor(this.sec);
@@ -1991,6 +2060,9 @@ function buildStudy() {
   box(2.2, 0.01, 1.6, m.rugLiving, 11.6, 0, 2.3);
   pendant(LN.study, 11.4, 2.25, 2.2);
   lightSwitch(LN.study, 10.55, 1.15, 4.4 - 0.078, Math.PI);
+  // a mirror beside the painting: from the middle of the room it shows the desk behind you
+  W.studyMirror = new Mirror('study', 0.66, 1.12, { parent: scene, pos: V3(8.8 + 0.078, 1.32, 1.3), ry: Math.PI / 2, dirt: 0.22 });
+  mirrorFrame(scene, 'z', 8.8 + 0.078, 1.32, 1.3, 0.66, 1.12);
   // loop props (hidden until needed)
   W.wekker = new THREE.Group(); scene.add(W.wekker);
   { const b = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.1, 0.2), MT.black); W.wekker.add(b);
@@ -2161,14 +2233,15 @@ function buildStairsAndBasement() {
   // workbench + basement clock
   box(0.6, 0.85, 2.0, m.midWood, 9.9, Y, 16.5, { collide: true });
   box(0.3, 0.08, 0.14, m.darkMetal, 9.85, Y + 0.85, 16.2); box(0.04, 0.3, 0.04, m.darkWood, 9.9, Y + 0.85, 16.9);
-  new AClock('basement', { pos: V3(9.5 + 0.075, Y + 1.8, 16.5), ry: Math.PI / 2, start: 542, dirty: true, rimMat: MT.darkMetal });
+  new AClock('basement', { pos: V3(9.5 + 0.075, Y + 1.55, 17.0), ry: Math.PI / 2, start: 542, dirty: true, rimMat: MT.darkMetal, lume: true, r: 0.3, target: 720 - TARGET_MIN });
+  // a tall mirror on the opposite wall: from the middle of the room you see the clock behind you
+  W.baseMirror = new Mirror('base', 0.9, 1.55, { parent: scene, pos: V3(15.2 - 0.078, Y + 1.35, 15.6), ry: -Math.PI / 2, dirt: 0.16, tint: 0.9 });
+  mirrorFrame(scene, 'z', 15.2 - 0.078, Y + 1.35, 15.6, 0.9, 1.55, -1);
   // washing machine
   box(0.6, 0.85, 0.6, M({ color: '#dcdad2', noise: 0.1 }), 14.8, Y, 17.9, { collide: true });
   // sheet-covered chair (a shape under cloth)
   const sc2 = addMesh(new THREE.ConeGeometry(0.45, 1.15, 7, 1, true), MT.sheet); sc2.position.set(13.2, Y + 0.575, 16.4); sc2.rotation.y = 0.4;
   addCollider(12.8, 13.6, 16.0, 16.8, Y, Y + 1.2, { occ: false });
-  // leaning covered mirror
-  const lm = box(0.8, 1.5, 0.05, MT.sheet, 14.9, Y, 15.2); lm.rotation.set(0, -Math.PI / 2, 0.12); lm.position.x = 15.05;
   W.basementBulb = bareBulb(LN.basement, 12.3, -0.65, 15.9);
   { const ch = box(0.006, 0.45, 0.006, m.brass, 12.36, -1.1, 15.9); use(ch, 'lbl_chain', () => Story.pullChain()); W.pullChain = ch; }
   LN.basement.on = 0;
@@ -2608,13 +2681,12 @@ void main(){
   vec4 w = modelMatrix * vec4(position, 1.0);
   vec3 n = normalize(mat3(modelMatrix) * normal);
   float crawl = sin(w.y * 7.0 + uTime * 1.9) * sin(w.x * 6.0 - uTime * 1.3 + w.z * 5.0) + 0.5 * sin(w.y * 17.0 - uTime * 3.1 + w.x * 13.0);
-  float twitch = uJit * sin(w.y * 37.0 + uTime * 71.0);
-  w.xyz += n * (0.02 * crawl + 0.04 * twitch);
+  w.xyz += n * (0.016 * crawl + 0.0 * uJit);
   vW = w.xyz; vN = n;
   gl_Position = projectionMatrix * viewMatrix * w;
 }`;
 const SHADE_FS = `
-uniform float uTime, uFade, uFogDensity, uBase; uniform vec3 uCamPos, uFogColor, uTint; uniform sampler2D uNoiseTex;
+uniform float uTime, uFade, uFogDensity, uBase, uFlashOn; uniform vec3 uCamPos, uFogColor, uTint, uFlashPos, uFlashDir, uFlashCol; uniform sampler2D uNoiseTex;
 varying vec3 vW; varying vec3 vN;
 void main(){
   vec3 v = normalize(uCamPos - vW);
@@ -2627,6 +2699,8 @@ void main(){
   float ign = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
   if (cut > 0.98 + ign * 0.32) discard;
   vec3 col = uTint * (0.45 + 0.9 * smoke) + vec3(0.010, 0.011, 0.014) * pow(fres, 3.0);
+  if (uFlashOn > 0.001) { vec3 L = vW - uFlashPos; float d2 = dot(L, L); float c = dot(L * inversesqrt(max(d2, 1e-6)), uFlashDir);
+    float cone = smoothstep(0.83, 0.94, c) + smoothstep(0.55, 0.86, c) * 0.07; col += uFlashCol * (uFlashOn * cone / (1.0 + 0.16 * d2)) * 0.02 * (0.6 + 0.8 * smoke); }
   vec3 dv = vW - uCamPos;
   float f = 1.0 - exp(-uFogDensity * uFogDensity * dot(dv, dv));
   col = mix(col, uFogColor, clamp(f, 0.0, 1.0));
@@ -2636,94 +2710,224 @@ let SHADE = null;
 function shadeMat() {
   if (SHADE) return SHADE;
   SHADE = new THREE.ShaderMaterial({
-    uniforms: { uTime: SU.uTime, uCamPos: SU.uCamPos, uFogColor: SU.uFogColor, uFogDensity: SU.uFogDensity, uNoiseTex: SU.uNoiseTex, uFade: { value: 1 }, uJit: { value: 0 }, uBase: { value: 0 }, uTint: { value: new THREE.Vector3(0.0022, 0.0021, 0.0024) } },
+    uniforms: { uTime: SU.uTime, uCamPos: SU.uCamPos, uFogColor: SU.uFogColor, uFogDensity: SU.uFogDensity, uNoiseTex: SU.uNoiseTex, uFlashPos: SU.uFlashPos, uFlashDir: SU.uFlashDir, uFlashOn: SU.uFlashOn, uFlashCol: SU.uFlashCol, uFade: { value: 1 }, uJit: { value: 0 }, uBase: { value: 0 }, uTint: { value: new THREE.Vector3(0.0022, 0.0021, 0.0024) } },
     vertexShader: SHADE_VS, fragmentShader: SHADE_FS,
   });
   return SHADE;
 }
 
-/* ---------- a rounded low-poly person ----------
-   Same joints as before (hips, knees, shoulders, elbows, neck, head) so
-   every pose keeps working; tapered limbs, a lathe torso, a sphere head
-   with a wrap-around face, striped pyjamas, bare feet. */
-function makeHuman(o) {
-  const P = Object.assign({ h: 1, arm: 1, neck: 1, head: 1, sh: 1, skin: '#c79f84', cloth: '#ffffff', hair: '#2e2219', headTex: T.headPlayer, eyes: false, flash: true, shade: false, lean: 0 }, o);
-  const shade = P.shade ? shadeMat() : null;
-  const mSkin = shade || M({ color: P.skin, noise: 0.04 });
-  const mCloth = shade || M({ map: T.pajama, world: false, ts: [3, 2], color: P.cloth, noise: 0.05 });
-  const mHead = shade || M({ map: P.headTex, world: false, noise: 0 });
-  const mDark = shade || M({ color: '#2d3a48', noise: 0.08 });
+/* ---------- you ----------
+   A plain person in dark sleep clothes: long-sleeved charcoal shirt,
+   dark joggers, socks. Proportions of an adult (eyes at 1.62 m), a head
+   of hair, a tired face. Same joints as the entity so poses are shared. */
+function makePerson(o) {
+  const P = Object.assign({ skin: '#c7a490', shirt: '#3a3e45', pants: '#262930', socks: '#1d1d20', hair: '#241a14', headTex: T.headPlayer, flash: true }, o);
+  const mSkin = M({ color: P.skin, noise: 0.03 });
+  const mShirt = M({ map: T.fabric, world: false, ts: [4, 4], color: P.shirt, noise: 0.04 });
+  const mPants = M({ map: T.fabric, world: false, ts: [4, 4], color: P.pants, noise: 0.04 });
+  const mSock = M({ color: P.socks, noise: 0.1 });
+  const mHair = M({ color: P.hair, noise: 0.3 });
+  const mHead = M({ map: P.headTex, world: false, noise: 0 });
   const root = new THREE.Group();
   const G_ = (parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); return g; };
   const add = (geo, mat, parent, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); parent.add(m); return m; };
-  // a limb segment hanging down from its joint: tapered tube plus a ball at the joint
-  const seg = (parent, len, r0, r1, mat, joint = true) => {
-    const g = new THREE.CylinderGeometry(r1, r0, len, 9, 1, false); g.translate(0, -len / 2, 0);
-    add(g, mat, parent);
-    if (joint) add(new THREE.SphereGeometry(r0 * 1.02, 9, 7), mat, parent);
-  };
-  const h = P.h, thigh = 0.44 * h, shin = 0.42 * h, hipY = 0.9 * h;
+  const tube = (parent, len, r0, r1, mat, seg = 10) => { const g = new THREE.CylinderGeometry(r1, r0, len, seg, 1, true); g.translate(0, -len / 2, 0); return add(g, mat, parent); };
+  const ball = (parent, r, mat, x = 0, y = 0, z = 0, sx = 1, sy = 1, sz = 1) => { const m = add(new THREE.SphereGeometry(r, 10, 8), mat, parent, x, y, z); m.scale.set(sx, sy, sz); return m; };
+  const lathe = (parent, pts, mat, sz, segs = 16) => { const m = add(new THREE.LatheGeometry(pts.map(([r, y]) => new THREE.Vector2(r, y)), segs), mat, parent); m.scale.z = sz; return m; };
+  const thigh = 0.42, shin = 0.4, hipY = 0.92;
   const hips = G_(root, 0, hipY, 0);
-  if (!shade) { const pelvis = add(new THREE.SphereGeometry(0.15, 12, 8), mCloth, hips, 0, -0.035, 0); pelvis.scale.set(1.0 * P.sh, 0.55, 0.74); }
-  else { // a long drape from the waist to the floor, fraying at the hem
-    const sk = [[0.15, 0.06], [0.165, -0.1], [0.19, -0.4], [0.225, -0.7], [0.27, -hipY + 0.02]].map(([r, y]) => new THREE.Vector2(r, y));
-    const skirt = add(new THREE.LatheGeometry(sk, 12), shade, hips); skirt.scale.z = 0.72;
-  }
-  const lHip = G_(hips, -0.092, -0.04, 0), rHip = G_(hips, 0.092, -0.04, 0);
+  // seat of the trousers, closed underneath
+  lathe(hips, [[0.001, -0.17], [0.07, -0.165], [0.125, -0.13], [0.145, -0.07], [0.14, 0.0], [0.13, 0.04]], mPants, 0.7);
+  const lHip = G_(hips, -0.085, -0.07, 0), rHip = G_(hips, 0.085, -0.07, 0);
   const legs = [];
   for (const hp of [lHip, rHip]) {
-    if (!shade) seg(hp, thigh, 0.082, 0.062, mCloth);
+    tube(hp, thigh, 0.07, 0.054, mPants);
     const knee = G_(hp, 0, -thigh, 0);
-    if (!shade) {
-      seg(knee, shin, 0.06, 0.046, mCloth);
-      const ankle = G_(knee, 0, -shin, 0);
-      add(new THREE.CylinderGeometry(0.037, 0.04, 0.05, 8), mSkin, ankle, 0, -0.005, 0);
-      const foot = add(new THREE.SphereGeometry(0.06, 9, 6), mSkin, ankle, 0, -0.035, 0.05); foot.scale.set(0.78, 0.45, 1.75);
-    }
+    ball(knee, 0.052, mPants);
+    tube(knee, shin, 0.05, 0.039, mPants);
+    const ankle = G_(knee, 0, -shin, 0);
+    tube(ankle, 0.05, 0.036, 0.034, mSock, 8);
+    ball(ankle, 0.046, mSock, 0, -0.04, 0.045, 0.85, 0.52, 2.0);
     legs.push(knee);
   }
-  const chest = G_(hips, 0, 0.06, 0);
-  const torsoH = 0.5 * h;
-  // torso profile: waist, belly, ribcage, shoulders
-  const prof = (shade ? [[0.15, -0.02], [0.14, 0.12], [0.15, 0.26], [0.17, 0.38], [0.165, 0.45], [0.08, 0.5], [0.04, 0.53]] : [[0.001, 0], [0.135, 0.01], [0.128, 0.12], [0.14, 0.26], [0.158, 0.38], [0.15, 0.46], [0.09, 0.5], [0.05, 0.52]]).map(([r, y]) => new THREE.Vector2(r * P.sh, y * h));
-  const torso = add(new THREE.LatheGeometry(prof, 14), mCloth, chest); torso.scale.z = 0.68;
-  // collar and buttons
-  if (!shade) { for (let i = 0; i < 4; i++) add(new THREE.SphereGeometry(0.009, 6, 4), mDark, chest, 0, torsoH * (0.2 + i * 0.18), 0.105); }
-  const neck = G_(chest, 0, torsoH, 0.005);
-  add((() => { const g = new THREE.CylinderGeometry(0.045, 0.052, 0.1 * P.neck, 9); g.translate(0, 0.05 * P.neck, 0); return g; })(), mSkin, neck);
-  const head = G_(neck, 0, 0.09 * P.neck, 0.012);
+  const chest = G_(hips, 0, 0.05, 0);
+  const torsoH = 0.47;
+  // waist, ribcage, shoulders sloping into the neck
+  lathe(chest, [[0.128, -0.03], [0.131, 0.08], [0.141, 0.2], [0.153, 0.3], [0.16, 0.365], [0.156, 0.41], [0.125, 0.445], [0.078, 0.466], [0.052, 0.476]], mShirt, 0.63, 18);
+  add(new THREE.TorusGeometry(0.05, 0.009, 6, 16), mShirt, chest, 0, 0.474, 0.004).rotation.x = Math.PI / 2; // crew neck
+  const neck = G_(chest, 0, torsoH, 0.006);
+  add((() => { const g = new THREE.CylinderGeometry(0.041, 0.047, 0.085, 10); g.translate(0, 0.0425, 0); return g; })(), mSkin, neck);
+  const head = G_(neck, 0, 0.07, 0.012);
   head.rotation.order = 'YXZ';
-  const hs = P.head;
-  const headMesh = add(new THREE.SphereGeometry(0.1 * hs, 20, 14), mHead, head, 0, 0.11 * hs, 0.005);
-  headMesh.scale.set(0.9, shade ? 1.3 : 1.12, 0.98);
-  if (!shade) { for (const s of [-1, 1]) { const ear = add(new THREE.SphereGeometry(0.024 * hs, 7, 5), mSkin, head, s * 0.09 * hs, 0.105 * hs, -0.005); ear.scale.set(0.45, 1, 0.8); } }
-  let eyes = null;
-  if (P.eyes) {
-    eyes = new THREE.Group(); head.add(eyes);
-    const em = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.55, 0.52, 0.47), transparent: true, opacity: 0.0, depthWrite: false });
-    for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.011 * hs, 0.007 * hs), em); e.position.set(s * 0.034 * hs, 0.118 * hs, 0.099 * hs); e.rotation.z = s * 0.3; eyes.add(e); }
-    eyes.userData.mat = em;
-  }
+  // skull: a sphere pulled into a head, narrower at the jaw, chin a little forward, fuller at the back
+  const skull = (g, R) => {
+    const pa = g.attributes.position;
+    for (let i = 0; i < pa.count; i++) {
+      let x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i); const t = y / R;
+      if (t < 0) { const k = 1 - 0.3 * Math.pow(-t, 1.3); x *= k; z *= 1 - 0.1 * -t; if (z > 0) z += 0.014 * -t * Math.max(0, 1 - Math.abs(x) / 0.045); }
+      if (z < 0 && t > -0.2) z *= 1.07;
+      pa.setXYZ(i, x, y, z);
+    }
+    return g; // keep the sphere's normals: smooth, and no odd spot at the pole
+  };
+  const headMesh = add(skull(new THREE.SphereGeometry(0.093, 26, 18), 0.093), mHead, head, 0, 0.102, 0.006);
+  headMesh.scale.set(0.84, 1.16, 0.95);
+  // hair: a cap tilted back, low at the neck, a hairline where a forehead ends
+  const hair = add(skull(new THREE.SphereGeometry(0.093 * 1.085, 26, 10, 0, TAU, 0, 1.5), 0.093 * 1.085), mHair, head, 0, 0.106, 0.0);
+  hair.scale.set(0.84, 1.16, 0.95); hair.rotation.x = -0.52;
+  const mEar = M({ color: '#a97d69', noise: 0.03 });
+  for (const s of [-1, 1]) ball(head, 0.018, mEar, s * 0.074, 0.092, -0.006, 0.36, 1, 0.72); // ears
   const arms = [];
   for (const s of [-1, 1]) {
-    const sh = G_(chest, s * (0.165 * P.sh + 0.03), torsoH - 0.07, 0);
-    const up = 0.3 * P.arm * h, fo = 0.27 * P.arm * h;
-    seg(sh, up, shade ? 0.042 : 0.052, shade ? 0.03 : 0.042, mCloth, !shade);
+    const sh = G_(chest, s * 0.158, torsoH - 0.072, 0);
+    ball(sh, 0.047, mShirt, -s * 0.006, 0, 0, 0.9, 0.72, 0.86); // deltoid, sunk into the torso
+    const up = 0.29, fo = 0.26;
+    tube(sh, up, 0.046, 0.037, mShirt);
     const el = G_(sh, 0, -up, 0);
-    seg(el, fo, shade ? 0.03 : 0.04, shade ? 0.022 : 0.032, mCloth, !shade);
-    add(new THREE.CylinderGeometry(0.03, 0.028, 0.035, 8), mSkin, el, 0, -fo - 0.01, 0);
-    const hand = add(new THREE.SphereGeometry(0.042, 8, 6), mSkin, el, 0, -fo - 0.06, 0.005); hand.scale.set(0.62, 1.25 * (P.shade ? 1.5 : 1), 0.95);
+    ball(el, 0.037, mShirt);
+    tube(el, fo, 0.036, 0.029, mShirt);
+    tube(el, 0.03, 0.024, 0.023, mSkin, 8).position.y = -fo + 0.005;
+    ball(el, 0.034, mSkin, 0, -fo - 0.055, 0.004, 0.55, 1.25, 0.9); // hand
     arms.push({ sh, el, fo });
   }
   let lens = null, torch = null;
   if (P.flash) {
     const el = arms[1].el;
     torch = new THREE.Group(); torch.position.set(0, -arms[1].fo - 0.05, 0.03); el.add(torch);
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.2, 10), M({ color: '#1e1f22', noise: 0.1 })); body.rotation.x = Math.PI / 2; torch.add(body);
-    lens = new THREE.Mesh(new THREE.CircleGeometry(0.024, 12), M({ color: '#000', emissive: '#fff6de', eI: 0, noise: 0 })); lens.position.z = 0.101; torch.add(lens);
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.19, 10), M({ color: '#1e1f22', noise: 0.1 })); body.rotation.x = Math.PI / 2; torch.add(body);
+    lens = new THREE.Mesh(new THREE.CircleGeometry(0.022, 12), M({ color: '#000', emissive: '#fff6de', eI: 0, noise: 0 })); lens.position.z = 0.096; torch.add(lens);
     torch.visible = false;
   }
-  return { root, hips, chest, neck, head, headMesh, mFace: mHead, lHip, rHip, legs, arms, lens, torch, eyes, P, hipY };
+  return { root, hips, chest, neck, head, headMesh, mFace: mHead, lHip, rHip, legs, arms, lens, torch, eyes: null, P, hipY };
+}
+
+function makeHuman(o) { return o.shade ? makeShade(o) : makePerson(o); }
+
+/* ---------- the entity: a thin dark core wrapped in drifting smoke ----------
+   No limbs you can count, no hands, no face you can study: a column of
+   dark smoke in the shape of someone too tall, with a pale smudge where a
+   face should be. The smoke takes light like smoke does: grey in the beam
+   of your flashlight, black everywhere else. */
+const SMOKE_VS = `
+#define NL ${NL}
+uniform vec3 uLPos[NL]; uniform vec3 uLCol[NL]; uniform vec4 uLMin[NL]; uniform vec3 uLMax[NL]; uniform vec3 uLMin2[NL]; uniform vec3 uLMax2[NL]; uniform int uNumLights;
+uniform vec3 uAmbient, uFlashPos, uFlashDir, uFlashCol; uniform float uFlashOn, uScale, uFogDensity;
+attribute float aSize; attribute float aAlpha;
+varying float vA; varying float vFog; varying vec3 vLit;
+bool inBox(vec3 p, vec3 a, vec3 b){ return all(greaterThanEqual(p, a)) && all(lessThanEqual(p, b)); }
+void main(){
+  vec3 w = position, lit = uAmbient;
+  for (int i = 0; i < NL; i++) {
+    if (i >= uNumLights) break;
+    vec4 mn = uLMin[i];
+    if (!(inBox(w, mn.xyz, uLMax[i]) || inBox(w, uLMin2[i], uLMax2[i]))) continue;
+    vec3 L = uLPos[i] - w; float d2 = dot(L, L); float q = clamp(1.0 - d2 / (mn.w * mn.w), 0.0, 1.0);
+    lit += uLCol[i] * (q * q / (1.0 + 0.5 * d2)) * 0.3;
+  }
+  if (uFlashOn > 0.001) {
+    vec3 L = w - uFlashPos; float d2 = dot(L, L); float c = dot(L * inversesqrt(max(d2, 1e-6)), uFlashDir);
+    float cone = smoothstep(0.83, 0.94, c) + smoothstep(0.965, 0.995, c) * 0.6 + smoothstep(0.55, 0.86, c) * 0.07;
+    lit += uFlashCol * (uFlashOn * cone / (1.0 + 0.16 * d2));
+  }
+  vLit = lit;
+  vec4 mv = viewMatrix * vec4(w, 1.0);
+  gl_PointSize = aSize * uScale / max(0.2, -mv.z);
+  gl_Position = projectionMatrix * mv;
+  vA = aAlpha; float d = length(mv.xyz); vFog = 1.0 - exp(-uFogDensity * uFogDensity * d * d);
+}`;
+const SMOKE_FS = `
+uniform vec3 uFogColor; uniform float uFade, uExposure, uAlbedo;
+varying float vA; varying float vFog; varying vec3 vLit;
+void main(){
+  vec2 p = gl_PointCoord * 2.0 - 1.0; float r = dot(p, p); if (r > 1.0) discard;
+  float a = 1.0 - r; a *= a;
+  vec3 col = vLit * uAlbedo;
+  col = mix(col, uFogColor, clamp(vFog, 0.0, 1.0));
+  col = 1.0 - exp(-col * uExposure);
+  gl_FragColor = vec4(pow(col, vec3(0.4545)), a * vA * uFade);
+}`;
+function makeShade(o) {
+  const P = Object.assign({ h: 1.08, arm: 1.38, neck: 2.0, head: 1.05, sh: 0.84 }, o);
+  const mat = shadeMat(), root = new THREE.Group();
+  const G_ = (parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); return g; };
+  const add = (geo, parent, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); parent.add(m); return m; };
+  const tube = (parent, len, r0, r1) => { const g = new THREE.CylinderGeometry(r1, r0, len, 9, 1, false); g.translate(0, -len / 2, 0); return add(g, parent); };
+  const h = P.h, hipY = 0.9 * h, thigh = 0.44 * h, torsoH = 0.5 * h;
+  const hips = G_(root, 0, hipY, 0);
+  // the core is thin: the smoke around it makes the outline
+  const sk = [[0.1, 0.06], [0.11, -0.1], [0.12, -0.4], [0.14, -0.7], [0.16, -hipY + 0.05]].map(([r, y]) => new THREE.Vector2(r, y));
+  add(new THREE.LatheGeometry(sk, 12), hips).scale.z = 0.72;
+  const lHip = G_(hips, -0.092, -0.04, 0), rHip = G_(hips, 0.092, -0.04, 0);
+  const legs = [G_(lHip, 0, -thigh, 0), G_(rHip, 0, -thigh, 0)];
+  const chest = G_(hips, 0, 0.06, 0);
+  const prof = [[0.1, -0.02], [0.095, 0.12], [0.1, 0.26], [0.11, 0.38], [0.105, 0.45], [0.05, 0.5], [0.03, 0.53]].map(([r, y]) => new THREE.Vector2(r * P.sh, y * h));
+  add(new THREE.LatheGeometry(prof, 12), chest).scale.z = 0.7;
+  const neck = G_(chest, 0, torsoH, 0.005), nl = 0.1 * P.neck;
+  add((() => { const g = new THREE.CylinderGeometry(0.03, 0.036, nl, 8); g.translate(0, nl / 2, 0); return g; })(), neck);
+  const head = G_(neck, 0, nl - 0.01, 0.012); head.rotation.order = 'YXZ';
+  const hs = P.head, headMesh = add(new THREE.SphereGeometry(0.07 * hs, 14, 10), head, 0, 0.12 * hs, 0); headMesh.scale.set(0.9, 1.45, 1);
+  const arms = [];
+  for (const s of [-1, 1]) {
+    const sh = G_(chest, s * (0.165 * P.sh + 0.03), torsoH - 0.07, 0);
+    const up = 0.3 * P.arm * h, fo = 0.27 * P.arm * h;
+    tube(sh, up, 0.028, 0.022);
+    const el = G_(sh, 0, -up, 0);
+    tube(el, fo + 0.12, 0.02, 0.004);   // the forearm runs out into a long hand, no fingers
+    arms.push({ sh, el, fo });
+  }
+  // the face: a pale smudge that only shows when light falls on it
+  const face = new THREE.Sprite(new THREE.SpriteMaterial({ map: T.ghostSmudge, color: 0x101010, transparent: true, opacity: 0, depthWrite: false, fog: false }));
+  face.scale.set(0.19, 0.25, 1); face.position.set(0, 0.125 * hs, 0.075); head.add(face);
+  // smoke: particles anchored to capsules along the body
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const segs = [
+    [hips, V(0, 0.08, 0), V(0, -hipY + 0.02, 0), 0.13, 0.3, 1.25],
+    [chest, V(0, 0, 0), V(0, torsoH, 0), 0.13, 0.16, 1.1],
+    [neck, V(0, 0, 0), V(0, nl, 0), 0.045, 0.04, 0.45],
+    [head, V(0, 0.03, 0), V(0, 0.25 * hs, 0.01), 0.07, 0.085, 1.0],
+  ];
+  for (const a of arms) { segs.push([a.sh, V(0, 0, 0), V(0, -0.3 * P.arm * h, 0), 0.05, 0.04, 0.5]); segs.push([a.el, V(0, 0, 0), V(0, -a.fo - 0.14, 0.01), 0.038, 0.012, 0.5]); }
+  const n = 2400, pos = new Float32Array(n * 3), size = new Float32Array(n), alpha = new Float32Array(n), PT = [];
+  const wsum = segs.reduce((acc, g) => acc + g[5], 0), rr = seeded(5);
+  for (let i = 0; i < n; i++) {
+    let pk = rr() * wsum, si = 0; while (pk > segs[si][5] && si < segs.length - 1) { pk -= segs[si][5]; si++; }
+    const d = V(rr() * 2 - 1, rr() * 2 - 1, rr() * 2 - 1); if (d.lengthSq() > 1) d.normalize();
+    PT.push({ si, t: rr(), d, rf: Math.pow(rr(), 0.45), ph: rr(), sp: 0.12 + rr() * 0.25, sz: 0.05 + rr() * 0.1, hair: si === 3 && rr() < 0.45, hx: (rr() - 0.5) * 0.16, hz: -0.02 - rr() * 0.07, hl: 0.25 + rr() * 0.35 });
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('aSize', new THREE.BufferAttribute(size, 1)); geo.setAttribute('aAlpha', new THREE.BufferAttribute(alpha, 1));
+  const sm = new THREE.ShaderMaterial({
+    uniforms: { uLPos: SU.uLPos, uLCol: SU.uLCol, uLMin: SU.uLMin, uLMax: SU.uLMax, uLMin2: SU.uLMin2, uLMax2: SU.uLMax2, uNumLights: SU.uNumLights, uAmbient: SU.uAmbient,
+      uFlashPos: SU.uFlashPos, uFlashDir: SU.uFlashDir, uFlashOn: SU.uFlashOn, uFlashCol: SU.uFlashCol, uFogColor: SU.uFogColor, uFogDensity: SU.uFogDensity, uExposure: SU.uExposure,
+      uFade: mat.uniforms.uFade, uScale: { value: 500 }, uAlbedo: { value: 0.016 } },
+    vertexShader: SMOKE_VS, fragmentShader: SMOKE_FS, transparent: true, depthWrite: false,
+  });
+  const pts = new THREE.Points(geo, sm); pts.frustumCulled = false; pts.visible = false;
+  const A = segs.map(() => V(0, 0, 0)), B = segs.map(() => V(0, 0, 0)), q = V(0, 0, 0);
+  const smoke = {
+    pts,
+    update(t) {
+      for (let k = 0; k < segs.length; k++) { const sg = segs[k]; A[k].copy(sg[1]).applyMatrix4(sg[0].matrixWorld); B[k].copy(sg[2]).applyMatrix4(sg[0].matrixWorld); }
+      for (let i = 0; i < n; i++) {
+        const p = PT[i], sg = segs[p.si], life = (p.ph + t * p.sp) % 1, fade = Math.sin(Math.PI * life);
+        if (p.hair) {   // strands hanging from the head
+          q.copy(A[3]).lerp(B[3], 0.75); q.x += p.hx + Math.sin(t * 0.8 + i) * 0.01; q.z += p.hz; q.y -= p.hl * p.t + 0.05;
+          pos[i * 3] = q.x; pos[i * 3 + 1] = q.y - life * 0.05; pos[i * 3 + 2] = q.z;
+          alpha[i] = 0.5 * (0.4 + 0.6 * fade); size[i] = p.sz * 0.45; continue;
+        }
+        q.copy(A[p.si]).lerp(B[p.si], p.t);
+        const rad = lerp(sg[3], sg[4], p.t) * p.rf, drift = life * (p.si === 0 ? 0.35 : 0.18);
+        pos[i * 3] = q.x + p.d.x * rad * (1 + life * 0.5) + Math.sin(t * 1.1 + i * 1.7) * 0.012;
+        pos[i * 3 + 1] = q.y + p.d.y * rad + drift;
+        pos[i * 3 + 2] = q.z + p.d.z * rad * (1 + life * 0.5) + Math.cos(t * 0.9 + i) * 0.012;
+        alpha[i] = (0.38 + 0.5 * (1 - p.rf)) * fade * (p.si === 0 ? 1 - p.t * 0.45 : 1);
+        size[i] = p.sz * (1 + life * 0.8);
+      }
+      geo.attributes.position.needsUpdate = true; geo.attributes.aAlpha.needsUpdate = true; geo.attributes.aSize.needsUpdate = true;
+      sm.uniforms.uScale.value = RH / (2 * Math.tan(camera.fov * DEG * 0.5));
+    },
+  };
+  return { root, hips, chest, neck, head, headMesh, mFace: null, lHip, rHip, legs, arms, lens: null, torch: null, eyes: null, P, hipY, smoke, face };
 }
 function setLayer(obj, layer) { obj.traverse((c) => c.layers.set(layer)); }
 
@@ -2760,8 +2964,8 @@ const Actors = {
     this.double = makeHuman({ flash: false });
     scene.add(this.double.root); this.double.root.visible = false;
     // the entity: taller, narrow, arms too long, neck too long; made of shade
-    this.ent = makeHuman({ h: 1.08, arm: 1.38, neck: 2.0, head: 1.05, sh: 0.84, eyes: true, flash: false, shade: true });
-    scene.add(this.ent.root); this.ent.root.visible = false;
+    this.ent = makeHuman({ shade: true });
+    scene.add(this.ent.root); this.ent.root.visible = false; scene.add(this.ent.smoke.pts);
   },
   prepareMirror(m) {
     const A = this.avatar; let pose = Player.pose();
@@ -3000,6 +3204,21 @@ const Sound = {
     B.groan = this.buf(3.2, (d, sr, n) => { const bp = new BQ('bp', 300, 6, sr), bp2 = new BQ('bp', 620, 8, sr); let ph = 0; for (let i = 0; i < n; i++) { const t = i / sr, u = t / 3.2; if (i % 128 === 0) { bp.set(320 - 140 * u + 20 * Math.sin(t * 3), 6); bp2.set(650 - 200 * u, 8); } ph += (52 + 18 * Math.sin(TAU * 0.35 * t) - 10 * u) / sr; const saw = (ph % 1) * 2 - 1, env = Math.pow(Math.sin(Math.PI * u), 0.7); d[i] = (bp.p(saw) + bp2.p(saw) * 0.6) * env; } });
     // a rushing inhale of the whole room that stops dead
     B.swell = this.buf(1.5, (d, sr, n) => { const bp = new BQ('bp', 400, 1.2, sr); for (let i = 0; i < n; i++) { const t = i / sr, u = t / 1.5; if (i % 64 === 0) bp.set(300 + 3000 * u * u, 1.2); d[i] = (bp.p(wn()) * Math.pow(u, 3) + Math.sin(TAU * (40 + 60 * u) * t) * Math.pow(u, 4) * 0.5) * (u > 0.985 ? 0 : 1); } });
+    // the sting when it turns its head to you: a scraped string cluster, a scream of noise, a drop
+    B.stinger = this.buf(2.4, (d, sr, n) => {
+      const fs = [311.1, 329.6, 349.2, 466.2, 493.9, 698.5, 739.9], ph = fs.map(() => Math.random());
+      const bp = new BQ('bp', 2600, 2.5, sr), lp = new BQ('lp', 3200, 0.7, sr), sub = { p: 0 };
+      for (let i = 0; i < n; i++) {
+        const t = i / sr, u = t / 2.4;
+        if (i % 64 === 0) bp.set(lerp(2800, 700, Math.min(1, t / 0.9)), 2.5);
+        let v = 0;
+        for (let k = 0; k < fs.length; k++) { const f = fs[k] * (1 + 0.012 * Math.sin(TAU * (5.5 + k) * t)) * (1 - 0.06 * u); ph[k] = (ph[k] + f / sr) % 1; v += (ph[k] * 2 - 1) * 0.16; }
+        v = lp.p(v) * Math.min(1, t / 0.012) * Math.exp(-t * 1.5);
+        v += bp.p(wn()) * Math.min(1, t / 0.006) * Math.exp(-t * 4.5) * 1.3;
+        sub.p += (58 - 26 * Math.min(1, t / 1.2)) / sr; v += Math.sin(TAU * sub.p) * Math.exp(-t * 1.8) * 0.9;
+        d[i] = v * (u > 0.98 ? (1 - u) * 50 : 1);
+      }
+    });
     B.drip = this.buf(0.3, (d, sr, n) => { let ph = 0; for (let i = 0; i < n; i++) { const t = i / sr; const f = t < 0.03 ? lerp(1700, 700, t / 0.03) : 700; ph += f / sr; d[i] = Math.sin(TAU * ph) * Math.exp(-t * 24); } });
     B.clank = this.buf(1.8, (d, sr, n) => { const P = [[233, 0.5, 3], [587, 0.35, 4], [1123, 0.3, 6], [1811, 0.2, 8], [2690, 0.12, 12]]; const bp = new BQ('bp', 1500, 1, sr); for (let i = 0; i < n; i++) { const t = i / sr; let v = bp.p(wn()) * Math.exp(-t * 120) * 0.6; for (const [f, a, k] of P) v += Math.sin(TAU * f * (1 + 0.002 * Math.sin(t * 20)) * t) * a * Math.exp(-t * k); d[i] = v; } });
     B.switch = this.buf(0.06, (d, sr, n) => { click(d, sr, n, 0, 1); click(d, sr, n, 0.014, 0.5); });
@@ -3158,13 +3377,13 @@ const Sound = {
     this.tinG.gain.cancelScheduledValues(t); this.tinG.gain.setValueAtTime(0, t);
     this.subG.gain.setValueAtTime(0, t); this.shepG.gain.setValueAtTime(0, t);
     this.tinBase = 0; this.pres = 0; this.presT = 0; this.hb.level = 0; this.shep.level = 0; this.breatheAmt = 0;
-    this.musicBox(false); this.drone(0, 0.01);
+    this.lullaby(false); this.drone(0, 0.01);
   },
   /* back to a clean, neutral world (the morning) */
   reset() {
     if (!this.ok) return;
     this.wrong = 0; this.spike = 0; this.wrongEff = 0; this.tinBase = 0; this.presT = 0; this.pres = 0; this.hb.level = 0; this.breatheAmt = 0; this.stretchK = 0;
-    this.shepard(0); this.muffle(0, 0.05); this.restore(0.05); this.tinnitus(0, 0.05); this.subG.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
+    this.lullaby(false); this.shepard(0); this.muffle(0, 0.05); this.restore(0.05); this.tinnitus(0, 0.05); this.subG.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
   },
 
   /* ---------- live sources ---------- */
@@ -3207,21 +3426,113 @@ const Sound = {
   wind(level, tc = 1) { if (this.windL) this.windL.gain(level, tc); },
   tone(level, tc = 1) { this.toneBase = level; if (this.toneL) this.toneL.gain(level, tc); },
 
-  /* music box */
-  mb: { on: false, t: 0, i: 0, speed: 1, gain: 0.5, last: 72 },
-  MELODY: [[76, 1], [72, 1], [69, 1], [72, 1], [76, 2], [74, 1], [71, 1], [67, 2], [69, 1], [72, 1], [76, 1], [81, 1], [79, 2], [76, 1], [74, 1], [76, 2], [72, 1], [69, 1], [64, 1], [67, 1], [69, 1], [71, 1], [72, 2], [69, 3]],
-  musicBox(on) { this.mb.on = on; this.mb.t = 0.2; this.mb.speed = 1; if (on) this.mb.i = 0; },
-  mbNote(midi, detune = 0) {
-    if (!this.musicE) return;
-    const c = this.ctx, t = c.currentTime, f = 440 * Math.pow(2, (midi - 69) / 12) * Math.pow(2, (rand(-8, 8) + detune) / 1200);
-    const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(this.mb.gain, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0008, t + 1.6);
-    g.connect(this.musicE.g);
-    for (const [k, a] of [[1, 1], [2.01, 0.25], [3.98, 0.08]]) { const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * k; const og = c.createGain(); og.gain.value = a; o.connect(og); og.connect(g); o.start(t); o.stop(t + 1.7); }
-    setTimeout(() => { try { g.disconnect(); } catch (e) { /* */ } }, 1900);
-    this.mb.last = midi;
+  /* ---------- the lullaby ----------
+     One melody for the whole night, a music box in A minor, three-four time.
+     It starts far away and clean while you set the clocks. Every step
+     further it comes apart: slower and flatter, notes missing, repeated or
+     played backwards, a second voice a semitone off, a hummed voice that is
+     not quite in tune, and at the end it is distorted and sagging. */
+  LUL: [[76, 1], [72, 1], [69, 1], [71, 1.5], [72, 0.5], [71, 1], [69, 1], [68, 1], [69, 1], [64, 3],
+    [76, 1], [77, 1], [76, 1], [74, 1.5], [72, 0.5], [71, 1], [72, 1], [71, 1], [68, 1], [69, 3]],
+  LUL_BASS: [45, 40, 41, 40, 45, 38, 40, 45],
+  lul: { on: false, c: 0, cT: 0, g: 0, gT: 0, t: 0, i: 0, beat: 0, trans: 0, transT: 0, shK: -1, dest: null, sag: 0 },
+  lulInit() {
+    if (this.lulOut || !this.ok) return;
+    const c = this.ctx;
+    this.lulIn = c.createGain();
+    this.lulShaper = c.createWaveShaper(); this.lulShaper.oversample = '2x';
+    this.lulLP = c.createBiquadFilter(); this.lulLP.type = 'lowpass'; this.lulLP.frequency.value = 2000; this.lulLP.Q.value = 0.7;
+    this.lulOut = c.createGain(); this.lulOut.gain.value = 0;
+    this.lulIn.connect(this.lulShaper); this.lulShaper.connect(this.lulLP); this.lulLP.connect(this.lulOut);
+    const send = c.createGain(); send.gain.value = 0.7; this.lulOut.connect(send); send.connect(this.revIn);
+    this.lulRoute(null); this.lulCurve(0);
   },
-  /* the record skips: the same note three times, a little flat */
-  mbSkip() { if (!this.mb.on) return; for (let k = 0; k < 3; k++) setTimeout(() => this.mbNote(this.mb.last, -30 * k), k * 80); this.mb.t = 0.5; this.mb.speed = Math.max(0.6, this.mb.speed - 0.08); },
+  /* null: everywhere at once, as if in your head; a position: from that spot */
+  lulRoute(pos) {
+    if (!this.lulOut) return;
+    if (this.lul.dest) { try { this.lulOut.disconnect(this.lul.dest); } catch (e) { /* */ } }
+    if (pos) {
+      if (!this.lulE) { this.lulE = this.emitter(pos, { ref: 1.4, roll: 1.2, rev: 0.5 }); this.lulE.base = 1; this.persist.push(this.lulE); }
+      else this.setPos(this.lulE, pos);
+      this.lul.dest = this.lulE.g;
+    } else this.lul.dest = this.bus;
+    this.lulOut.connect(this.lul.dest);
+  },
+  lulCurve(k) {
+    this.lul.shK = k;
+    if (k < 0.03) { this.lulShaper.curve = null; return; }
+    const n = 1024, cv = new Float32Array(n), a = k * k * 40;
+    for (let i = 0; i < n; i++) { const x = i / (n - 1) * 2 - 1; cv[i] = ((1 + a) * x) / (1 + a * Math.abs(x)) * (1 - 0.25 * k); }
+    this.lulShaper.curve = cv;
+  },
+  /* start, stop or retarget: c = how broken (0..1), g = loudness, pos = where from, trans = semitones */
+  lullaby(on, o = {}) {
+    if (!this.ok) return;
+    this.lulInit();
+    const L = this.lul;
+    if (!on) { L.on = false; L.gT = 0; L.g = 0; if (this.lulOut) this.lulOut.gain.setTargetAtTime(0, this.ctx.currentTime, o.tc ?? 0.05); return; }
+    if (!L.on) { L.on = true; L.t = 0.3; L.i = o.from ?? 0; L.beat = 0; L.g = o.fadeFrom ?? 0; L.c = o.c ?? L.c; }
+    if (o.c !== undefined) L.cT = o.c;
+    if (o.g !== undefined) L.gT = o.g;
+    if (o.trans !== undefined) L.transT = o.trans;
+    if (o.pos !== undefined) this.lulRoute(o.pos);
+  },
+  lulNote(midi, o = {}) {
+    const c = this.ctx, L = this.lul, t0 = c.currentTime + (o.delay || 0), k = L.c;
+    const cents = (o.detune || 0) + rand(-1, 1) * k * 28 + Math.sin(G.t * 0.7) * k * 40 - L.sag * 100;
+    const f = 440 * Math.pow(2, (midi + L.trans - 69) / 12) * Math.pow(2, cents / 1200), amp = o.amp ?? 0.5;
+    const g = c.createGain(), len = o.len || 1.9;
+    if (o.rev) { g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(amp, t0 + len * 0.85); g.gain.linearRampToValueAtTime(0, t0 + len * 0.87); }
+    else { g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(amp, t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0008, t0 + len); }
+    g.connect(this.lulIn);
+    for (const [m, a] of [[1, 1], [2.005, 0.28], [3.97, 0.09], [5.43, 0.035]]) {
+      const osc = c.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(f * m, t0);
+      if (k > 0.4) osc.frequency.linearRampToValueAtTime(f * m * (1 - 0.025 * k), t0 + len);   // the note sags as it rings
+      const og = c.createGain(); og.gain.value = a; osc.connect(og); og.connect(g); osc.start(t0); osc.stop(t0 + len + 0.05);
+    }
+    // a hummed voice singing along, a little off
+    if (o.hum > 0.01) {
+      const hf = f / 2 * Math.pow(2, (22 + 18 * k) / 1200), hg = c.createGain(), hl = (o.dur || 0.6) * 1.1;
+      hg.gain.setValueAtTime(0, t0); hg.gain.linearRampToValueAtTime(o.hum, t0 + 0.14); hg.gain.setValueAtTime(o.hum, t0 + hl); hg.gain.linearRampToValueAtTime(0, t0 + hl + 0.35);
+      const so = c.createOscillator(); so.type = 'sawtooth'; so.frequency.value = hf;
+      const vib = c.createOscillator(), vg = c.createGain(); vib.frequency.value = 4.6 + rand(-0.4, 0.4); vg.gain.value = 14 + 30 * k; vib.connect(vg); vg.connect(so.detune);
+      const f1 = c.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 330; f1.Q.value = 3.5;
+      const f2 = c.createBiquadFilter(); f2.type = 'bandpass'; f2.frequency.value = 850; f2.Q.value = 6;
+      const f2g = c.createGain(); f2g.gain.value = 0.35;
+      so.connect(f1); so.connect(f2); f1.connect(hg); f2.connect(f2g); f2g.connect(hg); hg.connect(this.lulIn);
+      so.start(t0); vib.start(t0); so.stop(t0 + hl + 0.45); vib.stop(t0 + hl + 0.45);
+    }
+    setTimeout(() => { try { g.disconnect(); } catch (e) { /* */ } }, (len + (o.delay || 0) + 0.6) * 1000);
+  },
+  lulBass(midi, delay = 0) { this.lulNote(midi - 12, { amp: 0.32 + this.lul.c * 0.1, len: 2.8, delay }); },
+  lulStep() {
+    const L = this.lul, k = L.c, M = this.LUL, [n, d] = M[L.i % M.length];
+    if (L.beat % 3 < 0.01 || L.beat % 3 > 2.99) this.lulBass(this.LUL_BASS[Math.floor(L.beat / 3) % this.LUL_BASS.length] + (Math.random() < k * 0.2 ? 1 : 0));
+    const first = L.i % 10 === 0;
+    if (!first && Math.random() < k * 0.22) { /* a note just isn't there */ }
+    else if (Math.random() < k * 0.12) { for (let r = 0; r < 3; r++) this.lulNote(n, { delay: r * 0.085, detune: -25 * r * (1 + k), amp: 0.45 }); }
+    else {
+      const wrong = Math.random() < k * 0.22 ? (Math.random() < 0.5 ? -1 : 1) : 0;
+      this.lulNote(n + wrong, { rev: Math.random() < k * 0.3, amp: 0.5, hum: k > 0.45 ? (k - 0.45) * 0.55 : 0, dur: d * 0.52 });
+      if (k > 0.3 && Math.random() < k * 0.8) this.lulNote(n + (Math.random() < 0.5 ? 1 : -1), { delay: 0.03 + k * 0.05, amp: 0.3 * k, detune: 15 });
+    }
+    L.i++; L.beat += d;
+    let beatLen = 0.52 / (1 - 0.34 * k) * (1 + rand(-1, 1) * 0.18 * k);
+    L.t += d * beatLen;
+    if (L.i % M.length === 0) { L.t += beatLen * (1 + k * 2); L.beat = 0; if (k > 0.55) L.sag = 0.8 * k; }   // end of the verse: a breath, and the tape drags
+  },
+  lulPhrase(pos, c = 0.9, notes = 6) {
+    if (!this.ok) return;
+    this.lulInit(); if (this.lul.on) return;
+    const L = this.lul; L.c = L.cT = c; this.lulCurve(c); this.lulRoute(pos);
+    const t = this.ctx.currentTime; this.lulOut.gain.cancelScheduledValues(t); this.lulOut.gain.setTargetAtTime(0.5, t, 0.05);
+    let acc = 0; const start = irand(0, this.LUL.length - notes);
+    for (let j = 0; j < notes; j++) { const [n, d] = this.LUL[start + j]; this.lulNote(n, { delay: acc, rev: Math.random() < 0.55, amp: 0.5, hum: 0.2, dur: d * 0.6 }); acc += d * 0.62 * rand(0.9, 1.4); }
+    this.lulOut.gain.setTargetAtTime(0, t + acc + 1.5, 0.4);
+  },
+  /* the small room's music: the same lullaby, from the record player */
+  musicBox(on) { if (on) this.lullaby(true, { c: 0.6, g: 0.42, pos: W.musicPos, from: 0, fadeFrom: 0.42 }); else this.lullaby(false); },
+  mbSkip() { const L = this.lul; if (!L.on) return; for (let r = 0; r < 3; r++) this.lulNote(this.LUL[(L.i + 19) % this.LUL.length][0], { delay: r * 0.08, detune: -35 * r, amp: 0.5 }); L.t = 0.6; L.cT = Math.min(0.95, L.cT + 0.05); },
 
   update(dt) {
     if (!this.ok || !camera) return;
@@ -3264,10 +3575,16 @@ const Sound = {
         sh.gains[i].gain.setTargetAtTime(Math.exp(-((x - 3.4) ** 2) / (2 * 1.25 * 1.25)) * 0.22, now, 0.05);
       }
     }
-    const mb = this.mb;
-    if (mb.on) {
-      mb.t -= dt * mb.speed;
-      if (mb.t <= 0) { const [n, d] = this.MELODY[mb.i % this.MELODY.length]; this.mbNote(n, -this.wrongEff * 40); mb.i++; mb.t += d * 0.34; }
+    const LU = this.lul;
+    if (LU.on && this.lulOut) {
+      LU.c += (LU.cT - LU.c) * (1 - Math.exp(-dt * 0.35));
+      LU.g += (LU.gT - LU.g) * (1 - Math.exp(-dt * 0.25));
+      LU.trans += (LU.transT - LU.trans) * (1 - Math.exp(-dt * 0.3));
+      LU.sag *= Math.exp(-dt * 1.2);
+      this.lulOut.gain.setTargetAtTime(LU.g, now, 0.2);
+      if (Math.abs(LU.c - LU.shK) > 0.04) { this.lulCurve(LU.c); this.lulLP.frequency.setTargetAtTime(1500 + 4500 * LU.c * LU.c, now, 0.5); }
+      LU.t -= dt;
+      if (LU.t <= 0) this.lulStep();
     }
   },
 };
@@ -3462,6 +3779,7 @@ const ClockUI = {
   open(c) {
     if (c.solvedLock) { UI.thought(tr('t_clockOk'), 2.5); return; }
     this.active = true; this.clock = c; this.rep = this.acc = this.repH = 0; this.snd = 0; this.turned = 0;
+    if (Story.onClockOpen) Story.onClockOpen(c);
     c.ticking = false;
     this.ang = ((((c.min % 60) + 60) % 60) / 60) * TAU; this.vx = Math.sin(this.ang); this.vy = -Math.cos(this.ang);
     Player.fovT = 46;
@@ -3492,7 +3810,7 @@ const ClockUI = {
   dial() {
     const c = this.clock; if (!c) return;
     const p = c.worldPos(_tv3), d = Math.max(0.2, p.distanceTo(camera.position));
-    const px = (0.16 / d) / Math.tan(camera.fov * DEG * 0.5) * (innerHeight / 2);
+    const px = ((c.r || 0.16) / d) / Math.tan(camera.fov * DEG * 0.5) * (innerHeight / 2);
     this.R = clamp(px * 1.35, 56, Math.min(innerWidth * 0.42, innerHeight * 0.3));
     UI.clockDial(this.ang, this.R);
   },
@@ -3544,49 +3862,83 @@ const F = G.flags;
 
 
 /* ---------------- the entity ----------------
-   It fades in rather than appearing, and when you look straight at it
-   it thins out in a fraction of a second. It is dark on purpose: you
-   should be unsure what you saw. */
+   A dark shape with a pale, hollow face. It fades in rather than
+   appearing. When you look straight at it, its head turns to you first,
+   and only then is it gone. Seen rarely, and mostly in the dark. */
 const Ent = {
   H: null, def: null, t: 0, lookT: 0, seen: false, gone: 0, lastEnd: -60, used: {}, pose: {},
-  fade: 1, fadeSpeed: 99, out: 0, jit: 0, eyeT: 0, eyeOn: false, eye: 0, flickT: 0,
+  fade: 1, fadeSpeed: 99, out: 0, eyeT: 0, eyeOn: false, eye: 0, flickT: 0, snapT: 0, snapYaw: 0,
   init() { this.H = Actors.ent; },
   spawn(def) {
-    const H = this.H; this.def = def; this.t = 0; this.lookT = 0; this.seen = false; this.gone = 0; this.out = 0;
+    const H = this.H; this.def = def; this.t = 0; this.lookT = 0; this.seen = false; this.gone = 0; this.out = 0; this.snapT = 0;
     H.root.visible = true;
     setLayer(H.root, def.mirrorOnly ? 2 : 0);
     H.root.position.copy(def.pos);
     H.root.rotation.y = def.yaw ?? 0;
-    this.pose = Object.assign({ pitch: -0.08, roll: 0.22, hunch: 0.16 }, def.pose || {});
+    this.pose = Object.assign({ pitch: -0.1, roll: 0.34, hunch: 0.2, headYaw: undefined }, def.pose || {});
     this.fade = def.fadeIn ? 0 : 1; this.fadeSpeed = def.fadeIn ? 1 / def.fadeIn : 99;
     this.eyeOn = false; this.eyeT = rand(0.6, 1.8); this.eye = 0;
-    { const tv = def.tint ?? 0.0022; shadeMat().uniforms.uTint.value.set(tv, tv * 0.95, tv * 1.1); }
+    { const tv = def.tint ?? 0.0022; shadeMat().uniforms.uTint.value.set(tv, tv * 0.95, tv * 1.1); H.smoke.pts.material.uniforms.uAlbedo.value = def.albedo ?? 0.016; }
     this.used[def.id] = true;
     shadeMat().uniforms.uFade.value = this.fade;
     if (def.onSpawn) def.onSpawn(this);
+    this.syncSmoke();   // no frame with a bare core
   },
   hide(reason) {
     if (!this.def) return;
-    const d = this.def; this.def = null; this.lastEnd = G.t; Sound.presence(0);
+    const d = this.def; this.def = null; this.lastEnd = G.t; Sound.presence(0); this.snapT = 0;
     // looked at, lit or approached: it thins out instead of vanishing on the spot
     if (this.H.root.visible && !d.mirrorOnly && (reason === 'look' || reason === 'flash' || reason === 'close' || reason === 'done')) this.out = reason === 'done' ? 0.4 : 0.16;
     else this.H.root.visible = false;
-    if (reason === 'look' && Math.random() < 0.35) { const l = nearestLight(this.H.root.position); if (l && l.lit && !l.flick) { l.setFlicker('unstable'); after(0.7, () => { if (l.flick && l.flick.mode === 'unstable' && !l.keepFlicker) l.setFlicker(null); }); } }
     if (d.onHide) d.onHide(reason);
+  },
+  /* the scare: the head turns to you, the room answers, then it is gone */
+  startSnap(d) {
+    const H = this.H, r = H.root.position, cam = camera.position;
+    this.snapT = 0.001;
+    this.snapYaw = clamp(angNorm(faceYaw(r, cam) - H.root.rotation.y), -1.5, 1.5);
+    this.eyeOn = true; this.eyeT = 1;
+    if (d.stinger) {
+      Sound.play('stinger', null, { gain: 0.75, pure: true, pri: 2 });
+      Sound.tinnitus(0.5, 0.05); after(1.2, () => Sound.tinnitus(0, 0.8));
+      const l = nearestLight(r); if (l && l.lit && !l.flick) { l.setFlicker('unstable'); after(1.2, () => { if (l.flick && l.flick.mode === 'unstable' && !l.keepFlicker) l.setFlicker(null); }); }
+      if (Player.flashOn) Player.flashFlicker = 0.5;
+    } else Sound.play('creaks', V3(r.x, r.y + 0.2, r.z), { gain: 0.4, rate: 0.7, hrtf: true });
+  },
+  /* the pale smudge of a face: only as bright as the light on it, and only from the front */
+  faceLight(dt) {
+    const H = this.H; if (!H.face) return;
+    const p = _fl.copy(H.root.position); p.y += 1.65;
+    let k = 0.025 + Math.min(0.2, lightLevel(p) * 0.05);
+    if (flashHits(p, 12, 26 * DEG)) k += 0.55;
+    this.fl = damp(this.fl ?? k, k, 10, dt);
+    const m = H.face.material, v = clamp(this.fl * 1.4, 0.03, 0.9);
+    m.color.setRGB(v, v, v * 0.97);
+    H.head.getWorldDirection(_fd); H.head.getWorldPosition(_fp);
+    const facing = _fd.dot(_fp.subVectors(camera.position, _fp).normalize());
+    m.opacity = 0.85 * shadeMat().uniforms.uFade.value * sstep(-0.05, 0.45, facing);
+  },
+  /* the smoke lives in world space: follow the body, the layer and the visibility */
+  syncSmoke() {
+    const H = this.H, pts = H.smoke.pts;
+    pts.visible = H.root.visible;
+    if (!pts.visible) return;
+    pts.layers.mask = H.root.layers.mask;
+    H.root.updateMatrixWorld(true);
+    H.smoke.update(G.t);
   },
   shadeUniforms(dt) {
     const u = shadeMat().uniforms, H = this.H;
-    this.jit = Math.max(0, this.jit - dt * 6);
-    if (Math.random() < dt * 0.5) this.jit = rand(0.4, 1);
-    u.uJit.value = this.jit; u.uBase.value = H.root.position.y;
-    // eyes: two faint points that are there only some of the time
+    u.uJit.value = 0; u.uBase.value = H.root.position.y;
+    // eyes: two faint points in the sockets, there only some of the time
     if (H.eyes) {
       this.eyeT -= dt; if (this.eyeT <= 0) { this.eyeOn = !this.eyeOn; this.eyeT = this.eyeOn ? rand(0.6, 2.2) : rand(0.25, 3.5); }
-      this.eye = damp(this.eye, this.def && !this.def.noEyes && (this.eyeOn || this.def.eyesOn) ? 1 : 0, 10, dt);
-      H.eyes.userData.mat.opacity = this.eye * u.uFade.value * 0.75;
+      this.eye = damp(this.eye, this.def && !this.def.noEyes && (this.eyeOn || this.def.eyesOn || this.snapT > 0) ? 1 : 0, 10, dt);
+      H.eyes.userData.mat.opacity = this.eye * u.uFade.value * 0.8;
     }
   },
-  update(dt) {
+  update(dt) { this.step(dt); this.faceLight(dt); this.syncSmoke(); },
+  step(dt) {
     const H = this.H, d = this.def, u = shadeMat().uniforms;
     if (!d) {
       if (this.out > 0) { this.out -= dt; u.uFade.value = Math.max(0, u.uFade.value - dt / 0.16); this.shadeUniforms(dt); if (this.out <= 0) H.root.visible = false; }
@@ -3597,9 +3949,11 @@ const Ent = {
     this.fade = target > this.fade ? Math.min(target, this.fade + dt * this.fadeSpeed) : Math.max(target, this.fade - dt * 6);
     u.uFade.value = this.fade;
     this.shadeUniforms(dt);
-    // idle: breathing sway, the head wrong, now and then a jerk
-    const tw = Math.sin(this.t * 0.7) * 0.05 + (Math.sin(this.t * 3.1) > 0.97 ? 0.4 : 0) + this.jit * 0.12;
-    poseHuman(H, Object.assign({ walk: 0, amp: 0, headYaw: tw, lean: Math.sin(this.t * 0.5) * 0.03 + (this.pose.lean || 0), armsOut: true }, this.pose, { hunch: (this.pose.hunch || 0) + Math.sin(this.t * 1.3) * 0.02 }));
+    // idle: very still, breathing, the head tilted too far
+    let hy = this.pose.headYaw ?? Math.sin(this.t * 0.4) * 0.05;
+    if (this.snapT > 0) { const k = Math.min(1, this.snapT / 0.1); hy = lerp(hy, this.snapYaw, k * k); }
+    poseHuman(H, Object.assign({ walk: 0, amp: 0, lean: Math.sin(this.t * 0.5) * 0.02 + (this.pose.lean || 0), armsOut: true }, this.pose, { headYaw: hy, hunch: (this.pose.hunch || 0) + Math.sin(this.t * 1.1) * 0.015 }));
+    if (this.snapT > 0) { this.snapT += dt; if (this.snapT > (d.stinger ? 0.55 : 0.4)) this.hide('look'); return; }
     if (d.update && d.update(dt, this) === false) return;
     if (!this.def) return;
     if (d.persistent) return;
@@ -3608,34 +3962,40 @@ const Ent = {
     if (d.mirrorOnly) { if (this.t > (d.timeout ?? 1.8)) this.hide('time'); return; }
     const vis = canSee(chest, 0.5);
     Sound.presence(vis ? 1 : 0);
-    // the flashlight falters when it is close
-    if (Player.flashOn && dist < 9 && G.t > this.flickT && Math.random() < dt * 1.6) { this.flickT = G.t + 1.2; Player.flashFlicker = rand(0.12, 0.3); }
+    // the flashlight falters now and then while you can see it
+    if (vis && Player.flashOn && dist < 8 && G.t > this.flickT && Math.random() < dt * 0.6) { this.flickT = G.t + 3; Player.flashFlicker = rand(0.12, 0.25); }
     if (vis) {
       this.seen = true; this.gone = 0;
       const thr = Math.max(7.5 * DEG, Math.atan2(0.38, dist));
-      if (viewAngleTo(chest) < thr) { this.lookT += dt; if (this.lookT > (d.lookDelay ?? 0.06)) { this.hide('look'); return; } } else this.lookT = 0;
+      if (viewAngleTo(chest) < thr) {
+        this.lookT += dt;
+        if (this.lookT > (d.lookDelay ?? 0.06)) { if (d.snap && this.fade > 0.5) { this.startSnap(d); return; } this.hide('look'); return; }
+      } else this.lookT = 0;
     } else if (this.seen) { this.gone += dt; if (this.gone > (d.unseenGrace ?? 0.35)) { this.hide('unseen'); return; } }
-    if (dist < (d.minDist ?? 3.4)) { this.hide('close'); return; }
+    if (dist < (d.minDist ?? 3.4)) { if (d.snap && vis && this.fade > 0.5) { this.startSnap(d); return; } this.hide('close'); return; }
     if (d.flashKill !== false && flashHits(chest, 11, 24 * DEG)) { this.hide('flash'); return; }
     if (!vis && (this.t > (d.timeout ?? 45) || (this.t > 15 && dist > 14))) this.hide('timeout');
   },
 };
+const _fl = new THREE.Vector3(), _fd = new THREE.Vector3(), _fp = new THREE.Vector3();
+/* only visible in mirrors (layer 2), or back to normal */
+function mirrorOnly(obj, on) { obj.traverse((o) => { if (o.isMesh) o.layers.mask = on ? 4 : (o.userData.rooms ?? 1); }); }
 
 /* ---------------- the one who follows ----------------
-   Most of the time it is only a position on the path you just walked:
-   steps that stop a beat after yours. Every so often it is seen: at the
-   edge of your view in a dim corner, walking past a doorway further off,
-   or right where you look when you spin round. */
+   Mostly it is only a position on the path you just walked: steps that
+   stop a beat after yours. Rarely it is seen: in a dark corner at the
+   edge of your view (and closer each time you look back), walking past
+   a doorway further off, or right behind you when you spin round. */
 const Dir = {
-  trail: [], tNext: 0, cueNext: 0, sightNext: 0, pollNext: 0, lastYaw: 0, wasMoving: false, n: 0,
-  level() { return { p1: 0.3, p2: 0.6, p2b: 0.75, p3: 1, descent: 0.8 }[Story.stage] || 0; },
-  reset() { this.trail.length = 0; this.cueNext = G.t + 25; this.sightNext = G.t + 45; this.pollNext = 0; this.lastYaw = Player.yaw; this.wasMoving = false; this.n = 0; },
+  trail: [], tNext: 0, cueNext: 0, sightNext: 0, pollNext: 0, lastYaw: 0, wasMoving: false, n: 0, cross: new Map(),
+  level() { return { p1: 0.3, p2: 0.5, p2b: 0.7, p3: 1, descent: 0.8 }[Story.stage] || 0; },
+  reset() { this.trail.length = 0; this.cueNext = G.t + 30; this.sightNext = G.t + 70; this.pollNext = 0; this.lastYaw = Player.yaw; this.wasMoving = false; this.n = 0; },
   behind(dist) {
     let acc = 0, px = Player.pos.x, pz = Player.pos.z;
     for (let i = this.trail.length - 1; i >= 0; i--) { const p = this.trail[i]; acc += Math.hypot(p.x - px, p.z - pz); px = p.x; pz = p.z; if (acc >= dist) return p; }
     return null;
   },
-  schedule(lv) { this.sightNext = G.t + rand(32, 58) / Math.max(0.4, lv); this.n++; },
+  schedule(lv) { this.sightNext = G.t + rand(85, 140) / Math.max(0.5, lv); this.n++; },
   update(dt) {
     const P = Player, lv = this.level();
     if (G.t > this.tNext) {
@@ -3648,22 +4008,23 @@ const Dir = {
     // steps behind you that stop just after you do
     const moving = P.amp > 0.35;
     if (this.wasMoving && !moving && G.t > this.cueNext && Math.random() < 0.25 + lv * 0.35) {
-      this.cueNext = G.t + rand(26, 48) / lv;
+      this.cueNext = G.t + rand(30, 55) / lv;
       const b = this.behind(rand(3.2, 5.5));
       if (b && roomOf(b.x, b.y + 1, b.z) !== 'outside') { const k = irand(1, 2), s = P.surface(); for (let i = 0; i < k; i++) after(0.32 + i * 0.52, () => Sound.step(s, V3(b.x, b.y + 0.1, b.z), { gain: 0.5, hrtf: true, vary: 0.05 })); }
     }
     this.wasMoving = moving;
-    if (Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 9) return;
+    if (Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 35) return;
     // first sighting (after the second clock): someone crossing a doorway, far off
     if (Story.stage === 'p1') {
-      if (F.p1CrossAt && !F.p1Cross && G.t > F.p1CrossAt && G.t > this.pollNext) { this.pollNext = G.t + 0.4; if (this.crossing()) { F.p1Cross = true; } }
+      if (F.p1CrossAt && !F.p1Cross && G.t > F.p1CrossAt && G.t > this.pollNext) { this.pollNext = G.t + 0.5; if (this.crossing()) { F.p1Cross = true; } }
       return;
     }
-    if (G.t < this.sightNext) return;
-    if (Math.abs(yv) > 4.2 && lv >= 0.6 && this.turnaround(yv)) { this.schedule(lv); return; }
+    if (lv < 0.6 || G.t < this.sightNext) return;
+    // once per stage: right behind you when you spin round
+    if (Math.abs(yv) > 4.2 && !F['turn_' + Story.stage] && this.turnaround(yv)) { F['turn_' + Story.stage] = true; this.schedule(lv); return; }
     if (G.t > this.pollNext) {
-      this.pollNext = G.t + 0.45;
-      const ok = Math.random() < 0.55 ? this.peripheral() || this.crossing() : this.crossing() || this.peripheral();
+      this.pollNext = G.t + 0.6;
+      const ok = Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || this.peripheral();
       if (ok) this.schedule(lv);
     }
   },
@@ -3671,72 +4032,96 @@ const Dir = {
     for (const c of colliders) if (c.on && c.y1 > p.y + 0.2 && c.y0 < p.y + 1.8 && p.x > c.x0 - 0.3 && p.x < c.x1 + 0.3 && p.z > c.z0 - 0.3 && p.z < c.z1 + 0.3) return false;
     return true;
   },
-  /* spinning round fast: it is standing on the path behind you */
+  dark(chest) { return lightLevel(chest) < 0.4 && lightLevel(camera.position) < 0.9 && !flashHits(chest, 14, 32 * DEG); },
+  /* spinning round fast: it is standing on the path, close behind you */
   turnaround(yv) {
     const P = Player;
-    for (const dd of [4.5, 3.4, 6]) {
+    for (const dd of [2.8, 3.6, 2.2]) {
       const b = this.behind(dd); if (!b) continue;
       const spot = V3(b.x, b.y, b.z), chest = V3(b.x, b.y + 1.25, b.z);
-      const dist = chest.distanceTo(camera.position); if (dist < 3 || dist > 7.5) continue;
-      if (roomOf(b.x, b.y + 1, b.z) === 'outside' || canSee(chest, 0.1) || !losClear(camera.position, chest)) continue;
-      const rel = angNorm(faceYaw(P.pos, spot) - (P.yaw + Math.PI)); // bearing relative to the view
+      const dist = chest.distanceTo(camera.position); if (dist < 2 || dist > 4.5) continue;
+      if (roomOf(b.x, b.y + 1, b.z) === 'outside' || canSee(chest, 0.1) || !losClear(camera.position, chest) || !this.dark(chest)) continue;
+      const rel = angNorm(faceYaw(P.pos, spot) - (P.yaw + Math.PI));
       if (Math.sign(rel) !== Math.sign(yv) || Math.abs(rel) < 0.7) continue;
-      Ent.spawn({ id: 'turn', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.28, roll: 0.32 }, lookDelay: 0.1, minDist: 2.2, timeout: 3, unseenGrace: 0.5,
-        onHide: (r) => { if (r === 'look') Sound.play('creaks', chest, { gain: 0.35, rate: 0.7, hrtf: true }); } });
+      Ent.spawn({ id: 'turn', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.3, roll: 0.45 }, lookDelay: 0.05, minDist: 1.4, timeout: 3, unseenGrace: 0.5, snap: true, stinger: true });
       return true;
     }
     return false;
   },
-  /* at the edge of your view, in a dim spot, slowly thickening */
+  /* in a dark corner at the edge of your view; each time you look away it comes closer */
   peripheral() {
     const P = Player;
     for (let i = 0; i < 10; i++) {
-      const side = Math.random() < 0.5 ? -1 : 1, a = P.yaw + side * rand(0.6, 0.85), dist = rand(3.8, 8);
+      const side = Math.random() < 0.5 ? -1 : 1, a = P.yaw + side * rand(0.6, 0.85), dist = rand(5, 8.5);
       const x = P.pos.x - Math.sin(a) * dist, z = P.pos.z - Math.cos(a) * dist;
       const gy = groundAt(x, z, P.pos.y + 0.5); if (gy === null || Math.abs(gy - P.pos.y) > 1.2) continue;
       const spot = V3(x, gy, z), chest = V3(x, gy + 1.25, z);
       if (roomOf(x, gy + 1, z) === 'outside' || !this.free(spot) || !losClear(camera.position, chest)) continue;
       const va = viewAngleTo(chest); if (va < 0.5 || va > 0.9) continue;
-      if (lightLevel(chest) > 1.4 || flashHits(chest, 12, 30 * DEG)) continue;
-      Ent.spawn({ id: 'edge', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.32, roll: 0.36, pitch: 0.12 }, fadeIn: 1.8, lookDelay: 0.08, minDist: 2.6, timeout: 9, unseenGrace: 0.8 });
+      if (!this.dark(chest)) continue;
+      let steps = 0, awayT = 0;
+      Ent.spawn({ id: 'edge', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.34, roll: 0.42, pitch: 0.1 }, fadeIn: 2.2, lookDelay: 0.12, minDist: 1.6, timeout: 30, unseenGrace: 999, snap: true, stinger: false,
+        update: (dt, E) => {
+          const r = E.H.root.position, cam = camera.position, ch = V3(r.x, r.y + 1.25, r.z);
+          E.def.stinger = steps > 0;
+          if (canSee(ch, 0.5)) { awayT = 0; return; }
+          if (!E.seen) return;
+          awayT += dt;
+          if (awayT < 0.7) return;
+          // you looked away: it comes closer, if there is a hidden spot between you
+          if (steps >= 3) { E.hide('unseen'); return false; }
+          const f = steps === 2 ? 0.55 : 0.38;
+          const nx = r.x + (cam.x - r.x) * f, nz = r.z + (cam.z - r.z) * f, ng = groundAt(nx, nz, r.y + 0.5);
+          const np = V3(nx, ng ?? r.y, nz), nc = V3(nx, np.y + 1.25, nz);
+          if (ng === null || !this.free(np) || canSee(nc, 0.3) || !losClear(cam, nc) || nc.distanceTo(cam) < 1.6) { E.hide('unseen'); return false; }
+          r.copy(np); E.H.root.rotation.y = faceYaw(np, Player.pos); steps++; awayT = 0; E.seen = false;
+          Sound.play('creaks', V3(nx, np.y + 0.1, nz), { gain: 0.3 + steps * 0.1, rate: 0.75, hrtf: true });
+        } });
       return true;
     }
     return false;
   },
-  /* walking past a doorway in another room */
+  /* walking past a doorway in another room; paths are worked out once per doorway and cached */
+  crossPath(pi, side, dir) {
+    const key = pi * 4 + (side > 0 ? 2 : 0) + (dir > 0 ? 1 : 0);
+    if (this.cross.has(key)) return this.cross.get(key);
+    const p = PORTALS[pi], q = portalCorners(p), cx = (q[0].x + q[2].x) / 2, cz = (q[0].z + q[2].z) / 2, y0 = p.y0;
+    const wx = p.axis === 'x', pc = wx ? cz : cx, lo = (wx ? q[0].x : q[0].z), hi = (wx ? q[1].x : q[1].z);
+    let res = null;
+    for (const dep of [1.0, 0.7, 1.45, 1.9]) {
+      const depth = pc - side * dep;
+      const far = wx ? roomOf(cx, y0 + 1, depth) : roomOf(depth, y0 + 1, cz);
+      if (far === 'outside') break;
+      const at = (u) => (wx ? V3(u, y0, depth) : V3(depth, y0, u));
+      const okAt = (u) => { const v = at(u); return roomOf(v.x, y0 + 1, v.z) === far && this.free(v); };
+      const clear = (u0, u1) => { const n = Math.ceil(Math.abs(u1 - u0) / 0.3); for (let i = 0; i <= n; i++) if (!okAt(u0 + (u1 - u0) * i / n)) return false; return true; };
+      const pickU = (edge, sgn) => { for (const e of [1.4, 1.0, 0.7, 0.45]) if (okAt(edge + sgn * e)) return edge + sgn * e; return null; };
+      const a = dir > 0 ? pickU(lo, -1) : pickU(hi, 1), b = dir > 0 ? pickU(hi, 1) : pickU(lo, -1);
+      if (a === null || b === null || !clear(a, b)) continue;
+      res = { start: at(a), end: at(b), far, mid: wx ? V3((lo + hi) / 2, y0 + 1.25, depth) : V3(depth, y0 + 1.25, (lo + hi) / 2), len: Math.abs(b - a) };
+      break;
+    }
+    if (!p.move) this.cross.set(key, res);   // the moving vestibule doorway is worked out fresh
+    return res;
+  },
   crossing() {
-    const cam = camera.position, list = PORTALS.filter((p) => !(p.b === 'outside' && !p.door) && portalOpen(p));
-    for (let i = list.length - 1; i > 0; i--) { const j = irand(0, i); [list[i], list[j]] = [list[j], list[i]]; }
-    for (const p of list) {
-      const q = portalCorners(p), cx = (q[0].x + q[2].x) / 2, cz = (q[0].z + q[2].z) / 2, y0 = p.y0;
-      if (y0 < -1.5 || y0 > 0.5) continue;
-      const mid = V3(cx, y0 + 1.25, cz), d = mid.distanceTo(cam);
+    const cam = camera.position, here = roomOf(cam.x, cam.y, cam.z);
+    const order = PORTALS.map((_, i) => i); for (let i = order.length - 1; i > 0; i--) { const j = irand(0, i); [order[i], order[j]] = [order[j], order[i]]; }
+    for (const pi of order) {
+      const p = PORTALS[pi]; if ((p.b === 'outside' && !p.door) || !portalOpen(p) || p.y0 < -1.5 || p.y0 > 0.5) continue;
+      const q = portalCorners(p), mid = V3((q[0].x + q[2].x) / 2, p.y0 + 1.25, (q[0].z + q[2].z) / 2), d = mid.distanceTo(cam);
       if (d < 4.5 || d > 13 || viewAngleTo(mid) > 0.7 || !losClear(cam, mid)) continue;
-      const wx = p.axis === 'x', pc = wx ? cz : cx, side = Math.sign((wx ? cam.z : cam.x) - pc) || 1;
-      const lo = (wx ? q[0].x : q[0].z), hi = (wx ? q[1].x : q[1].z), dir = Math.random() < 0.5 ? 1 : -1;
-      let start = null, end = null, far = null, a = 0, b = 0;
-      for (const dep of [1.0, 0.7, 1.45, 1.9]) {
-        const depth = pc - side * dep;
-        far = wx ? roomOf(cx, y0 + 1, depth) : roomOf(depth, y0 + 1, cz);
-        if (far === 'outside' || far === roomOf(cam.x, cam.y, cam.z)) break;
-        const at = (u) => (wx ? V3(u, y0, depth) : V3(depth, y0, u));
-        const okAt = (u) => { const v = at(u); return roomOf(v.x, y0 + 1, v.z) === far && this.free(v); };
-        const clear = (u0, u1) => { const n = Math.ceil(Math.abs(u1 - u0) / 0.3); for (let i = 0; i <= n; i++) if (!okAt(u0 + (u1 - u0) * i / n)) return false; return true; };
-        const pickU = (edge, sgn) => { for (const e of [1.4, 1.0, 0.7, 0.45]) if (okAt(edge + sgn * e)) return edge + sgn * e; return null; };
-        a = dir > 0 ? pickU(lo, -1) : pickU(hi, 1); b = dir > 0 ? pickU(hi, 1) : pickU(lo, -1);
-        if (a === null || b === null || !clear(a, b)) continue;
-        start = at(a); end = at(b); break;
-      }
-      if (!start) continue;
-      if (canSee(V3(start.x, y0 + 1.25, start.z), 0.25)) continue;
-      { const m = V3((start.x + end.x) / 2, y0 + 1.25, (start.z + end.z) / 2); const pm = wx ? V3((lo + hi) / 2, y0 + 1.25, m.z) : V3(m.x, y0 + 1.25, (lo + hi) / 2); if (!canSee(pm, 0.1)) continue; } // it must actually pass through view
-      const len = Math.abs(b - a), dv = V3((end.x - start.x) / len, 0, (end.z - start.z) / len);
+      const wx = p.axis === 'x', side = Math.sign((wx ? cam.z - mid.z : cam.x - mid.x)) || 1, dir = Math.random() < 0.5 ? 1 : -1;
+      const c = this.crossPath(pi, side, dir); if (!c || c.far === here) continue;
+      const start = c.start.clone(), end = c.end.clone();
+      if (canSee(V3(start.x, p.y0 + 1.25, start.z), 0.25) || !canSee(c.mid, 0.1)) continue;
+      const dv = V3((end.x - start.x) / c.len, 0, (end.z - start.z) / c.len), far = c.far;
       let stepT = 0;
-      Ent.spawn({ id: 'cross', pos: start, yaw: faceYaw(start, end), pose: { hunch: 0.24, roll: 0.14 }, lookDelay: 0.5, minDist: 2.2, timeout: 6, noEyes: true,
+      Ent.spawn({ id: 'cross', pos: start, yaw: faceYaw(start, end), pose: { hunch: 0.26, roll: 0.2 }, lookDelay: 0.5, minDist: 2.2, timeout: 6, noEyes: true,
         update: (dt, E) => {
-          const r = E.H.root.position; r.addScaledVector(dv, 1.5 * dt);
-          E.pose.walk = (E.pose.walk || 0) + dt * 8.5; E.pose.amp = 0.8;
-          stepT -= dt; if (stepT <= 0) { stepT = 0.37; Sound.step(far === 'kitchen' || far === 'bathroom' ? 'tile' : 'wood', V3(r.x, r.y + 0.1, r.z), { gain: 0.28, vary: 0.06 }); }
+          const r = E.H.root.position; r.addScaledVector(dv, 1.45 * dt);
+          E.pose.walk = (E.pose.walk || 0) + dt * 8; E.pose.amp = 0.75;
+          stepT -= dt; if (stepT <= 0) { stepT = 0.4; Sound.step(far === 'kitchen' || far === 'bathroom' ? 'tile' : 'wood', V3(r.x, r.y + 0.1, r.z), { gain: 0.26, vary: 0.06 }); }
           if ((r.x - end.x) * dv.x + (r.z - end.z) * dv.z >= 0) { E.hide('done'); return false; }
         } });
       return true;
@@ -3750,13 +4135,13 @@ function faceYaw(from, to) { return Math.atan2(to.x - from.x, to.z - from.z); }
 
 /* spawn points: only placed when the spot is out of sight */
 const SPAWNS = [
-  { id: 'hallEnd', stages: ['p2', 'p2b'], pos: V3(1.25, 0, 5.4), yaw: Math.PI / 2, minDist: 5, cond: () => ['kitchen', 'study', 'bathroom'].includes(Player.room) || (Player.room === 'hall' && Player.pos.x > 9.5 && viewAngleTo(V3(14, 1.5, 5.4)) < 0.9) },
-  { id: 'kitchenWindow', stages: ['p2', 'p2b'], pos: V3(11.3, 0, 12.9), yaw: Math.PI, minDist: 1.5, cond: () => Player.room === 'kitchen' && Player.pos.z < 9.5 },
-  { id: 'bedroomPeek', stages: ['p2b'], pos: V3(4.5, 0, 4.25), yaw: Math.PI / 2, pose: { lean: -0.12, roll: 0.35 }, minDist: 4, cond: () => Player.room === 'hall' && Player.pos.x > 8.2 && DOORS.bedroom.isOpen },
-  { id: 'armchair', stages: ['p2b', 'p3'], pos: V3(0.98, 0, 10.14), yaw: 2.4, pose: { sit: true, roll: 0.3 }, minDist: 3, cond: () => ['hall', 'kitchen', 'bathroom', 'bedroom'].includes(Player.room) },
-  { id: 'darkStudy', stages: ['p3'], pos: V3(13.1, 0, 0.95), yaw: faceYaw(V3(13.1, 0, 0.95), V3(9.9, 0, 4.4)), minDist: 3, cond: () => Player.room === 'hall' && DOORS.study.isOpen },
-  { id: 'longBehind', stages: ['p3'], dyn: true, minDist: 4, cond: () => VEST.D > 9 && Player.room === 'hall' && Player.vel.x < -0.2 },
-  { id: 'stairsBottom', stages: ['descent'], pos: V3(32.4, -12.8, 8.85), yaw: -Math.PI / 2, minDist: 3.2, timeout: 120, cond: () => F.loops >= 2 && Player.pos.x > 24 },
+  { id: 'hallEnd', stages: ['p2', 'p2b'], pos: V3(1.25, 0, 5.4), yaw: Math.PI / 2, minDist: 5, snap: true, cond: () => ['kitchen', 'study', 'bathroom'].includes(Player.room) || (Player.room === 'hall' && Player.pos.x > 9.5 && viewAngleTo(V3(14, 1.5, 5.4)) < 0.9) },
+  { id: 'kitchenWindow', stages: ['p2b'], pos: V3(11.3, 0, 12.9), yaw: Math.PI, minDist: 1.5, snap: true, stinger: true, cond: () => Player.room === 'kitchen' && Player.pos.z < 9.5 },
+  { id: 'bedroomPeek', stages: ['p2b'], pos: V3(4.5, 0, 4.25), yaw: Math.PI / 2, pose: { lean: -0.12, roll: 0.45 }, minDist: 4, snap: true, cond: () => Player.room === 'hall' && Player.pos.x > 8.2 && DOORS.bedroom.isOpen },
+  { id: 'armchair', stages: ['p3'], pos: V3(0.98, 0, 10.14), yaw: 2.4, pose: { sit: true, roll: 0.4 }, minDist: 3, snap: true, cond: () => ['hall', 'kitchen', 'bathroom', 'bedroom'].includes(Player.room) },
+  { id: 'darkStudy', stages: ['p3'], pos: V3(13.1, 0, 0.95), yaw: faceYaw(V3(13.1, 0, 0.95), V3(9.9, 0, 4.4)), minDist: 3, snap: true, stinger: true, cond: () => Player.room === 'hall' && DOORS.study.isOpen },
+  { id: 'longBehind', stages: ['p3'], dyn: true, minDist: 4, snap: true, stinger: true, cond: () => VEST.D > 9 && Player.room === 'hall' && Player.vel.x < -0.2 },
+  { id: 'stairsBottom', stages: ['descent'], pos: V3(32.4, -12.8, 8.85), yaw: -Math.PI / 2, minDist: 3.2, timeout: 120, snap: true, cond: () => F.loops >= 2 && Player.pos.x > 24 },
 ];
 
 /* ---------------- unseen changes ---------------- */
@@ -3824,21 +4209,24 @@ const Story = {
     // lights
     const L = LN;
     for (const l of LIGHTS) { l.setFlicker(null); l.dim = 1; l.keepFlicker = false; }
-    const base = { bedroom: 1, bathroom: 0, study: 0, hallA: 1, hallB: 1, vest: 1, living: 1, floorlamp: 1, kitchen: 1, stairs: 1, basement: 0, deepA: 0, deepB: 0, final: 0, sun: 0, special: 0 };
+    const base = { bedroom: 1, bathroom: 1, study: 1, hallA: 1, hallB: 0, vest: 1, living: 1, floorlamp: 1, kitchen: 1, stairs: 1, basement: 0, deepA: 0, deepB: 0, final: 0, sun: 0, special: 0 };
+    L.hallA.dim = 0.8; L.vest.dim = 0.65;
     L.bathroom.color = lin('#fff1dc'); L.bathroom.intensity = 4.2; L.floorlamp.color = lin('#ffb877'); L.floorlamp.intensity = 3.0;
     L.bedroom.color = lin('#ffc98e'); L.bedroom.intensity = 5.2;
     for (const k of ['study', 'hallA', 'hallB', 'vest', 'living', 'kitchen']) { L[k].color = lin(k === 'kitchen' ? '#fff0d8' : '#ffd29a'); L[k].intensity = { study: 4.2, hallA: 3.4, hallB: 3.4, vest: 3.2, living: 4.4, kitchen: 4.6 }[k]; }
     if (at('p1')) { base.floorlamp = F.lampOff ? 0 : 1; if (F.stairPop) base.stairs = 0; }
-    if (at('p2')) { base.vest = 0; base.living = 0; base.bathroom = 1; L.hallA.setFlicker('unstable'); L.hallA.keepFlicker = true; }
-    if (at('p2b')) { base.study = 1; L.hallB.dim = 0.6; }
+    if (at('p2')) { base.vest = 0; base.living = 0; base.study = 0; base.bathroom = 1; L.bathroom.sw = 1; L.hallA.setFlicker('unstable'); L.hallA.keepFlicker = true; L.hallA.dim = 0.7; }
+    if (at('p2b')) { base.study = 1; L.study.sw = 1; base.bathroom = 0; }
     if (at('p3')) {
       base.study = 0; base.hallA = 0; base.bedroom = 1; L.bedroom.dim = 0.7;
       L.bathroom.color = lin('#e8f0ff'); L.bathroom.intensity = 13;
       L.floorlamp.color = lin('#ff4a2a'); L.floorlamp.intensity = 2.2; base.floorlamp = 1;
-      L.hallB.dim = 0.55; L.hallB.setFlicker('unstable'); L.hallB.keepFlicker = true;
+      base.hallB = 1; L.hallB.dim = 0.5; L.hallB.setFlicker('unstable'); L.hallB.keepFlicker = true; base.living = 0; base.bathroom = 0; base.stairs = 0;
+      if (!at('descent')) L.kitchen.sw = 1;
       base.vest = 1; L.vest.dim = 0.45; L.vest.color = lin('#cfd8ff'); L.vest.setFlicker('unstable'); L.vest.keepFlicker = true;
       L.kitchen.setFlicker('reveal'); L.kitchen.keepFlicker = true;
     }
+    for (const l of LIGHTS) if (l.switchMesh) l.switchMesh.rotation.x = l.sw ? 0 : 0.35;
     if (at('descent')) { base.deepA = 1; base.deepB = 1; L.kitchen.setFlicker(null); }
     if (at('final')) { base.final = 1; base.deepA = 0; base.deepB = 0; }
     if (morning) {
@@ -3848,7 +4236,7 @@ const Story = {
     }
     for (const k in base) L[k].on = base[k];
     // environment
-    const env = morning ? [0.075, 0.075, 0.085, 0.012, 1.3] : at('final') ? [0.006, 0.006, 0.008, 0.075, 1.25] : at('descent') ? [0.004, 0.004, 0.005, 0.2, 1.3] : at('p3') ? [0.009, 0.008, 0.009, 0.05, 1.2] : at('p2') ? [0.02, 0.018, 0.018, 0.032, 1.25] : [0.03, 0.028, 0.026, 0.02, 1.25];
+    const env = morning ? [0.075, 0.075, 0.085, 0.012, 1.3] : at('final') ? [0.004, 0.004, 0.006, 0.075, 1.25] : at('descent') ? [0.0016, 0.0016, 0.002, 0.2, 1.3] : at('p3') ? [0.0022, 0.0024, 0.0034, 0.06, 1.2] : at('p2') ? [0.004, 0.0045, 0.0065, 0.04, 1.25] : [0.0055, 0.0062, 0.0095, 0.03, 1.25];
     SU.uAmbient.value.set(env[0], env[1], env[2]); SU.uFogDensity.value = env[3]; SU.uExposure.value = env[4];
     postMat.uniforms.uDesat.value = at('p3') ? 0.22 : at('p2') ? 0.14 : 0.08;
     postMat.uniforms.uGrain.value = at('p3') ? 0.075 : 0.055;
@@ -3863,7 +4251,7 @@ const Story = {
     W.brickDoor.visible = false; W.duvet.visible = true;
     W.cabDoor.visible = at('p2'); W.mug.visible = !at('p2'); W.hallMug.visible = at('p2');
     W.livingChair.rotation.y = 0; W.livingChair.position.x = 3.4;
-    W.wekker.visible = s === 'p2b'; W.studyNote.visible = s === 'p2b';
+    W.wekker.visible = s === 'p2b'; mirrorOnly(W.wekker, s === 'p2b'); W.studyNote.visible = s === 'p2b';
     W.wekker.position.set(11.15, 0.77 + 0.05, 0.62); W.wekker.rotation.y = 1.25;
     W.alarm.mesh.visible = W.alarmBody.visible = s !== 'p2b';
     W.alarm.mesh.material.uniforms.uMap.value = morning ? T.d714r : at('p3') ? T.d334r : T.d333r;
@@ -3905,7 +4293,10 @@ const Story = {
       Sound.wind(morning ? 0.06 : at('p1') ? 0.0 : 0.1, 1.5);
       Sound.tone(at('p2') && !morning ? 0.03 : 0.08, 1);
       Sound.drone(morning ? 0 : at('final') ? 0.3 : at('descent') ? 0.2 : at('p3') ? 0.11 : 0, 2);
-      Sound.musicBox(s === 'p2b');
+      if (s === 'p2b') Sound.musicBox(true);
+      else if (at('final')) Sound.lullaby(true, { c: 1, g: 0.2, trans: -7, pos: null });
+      else if (at('descent')) Sound.lullaby(true, { c: 0.9, g: 0.12, trans: -5, pos: null });
+      else Sound.lullaby(false);
       if (this.waterL) { this.waterL.stop(0.05); this.waterL = null; } F.water = false;
       if (s === 'p2' && F.waterStarted) this.startWater();
       Sound.setWrong({ intro: 0, p1: 0.04, p2: 0.14, p2b: 0.24, p3: 0.38, descent: 0.5, final: 0.55 }[s] ?? 0);
@@ -3945,8 +4336,8 @@ const Story = {
     DOORS.bedroom.set(true); DOORS.bathroom.set(false); DOORS.study.set(true); DOORS.basement.set(false); DOORS.front.set(false);
     for (const [k, v] of Object.entries({ hall: 430, living: 708, kitchen: 325, basement: 542 })) { CLOCKS[k].min = v; CLOCKS[k].ticking = true; }
     for (const l of LIGHTS) l.sw = 1;
-    LN.stairs.sw = 0; if (LN.stairs.switchMesh) LN.stairs.switchMesh.rotation.x = 0.35;
-    for (const k of ['bedroom', 'bathroom', 'study', 'living', 'kitchen']) if (LN[k].switchMesh) LN[k].switchMesh.rotation.x = 0;
+    for (const k of ['bathroom', 'study', 'living', 'kitchen', 'stairs']) LN[k].sw = 0;
+    for (const l of LIGHTS) if (l.switchMesh) l.switchMesh.rotation.x = l.sw ? 0 : 0.35;
     this.stage = stage; G.stage = stage; this.st = 0; this.loopIter = 0; this.mirrorAcc = 0;
     this.ending = null; this.endSilent = false; this.dbl = null; this.inBase = 0; this.inKitchen = 0; this.digSeen = 0; this.finLook = 0; this.flAcc = 0; this.textAcc = 0; this.darkT = 0; this.birdNext = 0; this.breathNext = 0; this.echo = 0;
     Player.onStep = null; W.coatMirror.keep = false; W.tvOn = false; W.tvScreen.material.uniforms.uEmissive.value.setScalar(0);
@@ -4041,6 +4432,8 @@ const Story = {
   u_p1(dt) {
     this.digitalLooks();
     const P = Player;
+    if (F.lul && Sound.lul) { const n = F.lulN || 0, cap = [0.04, 0.26, 0.48, 0.7, 0.85][n] + 0.14; Sound.lul.cT = Math.min(cap, Sound.lul.cT + dt * 0.0022); }
+    this.baseMirrorHints(dt);
     if (!F.stairPop && P.room === 'stairs' && P.pos.z > 10.9 && LN.stairs.lit) {
       F.stairPop = true; Sound.play('pop', LN.stairs.pos, { gain: 0.9 }); LN.stairs.on = 0;
     }
@@ -4054,6 +4447,16 @@ const Story = {
       }
     }
     if (!F.p2 && Object.values(CLOCKS).every((c) => c.isSet() && !c.ticking)) this.toP2();
+  },
+  /* the basement mirror: the clock behind you, seen the other way round */
+  baseMirrorHints(dt) {
+    const P = Player; if (P.room !== 'basement') { this.bmAcc = 0; return; }
+    const m = W.baseMirror;
+    if (!F.baseMirrorNew && activeMirror === m) { F.baseMirrorNew = true; after(0.6, () => UI.thought(tr('t_baseMirrorNew'), 3)); }
+    if (!F.mirrorClock && !CLOCKS.basement.isSet() && activeMirror === m && this.mirrorViewing(m)) {
+      this.bmAcc = (this.bmAcc || 0) + dt;
+      if (this.bmAcc > 2.2) { F.mirrorClock = true; UI.thought(tr('t_mirrorClock'), 3.5); }
+    } else this.bmAcc = 0;
   },
   digitalLooks() {
     for (const d of DIGITALS) {
@@ -4078,26 +4481,40 @@ const Story = {
   onClockSet(c) {
     if (this.stage === 'morning') { c.ticking = true; return; }
     if (SI(this.stage) >= SI('p2')) { c.ticking = false; return; }
+    const m = ((Math.round(c.min) % 720) + 720) % 720;
+    if (c === CLOCKS.basement && !c.isSet() && Math.abs(m - TARGET_MIN) <= 1 && !F.baseDisbelief) { F.baseDisbelief = true; after(0.7, () => UI.thought(tr('t_baseDisbelief'), 3)); }
     if (c.isSet()) {
-      c.min = TARGET_MIN; c.sec = 0; c.ticking = false; c.solvedLock = false;
+      c.min = c.target; c.sec = 0; c.ticking = false; c.solvedLock = false;
       Sound.play('ratchet', c.worldPos(_tv3), { gain: 0.8, rate: 0.7 });
       const n = Object.values(CLOCKS).filter((k) => k.isSet()).length;
+      this.lullabyLevel(n);
+      if (c === CLOCKS.basement) after(1.2, () => UI.thought(tr('t_mirrorRight'), 3));
       if (n === 2 && !F.p1CrossAt) F.p1CrossAt = G.t + 5;
       if (n === 1 && !F.firstSet) { F.firstSet = true; after(0.6, () => UI.thought(tr('t_clockStopped'), 3)); }
       if (n === 3 && !CLOCKS.basement.isSet() && !F.thirdHint) { F.thirdHint = true; after(0.8, () => UI.thought(tr('t_oneMore'), 3)); }
     } else { c.ticking = true; }
   },
+  /* the lullaby starts the first time you touch a clock, and gets worse with every clock you set */
+  onClockOpen(c) {
+    if (this.stage !== 'p1' || F.lul) return;
+    F.lul = true; Sound.lullaby(true, { c: 0.04, g: 0.055, pos: null, from: 0 });
+  },
+  lullabyLevel(n) {
+    if (!F.lul) return;
+    F.lulN = n;
+    Sound.lullaby(true, { c: [0.04, 0.26, 0.48, 0.7, 0.85][n], g: [0.055, 0.08, 0.11, 0.14, 0.16][n] });
+  },
   toP2() {
     F.p2 = true; F.silence = true;
     Sound.fridgeDie(1.6);
-    Sound.tapeStop(1.9, 0.9, 1.4, () => { Sound.wind(0, 0.01); Sound.tone(0.02, 0.01); Sound.fridge(false); });
+    Sound.tapeStop(1.9, 0.9, 1.4, () => { Sound.wind(0, 0.01); Sound.tone(0.02, 0.01); Sound.fridge(false); Sound.lullaby(false); });
     Sound.setWrong(0.14);
     for (const c of Object.values(CLOCKS)) c.solvedLock = true;
     this.setStage('p2');
     after(2.8, () => { const bd = DOORS.bedroom; if (bd.isOpen) bd.slam(); else Sound.play('thud', bd.pos, { gain: 1 }); });
-    after(3.0, () => { LN.vest.on = 0; LN.living.on = 0; LN.hallA.setFlicker('unstable'); LN.hallA.keepFlicker = true; });
+    after(3.0, () => { LN.vest.on = 0; LN.living.on = 0; LN.study.on = 0; LN.hallA.setFlicker('unstable'); LN.hallA.keepFlicker = true; LN.hallA.dim = 0.7; });
     after(4.6, () => UI.thought(tr('t_silent'), 3.5));
-    SU.uAmbient.value.set(0.02, 0.018, 0.018); SU.uFogDensity.value = 0.032;
+    SU.uAmbient.value.set(0.004, 0.0045, 0.0065); SU.uFogDensity.value = 0.04;
     postMat.uniforms.uDesat.value = 0.14;
     W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['delay'];
   },
@@ -4107,7 +4524,7 @@ const Story = {
     F.waterStarted = true; F.water = true;
     if (this.waterL) this.waterL.stop(0.05);
     this.waterL = Sound.loop('water', V3(7.2, 1.0, 0.3), { gain: 0.55, ref: 1.0, roll: 1.2, rev: 0.4 });
-    LN.bathroom.on = 1; if (!DOORS.bathroom.isOpen && !F.bathSlam) DOORS.bathroom.set(true);
+    LN.bathroom.on = 1; LN.bathroom.sw = 1; if (LN.bathroom.switchMesh) LN.bathroom.switchMesh.rotation.x = 0; if (!DOORS.bathroom.isOpen && !F.bathSlam) DOORS.bathroom.set(true);
   },
   faucet() {
     if (F.water) { F.water = false; if (this.waterL) { this.waterL.stop(0.08); this.waterL = null; } Sound.play('switch', W.faucet.getWorldPosition(_ev), { gain: 0.4, rate: 0.6 }); }
@@ -4162,9 +4579,9 @@ const Story = {
   },
   toP2b() {
     this.setStage('p2b');
-    DOORS.study.set(false); LN.study.on = 1; W.studyStrip.visible = true;
+    DOORS.study.set(false); LN.study.on = 1; LN.study.sw = 1; if (LN.study.switchMesh) LN.study.switchMesh.rotation.x = 0; W.studyStrip.visible = true;
     Sound.musicBox(true);
-    W.wekker.visible = true; W.studyNote.visible = true; W.alarm.mesh.visible = false; W.alarmBody.visible = false;
+    W.wekker.visible = true; mirrorOnly(W.wekker, true); W.studyNote.visible = true; W.alarm.mesh.visible = false; W.alarmBody.visible = false;
     W.wekker.position.set(11.15, 0.77 + 0.05, 0.62); W.wekker.rotation.y = 1.25;
     W.hallMirror.queue = ['stillHead']; W.bathMirror.queue = ['smile']; W.coatMirror.queue = ['lookAway'];
     LN.hallB.dim = 0.6;
@@ -4191,7 +4608,7 @@ const Story = {
     if (i === 4) { W.books.forEach((b) => (b.visible = false)); after(0.9, () => UI.thought(tr('t_loop4'), 4)); }
     if (i === 5) { Ent.spawn({ id: 'loopChair', pos: V3(13.05, 0, 3.72), yaw: -2.3, pose: { sit: true, roll: 0.3 }, minDist: 2.2, timeout: 30 }); }
     if (i === 6) { LN.special.dim = 0.55; after(0.8, () => UI.thought(tr('t_loop6'), 3.5)); }
-    if (i >= 7 && i % 2 === 1) { W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(3); after(0.8, () => UI.thought(tr('t_loop7'), 3.5)); }
+    if (i >= 7 && i % 2 === 1) { W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(3); after(0.8, () => UI.thought(tr(i === 7 ? 't_loopMirror' : 't_loop7'), 3.5)); }
   },
   loopObject(name) {
     if (this.stage !== 'p2b') return;
@@ -4202,6 +4619,7 @@ const Story = {
   solveLoop() {
     if (F.loopDone) return;
     F.loopDone = true; F.loopActive = false;
+    mirrorOnly(W.wekker, false);   // taken out of the mirror: now it is really there
     const wp = W.wekker.getWorldPosition(new THREE.Vector3());
     Sound.play('alarm', wp, { gain: 1.3, ref: 2 });
     LN.study.setFlicker('buzz'); LN.special.setFlicker('buzz');
@@ -4329,6 +4747,8 @@ const Story = {
     LN.deepA.pos.copy(bx[0]); LN.deepB.pos.copy(bx[1]);
     LN.deepA.intensity = LN.deepB.intensity = 2.0; LN.deepA.radius = LN.deepB.radius = 5.5;
     if (!LN.deepA.flick) { LN.deepA.setFlicker('buzz'); }
+    // the lullaby swells the deeper you go, and each loop of the stairs breaks it further
+    if (Sound.lul && Sound.lul.on) { Sound.lul.gT = 0.1 + clamp(-P.pos.y / 12.8, 0, 1) * 0.2; Sound.lul.cT = Math.min(1, 0.88 + (F.loops || 0) * 0.05); }
     if (P.pos.x > 33.4 && P.pos.y < -11) this.toFinal();
   },
 
@@ -4340,7 +4760,7 @@ const Story = {
     const H = Ent.H; let t = 0; const P = Player;
     let ex = 46.2, ez = 8.85, swelled = false;
     Ent.spawn({
-      id: 'final', persistent: true, flashKill: false, tint: 0.011, eyesOn: true, pos: V3(ex, -12.8, ez), yaw: -Math.PI / 2, pose: { roll: 0.25, pitch: 0 },
+      id: 'final', persistent: true, flashKill: false, tint: 0.006, albedo: 0.015, eyesOn: true, pos: V3(ex, -12.8, ez), yaw: -Math.PI / 2, pose: { roll: 0.25, pitch: 0 },
       update: (dt, E) => {
         t += dt;
         if (t > 2.2 && !swelled) { swelled = true; Sound.play('swell', null, { gain: 0.45, pure: true }); }
@@ -4478,7 +4898,7 @@ const Story = {
   updateSpawns() {
     if (Ent.def || G.t < this.spawnNext) return;
     this.spawnNext = G.t + 0.5;
-    const cool = { p2: 26, p2b: 22, p3: 16, descent: 5 }[this.stage] ?? 999;
+    const cool = { p2: 60, p2b: 50, p3: 40, descent: 30 }[this.stage] ?? 999;
     if (G.t - Ent.lastEnd < cool) return;
     for (const s of SPAWNS) {
       if (Ent.used[s.id] || !s.stages.includes(this.stage) || !s.cond()) continue;
@@ -4537,6 +4957,7 @@ const Story = {
       ev.push([2, () => { const ds = Object.values(DOORS).filter((d) => d.name !== 'front' && d.exists && d.pos.distanceTo(camera.position) > 5 && !canSee(d.pos, 0.5)); const d = pick(ds); if (d) { if (d.isOpen && Math.random() < 0.5) d.slam(); else Sound.play('shut', d.pos, { gain: 0.8 }); } }]);
       ev.push([2, () => { const p = back(-0.1); p.y = 2.9; for (let i = 0; i < 5; i++) after(i * 0.6, () => Sound.step('wood', V3(p.x + (i - 2) * 0.6, 2.9, p.z + 0.3), { gain: 0.7, lp: 600 })); }]);
       ev.push([2, () => Sound.knock(V3(P.pos.x, -0.2, P.pos.z), 3, 0.35, 0.8)]);
+      if (n >= SI('p3')) ev.push([3, () => { const p = far(); p.y = 1.1; Sound.lulPhrase(p, 0.85, irand(4, 7)); }]);
       ev.push([2, () => { if (P.room === 'hall' || P.room === 'vestibule') this.echo = irand(6, 9); else Sound.play('creaks', far(), { gain: 0.6 }); }]);
       ev.push([1, () => { const wins = [V3(0, 1.5, 1.95), V3(5.2, 1.4, 11), V3(11.3, 1.5, 11), V3(11.8, 1.5, 0)]; const w = wins.sort((a, b) => a.distanceTo(P.pos) - b.distanceTo(P.pos))[0]; for (let i = 0; i < 3; i++) Sound.play('glass', w, { gain: 0.3, delay: i * 0.4, rate: 0.7 }); }]);
     }
