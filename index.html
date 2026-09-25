@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Nog Niet Wakker</title>
+<title>Awakent</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
@@ -41,8 +41,9 @@
   #hint { position: absolute; left: max(16px, 3vw); bottom: max(16px, calc(3vh + env(safe-area-inset-bottom, 0px))); font-size: 11px; letter-spacing: 0.08em; color: rgba(230, 223, 210, 0.72); display: flex; gap: 14px; flex-wrap: wrap; align-items: center; max-width: calc(100% - 32px); transition: opacity 1s ease; }
   #hint span { display: inline-flex; gap: 6px; align-items: center; }
   #hint.fade { opacity: 0; }
-  #clockPanel { position: absolute; left: 50%; top: calc(50% + 120px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  #clockTime { font-family: var(--display); font-size: 34px; color: var(--bone); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9); font-variant-numeric: tabular-nums; }
+  #clockPanel { position: absolute; inset: 0; --r: 100px; }
+  #clockInfo { position: absolute; left: 50%; top: calc(50% + var(--r) + 14px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; width: max-content; max-width: calc(100% - 32px); }
+  #clockTime { font-family: var(--display); font-size: 30px; line-height: 1; color: var(--bone); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9); font-variant-numeric: tabular-nums; }
   #clockPanel .keys { font-size: 10.5px; letter-spacing: 0.1em; color: rgba(230, 223, 210, 0.75); text-transform: uppercase; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: center; }
 
   /* ---------- overlays: note & image ---------- */
@@ -106,6 +107,30 @@
     .screen { background: linear-gradient(0deg, rgba(10, 11, 15, 0.95) 0%, rgba(10, 11, 15, 0.8) 55%, rgba(10, 11, 15, 0.35) 100%); }
     .row { grid-template-columns: 1fr; gap: 6px; }
   }
+  /* ---------- clock dial ---------- */
+  #clockRing { position: absolute; left: 50%; top: 50%; width: 200px; height: 200px; margin: -100px 0 0 -100px; border-radius: 50%; border: 1.5px dashed rgba(217, 164, 91, 0.75); box-shadow: 0 0 0 1px rgba(10, 11, 15, 0.35), inset 0 0 0 1px rgba(10, 11, 15, 0.35); }
+  #clockDot { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--amber); border: 2px solid rgba(10, 11, 15, 0.7); box-shadow: 0 0 14px rgba(217, 164, 91, 0.9); }
+  #clockPanel .help { font-size: 11px; letter-spacing: 0.06em; color: rgba(230, 223, 210, 0.78); text-align: center; max-width: 34ch; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); }
+
+  /* ---------- performance meter ---------- */
+  #perf { position: absolute; right: calc(12px + env(safe-area-inset-right, 0px)); top: calc(12px + env(safe-area-inset-top, 0px)); margin: 0; padding: 8px 10px; font: 11px/1.45 var(--mono); color: var(--bone); background: rgba(10, 11, 15, 0.72); border: 1px solid rgba(230, 223, 210, 0.16); border-radius: 3px; pointer-events: none; white-space: pre; font-variant-numeric: tabular-nums; z-index: 5; }
+  #perf .bad { color: var(--alarm); } #perf .ok { color: var(--amber); } #perf .dim { color: var(--dust); }
+  #perfGraph { display: block; margin-top: 6px; width: 180px; height: 36px; }
+  @media (pointer: coarse) { #perf { top: calc(76px + env(safe-area-inset-top, 0px)); } }
+
+  /* ---------- language toggle ---------- */
+  .lang { display: inline-flex; gap: 2px; align-self: flex-start; border: 1px solid rgba(230, 223, 210, 0.2); border-radius: 3px; padding: 2px; }
+  .lang button { background: none; border: 0; padding: 5px 9px 4px; font-size: 11px; letter-spacing: 0.14em; color: var(--dust); cursor: pointer; border-radius: 2px; }
+  .lang button[aria-pressed="true"] { color: var(--ink); background: var(--bone); }
+  .lang button:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+  /* ---------- brightness calibration ---------- */
+  #calib { background: #000; align-items: center; justify-content: center; }
+  #calib .wrap { margin: auto; max-width: 620px; gap: 16px; }
+  #calCanvas { width: 100%; max-width: min(560px, 80vh); height: auto; aspect-ratio: 560 / 220; background: #000; border: 1px solid rgba(230, 223, 210, 0.1); }
+  #calib .row { grid-template-columns: minmax(0, 8em) minmax(0, 1fr); }
+  #calib p.lede { max-width: 52ch; font-size: clamp(16px, 1.8vw, 19px); }
+
   @media (prefers-reduced-motion: reduce) { #digits { animation: none; } #thought { transition: none; } }
 </style>
 </head>
@@ -113,7 +138,7 @@
 
 
 <div id="app">
-  <canvas id="view" aria-label="Spelwereld"></canvas>
+  <canvas id="view" data-i18n-aria="aria_view" aria-label="Spelwereld"></canvas>
 
   <div id="hud" hidden>
     <div id="reticle"></div>
@@ -121,79 +146,103 @@
     <p id="thought" aria-live="polite"></p>
     <div id="hint"></div>
     <div id="clockPanel" hidden>
-      <span id="clockTime">0:00</span>
-      <span class="keys"><kbd>W</kbd><kbd>S</kbd> uur &nbsp;·&nbsp; <kbd>A</kbd><kbd>D</kbd> minuten &nbsp;·&nbsp; <kbd>E</kbd> klaar</span>
+      <div id="clockRing"><div id="clockDot"></div></div>
+      <div id="clockInfo">
+        <span id="clockTime">0:00</span>
+        <span class="help" data-i18n="clock_help">Beweeg de muis rond de klok om de wijzers te draaien</span>
+        <span class="keys"><kbd>E</kbd>&nbsp;<span data-i18n="done">klaar</span></span>
+      </div>
     </div>
   </div>
 
   <div id="note" class="overlay" hidden>
     <div class="paper"><p id="noteText"></p></div>
-    <p class="close">E of klik om weg te leggen</p>
+    <p class="close" data-i18n="note_close">E of klik om weg te leggen</p>
   </div>
   <div id="image" class="overlay" hidden>
     <figure><canvas id="imgCanvas" width="360" height="240"></canvas><figcaption id="imgCap"></figcaption></figure>
-    <p class="close">E of klik om terug te gaan</p>
+    <p class="close" data-i18n="img_close">E of klik om terug te gaan</p>
   </div>
 
   <section id="title" class="screen">
     <div class="wrap">
+      <div class="lang" role="group" aria-label="Taal / Language"><button type="button" data-lang="nl" aria-pressed="true">NL</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
       <canvas id="digits" width="340" height="120" role="img" aria-label="03:33"></canvas>
-      <h1>Nog niet wakker</h1>
-      <p class="lede">Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.</p>
+      <h1>Awakent</h1>
+      <p class="lede" data-i18n="lede">Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.</p>
       <div class="actions">
-        <button id="startBtn" type="button" disabled>Begin</button>
-        <button id="contBtn" type="button" hidden>Verder vanaf laatste punt</button>
+        <button id="startBtn" type="button" disabled data-i18n="btn_begin">Begin</button>
+        <button id="contBtn" type="button" hidden data-i18n="btn_continue">Verder vanaf laatste punt</button>
       </div>
       <ul class="keys">
-        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> lopen</li>
-        <li><kbd>Muis</kbd> kijken</li>
-        <li><kbd>E</kbd> gebruiken</li>
-        <li><kbd>F</kbd> zaklamp</li>
-        <li><kbd>Shift</kbd> sneller</li>
-        <li><kbd>Esc</kbd> menu</li>
+        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <span data-i18n="k_walk">lopen</span></li>
+        <li><kbd data-i18n="k_mouse">Muis</kbd> <span data-i18n="k_look">kijken</span></li>
+        <li><kbd>E</kbd> <span data-i18n="k_use">gebruiken</span></li>
+        <li><kbd>F</kbd> <span data-i18n="k_flash">zaklamp</span></li>
+        <li><kbd>Shift</kbd> <span data-i18n="k_run">sneller</span></li>
+        <li><kbd>P</kbd> <span data-i18n="k_perf">prestaties</span></li>
+        <li><kbd>Esc</kbd> <span data-i18n="k_menu">menu</span></li>
       </ul>
-      <p class="meta">Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis</p>
-      <p id="loading">Het huis wordt opgebouwd…</p>
+      <p class="meta" data-i18n="meta">Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis</p>
+      <p id="loading" data-i18n="loading">Het huis wordt opgebouwd…</p>
     </div>
   </section>
 
   <section id="pause" class="screen" hidden>
     <div class="wrap">
-      <p class="eyebrow">Gepauzeerd</p>
-      <h2 id="objText">Ga naar buiten.</h2>
-      <details id="stuck"><summary>Ik zit vast</summary><p id="hintText"></p></details>
-      <div class="row"><label for="sens">Muisgevoeligheid</label><input id="sens" type="range" min="0.3" max="2.5" step="0.05" value="1"></div>
-      <div class="row"><label for="vol">Volume</label><input id="vol" type="range" min="0" max="1" step="0.01" value="0.9"></div>
-      <div class="row"><label for="quality">Beeldkwaliteit</label><select id="quality"><option value="auto">Automatisch</option><option value="laag">Laag (snelst)</option><option value="middel">Middel</option><option value="hoog">Hoog</option></select></div>
+      <p class="eyebrow" data-i18n="paused">Gepauzeerd</p>
+      <h2 id="objText"></h2>
+      <details id="stuck"><summary data-i18n="stuck">Ik zit vast</summary><p id="hintText"></p></details>
+      <div class="row"><label for="sens" data-i18n="sens">Muisgevoeligheid</label><input id="sens" type="range" min="0.3" max="2.5" step="0.05" value="1"></div>
+      <div class="row"><label for="vol" data-i18n="volume">Volume</label><input id="vol" type="range" min="0" max="1" step="0.01" value="0.9"></div>
+      <div class="row"><label for="bright" data-i18n="brightness">Helderheid</label><input id="bright" type="range" min="0.6" max="1.9" step="0.02" value="1"></div>
+      <div class="row"><label for="quality" data-i18n="quality">Beeldkwaliteit</label><select id="quality"><option value="auto" data-i18n="q_auto">Automatisch</option><option value="laag" data-i18n="q_low">Laag (snelst)</option><option value="middel" data-i18n="q_mid">Middel</option><option value="hoog" data-i18n="q_high">Hoog</option></select></div>
+      <div class="row"><label for="perfSel" data-i18n="perfmeter">Prestatiemeter</label><select id="perfSel"><option value="0" data-i18n="perf_off">Uit</option><option value="1" data-i18n="perf_on">Aan (toets P)</option></select></div>
+      <div class="row"><label for="langSel" data-i18n="language">Taal</label><select id="langSel"><option value="nl">Nederlands</option><option value="en">English</option></select></div>
       <div class="actions">
-        <button id="resumeBtn" type="button">Verder spelen</button>
-        <button id="restartBtn" type="button" class="ghost">Opnieuw beginnen</button>
+        <button id="resumeBtn" type="button" data-i18n="resume">Verder spelen</button>
+        <button id="restartBtn" type="button" class="ghost" data-i18n="restart">Opnieuw beginnen</button>
       </div>
       <ul class="keys">
-        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> lopen</li>
-        <li><kbd>E</kbd> gebruiken</li>
-        <li><kbd>F</kbd> zaklamp</li>
-        <li><kbd>Shift</kbd> sneller</li>
+        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <span data-i18n="k_walk">lopen</span></li>
+        <li><kbd>E</kbd> <span data-i18n="k_use">gebruiken</span></li>
+        <li><kbd>F</kbd> <span data-i18n="k_flash">zaklamp</span></li>
+        <li><kbd>Shift</kbd> <span data-i18n="k_run">sneller</span></li>
+        <li><kbd>P</kbd> <span data-i18n="k_perf">prestaties</span></li>
       </ul>
     </div>
   </section>
 
   <section id="end" class="screen" hidden>
     <div class="wrap">
-      <p class="eyebrow">Einde</p>
-      <h2>Nog niet wakker</h2>
-      <div class="actions"><button id="againBtn" type="button">Opnieuw spelen</button></div>
+      <p class="eyebrow" data-i18n="the_end">Einde</p>
+      <h2>Awakent</h2>
+      <div class="actions"><button id="againBtn" type="button" data-i18n="play_again">Opnieuw spelen</button></div>
     </div>
   </section>
+
+  <section id="calib" class="screen" hidden>
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="cal_eyebrow">Voor je begint</p>
+      <h2 data-i18n="cal_title">Helderheid</h2>
+      <canvas id="calCanvas" width="560" height="220" aria-hidden="true"></canvas>
+      <p class="lede" data-i18n="cal_text"></p>
+      <div class="row"><label for="calBright" data-i18n="brightness">Helderheid</label><input id="calBright" type="range" min="0.6" max="1.9" step="0.02" value="1"></div>
+      <div class="actions"><button id="calDone" type="button" data-i18n="cal_done">Klaar</button></div>
+      <p class="meta" data-i18n="cal_hint"></p>
+    </div>
+  </section>
+
+  <div id="perf" hidden><span id="perfText"></span><canvas id="perfGraph" width="180" height="36"></canvas></div>
 
   <div id="touch" hidden>
     <div id="stick"><div id="nub"></div></div>
     <div id="lookpad"></div>
-    <button id="tE" type="button" aria-label="Gebruiken">E</button>
-    <button id="tF" type="button" aria-label="Zaklamp">F</button>
+    <button id="tE" type="button" aria-label="Gebruiken" data-i18n-aria="k_use">E</button>
+    <button id="tF" type="button" aria-label="Zaklamp" data-i18n-aria="k_flash">F</button>
     <button id="tM" type="button" aria-label="Menu">II</button>
   </div>
-  <p id="dragNote" hidden>Klik in het beeld om rond te kijken <span>· of houd de muisknop ingedrukt en sleep</span></p>
+  <p id="dragNote" hidden><span data-i18n="drag_note">Klik in het beeld om rond te kijken</span> <span data-i18n="drag_note2">· of houd de muisknop ingedrukt en sleep</span></p>
 </div>
 
 <script>
@@ -262,9 +311,10 @@ addEventListener('keyup', (e) => { Input.keys[e.code] = false; });
 addEventListener('blur', () => { Input.keys = {}; });
 addEventListener('mousemove', (e) => {
   if (Input.locked || Input.dragging) { Input.mdx += e.movementX || 0; Input.mdy += e.movementY || 0; }
+  Input.ax = e.clientX; Input.ay = e.clientY; Input.amoved = true;
 });
 addEventListener('wheel', (e) => { if (G.running) Input.wheel += Math.sign(e.deltaY); }, { passive: true });
-function endInputFrame() { Input.mdx = 0; Input.mdy = 0; Input.ePress = false; Input.fPress = false; Input.click = false; Input.wheel = 0; Input.pressed = {}; }
+function endInputFrame() { Input.amoved = false; Input.mdx = 0; Input.mdy = 0; Input.ePress = false; Input.fPress = false; Input.click = false; Input.wheel = 0; Input.pressed = {}; }
 
 /* safe storage */
 const Store = {
@@ -272,6 +322,143 @@ const Store = {
   set(k, v) { try { localStorage.setItem('nnw_' + k, v); } catch (e) { /* ignore */ } },
   del(k) { try { localStorage.removeItem('nnw_' + k); } catch (e) { /* ignore */ } },
 };
+
+/* ---- 01b_i18n.js ---- */
+/* ============================================================
+   Language: Dutch and English
+   ============================================================ */
+const STR = {
+  nl: {
+    lede: 'Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.',
+    btn_begin: 'Begin', btn_continue: 'Verder vanaf laatste punt',
+    k_walk: 'lopen', k_mouse: 'Muis', k_look: 'kijken', k_use: 'gebruiken', k_flash: 'zaklamp', k_run: 'sneller', k_menu: 'menu', k_perf: 'prestaties',
+    meta: 'Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis',
+    loading: 'Het huis wordt opgebouwd…', loading_sound: 'Geluiden worden gemaakt…',
+    touch_note: 'Op een telefoon werkt het met het schermpje; met toetsenbord en muis is het beter.',
+    webgl: 'Dit spel heeft WebGL nodig. Probeer een andere browser of zet hardwareversnelling aan.',
+    paused: 'Gepauzeerd', stuck: 'Ik zit vast', sens: 'Muisgevoeligheid', volume: 'Volume', quality: 'Beeldkwaliteit',
+    q_auto: 'Automatisch', q_low: 'Laag (snelst)', q_mid: 'Middel', q_high: 'Hoog', brightness: 'Helderheid', language: 'Taal', perfmeter: 'Prestatiemeter',
+    perf_off: 'Uit', perf_on: 'Aan (toets P)',
+    resume: 'Verder spelen', restart: 'Opnieuw beginnen', restart_confirm: 'Zeker weten? Klik nog eens',
+    the_end: 'Einde', play_again: 'Opnieuw spelen',
+    clock_help: 'Beweeg de muis rond de klok om de wijzers te draaien', done: 'klaar',
+    drag_note: 'Klik in het beeld om rond te kijken', drag_note2: '· of houd de muisknop ingedrukt en sleep',
+    note_close: 'E of klik om weg te leggen', img_close: 'E of klik om terug te gaan',
+    cal_eyebrow: 'Voor je begint', cal_title: 'Helderheid',
+    cal_text: 'Schuif tot het linker figuur nét niet meer te zien is en het middelste nog wel. In het donker moet je iets kunnen zien, maar niet alles.',
+    cal_done: 'Klaar', cal_hint: 'Je kunt dit later aanpassen in het menu (Esc).',
+    perf_fps: 'fps', perf_res: 'beeld', perf_draws: 'tekenopdrachten', perf_mirror: 'spiegel', perf_lights: 'lampen', perf_rooms: 'kamers', perf_tris: 'driehoeken',
+    // prompts
+    lbl_open: 'Openen', lbl_close: 'Sluiten', lbl_door: 'Deur', lbl_clock: 'Klok verzetten', lbl_read: 'Lezen', lbl_look: 'Bekijken', lbl_photo: 'Foto',
+    lbl_tap: 'Kraan', lbl_tapOff: 'Kraan dicht', lbl_alarm: 'Wekker', lbl_chair: 'Stoel', lbl_books: 'Boeken', lbl_lamp: 'Lamp', lbl_chain: 'Koordje',
+    lbl_light: 'Licht', lbl_lightOn: 'Licht aan', lbl_lightOff: 'Licht uit',
+    // thoughts
+    t_goOut: 'Ik moet naar buiten.', t_nudgeDoor: 'De voordeur. Aan het eind van de gang.', t_doorFail: 'Hij zit niet op slot. Hij gaat gewoon niet open.',
+    t_notFront: 'Niet de voordeur. Beneden.', t_stuck1: 'Hij beweegt niet.', t_stuck2: 'Nog steeds niet.',
+    t_d1: '03:33.', t_d2: 'Nog steeds 3:33.', t_d3: 'Alles zegt 3:33. Behalve de klokken aan de muur.',
+    t_clockStopped: 'Hij tikt niet meer.', t_oneMore: 'Nog één. Beneden.', t_clockOk: 'Die staat goed.', t_silent: 'Alles is stil.',
+    t_water: 'Er loopt ergens water.', t_mirrorWriting: 'Spiegelschrift.', t_behind: 'Er stond iemand achter me.',
+    t_music: 'Dat komt uit de kleine kamer.', t_loop1: 'Ik liep toch net naar buiten?', t_loop2: 'Elke keer is er iets anders.',
+    t_loop4: 'Niet wat verandert. Wat hier niet thuishoort.', t_loop6: 'Iets dat uit een andere kamer komt…', t_loop7: 'De wekker. Die hoort naast mijn bed.',
+    t_lchair: 'Die stond net anders. Maar hij hoort hier wel.', t_lbooks: 'Die boeken horen hier.', t_llamp: 'Die lamp is van hier.',
+    t_bedside: 'Die hoort naast mijn bed.', t_wakeUp: 'Ik moet wakker worden.', t_maybeDoor: 'Misschien gaat de voordeur nu wel open.',
+    t_longer: 'De gang is langer dan hij was.', t_k2b: 'Ik liep toch de keuken in?', t_wasMe: '…dat was ik.', t_noExit: 'De voordeur is geen uitgang.',
+    t_baseMissing: 'De kelderdeur. Die zat hier.', t_inDark: 'In het donker was hij er.', t_lightOff: 'Misschien moet het licht uit.',
+    t_notFlash: 'Niet met de zaklamp erop.', t_notVanish: 'Deze keer verdwijnt hij niet.', t_goTo: 'Ik moet naar hem toe.', t_morning: '…Het is ochtend.',
+    t_handwriting: 'Dat is mijn handschrift.', t_dontRemember: 'Ik weet niet meer dat ik dat geschreven heb.', t_again: 'Weer mijn handschrift.',
+    t_basement: 'Beneden. De kelder.', t_brick: 'Er zit niets achter. Alleen muur.', t_paintingBelongs: 'Het schilderij hoort hier wel.',
+    t_someone: 'Is daar iemand?', t_notAlone: 'Ik ben niet alleen.',
+    cap_photo0: 'Zandvoort. Dat was een goede zomer.', cap_photo1: 'Wie staat daar, achteraan?', cap_photo2: 'Waar zijn wij?',
+    cap_hall0: 'Dat schilderij hangt hier al jaren.', cap_hall1: 'Stond daar altijd al iemand in het veld?',
+    cap_sea0: 'De zee bij Zandvoort.', cap_sea1: 'Dat was de zee.',
+    photo_label: 'Zandvoort, zomer', photo_label2: 'Zandvoort, 3:33',
+    note_fridge: 'ze moeten allemaal\nhetzelfde zeggen.\n\nook die beneden.',
+    note_study: 'ik ben hier al vaker geweest.\nelke keer is er iets anders.\n\néén ding hoort hier niet.',
+    note_door: 'niet de voordeur.\n\nde uitgang is beneden.',
+    mirror_text: 'JE SLAAPT', aria_view: 'Spelwereld', res_label: 'beeld', perf_mode_auto: 'auto',
+    // objectives: [goal, hint]
+    o_intro: ['Ga naar buiten.', 'De voordeur zit aan het eind van de gang, links, tegenover de spiegel bij de kapstok.'],
+    o_p1: ['De voordeur gaat niet open. Zoek uit wat er niet klopt.', 'Alle digitale klokken zeggen 3:33. Zet de vier wandklokken ook op 3:33: in de gang, de woonkamer, de keuken en in de kelder (de deur in de keuken). Kijk naar een klok, druk op E en draai de wijzers met de muis.'],
+    o_p2: ['Het is stil. Er loopt ergens water.', 'Ga naar de badkamer. Op de muur naast de deur staat iets in spiegelschrift. Ga voor de spiegel boven de wastafel staan en lees het daar.'],
+    o_p2b: ['Er speelt muziek in de kleine kamer.', 'De kleine kamer blijft je terugsturen. Wat verandert hoort er wél. Zoek het voorwerp dat uit een andere kamer komt en gebruik het.'],
+    o_p3: ['Word wakker.', 'De kelderdeur in de keuken bestaat alleen in het donker. Doe het keukenlicht uit (schakelaar bij de deuropening), doe je zaklamp uit en kijk naar de muur waar de deur zat.'],
+    o_descent: ['Naar beneden.', 'Blijf de trap afdalen.'],
+    o_final: ['…', 'Deze keer moet je niet wegkijken. Loop naar hem toe.'],
+    o_black: ['…', ''], o_morning: ['Ga naar buiten.', 'De voordeur gaat nu open.'], o_end: ['', ''],
+  },
+  en: {
+    lede: "You wake up in your own house. It's 3:33. Everything is where it belongs. Almost everything.",
+    btn_begin: 'Begin', btn_continue: 'Continue from last checkpoint',
+    k_walk: 'walk', k_mouse: 'Mouse', k_look: 'look', k_use: 'use', k_flash: 'flashlight', k_run: 'faster', k_menu: 'menu', k_perf: 'performance',
+    meta: 'Headphones recommended · about 15 minutes · keyboard and mouse',
+    loading: 'Building the house…', loading_sound: 'Making the sounds…',
+    touch_note: 'On a phone it works with on-screen controls; keyboard and mouse is better.',
+    webgl: 'This game needs WebGL. Try another browser or turn on hardware acceleration.',
+    paused: 'Paused', stuck: "I'm stuck", sens: 'Mouse sensitivity', volume: 'Volume', quality: 'Graphics quality',
+    q_auto: 'Automatic', q_low: 'Low (fastest)', q_mid: 'Medium', q_high: 'High', brightness: 'Brightness', language: 'Language', perfmeter: 'Performance meter',
+    perf_off: 'Off', perf_on: 'On (key P)',
+    resume: 'Resume', restart: 'Start over', restart_confirm: 'Are you sure? Click again',
+    the_end: 'The end', play_again: 'Play again',
+    clock_help: 'Move the mouse around the clock to turn the hands', done: 'done',
+    drag_note: 'Click the view to look around', drag_note2: '· or hold the mouse button and drag',
+    note_close: 'E or click to put it down', img_close: 'E or click to go back',
+    cal_eyebrow: 'Before you start', cal_title: 'Brightness',
+    cal_text: 'Adjust until the left figure is just barely invisible and the middle one can still be seen. In the dark you should see something, but not everything.',
+    cal_done: 'Done', cal_hint: 'You can change this later in the menu (Esc).',
+    perf_fps: 'fps', perf_res: 'render', perf_draws: 'draw calls', perf_mirror: 'mirror', perf_lights: 'lights', perf_rooms: 'rooms', perf_tris: 'triangles',
+    lbl_open: 'Open', lbl_close: 'Close', lbl_door: 'Door', lbl_clock: 'Set clock', lbl_read: 'Read', lbl_look: 'Look', lbl_photo: 'Photo',
+    lbl_tap: 'Tap', lbl_tapOff: 'Turn off tap', lbl_alarm: 'Alarm clock', lbl_chair: 'Chair', lbl_books: 'Books', lbl_lamp: 'Lamp', lbl_chain: 'Pull cord',
+    lbl_light: 'Light', lbl_lightOn: 'Light on', lbl_lightOff: 'Light off',
+    t_goOut: 'I need to get outside.', t_nudgeDoor: 'The front door. At the end of the hall.', t_doorFail: "It isn't locked. It just won't open.",
+    t_notFront: 'Not the front door. Downstairs.', t_stuck1: "It won't move.", t_stuck2: 'Still nothing.',
+    t_d1: '3:33.', t_d2: 'Still 3:33.', t_d3: 'Everything says 3:33. Except the clocks on the walls.',
+    t_clockStopped: 'It stopped ticking.', t_oneMore: 'One more. Downstairs.', t_clockOk: "That one's right.", t_silent: 'Everything has gone quiet.',
+    t_water: 'Water is running somewhere.', t_mirrorWriting: 'Mirror writing.', t_behind: 'Someone was standing behind me.',
+    t_music: "That's coming from the small room.", t_loop1: "Didn't I just walk out?", t_loop2: 'Something is different every time.',
+    t_loop4: "Not what changes. What doesn't belong here.", t_loop6: 'Something from another room…', t_loop7: 'The alarm clock. That belongs next to my bed.',
+    t_lchair: 'That was different a moment ago. But it belongs here.', t_lbooks: 'Those books belong here.', t_llamp: 'That lamp belongs in this room.',
+    t_bedside: 'That belongs next to my bed.', t_wakeUp: 'I have to wake up.', t_maybeDoor: 'Maybe the front door will open now.',
+    t_longer: 'The hallway is longer than it was.', t_k2b: "Wasn't I walking into the kitchen?", t_wasMe: '…that was me.', t_noExit: "The front door isn't a way out.",
+    t_baseMissing: 'The basement door. It was right here.', t_inDark: 'In the dark, it was there.', t_lightOff: 'Maybe the light has to be off.',
+    t_notFlash: 'Not with the flashlight on it.', t_notVanish: "This time it doesn't disappear.", t_goTo: 'I have to walk up to it.', t_morning: "…It's morning.",
+    t_handwriting: "That's my handwriting.", t_dontRemember: "I don't remember writing that.", t_again: 'My handwriting again.',
+    t_basement: 'Downstairs. The basement.', t_brick: "There's nothing behind it. Just wall.", t_paintingBelongs: 'The painting belongs here.',
+    t_someone: 'Is someone there?', t_notAlone: "I'm not alone.",
+    cap_photo0: 'Zandvoort. That was a good summer.', cap_photo1: 'Who is that, in the back?', cap_photo2: 'Where are we?',
+    cap_hall0: "That painting has hung here for years.", cap_hall1: 'Was someone always standing in that field?',
+    cap_sea0: 'The sea at Zandvoort.', cap_sea1: 'That used to be the sea.',
+    photo_label: 'Zandvoort, summer', photo_label2: 'Zandvoort, 3:33',
+    note_fridge: 'they all have to\nsay the same thing.\n\nthe one downstairs too.',
+    note_study: "i've been here before.\nsomething is different every time.\n\none thing doesn't belong here.",
+    note_door: 'not the front door.\n\nthe way out is downstairs.',
+    mirror_text: "YOU'RE ASLEEP", aria_view: 'Game world', res_label: 'render', perf_mode_auto: 'auto',
+    o_intro: ['Get outside.', 'The front door is at the end of the hallway, on the left, across from the mirror by the coat rack.'],
+    o_p1: ["The front door won't open. Find out what's wrong.", 'Every digital clock says 3:33. Set the four wall clocks to 3:33 as well: in the hallway, the living room, the kitchen and the basement (the door in the kitchen). Look at a clock, press E and turn the hands with the mouse.'],
+    o_p2: ['It has gone quiet. Water is running somewhere.', 'Go to the bathroom. Something is written in mirror writing on the wall next to the door. Stand in front of the mirror above the sink and read it there.'],
+    o_p2b: ['Music is playing in the small room.', 'The small room keeps sending you back. What changes does belong there. Find the object that comes from another room and use it.'],
+    o_p3: ['Wake up.', "The basement door in the kitchen only exists in the dark. Turn off the kitchen light (switch by the doorway), turn off your flashlight and look at the wall where the door used to be."],
+    o_descent: ['Go down.', 'Keep going down the stairs.'],
+    o_final: ['…', "This time, don't look away. Walk up to it."],
+    o_black: ['…', ''], o_morning: ['Get outside.', 'The front door opens now.'], o_end: ['', ''],
+  },
+};
+let LANG = (() => { const s = Store.get('lang'); if (s === 'nl' || s === 'en') return s; return ((navigator.language || '') + '').toLowerCase().startsWith('nl') ? 'nl' : 'en'; })();
+function tr(k) { const d = STR[LANG]; if (d && k in d) return d[k]; if (k in STR.nl) return STR.nl[k]; return k; }
+function applyLangDOM() {
+  document.documentElement.lang = LANG;
+  for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = tr(el.dataset.i18n);
+  for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', tr(el.dataset.i18nAria));
+  for (const b of document.querySelectorAll('[data-lang]')) b.setAttribute('aria-pressed', String(b.dataset.lang === LANG));
+  const sel = document.getElementById('langSel'); if (sel) sel.value = LANG;
+}
+function setLang(l) {
+  if (l !== 'nl' && l !== 'en') return;
+  LANG = l; Store.set('lang', l);
+  applyLangDOM();
+  if (typeof Story !== 'undefined' && Story.notes) Story.buildLangTextures();
+  if (typeof UI !== 'undefined' && UI.el && UI.el.objText) UI.objective(G.stage === 'title' ? 'intro' : G.stage);
+  if (typeof Interact !== 'undefined') Interact.cur = undefined;
+}
 
 /* ---- 02_tex.js ---- */
 /* ============================================================
@@ -523,8 +710,8 @@ function paintSea(hallway) {
   g.globalAlpha = 1; grain(g, W, H, 14, 9);
   return c;
 }
-function photoBeach(variant) {
-  const W = 240, H = 300, c = mkCanvas(W, H), g = c.getContext('2d');
+function photoBeach(variant, into) {
+  const W = 240, H = 300, c = into || mkCanvas(W, H), g = c.getContext('2d');
   g.fillStyle = '#efe9dc'; g.fillRect(0, 0, W, H); // photo border
   const x0 = 14, y0 = 14, w = W - 28, h = H - 70;
   const sky = g.createLinearGradient(0, y0, 0, y0 + h * 0.5); sky.addColorStop(0, '#8fb3c4'); sky.addColorStop(1, '#d8d6c4');
@@ -541,7 +728,7 @@ function photoBeach(variant) {
   if (variant === 1) { g.globalAlpha = 0.85; person(x0 + w * 0.84, y0 + h * 0.4, 0.9, '#000', true); g.globalAlpha = 1; }
   if (variant === 2) { person(x0 + w * 0.5, y0 + h * 0.46, 1.45, '#000', true); }
   g.fillStyle = 'rgba(255,240,200,0.12)'; g.fillRect(x0, y0, w, h);
-  g.fillStyle = '#6b6258'; g.font = 'italic 17px "IM Fell English", Georgia, serif'; g.fillText(variant === 2 ? 'Zandvoort, 3:33' : 'Zandvoort, zomer', x0 + 4, H - 24);
+  g.fillStyle = '#6b6258'; g.font = 'italic 17px "IM Fell English", Georgia, serif'; g.fillText(tr(variant === 2 ? 'photo_label2' : 'photo_label'), x0 + 4, H - 24);
   grain(g, W, H, 22, 12 + variant);
   return c;
 }
@@ -569,6 +756,52 @@ function faceCanvas(kind) {
   grain(g, W, W, 10, 3);
   return toTex(c, false);
 }
+/* wrap-around head texture for a sphere: the face sits at u = 0.25 (+z) */
+function headTex(kind) {
+  const W = 512, H = 256, c = mkCanvas(W, H), g = c.getContext('2d');
+  const skin = '#c79f84', hair = '#2e2219', smile = kind === 'smile';
+  g.fillStyle = skin; g.fillRect(0, 0, W, H);
+  // soft shading: cheeks warm, under the jaw darker
+  let gr = g.createLinearGradient(0, 150, 0, 256); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(60,30,20,0.35)'); g.fillStyle = gr; g.fillRect(0, 150, W, 106);
+  for (const x of [92, 164]) { const rg = g.createRadialGradient(x, 150, 2, x, 150, 26); rg.addColorStop(0, 'rgba(190,90,80,0.18)'); rg.addColorStop(1, 'rgba(190,90,80,0)'); g.fillStyle = rg; g.fillRect(x - 30, 120, 60, 60); }
+  // hair: a cap, low at the back and sides, a hairline over the forehead
+  g.fillStyle = hair;
+  g.beginPath(); g.moveTo(0, 0); g.lineTo(W, 0); g.lineTo(W, 168);
+  g.bezierCurveTo(420, 176, 300, 176, 236, 118);    // back of the head down to the right temple
+  g.bezierCurveTo(214, 96, 200, 70, 180, 64);
+  g.bezierCurveTo(150, 56, 106, 56, 76, 64);        // hairline, slightly uneven
+  g.bezierCurveTo(56, 70, 42, 96, 20, 118);
+  g.bezierCurveTo(12, 140, 6, 160, 0, 168); g.closePath(); g.fill();
+  g.strokeStyle = 'rgba(20,14,10,0.5)'; g.lineWidth = 1.2;
+  for (let i = 0; i < 90; i++) { const x = (i * 57) % W, y = 10 + (i * 31) % 130; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 6, y + 14); g.stroke(); }
+  // brows
+  g.strokeStyle = '#3a2a1e'; g.lineCap = 'round'; g.lineWidth = 4.5;
+  g.beginPath(); g.moveTo(90, 101); g.quadraticCurveTo(103, 96, 116, 100); g.stroke();
+  g.beginPath(); g.moveTo(140, 100); g.quadraticCurveTo(153, 96, 166, 101); g.stroke();
+  // eyes
+  for (const x of [104, 152]) {
+    g.fillStyle = 'rgba(80,40,30,0.25)'; g.beginPath(); g.ellipse(x, 116, 13, 8, 0, 0, TAU); g.fill();
+    g.fillStyle = '#efe8df'; g.beginPath(); g.ellipse(x, 115, 10.5, smile ? 3.2 : 5.2, 0, 0, TAU); g.fill();
+    g.fillStyle = '#3b2a1f'; g.beginPath(); g.arc(x, 115, smile ? 3 : 4.2, 0, TAU); g.fill();
+    g.fillStyle = '#0c0908'; g.beginPath(); g.arc(x, 115, 1.8, 0, TAU); g.fill();
+    g.strokeStyle = '#2a1d16'; g.lineWidth = 1.6; g.beginPath(); g.ellipse(x, 115, 10.5, smile ? 3.2 : 5.2, 0, Math.PI, TAU); g.stroke();
+  }
+  // nose and mouth
+  g.strokeStyle = 'rgba(110,60,45,0.55)'; g.lineWidth = 2.2; g.beginPath(); g.moveTo(129, 118); g.quadraticCurveTo(133, 136, 126, 144); g.quadraticCurveTo(128, 147, 134, 145); g.stroke();
+  g.strokeStyle = '#8a4a40'; g.lineWidth = 3.2; g.beginPath();
+  if (smile) { g.moveTo(106, 158); g.quadraticCurveTo(128, 178, 150, 158); } else { g.moveTo(114, 163); g.quadraticCurveTo(128, 165, 142, 163); }
+  g.stroke();
+  if (smile) { g.fillStyle = '#efe6d8'; g.beginPath(); g.moveTo(110, 160); g.quadraticCurveTo(128, 173, 146, 160); g.quadraticCurveTo(128, 166, 110, 160); g.fill(); }
+  grain(g, W, H, 8, kind === 'smile' ? 31 : 30);
+  const t = toTex(c, false); t.wrapS = THREE.RepeatWrapping; return t;
+}
+function pajamaTex() {
+  const W = 128, H = 128, c = mkCanvas(W, H), g = c.getContext('2d');
+  g.fillStyle = '#8c9aa6'; g.fillRect(0, 0, W, H);
+  for (let x = 0; x < W; x += 16) { g.fillStyle = '#4d5d6e'; g.fillRect(x, 0, 5, H); g.fillStyle = 'rgba(230,236,240,0.35)'; g.fillRect(x + 9, 0, 1.5, H); }
+  grain(g, W, H, 14, 33);
+  const t = toTex(c, true); return t;
+}
 function noteCanvas(text, opts = {}) {
   const W = 512, H = 384, c = mkCanvas(W, H), g = c.getContext('2d');
   g.fillStyle = opts.paper || '#efe8d4'; g.fillRect(0, 0, W, H);
@@ -580,16 +813,19 @@ function noteCanvas(text, opts = {}) {
   grain(g, W, H, 10, 22);
   return c;
 }
-function doorTextCanvas() { // mirror writing, smeared on the tiles above the door
-  const W = 512, H = 196, c = mkCanvas(W, H), g = c.getContext('2d');
+function doorTextCanvas(into) { // mirror writing, smeared on the tiles next to the door
+  const W = 512, H = 196, c = into || mkCanvas(W, H), g = c.getContext('2d');
   g.fillStyle = '#e9ece8'; g.fillRect(0, 0, W, H);
   g.strokeStyle = '#9aa09c'; g.lineWidth = 3;
   for (let x = 0; x <= W; x += 93) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
   for (let y = 12; y <= H; y += 93) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
   g.save(); g.translate(W, 0); g.scale(-1, 1); // mirrored
-  g.font = 'bold 104px "IM Fell English", Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  const txt = tr('mirror_text'); let fs = 104;
+  g.font = `bold ${fs}px "IM Fell English", Georgia, serif`;
+  while (fs > 50 && g.measureText(txt).width > W - 36) { fs -= 4; g.font = `bold ${fs}px "IM Fell English", Georgia, serif`; }
+  g.textAlign = 'center'; g.textBaseline = 'middle';
   g.fillStyle = '#6a1c14'; g.strokeStyle = 'rgba(40,8,6,0.55)'; g.lineWidth = 3;
-  g.fillText('JE SLAAPT', W / 2, H / 2 + 6); g.strokeText('JE SLAAPT', W / 2, H / 2 + 6);
+  g.fillText(txt, W / 2, H / 2 + 6); g.strokeText(txt, W / 2, H / 2 + 6);
   g.restore();
   const r = seeded(45); g.fillStyle = 'rgba(106,28,20,0.55)';
   for (let i = 0; i < 12; i++) { const x = 40 + r() * 430, y = H / 2 + 40; g.fillRect(x, y, 2 + r() * 2, 10 + r() * 40); }
@@ -679,11 +915,19 @@ function buildTextures() {
   IMG.photo0 = photoBeach(0); IMG.photo1 = photoBeach(1); IMG.photo2 = photoBeach(2);
   T.photo0 = toTex(IMG.photo0, false); T.photo1 = toTex(IMG.photo1, false); T.photo2 = toTex(IMG.photo2, false);
   T.facePlayer = faceCanvas('player'); T.faceSmile = faceCanvas('smile'); T.faceEntity = faceCanvas('entity');
+  T.headPlayer = headTex('player'); T.headSmile = headTex('smile'); T.pajama = pajamaTex();
   IMG.poster = posterCanvas(); T.poster = toTex(IMG.poster, false);
-  T.doorText = toTex(doorTextCanvas(), false);
+  IMG.doorText = doorTextCanvas(); T.doorText = toTex(IMG.doorText, false);
   T.d333r = digitsTex('03:33', '#ff3a22'); T.d334r = digitsTex('03:34', '#ff3a22'); T.d714r = digitsTex('07:14', '#ff3a22');
   T.d333g = digitsTex('3:33', '#5dff9a'); T.d714g = digitsTex('7:14', '#5dff9a'); T.dDashG = digitsTex('-:--', '#5dff9a'); T.d333v = digitsTex('03:33', '#7fd0ff');
   T.dBlank = digitsTex('    ', '#ff3a22');
+}
+
+/* redraw the few textures that carry words, after a language switch */
+function langWorldTextures() {
+  if (!IMG.photo0) return;
+  [0, 1, 2].forEach((v) => { photoBeach(v, IMG['photo' + v]); T['photo' + v].needsUpdate = true; });
+  doorTextCanvas(IMG.doorText); T.doorText.needsUpdate = true;
 }
 
 /* ---- 03_gfx.js ---- */
@@ -950,7 +1194,7 @@ function chooseMirror() {
   let best = null, bd = 1e9;
   const cp = camera.position;
   for (const m of MIRRORS) {
-    if (!m.enabled || !isShown(m.mesh)) continue;
+    if (!m.enabled || !isShown(m.mesh) || !(m.mesh.layers.mask & camera.layers.mask)) continue;
     const c = m.worldCenter(_mv.mp); const n = m.worldNormal(_mv.n);
     const d = c.distanceTo(cp);
     if (d > 16) continue;
@@ -1002,6 +1246,7 @@ function renderMirror(m) {
   const was = mesh.visible; mesh.visible = false;
   for (const o of MIRRORS) { o.mat.uniforms.uActive.value = 0; o.mat.uniforms.tMirror.value = T.dirt; }
   SU.uCamPos.value.copy(vCam.position);
+  Cull.mirror(m, vCam);
   renderer.setRenderTarget(rt);
   renderer.clear();
   renderer.render(scene, vCam);
@@ -1027,7 +1272,7 @@ function canSee(p, r = 0.35) { return inFrustum(p, r) && losClear(camera.positio
 
 /* ---------- post ---------- */
 const POST_FS = `
-uniform sampler2D tScene; uniform vec2 uRes; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite;
+uniform sampler2D tScene; uniform vec2 uRes; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma;
 varying vec2 vUv;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y)*p3.z); }
 void main(){
@@ -1044,6 +1289,7 @@ void main(){
   c = mix(c, vec3(l), uDesat);
   vec2 q = d*vec2(uRes.x/uRes.y, 1.0);
   c *= mix(1.0, smoothstep(1.05, 0.18, length(q)), uVig);
+  c = pow(max(c, vec3(0.0)), vec3(uGamma));
   float g = h12(gl_FragCoord.xy + fract(uTime*7.13)*917.0) - 0.5;
   c += g * uGrain * (0.55 + 0.45*(1.0 - l));
   c = mix(c, vec3(1.0, 0.99, 0.96), uWhite);
@@ -1082,13 +1328,14 @@ function initRenderer() {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', alpha: false, stencil: false, depth: true });
   renderer.setClearColor(0x000000, 1);
   renderer.setPixelRatio(1);
+  renderer.info.autoReset = false;
   ANISO = Math.min(4, renderer.capabilities.getMaxAnisotropy());
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(72, 16 / 9, 0.05, 90);
   camera.rotation.order = 'YXZ';
   camera.layers.set(0);
   vCam = new THREE.PerspectiveCamera(72, 16 / 9, 0.05, 90);
-  vCam.layers.enable(0); vCam.layers.enable(1); vCam.layers.enable(2);
+  vCam.layers.mask = 7;
   const o = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, depthBuffer: true, stencilBuffer: false };
   mainRT = new THREE.WebGLRenderTarget(4, 4, o);
   mirrorRT = new THREE.WebGLRenderTarget(4, 4, o);
@@ -1105,7 +1352,7 @@ function initRenderer() {
   nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.magFilter = THREE.LinearFilter; nt.minFilter = THREE.LinearMipmapLinearFilter; nt.generateMipmaps = true; nt.needsUpdate = true;
   SU.uNoiseTex.value = nt;
   postMat = new THREE.ShaderMaterial({
-    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 } },
+    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: POST_FS, depthTest: false, depthWrite: false,
   });
@@ -1130,14 +1377,18 @@ function renderFrame() {
   camera.updateMatrixWorld();
   projScreen.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
   frustum.setFromProjectionMatrix(projScreen);
+  Cull.main(camera);
   activeMirror = chooseMirror();
   for (const m of MIRRORS) if (m !== activeMirror) m.mat.uniforms.uActive.value = 0;
+  const info = renderer.info; info.reset();
   if (activeMirror) { if (!renderMirror(activeMirror)) activeMirror = null; }
   lastMirror = activeMirror;
+  const mc = info.render.calls, mt = info.render.triangles;
   SU.uCamPos.value.copy(camera.position);
   renderer.setRenderTarget(mainRT);
   renderer.clear();
   renderer.render(scene, camera);
+  Perf.calls = info.render.calls - mc; Perf.tris = info.render.triangles - mt; Perf.mirCalls = mc; Perf.mirTris = mt;
   renderer.setRenderTarget(null);
   renderer.render(postScene, postCam);
 }
@@ -1291,12 +1542,12 @@ function casing(axis, cx, cz, w, h, mat, parent, t = WT) {
 /* ---------- doors ---------- */
 class Door {
   constructor(name, o) {
-    this.name = name; this.axis = o.axis; this.w = o.w; this.h = o.h || 2.06; this.locked = !!o.locked; this.parent = o.parent || scene;
+    this.name = name; this.axis = o.axis; this.w = o.w; this.h = o.h || DH - 0.004; this.locked = !!o.locked; this.parent = o.parent || scene;
     this.cx = o.cx; this.cz = o.cz; this.y = o.y || 0;
     this.pivot = new THREE.Group(); this.parent.add(this.pivot); DYN.add(this.pivot);
     const hinge = o.hinge, w = o.w;
     if (o.axis === 'x') this.pivot.position.set(o.cx + hinge * w / 2, this.y, o.cz); else this.pivot.position.set(o.cx, this.y, o.cz + hinge * w / 2);
-    const lw = w - 0.03;
+    const lw = w - 0.006; // snug: no see-through cracks around a closed door
     const geo = o.axis === 'x' ? new THREE.BoxGeometry(lw, this.h, 0.045) : new THREE.BoxGeometry(0.045, this.h, lw);
     this.leaf = new THREE.Mesh(geo, o.mat);
     if (o.axis === 'x') this.leaf.position.set(-hinge * w / 2, this.h / 2, 0); else this.leaf.position.set(0, this.h / 2, -hinge * w / 2);
@@ -1314,8 +1565,8 @@ class Door {
     this.exists = true;
     this.col = o.axis === 'x' ? addCollider(o.cx - w / 2, o.cx + w / 2, o.cz - 0.06, o.cz + 0.06, this.y, this.y + this.h, { occ: true, tag: 'door' })
       : addCollider(o.cx - 0.06, o.cx + 0.06, o.cz - w / 2, o.cz + w / 2, this.y, this.y + this.h, { occ: true, tag: 'door' });
-    use(this.leaf, 'Deur', () => this.use(), { door: this });
-    this.leaf.userData.use.labelFn = () => (this.target ? 'Sluiten' : 'Openen');
+    use(this.leaf, 'lbl_door', () => this.use(), { door: this });
+    this.leaf.userData.use.labelFn = () => (this.target ? 'lbl_close' : 'lbl_open');
     occluders.push(this.leaf);
     DOORS[name] = this;
     this._wp = new THREE.Vector3();
@@ -1370,7 +1621,7 @@ class AClock {
     this.secP = hand(r * 0.84, 0.003, MT.redPaint, 0.026);
     this.min = o.start; this.sec = rand(0, 59); this.ticking = true; this.tock = false; this.solved = false;
     this.emitPos = g.position.clone();
-    for (const m of [face]) use(m, 'Klok verzetten', () => ClockUI.open(this), { clock: this });
+    for (const m of [face]) use(m, 'lbl_clock', () => ClockUI.open(this), { clock: this });
     CLOCKS[name] = this;
     this.shown = 0;
   }
@@ -1475,7 +1726,7 @@ function bareBulb(light, x, y, z, parent, cordLen = 0.3) {
   const b = addMesh(new THREE.SphereGeometry(0.045, 10, 8), fixtureMat(), parent); b.position.set(x, y, z);
   light.fixtures.push(b); return b;
 }
-function lightSwitch(light, x, y, z, ry, label = 'Licht') {
+function lightSwitch(light, x, y, z, ry, label = 'lbl_light') {
   const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = ry; scene.add(g); DYN.add(g);
   const plate = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.012), MT.white); g.add(plate);
   const rocker = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, 0.02), MT.porcelain); rocker.position.z = 0.01; g.add(rocker);
@@ -1484,7 +1735,7 @@ function lightSwitch(light, x, y, z, ry, label = 'Licht') {
     Sound.play('switch', g.position, { gain: 0.6 });
     if (light.onSwitch) light.onSwitch(light.sw);
   });
-  plate.userData.use.labelFn = () => (light.sw ? 'Licht uit' : 'Licht aan');
+  plate.userData.use.labelFn = () => (light.sw ? 'lbl_lightOff' : 'lbl_lightOn');
   light.switchMesh = rocker;
   return plate;
 }
@@ -1685,8 +1936,8 @@ function buildBathroom() {
   box(0.46, 0.03, 0.3, M({ color: '#9aa4a8', noise: 0.1 }), 7.2, 0.89, 0.3);
   box(0.03, 0.14, 0.03, m.metal, 7.2, 0.9, 0.14); box(0.03, 0.03, 0.12, m.metal, 7.2, 1.02, 0.2);
   W.faucet = box(0.1, 0.05, 0.05, m.metal, 7.32, 0.9, 0.14);
-  use(W.faucet, 'Kraan', () => Story.faucet());
-  W.faucet.userData.use.labelFn = () => (G.flags.water ? 'Kraan dicht' : 'Kraan');
+  use(W.faucet, 'lbl_tap', () => Story.faucet());
+  W.faucet.userData.use.labelFn = () => (G.flags.water ? 'lbl_tapOff' : 'lbl_tap');
   W.bathMirror = new Mirror('bath', 0.7, 0.85, { parent: scene, pos: V3(7.2, 1.5, 0.08), ry: 0, dirt: 0.28 });
   { const f = MT.darkMetal; box(0.8, 0.03, 0.03, f, 7.2, 1.925, 0.08); box(0.8, 0.03, 0.03, f, 7.2, 1.045, 0.08); box(0.03, 0.88, 0.03, f, 6.835, 1.06, 0.08); box(0.03, 0.88, 0.03, f, 7.565, 1.06, 0.08); }
   box(0.5, 0.02, 0.12, m.porcelain, 7.2, 1.0, 0.13);
@@ -1732,7 +1983,7 @@ function buildStudy() {
   // painting on west wall
   W.studyPainting = plane(0.8, 0.6, M({ map: T.sea0, world: false }), 8.892, 1.55, 2.4, 0, Math.PI / 2);
   box(0.03, 0.66, 0.86, m.darkWood, 8.87, 1.22, 2.4);
-  use(W.studyPainting, 'Bekijken', () => Story.examine('studyPainting'));
+  use(W.studyPainting, 'lbl_look', () => Story.examine('studyPainting'));
   // armchair
   armchair(13.1, 3.75, -2.3, m.fabricGreen);
   // plant, rug, globe
@@ -1745,14 +1996,14 @@ function buildStudy() {
   { const b = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.1, 0.2), MT.black); W.wekker.add(b);
     const d = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.064), M({ map: T.d333r, world: false, emap: true, emissive: '#ffffff', eI: 1.6, color: '#000000', noise: 0 }));
     d.position.x = -0.047; d.rotation.y = -Math.PI / 2; W.wekker.add(d); W.wekkerDisp = d;
-    use(b, 'Wekker', () => Story.loopObject('wekker')); use(d, 'Wekker', () => Story.loopObject('wekker')); }
+    use(b, 'lbl_alarm', () => Story.loopObject('wekker')); use(d, 'lbl_alarm', () => Story.loopObject('wekker')); }
   W.wekker.position.set(13.5, 0.78 + 0.05 + 0.02, 1.4); W.wekker.visible = false;
   W.studyNote = plane(0.2, 0.15, M({ color: '#ffffff', noise: 0 }), 11.95, 0.753, 0.45, -Math.PI / 2, 0.15);
   W.studyNote.visible = false;
-  use(W.studyNote, 'Lezen', () => Story.readNote('study'));
-  use(W.studyChair.children[0], 'Stoel', () => Story.loopObject('chair'));
-  use(W.books[1], 'Boeken', () => Story.loopObject('books'));
-  use(W.deskLamp, 'Lamp', () => Story.loopObject('lamp'));
+  use(W.studyNote, 'lbl_read', () => Story.readNote('study'));
+  use(W.studyChair.children[0], 'lbl_chair', () => Story.loopObject('chair'));
+  use(W.books[1], 'lbl_books', () => Story.loopObject('books'));
+  use(W.deskLamp, 'lbl_lamp', () => Story.loopObject('lamp'));
 }
 function armchair(x, z, ry, mat) {
   const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; scene.add(g);
@@ -1767,7 +2018,7 @@ function buildHall() {
   // painting between bathroom and study doors
   W.hallPainting = plane(0.9, 0.6, M({ map: T.hall0, world: false }), 8.55, 1.6, 4.4 + 0.092, 0, 0);
   W.hallPaintFrame = box(0.96, 0.66, 0.03, m.darkWood, 8.55, 1.27, 4.4 + 0.075);
-  use(W.hallPainting, 'Bekijken', () => Story.examine('hallPainting'));
+  use(W.hallPainting, 'lbl_look', () => Story.examine('hallPainting'));
   // console table at east end with a phone
   box(0.45, 0.8, 1.0, m.darkWood, 13.7, 0, 5.4, { collide: true });
   box(0.18, 0.08, 0.22, M({ color: '#8a2a20', noise: 0.1 }), 13.72, 0.8, 5.2);
@@ -1798,7 +2049,7 @@ function buildLiving() {
   W.photo = new THREE.Group(); W.photo.position.set(2.55, 0.85, 7.0); W.photo.rotation.y = Math.PI / 2 - 0.25; scene.add(W.photo);
   { const fr = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.25, 0.015), MT.brass); fr.position.y = 0.125; fr.rotation.x = -0.12; W.photo.add(fr);
     const pic = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.215), M({ map: T.photo0, world: false })); pic.position.set(0, 0.125, 0.009); pic.rotation.x = -0.12; W.photo.add(pic); W.photoPic = pic;
-    use(pic, 'Foto', () => Story.examine('photo')); use(fr, 'Foto', () => Story.examine('photo')); }
+    use(pic, 'lbl_photo', () => Story.examine('photo')); use(fr, 'lbl_photo', () => Story.examine('photo')); }
   cyl(0.06, 0.08, 0.28, M({ color: '#6a8a9a', noise: 0.2 }), 2.5, 0.85, 7.75);
   new AClock('living', { pos: V3(2.2 + 0.075, 1.78, 7.3), ry: Math.PI / 2, start: 708, r: 0.15 });
   // small table + chairs by the window
@@ -1820,7 +2071,7 @@ function buildLiving() {
     const dd = new THREE.Group(); dd.position.set(7.0 - 0.47, 0, 11 - 0.12); W.brickDoor.add(dd);
     const lf = new THREE.Mesh(new THREE.BoxGeometry(0.93, 2.05, 0.045), MT.paintDoor); lf.position.set(0.465, 1.025, -0.03); dd.add(lf);
     W.brickDoorPivot = dd;
-    use(lf, 'Openen', () => Story.brickDoor());
+    use(lf, 'lbl_open', () => Story.brickDoor());
     casing('x', 7.0, 11 - 0.12, 0.95, 2.08, MT.trim, W.brickDoor, 0.02);
     void bw; }
 }
@@ -1845,7 +2096,7 @@ function buildKitchen() {
   box(0.02, 0.4, 0.03, m.metal, 13.22, 1.0, 7.1);
   W.fridgeNote = plane(0.13, 0.13, M({ color: '#f2df7a', noise: 0.05 }), 13.225, 1.42, 6.85, 0, -Math.PI / 2);
   W.fridgeNote.visible = false;
-  use(W.fridgeNote, 'Lezen', () => Story.readNote('fridge'));
+  use(W.fridgeNote, 'lbl_read', () => Story.readNote('fridge'));
   W.fridgePos = V3(13.5, 1.0, 6.85);
   // table + chairs
   box(1.2, 0.05, 0.9, m.lightWood, 10.9, 0.72, 8.35, { collide: true });
@@ -1919,7 +2170,7 @@ function buildStairsAndBasement() {
   // leaning covered mirror
   const lm = box(0.8, 1.5, 0.05, MT.sheet, 14.9, Y, 15.2); lm.rotation.set(0, -Math.PI / 2, 0.12); lm.position.x = 15.05;
   W.basementBulb = bareBulb(LN.basement, 12.3, -0.65, 15.9);
-  { const ch = box(0.006, 0.45, 0.006, m.brass, 12.36, -1.1, 15.9); use(ch, 'Koordje', () => Story.pullChain()); W.pullChain = ch; }
+  { const ch = box(0.006, 0.45, 0.006, m.brass, 12.36, -1.1, 15.9); use(ch, 'lbl_chain', () => Story.pullChain()); W.pullChain = ch; }
   LN.basement.on = 0;
   W.dripPos = V3(14.6, -2.3, 14.2);
 }
@@ -1973,7 +2224,7 @@ function buildLongHall() {
     const lf = new THREE.Mesh(new THREE.BoxGeometry(0.85, 2.06, 0.03), MT.paintDoor); lf.position.set(x, 1.03, zf); dg.add(lf);
     const hd = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.025, 0.03), MT.brass); hd.position.set(x + 0.32, 1.0, zf + (north ? 0.03 : -0.03)); dg.add(hd);
     casing('x', x, north ? 4.4 : 6.4, 0.85, DH, MT.trim, dg);
-    use(lf, 'Openen', () => { Sound.play('rattle', lf.getWorldPosition(new THREE.Vector3()), { gain: 0.8 }); });
+    use(lf, 'lbl_open', () => { Sound.play('rattle', lf.getWorldPosition(new THREE.Vector3()), { gain: 0.8 }); });
     dg.userData.x = x; W.longDoors.push(dg);
   }
   W.longLamps = [];
@@ -2023,7 +2274,8 @@ function isPlain(m) {
   const e = m.uniforms.uEmissive.value;
   return !('HAS_MAP' in m.defines) && !('HOLES' in m.defines) && e.r + e.g + e.b === 0 && m.uniforms.uOpacity.value === 1 && !m.transparent;
 }
-function mergeStatic(root, cell = [6, 5]) {
+const TRI = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+function mergeStatic(root) {
   root.updateMatrixWorld(true);
   const inv = new THREE.Matrix4().copy(root.matrixWorld).invert();
   const buckets = new Map(), remove = [];
@@ -2038,21 +2290,24 @@ function mergeStatic(root, cell = [6, 5]) {
     const P = g.attributes.position, Nn = g.attributes.normal, U = g.attributes.uv;
     if (!P || !Nn) return;
     mw.multiplyMatrices(inv, o.matrixWorld); nm.getNormalMatrix(mw);
-    o.getWorldPosition(wp);
-    const zone = Math.floor(wp.x / cell[0]) + ',' + Math.floor(wp.z / cell[1]) + ',' + (wp.y < -1 ? 'b' : 'g');
     const groups = Array.isArray(o.material) && g.groups.length ? g.groups : [{ start: 0, count: P.count, materialIndex: 0 }];
     for (const gr of groups) {
       const mat = mats[gr.materialIndex] || mats[0];
-      const plain = isPlain(mat);
-      const key = (plain ? 'plain' + mat.side : mat.id) + '|' + zone;
-      let b = buckets.get(key); if (!b) { b = { mat: plain ? plainMat(mat.side) : mat, plain, pos: [], nrm: [], uv: [], col: [] }; buckets.set(key, b); }
+      const plain = isPlain(mat), dbl = mat.side === THREE.DoubleSide;
+      const mk = (plain ? 'plain' + mat.side : mat.id) + '|';
       const cc = mat.uniforms.uColor.value, na = mat.uniforms.uNoise.value;
       const end = Math.min(P.count, gr.start + gr.count);
-      for (let i = gr.start; i < end; i++) {
-        v.fromBufferAttribute(P, i).applyMatrix4(mw); b.pos.push(v.x, v.y, v.z);
-        v.fromBufferAttribute(Nn, i).applyMatrix3(nm).normalize(); b.nrm.push(v.x, v.y, v.z);
-        if (U) b.uv.push(U.getX(i), U.getY(i)); else b.uv.push(0, 0);
-        if (plain) b.col.push(cc.r, cc.g, cc.b, na);
+      for (let i = gr.start; i + 2 < end; i += 3) {
+        // bucket per material and per set of rooms the triangle faces
+        for (let k = 0; k < 3; k++) TRI[k].fromBufferAttribute(P, i + k).applyMatrix4(o.matrixWorld);
+        const rm = triRooms(TRI[0], TRI[1], TRI[2], dbl), key = mk + rm;
+        let b = buckets.get(key); if (!b) { b = { mat: plain ? plainMat(mat.side) : mat, plain, rmask: rm, pos: [], nrm: [], uv: [], col: [] }; buckets.set(key, b); }
+        for (let j = i; j < i + 3; j++) {
+          v.fromBufferAttribute(P, j).applyMatrix4(mw); b.pos.push(v.x, v.y, v.z);
+          v.fromBufferAttribute(Nn, j).applyMatrix3(nm).normalize(); b.nrm.push(v.x, v.y, v.z);
+          if (U) b.uv.push(U.getX(j), U.getY(j)); else b.uv.push(0, 0);
+          if (plain) b.col.push(cc.r, cc.g, cc.b, na);
+        }
       }
     }
     remove.push(o);
@@ -2065,7 +2320,7 @@ function mergeStatic(root, cell = [6, 5]) {
     g.setAttribute('uv', new THREE.Float32BufferAttribute(b.uv, 2));
     if (b.plain) g.setAttribute('aCol', new THREE.Float32BufferAttribute(b.col, 4));
     g.computeBoundingSphere();
-    const m = new THREE.Mesh(g, b.mat); m.matrixAutoUpdate = false; root.add(m); m.updateMatrix();
+    const m = new THREE.Mesh(g, b.mat); m.matrixAutoUpdate = false; m.userData.rmask = b.rmask; root.add(m); m.updateMatrix();
   }
   return { removed: remove.length, meshes: buckets.size };
 }
@@ -2082,7 +2337,7 @@ function mergeWorld() {
   for (const c of Object.values(CLOCKS)) { DYN.add(c.hourP); DYN.add(c.minP); DYN.add(c.secP); mergeStatic(c.group); }
   for (const d of Object.values(DOORS)) mergeStatic(d.pivot);
   for (const ch of [W.studyChair, W.livingChair, ...W.kitChairs]) mergeStatic(ch);
-  stats.push(mergeStatic(scene, [7, 6]));
+  stats.push(mergeStatic(scene));
   return stats;
 }
 
@@ -2137,7 +2392,7 @@ function losClear(a, b, shrink = 0.03) {
 function roomOf(x, y, z) {
   const D = VEST.D;
   if (y < -4) { if (x >= 33.1) return 'final'; if (x >= 15.2 && z >= 8.2 && z <= 9.5) return 'deep'; }
-  if (x >= 15.2 && z >= 8.2 && z <= 9.5 && y < 1) return 'deep';
+  if (x >= 15.2 && z >= 8.2 && z <= 9.5 && y < 3) return 'deep';
   if (y < -0.2 && z >= 13.25 && x >= 9.5 && x <= 15.2) return 'basement';
   if (x >= 14 && x <= 15.2 && z >= 9.5 && z <= 13.25) return 'stairs';
   if (x >= 14 && x <= 15.2 && z >= 8.2 && z < 9.5) return 'landing';
@@ -2149,75 +2404,330 @@ function roomOf(x, y, z) {
   return 'outside';
 }
 
+/* ---- 04b_rooms.js ---- */
+/* ============================================================
+   Rooms & portals: only draw what can be seen from where you stand.
+   Every mesh carries a bit per room it faces (three.js layers 3..15);
+   each frame a portal walk from the camera's room decides which bits
+   the camera renders. Doors, windows and archways are the portals.
+   ============================================================ */
+const ROOMS = ['bedroom', 'bathroom', 'study', 'hall', 'vestibule', 'living', 'kitchen', 'landing', 'stairs', 'basement', 'deep', 'final', 'outside'];
+const RBIT = {}; ROOMS.forEach((r, i) => { RBIT[r] = 1 << (i + 3); });
+const ALLROOMS = ROOMS.reduce((a, r) => a | RBIT[r], 0);
+const PORTALS = [];
+const ROOM_PORTALS = {}; for (const r of ROOMS) ROOM_PORTALS[r] = [];
+
+/* axis 'x': opening in a wall along x at z = c, spanning x lo..hi; axis 'z': wall along z at x = c */
+function addPortal(a, b, axis, c, lo, hi, y0, y1, o = {}) {
+  const p = { a, b, axis, c, lo, hi, y0, y1, door: o.door || null, move: !!o.move, open: o.open || null, pts: [V3(), V3(), V3(), V3()] };
+  PORTALS.push(p); ROOM_PORTALS[a].push(p); ROOM_PORTALS[b].push(p);
+  return p;
+}
+function portalOpen(p) {
+  if (p.door) { const d = DOORS[p.door]; if (!d || !d.exists) return false; if (Math.abs(d.ang) < 0.004 && d.target === 0) return false; }
+  return p.open ? p.open() : true;
+}
+function portalCorners(p) {
+  const s = p.move ? -VEST.D : 0, q = p.pts;
+  if (p.axis === 'x') { q[0].set(p.lo + s, p.y0, p.c); q[1].set(p.hi + s, p.y0, p.c); q[2].set(p.hi + s, p.y1, p.c); q[3].set(p.lo + s, p.y1, p.c); }
+  else { const x = p.c + s; q[0].set(x, p.y0, p.lo); q[1].set(x, p.y0, p.hi); q[2].set(x, p.y1, p.hi); q[3].set(x, p.y1, p.lo); }
+  return q;
+}
+function buildPortals() {
+  const always = () => true;
+  addPortal('bedroom', 'hall', 'x', 4.4, 4.25, 5.1, 0, DH, { door: 'bedroom' });
+  addPortal('bathroom', 'hall', 'x', 4.4, 6.75, 7.65, 0, DH, { door: 'bathroom' });
+  addPortal('study', 'hall', 'x', 4.4, 9.45, 10.3, 0, DH, { door: 'study' });
+  addPortal('hall', 'living', 'x', 6.4, 3.2, 4.4, 0, 2.2);
+  addPortal('hall', 'kitchen', 'x', 6.4, 9.0, 10.0, 0, 2.2);
+  addPortal('living', 'kitchen', 'z', 8.2, 8.9, 10.1, 0, 2.2);
+  addPortal('vestibule', 'hall', 'z', 2.2, 4.4, 6.4, 0, CEIL, { move: true });
+  addPortal('vestibule', 'outside', 'z', 0, 6.9, 7.85, 0, DH, { door: 'front', move: true });
+  addPortal('kitchen', 'landing', 'z', 14, 8.45, 9.3, 0, DH, { door: 'basement' });
+  addPortal('landing', 'stairs', 'x', 9.5, 14, 15.2, -2.9, CEIL, { open: () => !(W.stairBlock && W.stairBlock[0] && W.stairBlock[0].visible) });
+  addPortal('stairs', 'basement', 'x', 13.25, 14.07, 15.13, -2.7, -0.3);
+  addPortal('landing', 'deep', 'z', 15.2, 8.2, 9.5, -14, CEIL, { open: () => W.deep.visible && !(W.landingEast && W.landingEast[0] && W.landingEast[0].visible) });
+  addPortal('deep', 'final', 'z', 33.1, 8.2, 9.5, -12.8, -10.2, { open: () => W.deep.visible });
+  // windows
+  addPortal('bathroom', 'outside', 'x', 0, 5.85, 6.45, 1.55, 2.15, { open: always });
+  addPortal('study', 'outside', 'x', 0, 11.0, 12.6, 0.9, 2.2);
+  addPortal('living', 'outside', 'x', 11, 4.0, 6.4, 0.75, 2.15);
+  addPortal('kitchen', 'outside', 'x', 11, 10.6, 12.0, 1.0, 2.1);
+  addPortal('bedroom', 'outside', 'z', 0, 1.3, 2.6, 0.8, 2.15);
+  addPortal('living', 'outside', 'z', 0, 9.0, 10.4, 0.8, 2.15);
+  addPortal('hall', 'outside', 'z', 14, 5.05, 5.75, 1.0, 2.0);
+}
+
+/* ---------- which rooms does a triangle face? ---------- */
+const _ra = new THREE.Vector3(), _rb = new THREE.Vector3(), _rc = new THREE.Vector3(), _rn = new THREE.Vector3(), _rg = new THREE.Vector3(), _rt = new THREE.Vector3();
+function roomBitAt(x, y, z) { return RBIT[roomOf(x, y, z)] || RBIT.outside; }
+function triRooms(a, b, c, dbl) {
+  _rn.subVectors(c, b).cross(_rt.subVectors(a, b));
+  const l = _rn.length(); if (l > 1e-9) _rn.multiplyScalar(1 / l); else _rn.set(0, 0, 0);
+  _rg.copy(a).add(b).add(c).multiplyScalar(1 / 3);
+  let m = 0;
+  for (let s = 1; s >= (dbl ? -1 : 1); s -= 2) {
+    const k = 0.06 * s;
+    m |= roomBitAt(_rg.x + _rn.x * k, _rg.y + _rn.y * k, _rg.z + _rn.z * k);
+    for (const v of [a, b, c]) {
+      const x = v.x + (_rg.x - v.x) * 0.1 + _rn.x * k, y = v.y + (_rg.y - v.y) * 0.1 + _rn.y * k, z = v.z + (_rg.z - v.z) * 0.1 + _rn.z * k;
+      m |= roomBitAt(x, y, z);
+    }
+  }
+  return m;
+}
+/* rooms of a whole mesh (union over its triangles, world space) */
+function meshRooms(o) {
+  const g = o.geometry; if (!g || !g.attributes.position) return ALLROOMS;
+  o.updateMatrixWorld(true);
+  const P = g.attributes.position, idx = g.index, mw = o.matrixWorld;
+  const n = idx ? idx.count : P.count;
+  const mats = Array.isArray(o.material) ? o.material : [o.material];
+  const dbl = mats.some((m) => m && m.side === THREE.DoubleSide);
+  if (n > 9000) { // big: use the bounding box corners
+    g.computeBoundingBox(); const bb = g.boundingBox; let m = 0;
+    for (let i = 0; i < 9; i++) { const p = i === 8 ? bb.getCenter(_ra) : _ra.set(i & 1 ? bb.max.x : bb.min.x, i & 2 ? bb.max.y : bb.min.y, i & 4 ? bb.max.z : bb.min.z).lerp(bb.getCenter(_rb), 0.1); p.applyMatrix4(mw); m |= roomBitAt(p.x, p.y, p.z); }
+    return m;
+  }
+  let m = 0;
+  for (let i = 0; i + 2 < n; i += 3) {
+    const ia = idx ? idx.getX(i) : i, ib = idx ? idx.getX(i + 1) : i + 1, ic = idx ? idx.getX(i + 2) : i + 2;
+    _ra.fromBufferAttribute(P, ia).applyMatrix4(mw); _rb.fromBufferAttribute(P, ib).applyMatrix4(mw); _rc.fromBufferAttribute(P, ic).applyMatrix4(mw);
+    m |= triRooms(_ra, _rb, _rc, dbl);
+    if (m === ALLROOMS) break;
+  }
+  return m || RBIT.outside;
+}
+/* give every mesh its room bits; call once after mergeWorld() */
+function assignRooms() {
+  const skip = new Set([Actors.avatar.root, Actors.double.root, Actors.ent.root]);
+  const tag = (o, rooms) => { o.userData.roomTag = rooms.reduce((a, r) => a | RBIT[r], 0); };
+  for (const p of PORTALS) if (p.door && DOORS[p.door]) tag(DOORS[p.door].pivot, [p.a, p.b]);
+  tag(W.long, ['hall']); tag(W.exterior, ['outside']);
+  scene.updateMatrixWorld(true);
+  const stats = { meshes: 0 };
+  const walk = (o, inherited) => {
+    if (skip.has(o)) return;
+    const t = o.userData.roomTag !== undefined ? o.userData.roomTag : inherited;
+    if (o.isMesh && o.layers.mask === 1) {
+      const m = t !== undefined ? t : o.userData.rmask !== undefined ? o.userData.rmask : meshRooms(o);
+      o.layers.mask = m; o.userData.rooms = m; stats.meshes++;
+    }
+    for (const c of o.children) walk(c, t);
+  };
+  walk(scene, undefined);
+  return stats;
+}
+
+/* ---------- the portal walk ---------- */
+const Cull = {
+  enabled: true, mask: ALLROOMS, mirrorMask: ALLROOMS, rooms: 0, mirrorRooms: 0, start: '',
+  _v: new THREE.Vector4(), _vp: new THREE.Matrix4(), rect: {}, queue: [],
+  project(p, vp) { // screen rect of a portal, 'full' when it crosses the eye plane, null when behind
+    const q = portalCorners(p), v = this._v;
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9, behind = 0, near = false;
+    for (const c of q) {
+      v.set(c.x, c.y, c.z, 1).applyMatrix4(vp);
+      if (v.w <= 0.02) { behind++; near = true; continue; }
+      const x = v.x / v.w, y = v.y / v.w;
+      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+    }
+    if (behind === 4) return null;
+    if (near) return [-1, 1, -1, 1];
+    return [x0, x1, y0, y1];
+  },
+  walk(start, cam, base) {
+    if (!this.enabled || !start || !RBIT[start]) return ALLROOMS;
+    const vp = this._vp.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse);
+    const R = this.rect; for (const k in R) delete R[k];
+    R[start] = base ? base.slice() : [-1, 1, -1, 1];
+    const Q = this.queue; Q.length = 0; Q.push(start);
+    let mask = RBIT[start], it = 0;
+    while (Q.length && it++ < 80) {
+      const r = Q.shift(), cr = R[r];
+      for (const p of ROOM_PORTALS[r]) {
+        const other = p.a === r ? p.b : p.a;
+        if (!portalOpen(p)) continue;
+        const pr = this.project(p, vp); if (!pr) continue;
+        const nx0 = Math.max(cr[0], pr[0]), nx1 = Math.min(cr[1], pr[1]), ny0 = Math.max(cr[2], pr[2]), ny1 = Math.min(cr[3], pr[3]);
+        if (nx0 >= nx1 || ny0 >= ny1) continue;
+        const o = R[other];
+        if (o && o[0] <= nx0 && o[1] >= nx1 && o[2] <= ny0 && o[3] >= ny1) continue; // nothing new
+        R[other] = o ? [Math.min(o[0], nx0), Math.max(o[1], nx1), Math.min(o[2], ny0), Math.max(o[3], ny1)] : [nx0, nx1, ny0, ny1];
+        mask |= RBIT[other];
+        if (!Q.includes(other)) Q.push(other);
+      }
+    }
+    return mask;
+  },
+  camRoom(p) { return roomOf(p.x, p.y, p.z); },
+  count(m) { let n = 0; for (const r of ROOMS) if (m & RBIT[r]) n++; return n; },
+  names(m) { return ROOMS.filter((r) => m & RBIT[r]); },
+  /* before the main pass */
+  main(cam) {
+    this.start = this.camRoom(cam.position);
+    this.mask = this.walk(this.start, cam);
+    this.rooms = this.count(this.mask);
+    cam.layers.mask = 1 | this.mask;
+  },
+  /* before a mirror pass: walk from the mirror's own room with the reflected camera */
+  mirror(m, vcam) {
+    const c = m.worldCenter(_ra), n = m.worldNormal(_rb);
+    const start = roomOf(c.x + n.x * 0.2, c.y + n.y * 0.2, c.z + n.z * 0.2);
+    // the reflection is only seen through the glass: start from the mirror's own outline
+    const vp = this._vp.multiplyMatrices(vcam.projectionMatrix, vcam.matrixWorldInverse), mw = m.mesh.matrixWorld, v = this._v;
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9, full = false;
+    for (let i = 0; i < 4; i++) {
+      _rc.set((i & 1 ? 0.5 : -0.5) * m.w, (i & 2 ? 0.5 : -0.5) * m.h, 0).applyMatrix4(mw);
+      v.set(_rc.x, _rc.y, _rc.z, 1).applyMatrix4(vp);
+      if (v.w <= 0.02) { full = true; break; }
+      const x = v.x / v.w, y = v.y / v.w; x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+    }
+    const base = full ? null : [Math.max(-1, x0), Math.min(1, x1), Math.max(-1, y0), Math.min(1, y1)];
+    this.mirrorMask = this.walk(start, vcam, base);
+    this.mirrorRooms = this.count(this.mirrorMask);
+    vcam.layers.mask = 7 | this.mirrorMask;
+  },
+  all(cam) { cam.layers.mask = 1 | ALLROOMS; },
+};
+
 /* ---- 05_actors.js ---- */
 /* ============================================================
-   Actors: low-poly humans — the reflection, the double, the entity
+   Actors: the reflection, the double, and the thing that follows
    ============================================================ */
+
+/* ---------- the shade: a figure that is mostly absence ----------
+   Near-black, its surface crawls, its edges fray into dithered smoke,
+   and it fades in and out instead of popping. Seen head-on against a lit
+   wall it is a hole in the shape of someone; in the dark it is barely
+   there at all. */
+const SHADE_VS = `
+uniform float uTime, uJit;
+varying vec3 vW; varying vec3 vN;
+void main(){
+  vec4 w = modelMatrix * vec4(position, 1.0);
+  vec3 n = normalize(mat3(modelMatrix) * normal);
+  float crawl = sin(w.y * 7.0 + uTime * 1.9) * sin(w.x * 6.0 - uTime * 1.3 + w.z * 5.0) + 0.5 * sin(w.y * 17.0 - uTime * 3.1 + w.x * 13.0);
+  float twitch = uJit * sin(w.y * 37.0 + uTime * 71.0);
+  w.xyz += n * (0.02 * crawl + 0.04 * twitch);
+  vW = w.xyz; vN = n;
+  gl_Position = projectionMatrix * viewMatrix * w;
+}`;
+const SHADE_FS = `
+uniform float uTime, uFade, uFogDensity, uBase; uniform vec3 uCamPos, uFogColor, uTint; uniform sampler2D uNoiseTex;
+varying vec3 vW; varying vec3 vN;
+void main(){
+  vec3 v = normalize(uCamPos - vW);
+  float fres = 1.0 - abs(dot(normalize(vN), v));
+  float s1 = texture2D(uNoiseTex, vec2(vW.x + vW.z, vW.y) * 0.26 + vec2(uTime * 0.013, -uTime * 0.045)).r;
+  float s2 = texture2D(uNoiseTex, vec2(vW.z - vW.x, vW.y) * 0.9 + vec2(-uTime * 0.03, -uTime * 0.12)).r;
+  float smoke = s1 * 0.6 + s2 * 0.4;
+  float lowFray = smoothstep(0.7, 0.0, vW.y - uBase) * 0.6; // the hem dissolves into the floor
+  float cut = pow(fres, 1.6) * 1.3 + smoke * 0.7 + lowFray + (1.0 - uFade) * 1.4;
+  float ign = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
+  if (cut > 0.98 + ign * 0.32) discard;
+  vec3 col = uTint * (0.45 + 0.9 * smoke) + vec3(0.010, 0.011, 0.014) * pow(fres, 3.0);
+  vec3 dv = vW - uCamPos;
+  float f = 1.0 - exp(-uFogDensity * uFogDensity * dot(dv, dv));
+  col = mix(col, uFogColor, clamp(f, 0.0, 1.0));
+  gl_FragColor = vec4(pow(col, vec3(0.4545)), 1.0);
+}`;
+let SHADE = null;
+function shadeMat() {
+  if (SHADE) return SHADE;
+  SHADE = new THREE.ShaderMaterial({
+    uniforms: { uTime: SU.uTime, uCamPos: SU.uCamPos, uFogColor: SU.uFogColor, uFogDensity: SU.uFogDensity, uNoiseTex: SU.uNoiseTex, uFade: { value: 1 }, uJit: { value: 0 }, uBase: { value: 0 }, uTint: { value: new THREE.Vector3(0.0022, 0.0021, 0.0024) } },
+    vertexShader: SHADE_VS, fragmentShader: SHADE_FS,
+  });
+  return SHADE;
+}
+
+/* ---------- a rounded low-poly person ----------
+   Same joints as before (hips, knees, shoulders, elbows, neck, head) so
+   every pose keeps working; tapered limbs, a lathe torso, a sphere head
+   with a wrap-around face, striped pyjamas, bare feet. */
 function makeHuman(o) {
-  const P = Object.assign({ h: 1, arm: 1, neck: 1, head: 1, sh: 1, skin: '#c9a58a', shirt: '#5b6470', pants: '#2c2d33', hair: '#2b211a', face: T.facePlayer, eyes: false, flash: true }, o);
-  const mSkin = M({ color: P.skin, noise: 0.05 });
-  const mShirt = M({ map: T.fabric, world: false, ts: [2, 2], color: P.shirt });
-  const mPants = M({ map: T.fabric, world: false, ts: [2, 2], color: P.pants });
-  const mHair = M({ color: P.hair, noise: 0.2 });
-  const mFace = M({ map: P.face, world: false, noise: 0 });
+  const P = Object.assign({ h: 1, arm: 1, neck: 1, head: 1, sh: 1, skin: '#c79f84', cloth: '#ffffff', hair: '#2e2219', headTex: T.headPlayer, eyes: false, flash: true, shade: false, lean: 0 }, o);
+  const shade = P.shade ? shadeMat() : null;
+  const mSkin = shade || M({ color: P.skin, noise: 0.04 });
+  const mCloth = shade || M({ map: T.pajama, world: false, ts: [3, 2], color: P.cloth, noise: 0.05 });
+  const mHead = shade || M({ map: P.headTex, world: false, noise: 0 });
+  const mDark = shade || M({ color: '#2d3a48', noise: 0.08 });
   const root = new THREE.Group();
-  const B = (w, h, d, mat, parent, x, y, z, hang) => {
-    const g = new THREE.BoxGeometry(w, h, d); if (hang) g.translate(0, -h / 2, 0); else g.translate(0, h / 2, 0);
-    const m = new THREE.Mesh(g, mat); m.position.set(x, y, z); parent.add(m); return m;
-  };
   const G_ = (parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); return g; };
+  const add = (geo, mat, parent, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); parent.add(m); return m; };
+  // a limb segment hanging down from its joint: tapered tube plus a ball at the joint
+  const seg = (parent, len, r0, r1, mat, joint = true) => {
+    const g = new THREE.CylinderGeometry(r1, r0, len, 9, 1, false); g.translate(0, -len / 2, 0);
+    add(g, mat, parent);
+    if (joint) add(new THREE.SphereGeometry(r0 * 1.02, 9, 7), mat, parent);
+  };
   const h = P.h, thigh = 0.44 * h, shin = 0.42 * h, hipY = 0.9 * h;
   const hips = G_(root, 0, hipY, 0);
-  B(0.34 * P.sh, 0.17, 0.2, mPants, hips, 0, -0.06, 0);
-  const lHip = G_(hips, -0.095, 0, 0), rHip = G_(hips, 0.095, 0, 0);
+  if (!shade) { const pelvis = add(new THREE.SphereGeometry(0.15, 12, 8), mCloth, hips, 0, -0.035, 0); pelvis.scale.set(1.0 * P.sh, 0.55, 0.74); }
+  else { // a long drape from the waist to the floor, fraying at the hem
+    const sk = [[0.15, 0.06], [0.165, -0.1], [0.19, -0.4], [0.225, -0.7], [0.27, -hipY + 0.02]].map(([r, y]) => new THREE.Vector2(r, y));
+    const skirt = add(new THREE.LatheGeometry(sk, 12), shade, hips); skirt.scale.z = 0.72;
+  }
+  const lHip = G_(hips, -0.092, -0.04, 0), rHip = G_(hips, 0.092, -0.04, 0);
   const legs = [];
   for (const hp of [lHip, rHip]) {
-    B(0.15, thigh, 0.16, mPants, hp, 0, 0, 0, true);
+    if (!shade) seg(hp, thigh, 0.082, 0.062, mCloth);
     const knee = G_(hp, 0, -thigh, 0);
-    B(0.12, shin, 0.13, mPants, knee, 0, 0, 0, true);
-    B(0.11, 0.07, 0.25, M({ color: '#26231f', noise: 0.1 }), knee, 0, -shin - 0.035, 0.05);
+    if (!shade) {
+      seg(knee, shin, 0.06, 0.046, mCloth);
+      const ankle = G_(knee, 0, -shin, 0);
+      add(new THREE.CylinderGeometry(0.037, 0.04, 0.05, 8), mSkin, ankle, 0, -0.005, 0);
+      const foot = add(new THREE.SphereGeometry(0.06, 9, 6), mSkin, ankle, 0, -0.035, 0.05); foot.scale.set(0.78, 0.45, 1.75);
+    }
     legs.push(knee);
   }
-  const chest = G_(hips, 0, 0.08, 0);
+  const chest = G_(hips, 0, 0.06, 0);
   const torsoH = 0.5 * h;
-  B(0.38 * P.sh, torsoH, 0.22, mShirt, chest, 0, 0, 0);
-  const neck = G_(chest, 0, torsoH, 0);
-  B(0.1, 0.1 * P.neck, 0.1, mSkin, neck, 0, 0, 0);
-  const head = G_(neck, 0, 0.1 * P.neck, 0.01);
+  // torso profile: waist, belly, ribcage, shoulders
+  const prof = (shade ? [[0.15, -0.02], [0.14, 0.12], [0.15, 0.26], [0.17, 0.38], [0.165, 0.45], [0.08, 0.5], [0.04, 0.53]] : [[0.001, 0], [0.135, 0.01], [0.128, 0.12], [0.14, 0.26], [0.158, 0.38], [0.15, 0.46], [0.09, 0.5], [0.05, 0.52]]).map(([r, y]) => new THREE.Vector2(r * P.sh, y * h));
+  const torso = add(new THREE.LatheGeometry(prof, 14), mCloth, chest); torso.scale.z = 0.68;
+  // collar and buttons
+  if (!shade) { for (let i = 0; i < 4; i++) add(new THREE.SphereGeometry(0.009, 6, 4), mDark, chest, 0, torsoH * (0.2 + i * 0.18), 0.105); }
+  const neck = G_(chest, 0, torsoH, 0.005);
+  add((() => { const g = new THREE.CylinderGeometry(0.045, 0.052, 0.1 * P.neck, 9); g.translate(0, 0.05 * P.neck, 0); return g; })(), mSkin, neck);
+  const head = G_(neck, 0, 0.09 * P.neck, 0.012);
   head.rotation.order = 'YXZ';
   const hs = P.head;
-  const headMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2 * hs, 0.25 * hs, 0.22 * hs), [mSkin, mSkin, mHair, mSkin, mFace, mHair]);
-  headMesh.position.y = 0.125 * hs; head.add(headMesh);
-  B(0.215 * hs, 0.06 * hs, 0.235 * hs, mHair, head, 0, 0.235 * hs, -0.005);
+  const headMesh = add(new THREE.SphereGeometry(0.1 * hs, 20, 14), mHead, head, 0, 0.11 * hs, 0.005);
+  headMesh.scale.set(0.9, shade ? 1.3 : 1.12, 0.98);
+  if (!shade) { for (const s of [-1, 1]) { const ear = add(new THREE.SphereGeometry(0.024 * hs, 7, 5), mSkin, head, s * 0.09 * hs, 0.105 * hs, -0.005); ear.scale.set(0.45, 1, 0.8); } }
   let eyes = null;
   if (P.eyes) {
     eyes = new THREE.Group(); head.add(eyes);
-    const em = M({ color: '#000', emissive: '#e9e6dc', eI: 0.9, noise: 0 });
-    for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.018 * hs, 0.018 * hs), em); e.position.set(s * 0.045 * hs + (s > 0 ? -0.004 : 0.003), 0.14 * hs, 0.111 * hs); eyes.add(e); }
+    const em = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.55, 0.52, 0.47), transparent: true, opacity: 0.0, depthWrite: false });
+    for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.011 * hs, 0.007 * hs), em); e.position.set(s * 0.034 * hs, 0.118 * hs, 0.099 * hs); e.rotation.z = s * 0.3; eyes.add(e); }
+    eyes.userData.mat = em;
   }
   const arms = [];
   for (const s of [-1, 1]) {
-    const sh = G_(chest, s * (0.19 * P.sh + 0.045), torsoH - 0.05, 0);
+    const sh = G_(chest, s * (0.165 * P.sh + 0.03), torsoH - 0.07, 0);
     const up = 0.3 * P.arm * h, fo = 0.27 * P.arm * h;
-    B(0.085, up, 0.09, mShirt, sh, 0, 0, 0, true);
+    seg(sh, up, shade ? 0.042 : 0.052, shade ? 0.03 : 0.042, mCloth, !shade);
     const el = G_(sh, 0, -up, 0);
-    B(0.075, fo, 0.08, mSkin, el, 0, 0, 0, true);
-    B(0.075, 0.09 * P.arm, 0.04, mSkin, el, 0, -fo, 0, true);
+    seg(el, fo, shade ? 0.03 : 0.04, shade ? 0.022 : 0.032, mCloth, !shade);
+    add(new THREE.CylinderGeometry(0.03, 0.028, 0.035, 8), mSkin, el, 0, -fo - 0.01, 0);
+    const hand = add(new THREE.SphereGeometry(0.042, 8, 6), mSkin, el, 0, -fo - 0.06, 0.005); hand.scale.set(0.62, 1.25 * (P.shade ? 1.5 : 1), 0.95);
     arms.push({ sh, el, fo });
   }
   let lens = null, torch = null;
   if (P.flash) {
     const el = arms[1].el;
-    torch = new THREE.Group(); torch.position.set(0, -arms[1].fo - 0.04, 0.03); el.add(torch);
+    torch = new THREE.Group(); torch.position.set(0, -arms[1].fo - 0.05, 0.03); el.add(torch);
     const body = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.2, 10), M({ color: '#1e1f22', noise: 0.1 })); body.rotation.x = Math.PI / 2; torch.add(body);
     lens = new THREE.Mesh(new THREE.CircleGeometry(0.024, 12), M({ color: '#000', emissive: '#fff6de', eI: 0, noise: 0 })); lens.position.z = 0.101; torch.add(lens);
     torch.visible = false;
   }
-  return { root, hips, chest, neck, head, headMesh, mFace, lHip, rHip, legs, arms, lens, torch, eyes, P, hipY };
+  return { root, hips, chest, neck, head, headMesh, mFace: mHead, lHip, rHip, legs, arms, lens, torch, eyes, P, hipY };
 }
 function setLayer(obj, layer) { obj.traverse((c) => c.layers.set(layer)); }
 
-/* p: {walk, amp, pitch, headYaw, roll, flash, sit, reach, lean, armsOut} */
+/* p: {walk, amp, pitch, headYaw, roll, flash, sit, reach, lean, armsOut, hunch} */
 function poseHuman(H, p) {
   const s = Math.sin(p.walk || 0), c = Math.cos(p.walk || 0), amp = p.amp || 0;
   H.hips.position.y = H.hipY + Math.abs(c) * 0.018 * amp;
@@ -2225,7 +2735,7 @@ function poseHuman(H, p) {
   H.legs[0].rotation.x = Math.max(0, c) * 0.55 * amp; H.legs[1].rotation.x = Math.max(0, -c) * 0.55 * amp;
   H.arms[0].sh.rotation.set(s * 0.32 * amp, 0, -0.06); H.arms[0].el.rotation.x = -0.15 - 0.15 * amp;
   H.arms[1].sh.rotation.set(-s * 0.32 * amp, 0, 0.06); H.arms[1].el.rotation.x = -0.15 - 0.15 * amp;
-  H.chest.rotation.set(0.02 * amp, s * 0.06 * amp, p.lean || 0);
+  H.chest.rotation.set(0.02 * amp + (p.hunch || 0), s * 0.06 * amp, p.lean || 0);
   if (p.flash) {
     H.arms[1].sh.rotation.set(-1.25 + (p.pitch || 0) * -0.75, -0.25, 0.05);
     H.arms[1].el.rotation.x = -0.35;
@@ -2234,11 +2744,12 @@ function poseHuman(H, p) {
   if (H.lens) H.lens.material.uniforms.uEmissive.value.setScalar(p.flash ? 2.6 : 0);
   if (p.reach) { H.arms[1].sh.rotation.set(-1.45 * p.reach, 0.1, 0.05); H.arms[1].el.rotation.x = -0.1 * p.reach; }
   if (p.armsOut) { H.arms[0].sh.rotation.z = -0.12; H.arms[1].sh.rotation.z = 0.12; }
+  if (p.hunch) { H.arms[0].sh.rotation.x -= p.hunch * 0.9; H.arms[1].sh.rotation.x -= p.hunch * 0.9; H.arms[0].el.rotation.x += p.hunch * 0.3; H.arms[1].el.rotation.x += p.hunch * 0.3; }
   if (p.sit) {
     H.hips.position.y = 0.52; H.lHip.rotation.x = H.rHip.rotation.x = -1.5; H.legs[0].rotation.x = H.legs[1].rotation.x = 1.5;
     H.arms[0].sh.rotation.x = H.arms[1].sh.rotation.x = -0.35; H.arms[0].el.rotation.x = H.arms[1].el.rotation.x = -0.5;
   }
-  H.head.rotation.set(-(p.pitch || 0) * 0.85, p.headYaw || 0, p.roll || 0);
+  H.head.rotation.set(-(p.pitch || 0) * 0.85 - (p.hunch || 0) * 0.6, p.headYaw || 0, p.roll || 0);
 }
 
 const Actors = {
@@ -2248,18 +2759,19 @@ const Actors = {
     scene.add(this.avatar.root); setLayer(this.avatar.root, 1);
     this.double = makeHuman({ flash: false });
     scene.add(this.double.root); this.double.root.visible = false;
-    this.ent = makeHuman({ h: 1.07, arm: 1.34, neck: 1.9, head: 1.12, sh: 0.88, skin: '#9d9a93', shirt: '#3a4048', pants: '#1c1d21', hair: '#161310', face: T.faceEntity, eyes: true, flash: false });
+    // the entity: taller, narrow, arms too long, neck too long; made of shade
+    this.ent = makeHuman({ h: 1.08, arm: 1.38, neck: 2.0, head: 1.05, sh: 0.84, eyes: true, flash: false, shade: true });
     scene.add(this.ent.root); this.ent.root.visible = false;
   },
   prepareMirror(m) {
     const A = this.avatar; let pose = Player.pose();
     let extra = { headYaw: 0, roll: 0 };
-    A.mFace.uniforms.uMap.value = T.facePlayer;
+    A.mFace.uniforms.uMap.value = T.headPlayer;
     let vis = true;
     switch (m.mode) {
       case 'delay': pose = Player.poseAt(G.t - 0.5); break;
       case 'lookAway': extra.headYaw = 0.95; pose = Object.assign({}, pose, { pitch: -0.12 }); break;
-      case 'smile': pose = Player.poseAt(G.t - 0.15); A.mFace.uniforms.uMap.value = T.faceSmile; extra.roll = 0.14; break;
+      case 'smile': pose = Player.poseAt(G.t - 0.15); A.mFace.uniforms.uMap.value = T.headSmile; extra.roll = 0.14; break;
       case 'stillHead': extra.headYaw = angNorm((m.sessionYaw ?? pose.yaw) - pose.yaw); break;
       case 'frozen': case 'frozenPose': pose = m.frozenPose || pose; break;
       case 'missing': vis = false; break;
@@ -2915,7 +3427,7 @@ function lightLevel(p) {
 }
 
 const Interact = {
-  ray: new THREE.Raycaster(), cur: null, _t: null, _n: 0,
+  ray: (() => { const r = new THREE.Raycaster(); r.layers.mask = 0xffffffff | 0; return r; })(), cur: null, _t: null, _n: 0,
   targets() {
     const n = interactables.length + occluders.length;
     if (!this._t || n !== this._n) { this._t = interactables.concat(occluders); this._n = n; }
@@ -2939,31 +3451,50 @@ const Interact = {
     if (o === this.cur && !(o && o.userData.use.labelFn)) return;
     this.cur = o;
     const u = o && o.userData.use;
-    UI.prompt(u ? (u.labelFn ? u.labelFn() : u.label) : null);
+    UI.prompt(u ? tr(u.labelFn ? u.labelFn() : u.label) : null);
   },
 };
 
+/* Setting a wall clock: the minute hand follows the mouse around the dial
+   (one turn = one hour, the hour hand follows). Keys and wheel still work. */
 const ClockUI = {
-  active: false, clock: null, rep: 0, acc: 0, repH: 0,
+  active: false, clock: null, rep: 0, acc: 0, repH: 0, ang: 0, vx: 0, vy: -1, snd: 0, R: 100, turned: 0,
   open(c) {
-    if (c.solvedLock) { UI.thought('Die staat goed.', 2.5); return; }
-    this.active = true; this.clock = c; this.rep = this.acc = this.repH = 0;
+    if (c.solvedLock) { UI.thought(tr('t_clockOk'), 2.5); return; }
+    this.active = true; this.clock = c; this.rep = this.acc = this.repH = 0; this.snd = 0; this.turned = 0;
     c.ticking = false;
+    this.ang = ((((c.min % 60) + 60) % 60) / 60) * TAU; this.vx = Math.sin(this.ang); this.vy = -Math.cos(this.ang);
     Player.fovT = 46;
     Player.autoLook = { target: c.worldPos(new THREE.Vector3()), k: 6 };
-    UI.clockPanel(true); UI.clockReadout(c);
+    UI.clockPanel(true); UI.clockReadout(c); this.dial();
     Sound.play('ratchet', c.worldPos(_tv3), { gain: 0.5 });
   },
   close() {
     const c = this.clock; this.active = false; this.clock = null;
+    if (c) { c.min = ((Math.round(c.min) % 720) + 720) % 720; c.sec = 0; }
     Player.fovT = 72; Player.autoLook = null; UI.clockPanel(false);
     if (c) Story.onClockSet(c);
   },
   step(c, d) {
-    c.min = (((c.min + d) % 720) + 720) % 720;
+    c.min = (((Math.round(c.min) + d) % 720) + 720) % 720;
     c.sec = 0;
+    this.ang = ((c.min % 60) / 60) * TAU; this.vx = Math.sin(this.ang); this.vy = -Math.cos(this.ang);
     Sound.play('ratchet', c.worldPos(_tv3), { gain: 0.45, vary: 0.08 });
     UI.clockReadout(c);
+  },
+  turn(c, dMin) {
+    c.min = (((c.min + dMin) % 720) + 720) % 720; c.sec = 0;
+    this.snd += Math.abs(dMin); this.turned += Math.abs(dMin);
+    if (this.snd >= 2.5) { this.snd = 0; Sound.play('ratchet', c.worldPos(_tv3), { gain: 0.32, vary: 0.12, pri: 0 }); }
+    UI.clockReadout(c);
+  },
+  /* on-screen size of the dial, so the ring sits just outside the rim */
+  dial() {
+    const c = this.clock; if (!c) return;
+    const p = c.worldPos(_tv3), d = Math.max(0.2, p.distanceTo(camera.position));
+    const px = (0.16 / d) / Math.tan(camera.fov * DEG * 0.5) * (innerHeight / 2);
+    this.R = clamp(px * 1.35, 56, Math.min(innerWidth * 0.42, innerHeight * 0.3));
+    UI.clockDial(this.ang, this.R);
   },
   update(dt) {
     if (!this.active) return;
@@ -2976,7 +3507,28 @@ const ClockUI = {
     if (hold) { this.rep += dt; if (this.rep > 0.35) { this.acc += dt * (this.rep > 1.4 ? 45 : 14); while (this.acc >= 1) { this.acc -= 1; this.step(c, hold); } } } else { this.rep = 0; this.acc = 0; }
     const holdH = (keyDown('KeyW') || keyDown('ArrowUp')) ? 1 : (keyDown('KeyS') || keyDown('ArrowDown')) ? -1 : 0;
     if (holdH) { this.repH += dt; if (this.repH > 0.45) { this.repH -= 0.2; this.step(c, holdH * 60); } } else this.repH = 0;
-    if (Input.wheel) this.step(c, -Input.wheel);
+    if (Input.wheel) this.step(c, -Input.wheel * 5);
+    // mouse: a point riding the ring; only the sideways part of a movement turns it
+    let nx = null, ny = null;
+    const rel = Input.locked || Input.dragging || Input.tlook.x || Input.tlook.y;
+    if (rel) {
+      const mx = (Input.locked || Input.dragging ? Input.mdx : 0) + Input.tlook.x, my = (Input.locked || Input.dragging ? Input.mdy : 0) + Input.tlook.y;
+      Input.tlook.x = Input.tlook.y = 0;
+      if (mx || my) { const k = (0.85 * Input.sens) / this.R; nx = this.vx + mx * k; ny = this.vy + my * k; }
+    } else if (Input.amoved && !isTouch) { // cursor visible: aim at it directly
+      nx = Input.ax - innerWidth / 2; ny = Input.ay - innerHeight / 2;
+      if (Math.hypot(nx, ny) < this.R * 0.2) nx = ny = null;
+    }
+    if (nx !== null) {
+      const l = Math.hypot(nx, ny);
+      if (l > 1e-6) {
+        this.vx = nx / l; this.vy = ny / l;
+        const a = Math.atan2(this.vx, -this.vy);
+        const d = angNorm(a - this.ang); this.ang = a;
+        if (Math.abs(d) > 1e-5) this.turn(c, (d / TAU) * 60);
+      }
+    }
+    this.dial();
     if (Input.ePress || Input.click || keyPressed('Space') || keyPressed('Enter')) this.close();
   },
 };
@@ -2989,46 +3541,65 @@ const STAGES = ['intro', 'p1', 'p2', 'p2b', 'p3', 'descent', 'final', 'black', '
 const SI = (s) => STAGES.indexOf(s);
 const F = G.flags;
 
-const OBJECTIVES = {
-  intro: ['Ga naar buiten.', 'De voordeur zit aan het eind van de gang, links, tegenover de spiegel bij de kapstok.'],
-  p1: ['De voordeur gaat niet open. Zoek uit wat er niet klopt.', 'Alle digitale klokken zeggen 3:33. Zet de vier wandklokken ook op 3:33: in de gang, de woonkamer, de keuken en in de kelder (de deur in de keuken). Kijk naar een klok en druk op E.'],
-  p2: ['Het is stil. Er loopt ergens water.', 'Ga naar de badkamer. Op de muur naast de deur staat iets in spiegelschrift. Ga voor de spiegel boven de wastafel staan en lees het daar.'],
-  p2b: ['Er speelt muziek in de kleine kamer.', 'De kleine kamer blijft je terugsturen. Wat verandert hoort er wél. Zoek het voorwerp dat uit een andere kamer komt en gebruik het.'],
-  p3: ['Word wakker.', 'De kelderdeur in de keuken bestaat alleen in het donker. Doe het keukenlicht uit (schakelaar bij de deuropening), doe je zaklamp uit en kijk naar de muur waar de deur zat.'],
-  descent: ['Naar beneden.', 'Blijf de trap afdalen.'],
-  final: ['…', 'Deze keer moet je niet wegkijken. Loop naar hem toe.'],
-  black: ['…', ''],
-  morning: ['Ga naar buiten.', 'De voordeur gaat nu open.'],
-  end: ['', ''],
-};
 
-/* ---------------- the entity ---------------- */
+
+/* ---------------- the entity ----------------
+   It fades in rather than appearing, and when you look straight at it
+   it thins out in a fraction of a second. It is dark on purpose: you
+   should be unsure what you saw. */
 const Ent = {
   H: null, def: null, t: 0, lookT: 0, seen: false, gone: 0, lastEnd: -60, used: {}, pose: {},
+  fade: 1, fadeSpeed: 99, out: 0, jit: 0, eyeT: 0, eyeOn: false, eye: 0, flickT: 0,
   init() { this.H = Actors.ent; },
   spawn(def) {
-    const H = this.H; this.def = def; this.t = 0; this.lookT = 0; this.seen = false; this.gone = 0;
+    const H = this.H; this.def = def; this.t = 0; this.lookT = 0; this.seen = false; this.gone = 0; this.out = 0;
     H.root.visible = true;
     setLayer(H.root, def.mirrorOnly ? 2 : 0);
     H.root.position.copy(def.pos);
     H.root.rotation.y = def.yaw ?? 0;
-    this.pose = Object.assign({ pitch: -0.08, roll: 0.22 }, def.pose || {});
+    this.pose = Object.assign({ pitch: -0.08, roll: 0.22, hunch: 0.16 }, def.pose || {});
+    this.fade = def.fadeIn ? 0 : 1; this.fadeSpeed = def.fadeIn ? 1 / def.fadeIn : 99;
+    this.eyeOn = false; this.eyeT = rand(0.6, 1.8); this.eye = 0;
+    { const tv = def.tint ?? 0.0022; shadeMat().uniforms.uTint.value.set(tv, tv * 0.95, tv * 1.1); }
     this.used[def.id] = true;
+    shadeMat().uniforms.uFade.value = this.fade;
     if (def.onSpawn) def.onSpawn(this);
   },
   hide(reason) {
     if (!this.def) return;
-    const d = this.def; this.H.root.visible = false; this.def = null; this.lastEnd = G.t; Sound.presence(0);
+    const d = this.def; this.def = null; this.lastEnd = G.t; Sound.presence(0);
+    // looked at, lit or approached: it thins out instead of vanishing on the spot
+    if (this.H.root.visible && !d.mirrorOnly && (reason === 'look' || reason === 'flash' || reason === 'close' || reason === 'done')) this.out = reason === 'done' ? 0.4 : 0.16;
+    else this.H.root.visible = false;
     if (reason === 'look' && Math.random() < 0.35) { const l = nearestLight(this.H.root.position); if (l && l.lit && !l.flick) { l.setFlicker('unstable'); after(0.7, () => { if (l.flick && l.flick.mode === 'unstable' && !l.keepFlicker) l.setFlicker(null); }); } }
     if (d.onHide) d.onHide(reason);
   },
+  shadeUniforms(dt) {
+    const u = shadeMat().uniforms, H = this.H;
+    this.jit = Math.max(0, this.jit - dt * 6);
+    if (Math.random() < dt * 0.5) this.jit = rand(0.4, 1);
+    u.uJit.value = this.jit; u.uBase.value = H.root.position.y;
+    // eyes: two faint points that are there only some of the time
+    if (H.eyes) {
+      this.eyeT -= dt; if (this.eyeT <= 0) { this.eyeOn = !this.eyeOn; this.eyeT = this.eyeOn ? rand(0.6, 2.2) : rand(0.25, 3.5); }
+      this.eye = damp(this.eye, this.def && !this.def.noEyes && (this.eyeOn || this.def.eyesOn) ? 1 : 0, 10, dt);
+      H.eyes.userData.mat.opacity = this.eye * u.uFade.value * 0.75;
+    }
+  },
   update(dt) {
-    const d = this.def; if (!d) return;
+    const H = this.H, d = this.def, u = shadeMat().uniforms;
+    if (!d) {
+      if (this.out > 0) { this.out -= dt; u.uFade.value = Math.max(0, u.uFade.value - dt / 0.16); this.shadeUniforms(dt); if (this.out <= 0) H.root.visible = false; }
+      return;
+    }
     this.t += dt;
-    const H = this.H;
-    // idle: slow sway, wrong head
-    const tw = Math.sin(this.t * 0.7) * 0.04 + (Math.sin(this.t * 3.1) > 0.97 ? 0.35 : 0);
-    poseHuman(H, Object.assign({ walk: 0, amp: 0, headYaw: tw, lean: Math.sin(this.t * 0.5) * 0.03 + (this.pose.lean || 0), armsOut: true }, this.pose));
+    const target = d.forceFade ?? 1;
+    this.fade = target > this.fade ? Math.min(target, this.fade + dt * this.fadeSpeed) : Math.max(target, this.fade - dt * 6);
+    u.uFade.value = this.fade;
+    this.shadeUniforms(dt);
+    // idle: breathing sway, the head wrong, now and then a jerk
+    const tw = Math.sin(this.t * 0.7) * 0.05 + (Math.sin(this.t * 3.1) > 0.97 ? 0.4 : 0) + this.jit * 0.12;
+    poseHuman(H, Object.assign({ walk: 0, amp: 0, headYaw: tw, lean: Math.sin(this.t * 0.5) * 0.03 + (this.pose.lean || 0), armsOut: true }, this.pose, { hunch: (this.pose.hunch || 0) + Math.sin(this.t * 1.3) * 0.02 }));
     if (d.update && d.update(dt, this) === false) return;
     if (!this.def) return;
     if (d.persistent) return;
@@ -3037,14 +3608,140 @@ const Ent = {
     if (d.mirrorOnly) { if (this.t > (d.timeout ?? 1.8)) this.hide('time'); return; }
     const vis = canSee(chest, 0.5);
     Sound.presence(vis ? 1 : 0);
+    // the flashlight falters when it is close
+    if (Player.flashOn && dist < 9 && G.t > this.flickT && Math.random() < dt * 1.6) { this.flickT = G.t + 1.2; Player.flashFlicker = rand(0.12, 0.3); }
     if (vis) {
       this.seen = true; this.gone = 0;
       const thr = Math.max(7.5 * DEG, Math.atan2(0.38, dist));
       if (viewAngleTo(chest) < thr) { this.lookT += dt; if (this.lookT > (d.lookDelay ?? 0.06)) { this.hide('look'); return; } } else this.lookT = 0;
-    } else if (this.seen) { this.gone += dt; if (this.gone > 0.35) { this.hide('unseen'); return; } }
+    } else if (this.seen) { this.gone += dt; if (this.gone > (d.unseenGrace ?? 0.35)) { this.hide('unseen'); return; } }
     if (dist < (d.minDist ?? 3.4)) { this.hide('close'); return; }
     if (d.flashKill !== false && flashHits(chest, 11, 24 * DEG)) { this.hide('flash'); return; }
     if (!vis && (this.t > (d.timeout ?? 45) || (this.t > 15 && dist > 14))) this.hide('timeout');
+  },
+};
+
+/* ---------------- the one who follows ----------------
+   Most of the time it is only a position on the path you just walked:
+   steps that stop a beat after yours. Every so often it is seen: at the
+   edge of your view in a dim corner, walking past a doorway further off,
+   or right where you look when you spin round. */
+const Dir = {
+  trail: [], tNext: 0, cueNext: 0, sightNext: 0, pollNext: 0, lastYaw: 0, wasMoving: false, n: 0,
+  level() { return { p1: 0.3, p2: 0.6, p2b: 0.75, p3: 1, descent: 0.8 }[Story.stage] || 0; },
+  reset() { this.trail.length = 0; this.cueNext = G.t + 25; this.sightNext = G.t + 45; this.pollNext = 0; this.lastYaw = Player.yaw; this.wasMoving = false; this.n = 0; },
+  behind(dist) {
+    let acc = 0, px = Player.pos.x, pz = Player.pos.z;
+    for (let i = this.trail.length - 1; i >= 0; i--) { const p = this.trail[i]; acc += Math.hypot(p.x - px, p.z - pz); px = p.x; pz = p.z; if (acc >= dist) return p; }
+    return null;
+  },
+  schedule(lv) { this.sightNext = G.t + rand(32, 58) / Math.max(0.4, lv); this.n++; },
+  update(dt) {
+    const P = Player, lv = this.level();
+    if (G.t > this.tNext) {
+      this.tNext = G.t + 0.25;
+      const l = this.trail[this.trail.length - 1];
+      if (!l || Math.hypot(l.x - P.pos.x, l.z - P.pos.z) > 0.35) { this.trail.push(V3(P.pos.x, P.pos.y, P.pos.z)); if (this.trail.length > 60) this.trail.shift(); }
+    }
+    const yv = angNorm(P.yaw - this.lastYaw) / Math.max(dt, 1e-3); this.lastYaw = P.yaw;
+    if (!lv || !P.enabled || ClockUI.active || UI.overlay) return;
+    // steps behind you that stop just after you do
+    const moving = P.amp > 0.35;
+    if (this.wasMoving && !moving && G.t > this.cueNext && Math.random() < 0.25 + lv * 0.35) {
+      this.cueNext = G.t + rand(26, 48) / lv;
+      const b = this.behind(rand(3.2, 5.5));
+      if (b && roomOf(b.x, b.y + 1, b.z) !== 'outside') { const k = irand(1, 2), s = P.surface(); for (let i = 0; i < k; i++) after(0.32 + i * 0.52, () => Sound.step(s, V3(b.x, b.y + 0.1, b.z), { gain: 0.5, hrtf: true, vary: 0.05 })); }
+    }
+    this.wasMoving = moving;
+    if (Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 9) return;
+    // first sighting (after the second clock): someone crossing a doorway, far off
+    if (Story.stage === 'p1') {
+      if (F.p1CrossAt && !F.p1Cross && G.t > F.p1CrossAt && G.t > this.pollNext) { this.pollNext = G.t + 0.4; if (this.crossing()) { F.p1Cross = true; } }
+      return;
+    }
+    if (G.t < this.sightNext) return;
+    if (Math.abs(yv) > 4.2 && lv >= 0.6 && this.turnaround(yv)) { this.schedule(lv); return; }
+    if (G.t > this.pollNext) {
+      this.pollNext = G.t + 0.45;
+      const ok = Math.random() < 0.55 ? this.peripheral() || this.crossing() : this.crossing() || this.peripheral();
+      if (ok) this.schedule(lv);
+    }
+  },
+  free(p) {
+    for (const c of colliders) if (c.on && c.y1 > p.y + 0.2 && c.y0 < p.y + 1.8 && p.x > c.x0 - 0.3 && p.x < c.x1 + 0.3 && p.z > c.z0 - 0.3 && p.z < c.z1 + 0.3) return false;
+    return true;
+  },
+  /* spinning round fast: it is standing on the path behind you */
+  turnaround(yv) {
+    const P = Player;
+    for (const dd of [4.5, 3.4, 6]) {
+      const b = this.behind(dd); if (!b) continue;
+      const spot = V3(b.x, b.y, b.z), chest = V3(b.x, b.y + 1.25, b.z);
+      const dist = chest.distanceTo(camera.position); if (dist < 3 || dist > 7.5) continue;
+      if (roomOf(b.x, b.y + 1, b.z) === 'outside' || canSee(chest, 0.1) || !losClear(camera.position, chest)) continue;
+      const rel = angNorm(faceYaw(P.pos, spot) - (P.yaw + Math.PI)); // bearing relative to the view
+      if (Math.sign(rel) !== Math.sign(yv) || Math.abs(rel) < 0.7) continue;
+      Ent.spawn({ id: 'turn', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.28, roll: 0.32 }, lookDelay: 0.1, minDist: 2.2, timeout: 3, unseenGrace: 0.5,
+        onHide: (r) => { if (r === 'look') Sound.play('creaks', chest, { gain: 0.35, rate: 0.7, hrtf: true }); } });
+      return true;
+    }
+    return false;
+  },
+  /* at the edge of your view, in a dim spot, slowly thickening */
+  peripheral() {
+    const P = Player;
+    for (let i = 0; i < 10; i++) {
+      const side = Math.random() < 0.5 ? -1 : 1, a = P.yaw + side * rand(0.6, 0.85), dist = rand(3.8, 8);
+      const x = P.pos.x - Math.sin(a) * dist, z = P.pos.z - Math.cos(a) * dist;
+      const gy = groundAt(x, z, P.pos.y + 0.5); if (gy === null || Math.abs(gy - P.pos.y) > 1.2) continue;
+      const spot = V3(x, gy, z), chest = V3(x, gy + 1.25, z);
+      if (roomOf(x, gy + 1, z) === 'outside' || !this.free(spot) || !losClear(camera.position, chest)) continue;
+      const va = viewAngleTo(chest); if (va < 0.5 || va > 0.9) continue;
+      if (lightLevel(chest) > 1.4 || flashHits(chest, 12, 30 * DEG)) continue;
+      Ent.spawn({ id: 'edge', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.32, roll: 0.36, pitch: 0.12 }, fadeIn: 1.8, lookDelay: 0.08, minDist: 2.6, timeout: 9, unseenGrace: 0.8 });
+      return true;
+    }
+    return false;
+  },
+  /* walking past a doorway in another room */
+  crossing() {
+    const cam = camera.position, list = PORTALS.filter((p) => !(p.b === 'outside' && !p.door) && portalOpen(p));
+    for (let i = list.length - 1; i > 0; i--) { const j = irand(0, i); [list[i], list[j]] = [list[j], list[i]]; }
+    for (const p of list) {
+      const q = portalCorners(p), cx = (q[0].x + q[2].x) / 2, cz = (q[0].z + q[2].z) / 2, y0 = p.y0;
+      if (y0 < -1.5 || y0 > 0.5) continue;
+      const mid = V3(cx, y0 + 1.25, cz), d = mid.distanceTo(cam);
+      if (d < 4.5 || d > 13 || viewAngleTo(mid) > 0.7 || !losClear(cam, mid)) continue;
+      const wx = p.axis === 'x', pc = wx ? cz : cx, side = Math.sign((wx ? cam.z : cam.x) - pc) || 1;
+      const lo = (wx ? q[0].x : q[0].z), hi = (wx ? q[1].x : q[1].z), dir = Math.random() < 0.5 ? 1 : -1;
+      let start = null, end = null, far = null, a = 0, b = 0;
+      for (const dep of [1.0, 0.7, 1.45, 1.9]) {
+        const depth = pc - side * dep;
+        far = wx ? roomOf(cx, y0 + 1, depth) : roomOf(depth, y0 + 1, cz);
+        if (far === 'outside' || far === roomOf(cam.x, cam.y, cam.z)) break;
+        const at = (u) => (wx ? V3(u, y0, depth) : V3(depth, y0, u));
+        const okAt = (u) => { const v = at(u); return roomOf(v.x, y0 + 1, v.z) === far && this.free(v); };
+        const clear = (u0, u1) => { const n = Math.ceil(Math.abs(u1 - u0) / 0.3); for (let i = 0; i <= n; i++) if (!okAt(u0 + (u1 - u0) * i / n)) return false; return true; };
+        const pickU = (edge, sgn) => { for (const e of [1.4, 1.0, 0.7, 0.45]) if (okAt(edge + sgn * e)) return edge + sgn * e; return null; };
+        a = dir > 0 ? pickU(lo, -1) : pickU(hi, 1); b = dir > 0 ? pickU(hi, 1) : pickU(lo, -1);
+        if (a === null || b === null || !clear(a, b)) continue;
+        start = at(a); end = at(b); break;
+      }
+      if (!start) continue;
+      if (canSee(V3(start.x, y0 + 1.25, start.z), 0.25)) continue;
+      { const m = V3((start.x + end.x) / 2, y0 + 1.25, (start.z + end.z) / 2); const pm = wx ? V3((lo + hi) / 2, y0 + 1.25, m.z) : V3(m.x, y0 + 1.25, (lo + hi) / 2); if (!canSee(pm, 0.1)) continue; } // it must actually pass through view
+      const len = Math.abs(b - a), dv = V3((end.x - start.x) / len, 0, (end.z - start.z) / len);
+      let stepT = 0;
+      Ent.spawn({ id: 'cross', pos: start, yaw: faceYaw(start, end), pose: { hunch: 0.24, roll: 0.14 }, lookDelay: 0.5, minDist: 2.2, timeout: 6, noEyes: true,
+        update: (dt, E) => {
+          const r = E.H.root.position; r.addScaledVector(dv, 1.5 * dt);
+          E.pose.walk = (E.pose.walk || 0) + dt * 8.5; E.pose.amp = 0.8;
+          stepT -= dt; if (stepT <= 0) { stepT = 0.37; Sound.step(far === 'kitchen' || far === 'bathroom' ? 'tile' : 'wood', V3(r.x, r.y + 0.1, r.z), { gain: 0.28, vary: 0.06 }); }
+          if ((r.x - end.x) * dv.x + (r.z - end.z) * dv.z >= 0) { E.hide('done'); return false; }
+        } });
+      return true;
+    }
+    return false;
   },
 };
 const _ev = new THREE.Vector3();
@@ -3083,18 +3780,11 @@ const CHANGES = [
 const Story = {
   stage: 'title', st: 0, ambNext: 0, chgNext: 0, spawnNext: 0, echo: 0, loopIter: 0, mirrorAcc: 0, textAcc: 0, doorAcc: 0,
   init() {
-    const note = (t, o) => { const c = noteCanvas(t, o); return { c, t: toTex(c, false) }; };
-    this.notes = {
-      fridge: Object.assign(note('ze moeten allemaal\nhetzelfde zeggen.\n\nook die beneden.', { paper: '#f2df7a', lines: false, size: 54 }), { text: 'ze moeten allemaal\nhetzelfde zeggen.\n\nook die beneden.' }),
-      study: Object.assign(note('ik ben hier al vaker geweest.\nelke keer is er iets anders.\n\néén ding hoort hier niet.'), { text: 'ik ben hier al vaker geweest.\nelke keer is er iets anders.\n\néén ding hoort hier niet.' }),
-      door: Object.assign(note('niet de voordeur.\n\nde uitgang is beneden.', { paper: '#ebe4cf' }), { text: 'niet de voordeur.\n\nde uitgang is beneden.' }),
-    };
-    W.fridgeNote.material.uniforms.uMap.value = this.notes.fridge.t; W.fridgeNote.material.defines.HAS_MAP = ''; W.fridgeNote.material.uniforms.uColor.value.setRGB(1, 1, 1); W.fridgeNote.material.needsUpdate = true;
-    W.studyNote.material.uniforms.uMap.value = this.notes.study.t; W.studyNote.material.defines.HAS_MAP = ''; W.studyNote.material.needsUpdate = true;
+    this.buildLangTextures();
     // note on the inside of the front door
     const fdn = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.15), M({ map: this.notes.door.t, world: false, noise: 0 }));
     fdn.position.set(0.024, 1.5 - 1.03, 0.1); fdn.rotation.y = Math.PI / 2; DOORS.front.leaf.add(fdn); fdn.visible = false; W.frontNote = fdn;
-    use(fdn, 'Lezen', () => Story.readNote('door'));
+    use(fdn, 'lbl_read', () => Story.readNote('door'));
     // light under the study door
     W.studyStrip = plane(0.8, 0.02, M({ color: '#000', emissive: '#ffcf8a', eI: 0.9, noise: 0 }), 9.875, 0.005, 4.4 + 0.075, -Math.PI / 2, 0);
     W.studyStrip.visible = false;
@@ -3102,6 +3792,22 @@ const Story = {
     DOORS.front.onUse = () => { this.frontDoor(); return true; };
     DOORS.basement.onUse = () => { if (!DOORS.basement.exists) return true; return false; };
     LN.kitchen.onSwitch = () => { F.kitchenSwitched = true; };
+  },
+
+  buildLangTextures() {
+    const old = this.notes;
+    const note = (k, o) => { const text = tr(k), c = noteCanvas(text, o); return { c, t: toTex(c, false), text }; };
+    this.notes = {
+      fridge: note('note_fridge', { paper: '#f2df7a', lines: false, size: 54 }),
+      study: note('note_study'),
+      door: note('note_door', { paper: '#ebe4cf' }),
+    };
+    const set = (mesh, n) => { if (!mesh) return; const u = mesh.material.uniforms; u.uMap.value = n.t; if (mesh.material.defines.HAS_MAP === undefined) { mesh.material.defines.HAS_MAP = ''; mesh.material.needsUpdate = true; } };
+    set(W.fridgeNote, this.notes.fridge); W.fridgeNote.material.uniforms.uColor.value.setRGB(1, 1, 1);
+    set(W.studyNote, this.notes.study);
+    set(W.frontNote, this.notes.door);
+    if (old) for (const k in old) old[k].t.dispose();
+    langWorldTextures();
   },
 
   /* ---------- world state per stage (used for checkpoints and transitions) ---------- */
@@ -3233,8 +3939,8 @@ const Story = {
     if (Sound.ok) Sound.reset();
     for (const k of ['draftL', 'voidL']) if (this[k]) { this[k].stop(0.02); this[k] = null; }
     for (const k of Object.keys(F)) delete F[k];
-    Ent.hide(); Ent.used = {}; Ent.lastEnd = -60;
-    Actors.double.root.visible = false;
+    Ent.hide(); Ent.used = {}; Ent.lastEnd = -60; Ent.out = 0; Ent.H.root.visible = false;
+    Actors.double.root.visible = false; Actors.double.mFace.uniforms.uMap.value = T.headPlayer;
     // reset doors & clocks for a fresh run
     DOORS.bedroom.set(true); DOORS.bathroom.set(false); DOORS.study.set(true); DOORS.basement.set(false); DOORS.front.set(false);
     for (const [k, v] of Object.entries({ hall: 430, living: 708, kitchen: 325, basement: 542 })) { CLOCKS[k].min = v; CLOCKS[k].ticking = true; }
@@ -3259,6 +3965,7 @@ const Story = {
     Player.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
     Player.flashOn = stage === 'descent'; Player.flashK = Player.flashOn ? 1 : 0;
     this.ambNext = G.t + rand(12, 20); this.chgNext = G.t + rand(18, 30); this.spawnNext = G.t + 8;
+    Dir.reset();
     postMat.uniforms.uFade.value = 1; postMat.uniforms.uWhite.value = 0; postMat.uniforms.uWarp.value = 0;
     UI.clearThoughts();
     this.fadeIn(stage === 'intro' || stage === 'morning' ? 3.5 : 1.2);
@@ -3266,7 +3973,7 @@ const Story = {
     if (stage === 'morning') { this.stage = 'morning'; }
     UI.objective(stage);
     if (stage === 'p2b') { F.bathSlam = true; F.mirrorDone = true; }
-    if (stage === 'p3') { after(1.5, () => UI.thought('Ik moet wakker worden.', 3.5)); }
+    if (stage === 'p3') { after(1.5, () => UI.thought(tr('t_wakeUp'), 3.5)); }
     this.save();
   },
   fadeIn(dur) { this.fade = { from: 1, to: 0, t: 0, dur }; },
@@ -3284,6 +3991,7 @@ const Story = {
     if (W.tvOn) { W.tvScreen.material.uniforms.uTexOff.value.set(Math.random(), Math.random()); }
     if (this.dbl) this.dbl(dt);
     Ent.update(dt);
+    Dir.update(dt);
     this.updateMirrors(dt);
     const si = SI(this.stage);
     if (si >= SI('p1') && si <= SI('p3')) this.updateUnseen();
@@ -3295,8 +4003,8 @@ const Story = {
 
   /* ---------- intro ---------- */
   u_intro() {
-    if (this.st > 2.4 && !F.t0) { F.t0 = true; UI.thought('Ik moet naar buiten.', 3.5); }
-    if (this.st > 110 && !F.nudge) { F.nudge = true; UI.thought('De voordeur. Aan het eind van de gang.', 3.5); }
+    if (this.st > 2.4 && !F.t0) { F.t0 = true; UI.thought(tr('t_goOut'), 3.5); }
+    if (this.st > 110 && !F.nudge) { F.nudge = true; UI.thought(tr('t_nudgeDoor'), 3.5); }
   },
   frontDoor() {
     const d = DOORS.front, s = this.stage;
@@ -3307,7 +4015,7 @@ const Story = {
         Sound.play('flick', d.pos, { gain: 0.5 });
         Sound.wind(0, 0.02); Sound.play('thud', V3(-5, 0.2, 7.4), { gain: 0.6, lp: 260 }); Sound.wrongSpike(0.35, 2.5);
       });
-      after(1.0, () => UI.thought('Hij zit niet op slot. Hij gaat gewoon niet open.', 4));
+      after(1.0, () => UI.thought(tr('t_doorFail'), 4));
       F.doorFailed = true; this.setStage('p1');
       W.fridgeNote.visible = true;
       W.hallMirror.queue = ['delay']; W.coatMirror.queue = ['delay'];
@@ -3322,7 +4030,7 @@ const Story = {
     }
     if (s === 'morning') { if (!d.isOpen) this.endingOpen(); return; }
     Sound.play('rattle', d.pos, { gain: 1 }); d.shake = 0.35;
-    if (!F['fd_' + s]) { F['fd_' + s] = true; after(0.6, () => UI.thought(s === 'p3' || s === 'descent' ? 'Niet de voordeur. Beneden.' : pick(['Hij beweegt niet.', 'Nog steeds niet.']), 3)); }
+    if (!F['fd_' + s]) { F['fd_' + s] = true; after(0.6, () => UI.thought(s === 'p3' || s === 'descent' ? tr('t_notFront') : pick([tr('t_stuck1'), tr('t_stuck2')]), 3)); }
   },
   stepsIn(pts, gap, done) {
     pts.forEach((p, i) => after(i * gap * rand(0.92, 1.08), () => Sound.step('wood', p, { gain: 0.9, ref: 1.5, hrtf: true })));
@@ -3353,9 +4061,9 @@ const Story = {
       const p = d.mesh.getWorldPosition(_ev);
       if (p.distanceTo(camera.position) < 3.2 && viewAngleTo(p) < 0.2 && canSee(p, 0.1)) {
         d.seen = true; this.digSeen = (this.digSeen || 0) + 1;
-        if (this.digSeen === 1) UI.thought('03:33.', 2.5);
-        else if (this.digSeen === 2) UI.thought('Nog steeds 3:33.', 3);
-        else if (this.digSeen === 3) UI.thought('Alles zegt 3:33. Behalve de klokken aan de muur.', 4);
+        if (this.digSeen === 1) UI.thought(tr('t_d1'), 2.5);
+        else if (this.digSeen === 2) UI.thought(tr('t_d2'), 3);
+        else if (this.digSeen === 3) UI.thought(tr('t_d3'), 4);
       }
     }
   },
@@ -3364,7 +4072,7 @@ const Story = {
     const lv = lightLevel(camera.position);
     if (lv < 0.12 && (Player.room === 'stairs' || Player.room === 'basement' || SI(this.stage) >= SI('p3'))) {
       this.darkT = (this.darkT || 0) + G.dt;
-      if (this.darkT > 1.2 && (!F.fHint || (G.t - F.fHint > 70 && !F.usedFlash))) { F.fHint = G.t; UI.hint('<kbd>F</kbd> zaklamp', 5); }
+      if (this.darkT > 1.2 && (!F.fHint || (G.t - F.fHint > 70 && !F.usedFlash))) { F.fHint = G.t; UI.hint('<kbd>F</kbd> ' + tr('k_flash'), 5); }
     } else this.darkT = 0;
   },
   onClockSet(c) {
@@ -3374,8 +4082,9 @@ const Story = {
       c.min = TARGET_MIN; c.sec = 0; c.ticking = false; c.solvedLock = false;
       Sound.play('ratchet', c.worldPos(_tv3), { gain: 0.8, rate: 0.7 });
       const n = Object.values(CLOCKS).filter((k) => k.isSet()).length;
-      if (n === 1 && !F.firstSet) { F.firstSet = true; after(0.6, () => UI.thought('Hij tikt niet meer.', 3)); }
-      if (n === 3 && !CLOCKS.basement.isSet() && !F.thirdHint) { F.thirdHint = true; after(0.8, () => UI.thought('Nog één. Beneden.', 3)); }
+      if (n === 2 && !F.p1CrossAt) F.p1CrossAt = G.t + 5;
+      if (n === 1 && !F.firstSet) { F.firstSet = true; after(0.6, () => UI.thought(tr('t_clockStopped'), 3)); }
+      if (n === 3 && !CLOCKS.basement.isSet() && !F.thirdHint) { F.thirdHint = true; after(0.8, () => UI.thought(tr('t_oneMore'), 3)); }
     } else { c.ticking = true; }
   },
   toP2() {
@@ -3387,7 +4096,7 @@ const Story = {
     this.setStage('p2');
     after(2.8, () => { const bd = DOORS.bedroom; if (bd.isOpen) bd.slam(); else Sound.play('thud', bd.pos, { gain: 1 }); });
     after(3.0, () => { LN.vest.on = 0; LN.living.on = 0; LN.hallA.setFlicker('unstable'); LN.hallA.keepFlicker = true; });
-    after(4.6, () => UI.thought('Alles is stil.', 3.5));
+    after(4.6, () => UI.thought(tr('t_silent'), 3.5));
     SU.uAmbient.value.set(0.02, 0.018, 0.018); SU.uFogDensity.value = 0.032;
     postMat.uniforms.uDesat.value = 0.14;
     W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['delay'];
@@ -3408,7 +4117,7 @@ const Story = {
     const P = Player;
     if (!F.waterStarted && this.st > 11) this.startWater();
     if (P.room === 'bathroom') F.inBath = true;
-    if (F.waterStarted && !F.inBath && this.st > 60 && !F.waterNag) { F.waterNag = true; UI.thought('Er loopt ergens water.', 3); }
+    if (F.waterStarted && !F.inBath && this.st > 60 && !F.waterNag) { F.waterNag = true; UI.thought(tr('t_water'), 3); }
     if (!F.bathSlam && F.waterStarted && P.room === 'bathroom' && P.pos.z < 3.3) {
       F.bathSlam = true;
       after(0.35, () => {
@@ -3418,7 +4127,7 @@ const Story = {
     }
     if (F.bathSlam && !F.textThought && P.room === 'bathroom') {
       const dc = V3(8.22, 1.52, 4.33);
-      if (viewAngleTo(dc) < 0.35) { this.textAcc += dt; if (this.textAcc > 1.3) { F.textThought = true; UI.thought('Spiegelschrift.', 3); } } else this.textAcc = 0;
+      if (viewAngleTo(dc) < 0.35) { this.textAcc += dt; if (this.textAcc > 1.3) { F.textThought = true; UI.thought(tr('t_mirrorWriting'), 3); } } else this.textAcc = 0;
     }
     if (F.bathSlam && !F.mirrorDone && P.room === 'bathroom' && activeMirror === W.bathMirror) {
       const mc = W.bathMirror.worldCenter(_ev);
@@ -3446,7 +4155,7 @@ const Story = {
         });
         if (!bath) return;
         after(1.5, () => { DOORS.bathroom.open(0.55, 'slow'); });
-        after(2.4, () => UI.thought('Er stond iemand achter me.', 3.5));
+        after(2.4, () => UI.thought(tr('t_behind'), 3.5));
         after(3.5, () => this.toP2b());
       },
     });
@@ -3464,7 +4173,7 @@ const Story = {
   /* ---------- phase 2b: the room that repeats ---------- */
   u_p2b(dt) {
     const P = Player;
-    if (!F.musicThought && this.st > 7 && P.room === 'hall') { F.musicThought = true; UI.thought('Dat komt uit de kleine kamer.', 3); }
+    if (!F.musicThought && this.st > 7 && P.room === 'hall') { F.musicThought = true; UI.thought(tr('t_music'), 3); }
     if (!DOORS.study.isOpen) W.studyStrip.visible = true; else W.studyStrip.visible = false;
     if (!F.loopActive && P.room === 'study' && P.pos.z < 3.9) F.loopActive = true;
     if (F.loopActive && !F.loopDone && P.pos.z > 4.46 && P.pos.z < 5.2 && P.pos.x > 9.4 && P.pos.x < 10.35 && (this.prevZ ?? 0) <= 4.46) this.loopTeleport();
@@ -3476,18 +4185,18 @@ const Story = {
     const i = ++this.loopIter;
     Sound.mbSkip(); Sound.wrongSpike(0.65, 1.2);
     if (!DOORS.study.isOpen) DOORS.study.set(true);
-    if (i === 1) { W.studyChair.rotation.y = Math.PI; after(1.0, () => UI.thought('Ik liep toch net naar buiten?', 3)); }
-    if (i === 2) { W.studyPainting.material.uniforms.uMap.value = T.sea1; after(0.8, () => UI.thought('Elke keer is er iets anders.', 3)); }
+    if (i === 1) { W.studyChair.rotation.y = Math.PI; after(1.0, () => UI.thought(tr('t_loop1'), 3)); }
+    if (i === 2) { W.studyPainting.material.uniforms.uMap.value = T.sea1; after(0.8, () => UI.thought(tr('t_loop2'), 3)); }
     if (i === 3) { W.deskLamp.position.set(12.1, 0.1, 1.1); W.deskLamp.rotation.set(1.2, 0.6, 0); LN.study.on = 0; const s = LN.special; s.pos.set(12.1, 0.25, 1.1); s.color = lin('#ffb070'); s.intensity = 3.2; s.radius = 6; s.box = [8.8, -0.3, 0, 14, 4.5, 4.4]; s.box2 = null; s.on = 1; }
-    if (i === 4) { W.books.forEach((b) => (b.visible = false)); after(0.9, () => UI.thought('Niet wat verandert. Wat hier niet thuishoort.', 4)); }
+    if (i === 4) { W.books.forEach((b) => (b.visible = false)); after(0.9, () => UI.thought(tr('t_loop4'), 4)); }
     if (i === 5) { Ent.spawn({ id: 'loopChair', pos: V3(13.05, 0, 3.72), yaw: -2.3, pose: { sit: true, roll: 0.3 }, minDist: 2.2, timeout: 30 }); }
-    if (i === 6) { LN.special.dim = 0.55; after(0.8, () => UI.thought('Iets dat uit een andere kamer komt…', 3.5)); }
-    if (i >= 7 && i % 2 === 1) { W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(3); after(0.8, () => UI.thought('De wekker. Die hoort naast mijn bed.', 3.5)); }
+    if (i === 6) { LN.special.dim = 0.55; after(0.8, () => UI.thought(tr('t_loop6'), 3.5)); }
+    if (i >= 7 && i % 2 === 1) { W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(3); after(0.8, () => UI.thought(tr('t_loop7'), 3.5)); }
   },
   loopObject(name) {
     if (this.stage !== 'p2b') return;
     if (name === 'wekker') { this.solveLoop(); return; }
-    const t = { chair: 'Die stond net anders. Maar hij hoort hier wel.', books: 'Die boeken horen hier.', lamp: 'Die lamp is van hier.' }[name];
+    const t = { chair: tr('t_lchair'), books: tr('t_lbooks'), lamp: tr('t_llamp') }[name];
     if (t) UI.thought(t, 3);
   },
   solveLoop() {
@@ -3502,7 +4211,7 @@ const Story = {
       LN.study.setFlicker(null); LN.special.on = 0; LN.study.on = 0;
       postMat.uniforms.uWarp.value = 0;
     });
-    after(4.2, () => { Sound.restore(1.5); UI.thought('Die hoort naast mijn bed.', 3.5); });
+    after(4.2, () => { Sound.restore(1.5); UI.thought(tr('t_bedside'), 3.5); });
     after(6.5, () => this.toP3());
   },
   toP3() {
@@ -3511,8 +4220,8 @@ const Story = {
     W.wekker.visible = false; W.studyNote.visible = false;
     W.alarm.mesh.visible = W.alarmBody.visible = true;
     Sound.play('thud', V3(7, -0.5, 5.4), { gain: 0.8 });
-    after(2.5, () => UI.thought('Ik moet wakker worden.', 3.5));
-    after(7, () => UI.thought('Misschien gaat de voordeur nu wel open.', 3.5));
+    after(2.5, () => UI.thought(tr('t_wakeUp'), 3.5));
+    after(7, () => UI.thought(tr('t_maybeDoor'), 3.5));
   },
 
   /* ---------- phase 3: dream logic ---------- */
@@ -3523,7 +4232,7 @@ const Story = {
     if (!F.frontDone && (P.room === 'hall' || P.room === 'vestibule') && P.pos.x < 10 && P.vel.x < -0.2 && P.pos.z > 4.4 && P.pos.z < 6.4) {
       const D = Math.min(24, VEST.D + 0.8 * (-P.vel.x) * dt);
       if (D !== VEST.D) { setLongHall(D); Sound.stretch(D / 24); }
-      if (D > 7 && !F.longThought) { F.longThought = true; UI.thought('De gang is langer dan hij was.', 3.5); }
+      if (D > 7 && !F.longThought) { F.longThought = true; UI.thought(tr('t_longer'), 3.5); }
     }
     if (VEST.D > 0.5) this.longLights();
     if (F.frontVoid && !F.frontDone) {
@@ -3537,7 +4246,7 @@ const Story = {
       Sound.tapeStop(0.32, 0.12, 0.3);
       P.teleport((4.675 + 9.5) - 2 * P.pos.x, 0, (4.4 + 6.4) - 2 * P.pos.z, Math.PI);
       this.prevZ = P.pos.z;
-      after(1.2, () => UI.thought('Ik liep toch de keuken in?', 3));
+      after(1.2, () => UI.thought(tr('t_k2b'), 3));
     }
     // the living room grows
     if (P.room === 'living' && this.livingH < 4.0) this.setCeiling(Math.min(4.0, this.livingH + 0.05 * dt));
@@ -3573,8 +4282,8 @@ const Story = {
         after(0.2, () => Sound.muffle(0, 2.5));
       }
     };
-    after(1.1, () => UI.thought('…dat was ik.', 3));
-    after(5.2, () => UI.thought('De voordeur is geen uitgang.', 3.5));
+    after(1.1, () => UI.thought(tr('t_wasMe'), 3));
+    after(5.2, () => UI.thought(tr('t_noExit'), 3.5));
   },
   lightPuzzle(dt) {
     const P = Player;
@@ -3591,10 +4300,10 @@ const Story = {
     if (P.room !== 'kitchen') return;
     this.inKitchen = (this.inKitchen || 0) + dt;
     const looking = viewAngleTo(dp) < 0.45 && dp.distanceTo(camera.position) < 7;
-    if (!F.missingThought && looking && !exists) { F.missingThought = true; UI.thought('De kelderdeur. Die zat hier.', 3); }
-    if (!F.revealThought && looking && exists && K.sw === 1) { F.revealThought = true; after(0.5, () => UI.thought('In het donker was hij er.', 3)); }
-    if (!F.lightHint && this.inKitchen > 45 && !F.kitchenSwitched) { F.lightHint = true; UI.thought('Misschien moet het licht uit.', 3.5); }
-    if (dark && lit && !F.flashThought && looking) { this.flAcc = (this.flAcc || 0) + dt; if (this.flAcc > 2.5) { F.flashThought = true; UI.thought('Niet met de zaklamp erop.', 3); } }
+    if (!F.missingThought && looking && !exists) { F.missingThought = true; UI.thought(tr('t_baseMissing'), 3); }
+    if (!F.revealThought && looking && exists && K.sw === 1) { F.revealThought = true; after(0.5, () => UI.thought(tr('t_inDark'), 3)); }
+    if (!F.lightHint && this.inKitchen > 45 && !F.kitchenSwitched) { F.lightHint = true; UI.thought(tr('t_lightOff'), 3.5); }
+    if (dark && lit && !F.flashThought && looking) { this.flAcc = (this.flAcc || 0) + dt; if (this.flAcc > 2.5) { F.flashThought = true; UI.thought(tr('t_notFlash'), 3); } }
     if (exists && K.sw === 0 && !F.kitchenDarkHint) { F.kitchenDarkHint = true; }
   },
   toDescent() {
@@ -3631,7 +4340,7 @@ const Story = {
     const H = Ent.H; let t = 0; const P = Player;
     let ex = 46.2, ez = 8.85, swelled = false;
     Ent.spawn({
-      id: 'final', persistent: true, flashKill: false, pos: V3(ex, -12.8, ez), yaw: -Math.PI / 2, pose: { roll: 0.25, pitch: 0 },
+      id: 'final', persistent: true, flashKill: false, tint: 0.011, eyesOn: true, pos: V3(ex, -12.8, ez), yaw: -Math.PI / 2, pose: { roll: 0.25, pitch: 0 },
       update: (dt, E) => {
         t += dt;
         if (t > 2.2 && !swelled) { swelled = true; Sound.play('swell', null, { gain: 0.45, pure: true }); }
@@ -3646,6 +4355,11 @@ const Story = {
           E.pose.reach = sstep(4.5, 1.6, dist);
           E.pose.walk = P.phase; E.pose.amp = Math.min(1, P.amp) * 0.8;
           E.pose.pitch = -0.05; E.pose.roll = 0.25 + (1 - sstep(1.5, 6, dist)) * 0.2;
+          // up close the darkness gives way: it is you, smiling
+          const D2 = Actors.double, rev = dist < 2.7;
+          E.def.forceFade = rev ? 0 : 1;
+          if (rev !== D2.root.visible) { D2.root.visible = rev; D2.mFace.uniforms.uMap.value = T.headSmile; if (rev) Sound.play('exhale', V3(ex, -11.2, ez), { gain: 0.6, ref: 0.6, hrtf: true, noOcc: true }); }
+          if (rev) { D2.root.position.copy(H.root.position); D2.root.rotation.y = H.root.rotation.y; poseHuman(D2, Object.assign({}, E.pose, { hunch: 0.1, headYaw: 0, roll: 0.3 })); }
           postMat.uniforms.uWarp.value = (1 - sstep(1.5, 7, dist)) * 0.8;
           Sound.drone(0.3 + (1 - sstep(1.5, 8, dist)) * 0.5, 0.5);
           const near = 1 - sstep(1.5, 9, dist);
@@ -3655,13 +4369,13 @@ const Story = {
           if (dist < 1.4) { this.blackout(); return false; }
         }
         const chest = _ev.copy(H.root.position); chest.y += 1.3;
-        if (!F.finalLook && canSee(chest, 0.5) && viewAngleTo(chest) < 0.25) { this.finLook = (this.finLook || 0) + dt; if (this.finLook > 1.6) { F.finalLook = true; UI.thought('Deze keer verdwijnt hij niet.', 3.5); } }
-        if (F.finalLook && !F.finalGo && t > 12 && P.pos.x < 36.5) { F.finalGo = true; UI.thought('Ik moet naar hem toe.', 3.5); }
+        if (!F.finalLook && canSee(chest, 0.5) && viewAngleTo(chest) < 0.25) { this.finLook = (this.finLook || 0) + dt; if (this.finLook > 1.6) { F.finalLook = true; UI.thought(tr('t_notVanish'), 3.5); } }
+        if (F.finalLook && !F.finalGo && t > 12 && P.pos.x < 36.5) { F.finalGo = true; UI.thought(tr('t_goTo'), 3.5); }
       },
     });
   },
   blackout() {
-    Ent.hide(); UI.clearThoughts();
+    Ent.hide(); UI.clearThoughts(); Actors.double.root.visible = false;
     this.setStage('black');
     postMat.uniforms.uFade.value = 1; this.fade = null;
     Sound.cut();
@@ -3676,7 +4390,7 @@ const Story = {
     this.start('morning');
     Sound.duckTo(1, 2);
     this.birdNext = G.t + 1;
-    after(5, () => UI.thought('…Het is ochtend.', 3.5));
+    after(5, () => UI.thought(tr('t_morning'), 3.5));
   },
   u_morning(dt) {
     const P = Player;
@@ -3848,20 +4562,20 @@ const Story = {
   readNote(name) {
     const n = this.notes[name]; UI.showNote(n.text);
     UI.onClose = () => {
-      if (name === 'fridge' && !F.noteRead) { F.noteRead = true; after(0.4, () => UI.thought('Dat is mijn handschrift.', 3)); after(3.8, () => UI.thought('Ik weet niet meer dat ik dat geschreven heb.', 3.5)); }
-      if (name === 'study' && !F.studyNoteRead) { F.studyNoteRead = true; after(0.4, () => UI.thought('Weer mijn handschrift.', 3)); }
-      if (name === 'door' && !F.doorNoteRead) { F.doorNoteRead = true; after(0.4, () => UI.thought('Beneden. De kelder.', 3)); }
+      if (name === 'fridge' && !F.noteRead) { F.noteRead = true; after(0.4, () => UI.thought(tr('t_handwriting'), 3)); after(3.8, () => UI.thought(tr('t_dontRemember'), 3.5)); }
+      if (name === 'study' && !F.studyNoteRead) { F.studyNoteRead = true; after(0.4, () => UI.thought(tr('t_again'), 3)); }
+      if (name === 'door' && !F.doorNoteRead) { F.doorNoteRead = true; after(0.4, () => UI.thought(tr('t_basement'), 3)); }
     };
   },
   examine(name) {
     if (name === 'photo') {
       const v = F.photoV || 0; const s = this.stage;
       const c = s === 'morning' ? IMG.photo0 : W.photoPic.material.uniforms.uMap.value === T.photo2 ? IMG.photo2 : W.photoPic.material.uniforms.uMap.value === T.photo1 ? IMG.photo1 : IMG.photo0;
-      const cap = c === IMG.photo2 ? 'Waar zijn wij?' : c === IMG.photo1 ? 'Wie staat daar, achteraan?' : 'Zandvoort. Dat was een goede zomer.';
+      const cap = c === IMG.photo2 ? tr('cap_photo2') : c === IMG.photo1 ? tr('cap_photo1') : tr('cap_photo0');
       UI.showImage(c, cap); void v; return;
     }
-    if (name === 'hallPainting') { const f = W.hallPainting.material.uniforms.uMap.value === T.hall1; UI.showImage(f ? IMG.hall1 : IMG.hall0, f ? 'Stond daar altijd al iemand in het veld?' : 'Dat schilderij hangt hier al jaren.'); return; }
-    if (name === 'studyPainting') { const f = W.studyPainting.material.uniforms.uMap.value === T.sea1; UI.showImage(f ? IMG.sea1 : IMG.sea0, f ? 'Dat was de zee.' : 'De zee bij Zandvoort.'); if (this.stage === 'p2b' && f) after(0.1, () => { UI.onClose = () => UI.thought('Het schilderij hoort hier wel.', 3); }); return; }
+    if (name === 'hallPainting') { const f = W.hallPainting.material.uniforms.uMap.value === T.hall1; UI.showImage(f ? IMG.hall1 : IMG.hall0, f ? tr('cap_hall1') : tr('cap_hall0')); return; }
+    if (name === 'studyPainting') { const f = W.studyPainting.material.uniforms.uMap.value === T.sea1; UI.showImage(f ? IMG.sea1 : IMG.sea0, f ? tr('cap_sea1') : tr('cap_sea0')); if (this.stage === 'p2b' && f) after(0.1, () => { UI.onClose = () => UI.thought(tr('t_paintingBelongs'), 3); }); return; }
   },
   pullChain() {
     if (!F.chain) {
@@ -3873,7 +4587,7 @@ const Story = {
   brickDoor() {
     const p = W.brickDoorPivot; if (p.rotation.y !== 0) return;
     p.rotation.y = 1.3; Sound.play('doorOpen', V3(7, 1, 10.9), { gain: 0.8 });
-    after(0.8, () => UI.thought('Er zit niets achter. Alleen muur.', 3));
+    after(0.8, () => UI.thought(tr('t_brick'), 3));
   },
 };
 
@@ -3884,7 +4598,8 @@ const Story = {
 const UI = {
   overlay: null, onClose: null, q: [], cur: null, tt: 0, gap: 0, el: {}, hintTO: 0, restartArm: 0,
   init() {
-    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality']) this.el[id] = $(id);
+    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot']) this.el[id] = $(id);
+    applyLangDOM();
     const g = this.el.digits.getContext('2d');
     g.clearRect(0, 0, 340, 120); draw7(g, '03:33', 16, 16, 86, '#ff3a22', 'rgba(255,58,34,0.08)');
     const sens = parseFloat(Store.get('sens')); if (sens > 0) { Input.sens = sens; this.el.sens.value = sens; }
@@ -3893,16 +4608,62 @@ const UI = {
     this.el.vol.addEventListener('input', () => { Sound.setVolume(parseFloat(this.el.vol.value)); Store.set('vol', Sound.vol); });
     this.el.quality.value = Store.get('quality') || 'auto';
     this.el.quality.addEventListener('change', () => { if (renderer) Quality.set(this.el.quality.value); });
-    this.el.startBtn.addEventListener('click', () => App.start('intro'));
-    this.el.contBtn.addEventListener('click', () => App.start(App.ckpt || 'intro'));
+    this.el.startBtn.addEventListener('click', () => this.beforeStart('intro'));
+    this.el.contBtn.addEventListener('click', () => this.beforeStart(App.ckpt || 'intro'));
+    // brightness
+    const br = parseFloat(Store.get('bright')); this.setBright(br > 0 ? br : 1, false);
+    for (const k of ['bright', 'calBright']) this.el[k].addEventListener('input', () => this.setBright(parseFloat(this.el[k].value), true));
+    this.el.calDone.addEventListener('click', () => { this.setBright(this.bright, true); this.el.calib.hidden = true; const s = this.calNext; this.calNext = null; App.start(s || 'intro'); });
+    // language
+    for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => setLang(b.dataset.lang));
+    this.el.langSel.addEventListener('change', () => setLang(this.el.langSel.value));
+    // performance meter
+    this.el.perfSel.addEventListener('change', () => Perf.set(this.el.perfSel.value === '1'));
     this.el.resumeBtn.addEventListener('click', () => App.resume());
     this.el.againBtn.addEventListener('click', () => { Store.del('ckpt'); App.start('intro'); });
     this.el.restartBtn.addEventListener('click', () => {
-      if (G.t - this.restartArm < 4 && this.restartArm) { this.restartArm = 0; this.el.restartBtn.textContent = 'Opnieuw beginnen'; Store.del('ckpt'); App.start('intro'); return; }
-      this.restartArm = G.t || 0.001; this.el.restartBtn.textContent = 'Zeker weten? Klik nog eens';
-      setTimeout(() => { this.el.restartBtn.textContent = 'Opnieuw beginnen'; this.restartArm = 0; }, 4000);
+      if (G.t - this.restartArm < 4 && this.restartArm) { this.restartArm = 0; this.el.restartBtn.textContent = tr('restart'); Store.del('ckpt'); App.start('intro'); return; }
+      this.restartArm = G.t || 0.001; this.el.restartBtn.textContent = tr('restart_confirm');
+      setTimeout(() => { this.el.restartBtn.textContent = tr('restart'); this.restartArm = 0; }, 4000);
     });
     this.initTouch();
+  },
+  /* the first time: set the brightness before the house appears */
+  beforeStart(stage) {
+    if (Store.get('bright') !== null) { App.start(stage); return; }
+    this.calNext = stage; this.el.title.hidden = true; this.el.calib.hidden = false; this.drawCal();
+    setTimeout(() => this.el.calBright.focus({ preventScroll: true }), 30);
+  },
+  setBright(v, save) {
+    v = clamp(v || 1, 0.6, 1.9); this.bright = v;
+    if (save) Store.set('bright', v.toFixed(2));
+    if (typeof postMat !== 'undefined' && postMat) postMat.uniforms.uGamma.value = 1 / v;
+    if (this.el.bright) this.el.bright.value = v; if (this.el.calBright) this.el.calBright.value = v;
+    if (this.el.calib && !this.el.calib.hidden) this.drawCal();
+  },
+  drawCal() {
+    const c = this.el.calCanvas, g = c.getContext('2d'), W = c.width, H = c.height, e = 1 / this.bright;
+    g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+    [0.011, 0.036, 0.1].forEach((v, i) => {
+      const k = Math.pow(v, e), col = `rgb(${Math.round(k * 255)},${Math.round(k * 250)},${Math.round(k * 242)})`;
+      const x = W * (i + 0.5) / 3, base = H - 14, h = H - 44;
+      g.save(); g.translate(x, base); g.rotate((i - 1) * 0.025 + 0.03); g.fillStyle = col;
+      g.beginPath(); g.ellipse(4, -h + 16, 13, 17, 0.15, 0, TAU); g.fill();                    // head, tilted
+      g.beginPath();
+      g.moveTo(-5, -h + 30); g.lineTo(9, -h + 30);                                              // neck
+      g.quadraticCurveTo(34, -h + 40, 36, -h + 58); g.lineTo(38, -h * 0.28); g.lineTo(31, -h * 0.26); // right arm, long
+      g.lineTo(27, -h + 66); g.lineTo(22, -h * 0.52); g.lineTo(17, 0); g.lineTo(6, 0); g.lineTo(2, -h * 0.4);
+      g.lineTo(-3, 0); g.lineTo(-14, 0); g.lineTo(-19, -h * 0.52); g.lineTo(-24, -h + 66);
+      g.lineTo(-29, -h * 0.34); g.lineTo(-36, -h * 0.36); g.lineTo(-33, -h + 56);
+      g.quadraticCurveTo(-28, -h + 38, -5, -h + 30); g.closePath(); g.fill();
+      g.restore();
+    });
+  },
+  clockDial(ang, R) {
+    const r = this.el.clockRing, d = this.el.clockDot; if (!r) return;
+    const px = Math.round(R);
+    if (r._r !== px) { r._r = px; r.style.width = r.style.height = 2 * px + 'px'; r.style.margin = `${-px}px 0 0 ${-px}px`; this.el.clockPanel.style.setProperty('--r', px + 'px'); }
+    d.style.transform = `rotate(${ang}rad) translateY(${-px}px)`;
   },
   prompt(label) {
     const e = this.el;
@@ -3935,7 +4696,7 @@ const UI = {
   },
   clockPanel(on) { this.el.clockPanel.hidden = !on; },
   clockReadout(c) { const m = ((Math.round(c.min) % 720) + 720) % 720; const h = Math.floor(m / 60) || 12; this.el.clockTime.textContent = `${h}:${String(m % 60).padStart(2, '0')}`; },
-  objective(stage) { const o = OBJECTIVES[stage]; if (!o) return; this.el.objText.textContent = o[0]; this.el.hintText.textContent = o[1]; this.el.stuck.open = false; },
+  objective(stage) { const o = tr('o_' + stage); if (!Array.isArray(o)) return; this.el.objText.textContent = o[0]; this.el.hintText.textContent = o[1]; this.el.stuck.open = false; },
   onEscape() {
     // Esc only ever pauses: resuming needs a click so the mouse can be captured again
     if (!G.running || G.stage === 'end' || G.paused) return;
@@ -3966,6 +4727,60 @@ const UI = {
   },
 };
 
+/* ---- 09b_perf.js ---- */
+/* ============================================================
+   Performance meter (key P): frame time, render size, draw calls
+   for the main view and the mirror, lights and rooms drawn.
+   ============================================================ */
+const Perf = {
+  on: false, calls: 0, tris: 0, mirCalls: 0, mirTris: 0,
+  hist: new Float32Array(90), hi: 0, acc: 0, n: 0, t: 0, worst: 0, lastFps: 0,
+  init() {
+    this.el = $('perf'); this.txt = $('perfText'); this.cv = $('perfGraph'); this.g = this.cv.getContext('2d');
+    this.set(Store.get('perf') === '1', false);
+  },
+  set(on, save = true) {
+    this.on = !!on; if (save) Store.set('perf', this.on ? '1' : '0');
+    this.el.hidden = !this.on; this.t = 1e9;
+    const s = $('perfSel'); if (s) s.value = this.on ? '1' : '0';
+  },
+  toggle() { this.set(!this.on); },
+  frame(ms) {
+    if (!(ms > 0) || ms > 1000) return;
+    this.hist[this.hi] = ms; this.hi = (this.hi + 1) % this.hist.length;
+    this.acc += ms; this.n++; this.worst = Math.max(this.worst, ms); this.t += ms;
+    if ((this.hi & 3) === 0) this.graph();
+    if (this.t < 500) return;
+    const avg = this.acc / Math.max(1, this.n), fps = 1000 / avg;
+    const cls = fps < 40 ? 'bad' : fps < 55 ? 'ok' : '';
+    const q = Quality.mode === 'auto' ? `${tr('perf_mode_auto')} ${Quality.idx + 1}/${QLEVELS.length}` : Quality.mode;
+    const k = (v) => (v >= 1000 ? (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : String(v));
+    const rooms = Cull.enabled ? Cull.names(Cull.mask) : ROOMS;
+    const lines = [
+      `<span class="${cls}">${fps.toFixed(0)} ${tr('perf_fps')}</span> · ${avg.toFixed(1)} ms <span class="dim">(max ${this.worst.toFixed(1)})</span>`,
+      `${tr('perf_res')} ${RW}×${RH} <span class="dim">· ${q}</span>`,
+      `${tr('perf_draws')} ${this.calls}${this.mirCalls ? ` <span class="dim">+ ${tr('perf_mirror')} ${this.mirCalls}</span>` : ''}`,
+      `${tr('perf_tris')} ${k(this.tris)}${this.mirTris ? ` <span class="dim">+ ${k(this.mirTris)}</span>` : ''}`,
+      `${tr('perf_lights')} ${SU.uNumLights.value}/${NL} · ${tr('perf_rooms')} ${rooms.length}/${ROOMS.length}${activeMirror ? ` <span class="dim">· ${tr('perf_mirror')} ${Cull.mirrorRooms}</span>` : ''}`,
+      `<span class="dim">${Cull.start || '-'} ▸ ${rooms.join(', ')}</span>`,
+    ];
+    this.txt.innerHTML = lines.join('\n');
+    this.acc = 0; this.n = 0; this.t = 0; this.worst = 0;
+  },
+  graph() {
+    const g = this.g, W = this.cv.width, H = this.cv.height, n = this.hist.length;
+    g.clearRect(0, 0, W, H);
+    g.fillStyle = 'rgba(230,223,210,0.08)'; g.fillRect(0, H - H * (16.7 / 50), W, 1); g.fillRect(0, H - H * (33.3 / 50), W, 1);
+    const bw = W / n;
+    for (let i = 0; i < n; i++) {
+      const v = this.hist[(this.hi + i) % n]; if (!v) continue;
+      const h = Math.min(H, (v / 50) * H);
+      g.fillStyle = v > 25 ? '#ff3a22' : v > 18.5 ? '#d9a45b' : 'rgba(230,223,210,0.55)';
+      g.fillRect(i * bw, H - h, Math.max(1, bw - 0.5), h);
+    }
+  },
+};
+
 /* ---- 10_main.js ---- */
 /* ============================================================
    Boot, main loop, pointer lock, pause
@@ -3975,18 +4790,22 @@ const App = {
   ready: false, last: 0, titleT: 0, ambStarted: false, ckpt: null,
   async boot(data) {
     UI.init();
+    Perf.init();
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     try { await Promise.race([Promise.all([document.fonts.load('40px "Reenie Beanie"'), document.fonts.load('30px "IM Fell English"'), document.fonts.load('italic 20px "IM Fell English"')]), wait(3000)]); } catch (e) { /* fonts optional */ }
     try {
       initRenderer();
+      UI.setBright(UI.bright, false);
       buildTextures();
       buildWorld();
       Actors.init();
       Story.init();
       mergeWorld();
+      buildPortals();
+      assignRooms();
     } catch (e) {
       console.error(e);
-      UI.el.loading.textContent = 'Dit spel heeft WebGL nodig. Probeer een andere browser of zet hardwareversnelling aan.';
+      UI.el.loading.textContent = tr('webgl');
       return;
     }
     Story.applyState('intro');
@@ -3994,15 +4813,15 @@ const App = {
     postMat.uniforms.uFade.value = 1;
     const ck = (data && data.ckpt) || Store.get('ckpt');
     if (ck && STAGES.includes(ck) && SI(ck) >= SI('p2') && SI(ck) <= SI('descent')) { this.ckpt = ck; UI.el.contBtn.hidden = false; }
-    UI.el.loading.hidden = false; UI.el.loading.textContent = 'Geluiden worden gemaakt…';
+    UI.el.loading.hidden = false; UI.el.loading.textContent = tr('loading_sound');
     await new Promise((r) => setTimeout(r, 30));
     Sound.prebuild();
-    UI.el.loading.textContent = isTouch ? 'Op een telefoon werkt het met het schermpje; met toetsenbord en muis is het beter.' : '';
+    UI.el.loading.textContent = isTouch ? tr('touch_note') : ''; UI.el.loading.removeAttribute('data-i18n');
     UI.el.loading.hidden = !isTouch;
     UI.el.startBtn.disabled = false;
     this.ready = true;
     // compile shaders once so the first seconds do not stutter
-    try { renderer.compile(scene, camera); } catch (e) { /* ignore */ }
+    try { Cull.all(camera); renderer.compile(scene, camera); } catch (e) { /* ignore */ }
   },
   start(stage) {
     Sound.init(); Sound.resume();
@@ -4012,7 +4831,7 @@ const App = {
     if (ClockUI.active) ClockUI.close();
     G.running = true; G.paused = false;
     Story.start(stage);
-    if (stage === 'intro') UI.hint('<span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> lopen</span><span><kbd>Muis</kbd> kijken</span><span><kbd>E</kbd> gebruiken</span><span><kbd>F</kbd> zaklamp</span><span><kbd>Esc</kbd> menu</span>', 12);
+    if (stage === 'intro') UI.hint(`<span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> ${tr('k_walk')}</span><span><kbd>${tr('k_mouse')}</kbd> ${tr('k_look')}</span><span><kbd>E</kbd> ${tr('k_use')}</span><span><kbd>F</kbd> ${tr('k_flash')}</span><span><kbd>Esc</kbd> ${tr('k_menu')}</span>`, 12);
     if (isTouch) UI.el.touch.hidden = false;
     lockPointer();
   },
@@ -4070,8 +4889,10 @@ document.addEventListener('visibilitychange', () => { if (document.hidden && G.r
 
 function loop(now) {
   requestAnimationFrame(loop);
-  const dt = Math.min(0.05, Math.max(0.001, (now - App.last) / 1000 || 0.016)); App.last = now;
+  const raw = now - App.last;
+  const dt = Math.min(0.05, Math.max(0.001, raw / 1000 || 0.016)); App.last = now;
   if (!App.ready) return;
+  if (keyPressed('KeyP')) Perf.toggle();
   postMat.uniforms.uTime.value = now / 1000;
   if (G.running && !G.paused) {
     G.dt = dt; G.t += dt; G.frame++;
@@ -4098,6 +4919,7 @@ function loop(now) {
     updateLights(dt);
   }
   renderFrame();
+  if (Perf.on) Perf.frame(raw);
   endInputFrame();
 }
 
