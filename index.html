@@ -265,7 +265,7 @@
       <div class="row"><label for="quality" data-i18n="quality">Beeldkwaliteit</label><select id="quality"><option value="auto" data-i18n="q_auto">Automatisch</option><option value="laag" data-i18n="q_low">Laag (snelst)</option><option value="middel" data-i18n="q_mid">Middel</option><option value="hoog" data-i18n="q_high">Hoog</option></select></div>
       <div class="row"><label for="perfSel" data-i18n="perfmeter">Prestatiemeter</label><select id="perfSel"><option value="0" data-i18n="perf_off">Uit</option><option value="1" data-i18n="perf_on">Aan (toets P)</option></select></div>
       <div class="row touchOnly"><label for="gyroSel" data-i18n="gyro">Kijken door te kantelen</label><label class="switch"><input id="gyroSel" type="checkbox" role="switch"><span class="knob" aria-hidden="true"></span><span class="st" data-on="Aan" data-off="Uit"></span></label></div>
-      <div class="row touchOnly"><label for="gyroSens" data-i18n="gyro_sens">Kantelgevoeligheid</label><input id="gyroSens" type="range" min="0.25" max="1.5" step="0.05" value="0.6"></div>
+      <div class="row touchOnly"><label for="gyroSens" data-i18n="gyro_sens">Kantelgevoeligheid</label><input id="gyroSens" type="range" min="0.15" max="1.2" step="0.05" value="0.4"></div>
       <div class="row"><label for="langSel" data-i18n="language">Taal</label><select id="langSel"><option value="nl">Nederlands</option><option value="en">English</option></select></div>
       <div class="actions">
         <button id="resumeBtn" type="button" data-i18n="resume">Verder spelen</button>
@@ -390,11 +390,11 @@ addEventListener('wheel', (e) => { if (G.running) Input.wheel += Math.sign(e.del
    camera orientation; how much it turned since the last reading is added to your view,
    and its tilt sideways tilts the view with it, so the horizon stays where it really is. */
 const Gyro = {
-  want: true, ok: false, sens: 0.6, seen: 0, asked: false, prev: null, dYaw: 0, dPitch: 0, roll: 0, rollK: 1, lastT: 0, onChange: null,
+  want: true, ok: false, sens: 0.4, seen: 0, asked: false, prev: null, dYaw: 0, dPitch: 0, roll: 0, rollK: 1, lastT: 0, onChange: null,
   _e: null, _q: null, _q0: null, _q1: null, _z: null, _e2: null,
   init() {
     const s = Store.get('gyro'); this.want = s === null ? true : s === '1';
-    const g = parseFloat(Store.get('gyroSens2')); if (g > 0) this.sens = g;
+    const g = parseFloat(Store.get('gyroSens3')); if (g > 0) this.sens = g;
     this._e = new THREE.Euler(); this._e2 = new THREE.Euler(); this._q = new THREE.Quaternion(); this._q0 = new THREE.Quaternion();
     this._q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));   // the camera looks out of the back of the phone
     this._z = new THREE.Vector3(0, 0, 1);
@@ -432,7 +432,7 @@ const Gyro = {
   active() { return this.want && this.ok && performance.now() - this.lastT < 500; },
   take() { const y = this.dYaw * this.sens, p = this.dPitch * this.sens; this.dYaw = this.dPitch = 0; return this.want ? [y, p] : [0, 0]; },
   set(on) { this.want = on; Store.set('gyro', on ? '1' : '0'); if (on) { this.asked = false; this.request(); } },
-  setSens(v) { this.sens = v; Store.set('gyroSens2', String(v)); },
+  setSens(v) { this.sens = v; Store.set('gyroSens3', String(v)); },
 };
 
 function endInputFrame() { Input.tap = false; Input.amoved = false; Input.mdx = 0; Input.mdy = 0; Input.ePress = false; Input.fPress = false; Input.click = false; Input.wheel = 0; Input.pressed = {}; }
