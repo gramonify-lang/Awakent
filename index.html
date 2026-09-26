@@ -140,7 +140,17 @@
   #clockDoneT { display: none; margin-top: 4px; padding: 10px 22px; border: 1px solid rgba(230, 223, 210, 0.35); border-radius: 22px; background: rgba(10, 11, 15, 0.55); color: var(--bone); font-family: var(--mono); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; pointer-events: auto; }
   body.touch #clockDoneT { display: inline-block; }
   .touchOnly { display: none !important; }
-  body.touch .touchOnly { display: grid !important; }
+  body.touch .touchOnly, body.gyro .touchOnly { display: grid !important; }
+  .switch { position: relative; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; justify-self: start; min-height: 44px; -webkit-tap-highlight-color: transparent; }
+  body.touch ul.keys { display: none; }
+  .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .switch .knob { position: relative; width: 50px; height: 28px; border-radius: 14px; background: rgba(230, 223, 210, 0.16); border: 1px solid rgba(230, 223, 210, 0.3); transition: background 0.2s ease; }
+  .switch .knob::after { content: ''; position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--dust); transition: transform 0.2s ease, background 0.2s ease; }
+  .switch input:checked + .knob { background: rgba(232, 196, 138, 0.35); border-color: rgba(232, 196, 138, 0.6); }
+  .switch input:checked + .knob::after { transform: translateX(22px); background: var(--bone); }
+  .switch input:focus-visible + .knob { outline: 2px solid var(--bone); outline-offset: 2px; }
+  .switch .st::after { content: attr(data-off); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dust); }
+  .switch input:checked ~ .st::after { content: attr(data-on); color: var(--bone); }
   body.touch #hint { left: 50%; transform: translateX(-50%); bottom: auto; top: calc(58px + env(safe-area-inset-top, 0px)); justify-content: center; text-align: center; max-width: calc(100% - 140px); }
   body.touch #clockInfo .keys, body.touch #clockInfo .help { display: none; }
   #nub { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: rgba(230, 223, 210, 0.16); }
@@ -254,8 +264,8 @@
       <div class="row"><label for="bright" data-i18n="brightness">Helderheid</label><input id="bright" type="range" min="0.6" max="1.9" step="0.02" value="1"></div>
       <div class="row"><label for="quality" data-i18n="quality">Beeldkwaliteit</label><select id="quality"><option value="auto" data-i18n="q_auto">Automatisch</option><option value="laag" data-i18n="q_low">Laag (snelst)</option><option value="middel" data-i18n="q_mid">Middel</option><option value="hoog" data-i18n="q_high">Hoog</option></select></div>
       <div class="row"><label for="perfSel" data-i18n="perfmeter">Prestatiemeter</label><select id="perfSel"><option value="0" data-i18n="perf_off">Uit</option><option value="1" data-i18n="perf_on">Aan (toets P)</option></select></div>
-      <div class="row touchOnly"><label for="gyroSel" data-i18n="gyro">Kijken door te kantelen</label><select id="gyroSel"><option value="1" data-i18n="perf_on_plain">Aan</option><option value="0" data-i18n="perf_off">Uit</option></select></div>
-      <div class="row touchOnly"><label for="gyroSens" data-i18n="gyro_sens">Kantelgevoeligheid</label><input id="gyroSens" type="range" min="0.5" max="2" step="0.05" value="1"></div>
+      <div class="row touchOnly"><label for="gyroSel" data-i18n="gyro">Kijken door te kantelen</label><label class="switch"><input id="gyroSel" type="checkbox" role="switch"><span class="knob" aria-hidden="true"></span><span class="st" data-on="Aan" data-off="Uit"></span></label></div>
+      <div class="row touchOnly"><label for="gyroSens" data-i18n="gyro_sens">Kantelgevoeligheid</label><input id="gyroSens" type="range" min="0.25" max="1.5" step="0.05" value="0.6"></div>
       <div class="row"><label for="langSel" data-i18n="language">Taal</label><select id="langSel"><option value="nl">Nederlands</option><option value="en">English</option></select></div>
       <div class="actions">
         <button id="resumeBtn" type="button" data-i18n="resume">Verder spelen</button>
@@ -380,11 +390,11 @@ addEventListener('wheel', (e) => { if (G.running) Input.wheel += Math.sign(e.del
    camera orientation; how much it turned since the last reading is added to your view,
    and its tilt sideways tilts the view with it, so the horizon stays where it really is. */
 const Gyro = {
-  want: true, ok: false, sens: 1, seen: 0, asked: false, prev: null, dYaw: 0, dPitch: 0, roll: 0, rollK: 1, lastT: 0,
+  want: true, ok: false, sens: 0.6, seen: 0, asked: false, prev: null, dYaw: 0, dPitch: 0, roll: 0, rollK: 1, lastT: 0, onChange: null,
   _e: null, _q: null, _q0: null, _q1: null, _z: null, _e2: null,
   init() {
     const s = Store.get('gyro'); this.want = s === null ? true : s === '1';
-    const g = parseFloat(Store.get('gyroSens')); if (g > 0) this.sens = g;
+    const g = parseFloat(Store.get('gyroSens2')); if (g > 0) this.sens = g;
     this._e = new THREE.Euler(); this._e2 = new THREE.Euler(); this._q = new THREE.Quaternion(); this._q0 = new THREE.Quaternion();
     this._q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));   // the camera looks out of the back of the phone
     this._z = new THREE.Vector3(0, 0, 1);
@@ -400,7 +410,7 @@ const Gyro = {
   screenAngle() { const so = screen.orientation; const a = so && typeof so.angle === 'number' ? so.angle : (window.orientation || 0); return ((a % 360) + 360) % 360; },
   onOrient(e) {
     if (e.alpha === null || e.beta === null || e.gamma === null || e.alpha === undefined) return;
-    this.seen++; if (this.seen > 3) this.ok = true;
+    this.seen++; if (this.seen > 3 && !this.ok) { this.ok = true; if (this.onChange) this.onChange(); }
     this.lastT = performance.now();
     const q = this._q;
     this._e.set(e.beta * DEG, e.alpha * DEG, -e.gamma * DEG, 'YXZ');
@@ -410,17 +420,19 @@ const Gyro = {
     const E = this._e2.setFromQuaternion(q, 'YXZ');   // x: pitch, y: yaw, z: roll, as the camera uses them
     const yaw = E.y, pitch = E.x, roll = E.z;
     if (this.prev) {
+      // a steady hand still trembles: the smallest movements count for less
+      const soft = (d) => d * sstep(0.0004, 0.0025, Math.abs(d));
       // looking almost straight up or down the yaw reading turns unreliable: then only pitch counts
-      if (Math.abs(pitch) < 1.3 && Math.abs(this.prev.pitch) < 1.3) this.dYaw += angNorm(yaw - this.prev.yaw);
-      this.dPitch += pitch - this.prev.pitch;
+      if (Math.abs(pitch) < 1.3 && Math.abs(this.prev.pitch) < 1.3) this.dYaw += soft(angNorm(yaw - this.prev.yaw));
+      this.dPitch += soft(pitch - this.prev.pitch);
     }
     this.prev = { yaw, pitch };
-    this.roll = clamp(roll, -0.6, 0.6);
+    this.roll = clamp(roll * Math.min(1, this.sens + 0.2), -0.5, 0.5);
   },
   active() { return this.want && this.ok && performance.now() - this.lastT < 500; },
   take() { const y = this.dYaw * this.sens, p = this.dPitch * this.sens; this.dYaw = this.dPitch = 0; return this.want ? [y, p] : [0, 0]; },
   set(on) { this.want = on; Store.set('gyro', on ? '1' : '0'); if (on) { this.asked = false; this.request(); } },
-  setSens(v) { this.sens = v; Store.set('gyroSens', String(v)); },
+  setSens(v) { this.sens = v; Store.set('gyroSens2', String(v)); },
 };
 
 function endInputFrame() { Input.tap = false; Input.amoved = false; Input.mdx = 0; Input.mdy = 0; Input.ePress = false; Input.fPress = false; Input.click = false; Input.wheel = 0; Input.pressed = {}; }
@@ -624,6 +636,7 @@ function setLang(l) {
   if (typeof Story !== 'undefined' && Story.notes) Story.buildLangTextures();
   if (typeof Lore !== 'undefined' && Lore.ready) Lore.langTextures();
   if (typeof Decor !== 'undefined') Decor.langTextures();
+  if (typeof UI !== 'undefined' && UI.gyroLabels) UI.gyroLabels();
   if (typeof UI !== 'undefined' && UI.el && UI.el.objText) UI.objective(G.stage === 'title' ? 'intro' : G.stage);
   if (typeof Interact !== 'undefined') Interact.cur = undefined;
 }
@@ -4736,9 +4749,11 @@ const Player = {
       const tk = 1 - Math.exp(-dt * 26), tx = Input.tlook.x * tk, ty = Input.tlook.y * tk, kt = 0.0048 * Input.sens;
       Input.tlook.x -= tx; Input.tlook.y -= ty;
       this.yaw -= Input.mdx * k + tx * kt; this.pitch -= Input.mdy * k + ty * kt;
-      // the phone itself: turn it and the view turns with it
-      const [gy, gp] = Gyro.take(); this.yaw += gy; this.pitch += gp;
-    } else { Input.tlook.x = Input.tlook.y = 0; Gyro.take(); }
+      // the phone itself: turn it and the view turns with it (spread over a few frames, so it does not shiver)
+      const [gy, gp] = Gyro.take(); this.gyP = (this.gyP || 0) + gp; this.gyY = (this.gyY || 0) + gy;
+      const gk = 1 - Math.exp(-dt * 22), ay = this.gyY * gk, ap = this.gyP * gk; this.gyY -= ay; this.gyP -= ap;
+      this.yaw += ay; this.pitch += ap;
+    } else { Input.tlook.x = Input.tlook.y = 0; Gyro.take(); this.gyY = this.gyP = 0; }
     if (this.autoLook) {
       const a = this.autoLook; const d = _tv1.subVectors(a.target, camera.position);
       const ty = Math.atan2(-d.x, -d.z), tp = Math.atan2(d.y, Math.hypot(d.x, d.z));
@@ -6707,8 +6722,11 @@ const UI = {
     this.el.contBtn.addEventListener('click', () => { Gyro.request(); this.beforeStart(App.ckpt || 'intro'); });
     // tilt to look (phones)
     Gyro.init();
-    this.el.gyroSel.value = Gyro.want ? '1' : '0'; this.el.gyroSens.value = Gyro.sens;
-    this.el.gyroSel.addEventListener('change', () => Gyro.set(this.el.gyroSel.value === '1'));
+    this.el.gyroSel.checked = Gyro.want; this.el.gyroSens.value = Gyro.sens;
+    this.el.gyroSel.addEventListener('change', () => { Gyro.set(this.el.gyroSel.checked); this.el.gyroSens.disabled = !Gyro.want; });
+    this.el.gyroSens.disabled = !Gyro.want;
+    Gyro.onChange = () => document.body.classList.add('gyro');   // the sensor works here: show the setting
+    this.gyroLabels();
     this.el.gyroSens.addEventListener('input', () => Gyro.setSens(parseFloat(this.el.gyroSens.value)));
     // brightness
     const br = parseFloat(Store.get('bright')); this.setBright(br > 0 ? br : 1, false);
@@ -6805,6 +6823,7 @@ const UI = {
     this.el.note.hidden = true; this.el.image.hidden = true; this.el.doc.hidden = true; this.overlay = null; this.touchOverlay(false);
     const f = this.onClose; this.onClose = null; if (f) f();
   },
+  gyroLabels() { const st = document.querySelector('.switch .st'); if (st) { st.dataset.on = tr('perf_on_plain'); st.dataset.off = tr('perf_off'); } },
   /* with a paper in your hands the touch controls step aside, so a tap reaches it (and it can scroll) */
   touchOverlay(on) { if (isTouch && this.el.touch) { this.el.touch.classList.toggle('ovl', on); if (on) { Input.tmx = Input.tmz = 0; Input.trun = false; } } },
   clockPanel(on) {
