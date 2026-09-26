@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Awakent</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,6 +38,8 @@
   #prompt { position: absolute; left: 50%; top: calc(50% + 18px); transform: translateX(-50%); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); white-space: nowrap; }
   #thought { position: absolute; left: 50%; bottom: max(11vh, calc(40px + env(safe-area-inset-bottom, 0px))); transform: translateX(-50%); width: min(62ch, calc(100% - 32px)); margin: 0; text-align: center; font-family: var(--display); font-style: italic; font-size: clamp(17px, 2.1vw, 23px); line-height: 1.35; color: var(--bone); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9); opacity: 0; transition: opacity 0.7s ease; text-wrap: balance; }
   #thought.on { opacity: 0.94; }
+  #rotateNote { display: none; position: absolute; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); margin: 0; padding: 6px 12px; border-radius: 14px; background: rgba(10, 11, 15, 0.6); font-size: 11px; letter-spacing: 0.08em; color: var(--dust); white-space: nowrap; }
+  @media (orientation: portrait) and (pointer: coarse) { body.touch #rotateNote { display: block; } }
   #introCard { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; opacity: 0; transition: opacity 1.1s ease; pointer-events: none; }
   #introCard.on { opacity: 1; }
   #introCard .d { margin: 0; font-family: var(--display); font-style: italic; font-size: clamp(18px, 2.2vw, 24px); color: #bdb4a4; }
@@ -127,7 +129,18 @@
   /* ---------- touch ---------- */
   #touch { position: absolute; inset: 0; pointer-events: none; }
   #touch[hidden] { display: none; }
-  #stick { position: absolute; left: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: 128px; height: 128px; border-radius: 50%; border: 1px solid rgba(230, 223, 210, 0.22); pointer-events: auto; touch-action: none; }
+  #stickzone { position: absolute; left: 0; top: 0; width: 45%; height: 100%; pointer-events: auto; touch-action: none; }
+  #stick { position: absolute; left: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: 128px; height: 128px; margin: 0; border-radius: 50%; border: 1px solid rgba(230, 223, 210, 0.22); pointer-events: none; opacity: 0.55; transition: opacity 0.25s ease; }
+  #stick.on { opacity: 1; transition: none; }
+  #clockpad { position: absolute; inset: 0; pointer-events: auto; touch-action: none; }
+  #clockpad[hidden] { display: none; }
+  #touch.clock #stickzone, #touch.clock #stick, #touch.clock #lookpad, #touch.clock #tF { display: none; }
+  #touch.ovl #stickzone, #touch.ovl #stick, #touch.ovl #lookpad, #touch.ovl #tF, #touch.ovl #clockpad { display: none; }
+  body.touch #clockInfo { z-index: 5; }
+  #clockDoneT { display: none; margin-top: 4px; padding: 10px 22px; border: 1px solid rgba(230, 223, 210, 0.35); border-radius: 22px; background: rgba(10, 11, 15, 0.55); color: var(--bone); font-family: var(--mono); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; pointer-events: auto; }
+  body.touch #clockDoneT { display: inline-block; }
+  body.touch #hint { left: 50%; transform: translateX(-50%); bottom: auto; top: calc(58px + env(safe-area-inset-top, 0px)); justify-content: center; text-align: center; max-width: calc(100% - 140px); }
+  body.touch #clockInfo .keys, body.touch #clockInfo .help { display: none; }
   #nub { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: rgba(230, 223, 210, 0.16); }
   #lookpad { position: absolute; right: 0; top: 0; width: 55%; height: 100%; pointer-events: auto; touch-action: none; }
   #touch button { position: absolute; pointer-events: auto; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(230, 223, 210, 0.3); background: rgba(10, 11, 15, 0.45); font-size: 15px; letter-spacing: 0.05em; }
@@ -175,6 +188,7 @@
   <div id="hud" hidden>
     <div id="reticle"></div>
     <div id="prompt" hidden><span id="promptText"></span></div>
+    <p id="rotateNote" data-i18n="rotate">Draai je telefoon voor het beste beeld</p>
     <div id="introCard" aria-hidden="true"><p class="d" data-i18n="intro_date">27 maart</p><p class="t">3:33</p></div>
     <p id="voice" aria-live="polite"></p>
     <p id="thought" aria-live="polite"></p>
@@ -186,6 +200,7 @@
         <span id="clockMirror" hidden><span data-i18n="clock_mirror">in de spiegel</span> <b id="clockMirrorTime">0:00</b></span>
         <span class="help" data-i18n="clock_help">Beweeg de muis rond de klok om de wijzers te draaien</span>
         <span class="keys"><kbd>E</kbd>&nbsp;<span data-i18n="done">klaar</span></span>
+        <button id="clockDoneT" type="button" data-i18n="done">klaar</button>
       </div>
     </div>
   </div>
@@ -275,8 +290,10 @@
   <div id="perf" hidden><span id="perfText"></span><canvas id="perfGraph" width="180" height="36"></canvas></div>
 
   <div id="touch" hidden>
+    <div id="stickzone"></div>
     <div id="stick"><div id="nub"></div></div>
     <div id="lookpad"></div>
+    <div id="clockpad" hidden></div>
     <button id="tE" type="button" aria-label="Gebruiken" data-i18n-aria="k_use">E</button>
     <button id="tF" type="button" aria-label="Zaklamp" data-i18n-aria="k_flash">F</button>
     <button id="tM" type="button" aria-label="Menu">II</button>
@@ -332,7 +349,7 @@ function runTimers() {
 /* ---------- input ---------- */
 const Input = {
   keys: {}, mdx: 0, mdy: 0, locked: false, ePress: false, fPress: false, click: false,
-  wheel: 0, sens: 1, dragLook: false, dragging: false, tmx: 0, tmz: 0, tlook: { x: 0, y: 0 },
+  wheel: 0, sens: 1, dragLook: false, dragging: false, tmx: 0, tmz: 0, trun: false, cda: 0, tlook: { x: 0, y: 0 },
   pressed: {}, // one-shot key presses this frame
 };
 function keyDown(code) { return !!Input.keys[code]; }
@@ -353,7 +370,7 @@ addEventListener('mousemove', (e) => {
   Input.ax = e.clientX; Input.ay = e.clientY; Input.amoved = true;
 });
 addEventListener('wheel', (e) => { if (G.running) Input.wheel += Math.sign(e.deltaY); }, { passive: true });
-function endInputFrame() { Input.amoved = false; Input.mdx = 0; Input.mdy = 0; Input.ePress = false; Input.fPress = false; Input.click = false; Input.wheel = 0; Input.pressed = {}; }
+function endInputFrame() { Input.tap = false; Input.amoved = false; Input.mdx = 0; Input.mdy = 0; Input.ePress = false; Input.fPress = false; Input.click = false; Input.wheel = 0; Input.pressed = {}; }
 
 /* safe storage */
 const Store = {
@@ -447,7 +464,7 @@ const STR = {
     t_diary: 'Elke nacht dezelfde tijd.', t_letter: 'Half wakker.', t_card1: '3:33.', t_card2: 'Daarom.',
     t_mom: 'Mama.', t_vm1: 'Ik had haar terug moeten bellen.', t_vm2: 'Dat is nu.', t_vm3: 'Ik bel haar terug.',
     cal_month: 'MAART', box_mama: 'MAMA', box_xmas: 'KERST',
-    t_cantLook: 'Ik kan mezelf niet aankijken.',
+    t_cantLook: 'Ik kan mezelf niet aankijken.', k_tapskip: 'Tik om over te slaan', k_twalk: 'duim links: lopen (ver duwen = rennen)', k_tlook: 'rechts slepen: kijken', rotate: 'Draai je telefoon voor het beste beeld',
     intro_date: '27 maart', k_space: 'Spatie', k_skip: 'overslaan', t_again2: 'Weer.', t_knock1: 'Er klopt iemand.', t_knock2: 'Om 3:33?', t_hello: 'Hallo?',
     t_sleepNow: '„Slaap maar, lieverd.”', t_flashDead: 'Kom op…',
     wall_tally: 'IIII IIII IIII IIII IIII II',
@@ -530,7 +547,7 @@ const STR = {
     t_diary: 'Every night, the same time.', t_letter: 'Half awake.', t_card1: '3:33.', t_card2: "That's why.",
     t_mom: 'Mom.', t_vm1: 'I should have called her back.', t_vm2: "That's now.", t_vm3: "I'll call her back.",
     cal_month: 'MARCH', box_mama: 'MOM', box_xmas: 'CHRISTMAS',
-    t_cantLook: "I can't look myself in the eye.",
+    t_cantLook: "I can't look myself in the eye.", k_tapskip: 'Tap to skip', k_twalk: 'left thumb: walk (push far to run)', k_tlook: 'drag right: look', rotate: 'Turn your phone sideways for the best view',
     intro_date: '27 March', k_space: 'Space', k_skip: 'skip', t_again2: 'Again.', t_knock1: "Someone's knocking.", t_knock2: 'At 3:33?', t_hello: 'Hello?',
     t_sleepNow: '"Go to sleep, sweetheart."', t_flashDead: 'Come on…',
     wall_tally: 'IIII IIII IIII IIII IIII II',
@@ -4662,9 +4679,11 @@ const Player = {
     // look
     if (this.look && !ClockUI.active && !UI.overlay) {
       const k = 0.0021 * Input.sens;
-      this.yaw -= Input.mdx * k + Input.tlook.x * 0.0045; this.pitch -= Input.mdy * k + Input.tlook.y * 0.0045;
-      Input.tlook.x = Input.tlook.y = 0;
-    }
+      // a finger moves in uneven steps: spread each step over a few frames so the view glides
+      const tk = 1 - Math.exp(-dt * 26), tx = Input.tlook.x * tk, ty = Input.tlook.y * tk, kt = 0.0048 * Input.sens;
+      Input.tlook.x -= tx; Input.tlook.y -= ty;
+      this.yaw -= Input.mdx * k + tx * kt; this.pitch -= Input.mdy * k + ty * kt;
+    } else { Input.tlook.x = Input.tlook.y = 0; }
     if (this.autoLook) {
       const a = this.autoLook; const d = _tv1.subVectors(a.target, camera.position);
       const ty = Math.atan2(-d.x, -d.z), tp = Math.atan2(d.y, Math.hypot(d.x, d.z));
@@ -4687,7 +4706,7 @@ const Player = {
       if (this.standT > 0) { this.standT += dt; if (this.standT > 1.2) this.seated = false; }
       ix = iz = 0;
     }
-    const run = keyDown('ShiftLeft') || keyDown('ShiftRight');
+    const run = keyDown('ShiftLeft') || keyDown('ShiftRight') || Input.trun;
     const spd = (run ? 2.6 : 1.55) * this.speedMul;
     const fx = -Math.sin(this.yaw), fz = -Math.cos(this.yaw), rx = Math.cos(this.yaw), rz = -Math.sin(this.yaw);
     const wx = (fx * iz + rx * ix) * spd, wz = (fz * iz + rz * ix) * spd;
@@ -4924,6 +4943,12 @@ const ClockUI = {
     if (holdH) { this.repH += dt; if (this.repH > 0.45) { this.repH -= 0.2; this.step(c, holdH * 60); } } else this.repH = 0;
     if (Input.wheel) this.step(c, -Input.wheel * 5);
     // mouse: a point riding the ring; only the sideways part of a movement turns it
+    // a phone: circling a finger anywhere turns the hand by the same angle
+    if (Input.cda) {
+      const d = Input.cda; Input.cda = 0;
+      this.ang += d; this.vx = Math.sin(this.ang); this.vy = -Math.cos(this.ang);
+      this.turn(c, (d / TAU) * 60);
+    }
     let nx = null, ny = null;
     const rel = Input.locked || Input.dragging || Input.tlook.x || Input.tlook.y;
     if (rel) {
@@ -5545,13 +5570,13 @@ const Story = {
   u_intro() {
     const T = this.st, P = Player;
     if (!F.introDone) {
-      if (T > 0.3 && (Input.ePress || Input.click || keyPressed('Space') || keyPressed('Enter'))) { this.skipIntro(); return; }
+      if (T > 0.3 && (Input.ePress || Input.click || Input.tap || keyPressed('Space') || keyPressed('Enter'))) { this.skipIntro(); return; }
       this.introPose(T);
       const card = UI.el.introCard;
       if (T > 0.6 && !F.icard) { F.icard = true; card.classList.add('on'); }
       if (T > 3.6 && F.icard && !F.icardOff) { F.icardOff = true; card.classList.remove('on'); }
       if (T > 1.0 && !F.ih1) { F.ih1 = true; Sound.play('heart', null, { gain: 0.09, lp: 300, pure: true }); after(0.95, () => Sound.play('heart', null, { gain: 0.07, lp: 300, pure: true })); }
-      if (T > 4.4 && !F.iskip) { F.iskip = true; UI.hint(`<span><kbd>${tr('k_space')}</kbd> ${tr('k_skip')}</span>`, 6); }
+      if (T > 4.4 && !F.iskip) { F.iskip = true; UI.hint(isTouch ? `<span>${tr('k_tapskip')}</span>` : `<span><kbd>${tr('k_space')}</kbd> ${tr('k_skip')}</span>`, 6); }
       // the eyes open, close, open
       const kf = [[4.2, 1], [4.7, 0.55], [5.0, 1], [5.8, 0.25], [6.1, 0.8], [7.0, 0]];
       let fade = 1; for (let i = 0; i < kf.length - 1; i++) if (T >= kf[i][0] && T < kf[i + 1][0]) fade = lerp(kf[i][1], kf[i + 1][1], sstep(kf[i][0], kf[i + 1][0], T));
@@ -6613,7 +6638,7 @@ function wallWriting(c, text, seed, heavy) {
 const UI = {
   overlay: null, onClose: null, q: [], cur: null, tt: 0, gap: 0, el: {}, hintTO: 0, restartArm: 0,
   init() {
-    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard']) this.el[id] = $(id);
+    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard', 'stickzone', 'clockpad', 'clockDoneT']) this.el[id] = $(id);
     applyLangDOM();
     const g = this.el.digits.getContext('2d');
     g.clearRect(0, 0, 340, 120); draw7(g, '03:33', 16, 16, 86, '#ff3a22', 'rgba(255,58,34,0.08)');
@@ -6697,18 +6722,18 @@ const UI = {
     clearTimeout(this.hintTO); this.hintTO = setTimeout(() => h.classList.add('fade'), dur * 1000);
   },
   showNote(text) {
-    this.el.noteText.textContent = text; this.el.note.hidden = false; this.overlay = 'note';
+    this.el.noteText.textContent = text; this.el.note.hidden = false; this.overlay = 'note'; this.touchOverlay(true);
     Sound.play('scrape', null, { gain: 0.1, rate: 2.2 });
   },
   showImage(canvas, cap) {
     const c = this.el.imgCanvas; c.width = canvas.width; c.height = canvas.height;
     c.getContext('2d').drawImage(canvas, 0, 0);
-    this.el.imgCap.textContent = cap || ''; this.el.image.hidden = false; this.overlay = 'image';
+    this.el.imgCap.textContent = cap || ''; this.el.image.hidden = false; this.overlay = 'image'; this.touchOverlay(true);
   },
   /* a found document: kind is the paper style, build(el) fills it */
   showDoc(kind, build) {
     const b = this.el.docBody; b.className = 'doc ' + kind; b.textContent = ''; build(b); b.scrollTop = 0;
-    this.el.doc.hidden = false; this.overlay = 'doc';
+    this.el.doc.hidden = false; this.overlay = 'doc'; this.touchOverlay(true);
     Sound.play('scrape', null, { gain: 0.1, rate: 2.2 });
   },
   /* a voice from a speaker: sys lines are the machine itself */
@@ -6717,10 +6742,16 @@ const UI = {
     clearTimeout(this.voiceTO); this.voiceTO = setTimeout(() => v.classList.remove('on'), dur * 1000);
   },
   closeOverlay() {
-    this.el.note.hidden = true; this.el.image.hidden = true; this.el.doc.hidden = true; this.overlay = null;
+    this.el.note.hidden = true; this.el.image.hidden = true; this.el.doc.hidden = true; this.overlay = null; this.touchOverlay(false);
     const f = this.onClose; this.onClose = null; if (f) f();
   },
-  clockPanel(on) { this.el.clockPanel.hidden = !on; },
+  /* with a paper in your hands the touch controls step aside, so a tap reaches it (and it can scroll) */
+  touchOverlay(on) { if (isTouch && this.el.touch) { this.el.touch.classList.toggle('ovl', on); if (on) { Input.tmx = Input.tmz = 0; Input.trun = false; } } },
+  clockPanel(on) {
+    this.el.clockPanel.hidden = !on;
+    // on a phone the whole screen becomes the dial while a clock is being set
+    if (isTouch) { this.el.touch.classList.toggle('clock', on); this.el.clockpad.hidden = !on; Input.tmx = Input.tmz = 0; Input.trun = false; }
+  },
   clockReadout(c) {
     const fmt = (m) => `${Math.floor(m / 60) || 12}:${String(m % 60).padStart(2, '0')}`;
     const m = ((Math.round(c.min) % 720) + 720) % 720; this.el.clockTime.textContent = fmt(m);
@@ -6742,18 +6773,50 @@ const UI = {
     if (document.exitPointerLock && document.pointerLockElement) document.exitPointerLock();
     setTimeout(() => this.el.againBtn.focus(), 50);
   },
+  /* touch: a stick that appears where your thumb lands on the left, looking on the right,
+     and while a clock is being set, circling anywhere on the screen turns the hands */
   initTouch() {
-    const st = this.el.stick, nub = this.el.nub, lp = this.el.lookpad;
+    if (isTouch) document.body.classList.add('touch');
+    const st = this.el.stick, nub = this.el.nub, lp = this.el.lookpad, zone = this.el.stickzone, R = 56, DEAD = 0.12;
     let sid = null, cx = 0, cy = 0, lid = null, lx = 0, ly = 0;
-    st.addEventListener('pointerdown', (e) => { sid = e.pointerId; const r = st.getBoundingClientRect(); cx = r.left + r.width / 2; cy = r.top + r.height / 2; st.setPointerCapture(e.pointerId); move(e); });
-    const move = (e) => { if (e.pointerId !== sid) return; let dx = (e.clientX - cx) / 50, dy = (e.clientY - cy) / 50; const l = Math.hypot(dx, dy); if (l > 1) { dx /= l; dy /= l; } Input.tmx = dx; Input.tmz = -dy; nub.style.transform = `translate(${dx * 40}px, ${dy * 40}px)`; };
-    st.addEventListener('pointermove', move);
-    const end = (e) => { if (e.pointerId !== sid) return; sid = null; Input.tmx = Input.tmz = 0; nub.style.transform = ''; };
-    st.addEventListener('pointerup', end); st.addEventListener('pointercancel', end);
-    lp.addEventListener('pointerdown', (e) => { lid = e.pointerId; lx = e.clientX; ly = e.clientY; lp.setPointerCapture(e.pointerId); });
-    lp.addEventListener('pointermove', (e) => { if (e.pointerId !== lid) return; Input.tlook.x += (e.clientX - lx); Input.tlook.y += (e.clientY - ly); lx = e.clientX; ly = e.clientY; });
+    const place = () => { st.style.left = (cx - 64) + 'px'; st.style.top = (cy - 64) + 'px'; st.style.bottom = 'auto'; };
+    zone.addEventListener('pointerdown', (e) => { Input.tap = true; if (sid !== null) return; sid = e.pointerId; cx = e.clientX; cy = e.clientY; place(); st.classList.add('on'); zone.setPointerCapture(e.pointerId); move(e); });
+    const move = (e) => {
+      if (e.pointerId !== sid) return;
+      let dx = e.clientX - cx, dy = e.clientY - cy, l = Math.hypot(dx, dy);
+      // dragged far past the edge: the stick follows the thumb
+      if (l > R * 1.3) { const k = (l - R * 1.3) / l; cx += dx * k; cy += dy * k; place(); dx = e.clientX - cx; dy = e.clientY - cy; l = Math.hypot(dx, dy); }
+      const mag = Math.min(1, l / R), m = mag < DEAD ? 0 : (mag - DEAD) / (1 - DEAD), ux = l > 0 ? dx / l : 0, uy = l > 0 ? dy / l : 0;
+      Input.tmx = ux * m; Input.tmz = -uy * m; Input.trun = mag > 0.97 && l > R * 1.1;
+      nub.style.transform = `translate(${ux * mag * 40}px, ${uy * mag * 40}px)`;
+    };
+    zone.addEventListener('pointermove', move);
+    const end = (e) => { if (e.pointerId !== sid) return; sid = null; Input.tmx = Input.tmz = 0; Input.trun = false; nub.style.transform = ''; st.classList.remove('on'); st.style.left = ''; st.style.top = ''; st.style.bottom = ''; };
+    zone.addEventListener('pointerup', end); zone.addEventListener('pointercancel', end);
+    lp.addEventListener('pointerdown', (e) => { Input.tap = true; if (lid !== null) return; lid = e.pointerId; lx = e.clientX; ly = e.clientY; lp.setPointerCapture(e.pointerId); });
+    lp.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== lid) return;
+      const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+      const last = evs.length ? evs[evs.length - 1] : e;
+      Input.tlook.x += (last.clientX - lx); Input.tlook.y += (last.clientY - ly); lx = last.clientX; ly = last.clientY;
+    });
     const lend = (e) => { if (e.pointerId === lid) lid = null; };
     lp.addEventListener('pointerup', lend); lp.addEventListener('pointercancel', lend);
+    // the dial: the angle your finger moves around the middle of the screen is the angle the hand moves
+    const cp = this.el.clockpad; let cid = null, ca = 0;
+    const ang = (e) => Math.atan2(e.clientX - innerWidth / 2, -(e.clientY - innerHeight / 2));
+    const rad = (e) => Math.hypot(e.clientX - innerWidth / 2, e.clientY - innerHeight / 2);
+    cp.addEventListener('pointerdown', (e) => { if (cid !== null) return; cid = e.pointerId; ca = ang(e); cp.setPointerCapture(e.pointerId); });
+    cp.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== cid) return;
+      const a = ang(e), w = sstep(18, 60, rad(e));   // near the middle the angle is jumpy: count it less
+      Input.cda = (Input.cda || 0) + angNorm(a - ca) * w; ca = a;
+    });
+    const cend = (e) => { if (e.pointerId === cid) cid = null; };
+    cp.addEventListener('pointerup', cend); cp.addEventListener('pointercancel', cend);
+    this.el.clockDoneT.addEventListener('click', (e) => { e.preventDefault(); if (ClockUI.active) ClockUI.close(); });
+    // documents and pictures: a tap puts them down
+    for (const id of ['note', 'image', 'doc']) this.el[id].addEventListener('click', () => { if (this.overlay) this.closeOverlay(); });
     this.el.tE.addEventListener('pointerdown', (e) => { e.preventDefault(); Input.ePress = true; });
     this.el.tF.addEventListener('pointerdown', (e) => { e.preventDefault(); Input.fPress = true; });
     this.el.tM.addEventListener('pointerdown', (e) => { e.preventDefault(); App.pause(); });
@@ -6868,7 +6931,9 @@ const App = {
     if (isTouch) UI.el.touch.hidden = false;
     lockPointer();
   },
-  controlsHint(dur = 12) { UI.hint(`<span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> ${tr('k_walk')}</span><span><kbd>${tr('k_mouse')}</kbd> ${tr('k_look')}</span><span><kbd>E</kbd> ${tr('k_use')}</span><span><kbd>F</kbd> ${tr('k_flash')}</span><span><kbd>Esc</kbd> ${tr('k_menu')}</span>`, dur); },
+  controlsHint(dur = 12) {
+    if (isTouch) { UI.hint(`<span>${tr('k_twalk')}</span><span>${tr('k_tlook')}</span><span><kbd>E</kbd> ${tr('k_use')}</span><span><kbd>F</kbd> ${tr('k_flash')}</span>`, dur); return; }
+    UI.hint(`<span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> ${tr('k_walk')}</span><span><kbd>${tr('k_mouse')}</kbd> ${tr('k_look')}</span><span><kbd>E</kbd> ${tr('k_use')}</span><span><kbd>F</kbd> ${tr('k_flash')}</span><span><kbd>Esc</kbd> ${tr('k_menu')}</span>`, dur); },
   pause() {
     if (!G.running || G.paused || G.stage === 'end') return;
     G.paused = true;
