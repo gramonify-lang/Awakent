@@ -249,7 +249,7 @@
         <li><kbd>P</kbd> <span data-i18n="k_perf">prestaties</span></li>
         <li><kbd>Esc</kbd> <span data-i18n="k_menu">menu</span></li>
       </ul>
-      <p class="meta" data-i18n="meta">Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis</p>
+      <p class="meta" data-i18n="meta">Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis · bevat harde schrikmomenten</p>
       <p id="loading" data-i18n="loading">Het huis wordt opgebouwd…</p>
     </div>
   </section>
@@ -453,7 +453,7 @@ const STR = {
     lede: 'Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.',
     btn_begin: 'Begin', btn_continue: 'Verder vanaf laatste punt',
     k_walk: 'lopen', k_mouse: 'Muis', k_look: 'kijken', k_use: 'gebruiken', k_flash: 'zaklamp', k_run: 'sneller', k_menu: 'menu', k_perf: 'prestaties',
-    meta: 'Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis',
+    meta: 'Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis · bevat harde schrikmomenten',
     loading: 'Het huis wordt opgebouwd…', loading_sound: 'Geluiden worden gemaakt…',
     touch_note: 'Op een telefoon werkt het met het schermpje; met toetsenbord en muis is het beter.',
     webgl: 'Dit spel heeft WebGL nodig. Probeer een andere browser of zet hardwareversnelling aan.',
@@ -531,6 +531,8 @@ const STR = {
     cal_month: 'MAART', box_mama: 'MAMA', box_xmas: 'KERST',
     t_cantLook: 'Ik kan mezelf niet aankijken.', k_tapskip: 'Tik om over te slaan', k_twalk: 'duim links: lopen (ver duwen = rennen)', k_tlook: 'rechts slepen: kijken', k_tilt: 'of kantel je telefoon', gyro: 'Kijken door te kantelen', gyro_sens: 'Kantelgevoeligheid', perf_on_plain: 'Aan', rotate: 'Draai je telefoon voor het beste beeld',
     intro_date: '27 maart', k_space: 'Spatie', k_skip: 'overslaan', t_again2: 'Weer.', t_knock1: 'Er klopt iemand.', t_knock2: 'Om 3:33?', t_hello: 'Hallo?',
+    t_caught1: 'Weer in bed. Het had me.', t_caught2: 'Niet weer…', t_caught3: 'Ik word steeds hier wakker.',
+    t_lookAtIt: 'Als ik het aankijk, valt het uit elkaar.', t_behindMe: 'Er loopt iemand achter me.', t_rightBehind: 'Vlak achter me…', t_dontOpen: 'Niet opendoen.',
     t_sleepNow: '„Slaap maar, lieverd.”', t_flashDead: 'Kom op…',
     wall_tally: 'IIII IIII IIII IIII IIII II',
     wall_l0: ['3:33', 'nacht 41', 'niet omkijken'], wall_l1: ['hij let op', 'kijk hem aan', 'dan gaat hij weg'], wall_l2: ['hij gaat niet meer weg', 'hij is niet eng', 'hij let alleen op'],
@@ -540,7 +542,7 @@ const STR = {
     lede: "You wake up in your own house. It's 3:33. Everything is where it belongs. Almost everything.",
     btn_begin: 'Begin', btn_continue: 'Continue from last checkpoint',
     k_walk: 'walk', k_mouse: 'Mouse', k_look: 'look', k_use: 'use', k_flash: 'flashlight', k_run: 'faster', k_menu: 'menu', k_perf: 'performance',
-    meta: 'Headphones recommended · about 15 minutes · keyboard and mouse',
+    meta: 'Headphones recommended · about 15 minutes · keyboard and mouse · contains loud jump scares',
     loading: 'Building the house…', loading_sound: 'Making the sounds…',
     touch_note: 'On a phone it works with on-screen controls; keyboard and mouse is better.',
     webgl: 'This game needs WebGL. Try another browser or turn on hardware acceleration.',
@@ -614,6 +616,8 @@ const STR = {
     cal_month: 'MARCH', box_mama: 'MOM', box_xmas: 'CHRISTMAS',
     t_cantLook: "I can't look myself in the eye.", k_tapskip: 'Tap to skip', k_twalk: 'left thumb: walk (push far to run)', k_tlook: 'drag right: look', k_tilt: 'or tilt your phone', gyro: 'Look by tilting', gyro_sens: 'Tilt sensitivity', perf_on_plain: 'On', rotate: 'Turn your phone sideways for the best view',
     intro_date: '27 March', k_space: 'Space', k_skip: 'skip', t_again2: 'Again.', t_knock1: "Someone's knocking.", t_knock2: 'At 3:33?', t_hello: 'Hello?',
+    t_caught1: 'Back in bed. It had me.', t_caught2: 'Not again…', t_caught3: 'I keep waking up here.',
+    t_lookAtIt: 'If I look at it, it comes apart.', t_behindMe: 'Someone is walking behind me.', t_rightBehind: 'Right behind me…', t_dontOpen: "Don't open it.",
     t_sleepNow: '"Go to sleep, sweetheart."', t_flashDead: 'Come on…',
     wall_tally: 'IIII IIII IIII IIII IIII II',
     wall_l0: ['3:33', 'night 41', "don't look back"], wall_l1: ['he watches', 'look at him', 'then he goes away'], wall_l2: ["he doesn't go away anymore", "he isn't scary", "he's only keeping watch"],
@@ -1375,7 +1379,7 @@ class RoomLight {
     this.name = name; LIGHTS.push(this); LN[name] = this;
     this.pos = o.pos.clone(); this.color = lin(o.color || '#ffd9a8'); this.intensity = o.i ?? 3.5; this.radius = o.r ?? 7;
     this.box = o.box; this.box2 = o.box2 || null;
-    this.on = o.on ?? 1; this.sw = 1; this.dim = 1; this.flick = null; this.fk = 1; this.eff = 0; this._d = 0;
+    this.on = o.on ?? 1; this.sw = 1; this.dim = 1; this.kill = 1; this.flick = null; this.fk = 1; this.eff = 0; this._d = 0;
     this.fixtures = []; this.fixColor = lin(o.fix || '#ffe2b0'); this.fixK = o.fixK ?? 2.2; this._fk = -1;
   }
   setFlicker(mode) { this.flick = mode ? { mode, t: 0, next: rand(0.5, 2), burst: 0, bt: 0 } : null; this.fk = 1; }
@@ -1400,7 +1404,7 @@ class RoomLight {
     }
     const prev = this.fk; this.fk = f;
     if (prev > 0.5 && f < 0.5 && this.flick && typeof Sound !== 'undefined') Sound.flickerTick(this);
-    this.eff = this.intensity * this.on * this.sw * this.dim * f;
+    this.eff = this.intensity * this.on * this.sw * this.dim * this.kill * f;
     const k = this.intensity > 0 ? this.eff / this.intensity : 0;
     if (Math.abs(k - this._fk) > 0.004) { this._fk = k; for (const fx of this.fixtures) fx.material.uniforms.uEmissive.value.copy(this.fixColor).multiplyScalar(this.fixK * k); }
   }
@@ -1615,7 +1619,7 @@ function canSee(p, r = 0.35) { return inFrustum(p, r) && losClear(camera.positio
 
 /* ---------- post ---------- */
 const POST_FS = `
-uniform sampler2D tScene; uniform vec2 uRes; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma, uPulse, uFear;
+uniform sampler2D tScene, tScare; uniform vec2 uRes, uScareOff; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma, uPulse, uFear, uScare, uScareZ, uScareDim;
 varying vec2 vUv;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y)*p3.z); }
 void main(){
@@ -1630,6 +1634,21 @@ void main(){
   float ca = (uChroma*0.004 + uWarp*0.012 + uPulse*0.012) * dot(d,d) * 4.0;
   vec3 c;
   c.r = texture2D(tScene, uv + d*ca).r; c.g = texture2D(tScene, uv).g; c.b = texture2D(tScene, uv - d*ca).b;
+  // the face, far too close: torn lines, colour fringes, the room gone dark around it
+  if(uScare > 0.001){
+    vec2 p = (vUv - 0.5 - uScareOff) * vec2(uRes.x/uRes.y, 1.0) / uScareZ;
+    vec2 fuv = vec2(p.x / 0.8 + 0.5, p.y + 0.5);
+    float ln = floor(fuv.y * 70.0), tt = floor(uTime * 26.0);
+    fuv.x += (h12(vec2(ln, tt)) - 0.5) * 0.05 * uScare * step(0.78, h12(vec2(ln * 1.7 + 3.0, tt)));
+    fuv += vec2(sin(fuv.y * 23.0 + uTime * 40.0), cos(fuv.x * 19.0 - uTime * 37.0)) * 0.004 * uScare;
+    float cs = 0.008 * uScare;
+    vec4 fg = texture2D(tScare, fuv);
+    vec3 fc = vec3(texture2D(tScare, fuv + vec2(cs, 0.0)).r, fg.g, texture2D(tScare, fuv - vec2(cs, 0.0)).b);
+    float fa = fg.a * step(0.0, fuv.x) * step(fuv.x, 1.0) * step(0.0, fuv.y) * step(fuv.y, 1.0);
+    fc *= vec3(0.9, 0.95, 0.9) * (0.5 + 0.62 * (1.0 - fuv.y));
+    c *= 1.0 - uScareDim * min(1.0, uScare * 1.4);
+    c = mix(c, fc, fa * min(1.0, uScare));
+  }
   float l = dot(c, vec3(0.299, 0.587, 0.114));
   c = mix(c, vec3(l), uDesat);
   vec2 q = d*vec2(uRes.x/uRes.y, 1.0);
@@ -1705,7 +1724,7 @@ function initRenderer() {
   nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.magFilter = THREE.LinearFilter; nt.minFilter = THREE.LinearMipmapLinearFilter; nt.generateMipmaps = true; nt.needsUpdate = true;
   SU.uNoiseTex.value = nt;
   postMat = new THREE.ShaderMaterial({
-    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 } },
+    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 }, tScare: { value: null }, uScare: { value: 0 }, uScareZ: { value: 1 }, uScareDim: { value: 0.9 }, uScareOff: { value: new THREE.Vector2() } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: POST_FS, depthTest: false, depthWrite: false,
   });
@@ -1944,7 +1963,7 @@ class Door {
   use() {
     if (this.onUse && this.onUse() === true) return;
     if (this.locked) { Sound.play('rattle', this.pos, { gain: 0.9 }); this.shake = 0.35; return; }
-    if (this.target) this.close(); else this.open();
+    if (this.target) { this.close(); if (typeof Scare !== 'undefined') Scare.onDoorClosed(this); } else this.open();
   }
   open(speed = 2.2, sound = 'open') {
     this.target = this.openSign * this.maxAng; this.speed = speed;
@@ -4317,6 +4336,43 @@ const Sound = {
         d[i] = v * (u > 0.98 ? (1 - u) * 50 : 1);
       }
     });
+    // the scream in your face: a torn falsetto and a second voice a tritone under it, through the
+    // formants of an open mouth, rough and breaking, with air rushing through; driven into distortion
+    B.shriek = this.buf(1.9, (d, sr, n) => {
+      const FA = [[1050, 4], [1600, 5], [3000, 6], [4100, 7]], FB = [[800, 4], [1250, 5], [2600, 6]];
+      const fa = FA.map(([f, q]) => new BQ('bp', f, q, sr)), fb = FB.map(([f, q]) => new BQ('bp', f, q, sr));
+      const air = new BQ('bp', 3200, 1.2, sr), rasp = new BQ('bp', 1500, 2, sr), sub = new BQ('lp', 160, 0.8, sr);
+      let pa = 0, pb = 0, pc = 0, ps = 0, jit = 0, rough = 1, rt = 0;
+      for (let i = 0; i < n; i++) {
+        const t = i / sr, u = t / 1.9;
+        const env = Math.min(1, t / 0.008) * (t < 1.0 ? 1 - 0.15 * t : 0.85 * Math.exp(-(t - 1.0) * 5));
+        jit = jit * 0.9995 + wn() * 0.0008;
+        const vib = 1 + 0.03 * Math.sin(TAU * 6.8 * t + Math.sin(TAU * 1.3 * t) * 2) + jit;
+        const fA = (980 - 330 * u + 140 * Math.exp(-t * 9)) * vib, fB = fA * 0.708 * (1 + 0.01 * Math.sin(TAU * 3.1 * t));
+        pa = (pa + fA / sr) % 1; pb = (pb + fB / sr) % 1; pc = (pc + fA * 0.5 / sr) % 1; ps = (ps + fA * 2.01 / sr) % 1;
+        if (--rt <= 0) { rt = (sr / (30 + Math.random() * 40)) | 0; rough = 0.8 + Math.random() * 0.35; }   // the voice breaking up
+        const sa = (pa * 2 - 1) * rough + (pc < 0.5 ? 0.18 : -0.18), sb = pb * 2 - 1;
+        if (i % 64 === 0) { const m = 1 + 0.1 * Math.sin(TAU * 2.2 * t); fa[0].set(1050 * m, 4); fa[1].set(1600 * m, 5); fb[0].set(800 / m, 4); }
+        let v = 0; for (let k = 0; k < fa.length; k++) v += fa[k].p(sa) * (k >= 2 ? 0.7 : 1);
+        let w = 0; for (const f of fb) w += f.p(sb);
+        const nz = wn();
+        v = v + w * 0.5 + air.p(nz) * 0.35 + rasp.p(nz) * 0.22 * rough + Math.sin(TAU * ps) * 0.12;
+        v = Math.tanh(v * 1.8);
+        v += sub.p(wn()) * 2.0 * Math.exp(-t * 7) + Math.sin(TAU * (70 - 30 * Math.min(1, t * 3)) * t) * 0.55 * Math.exp(-t * 5);
+        d[i] = v * env;
+      }
+    });
+    // a fist on the other side of a door: the thump of the leaf, the latch rattling in its keep
+    B.bang = this.buf(0.8, (d, sr, n) => {
+      const lp = new BQ('lp', 200, 0.8, sr), bp = new BQ('bp', 750, 1.4, sr), hi = new BQ('bp', 3100, 4, sr);
+      const rat = [0.018, 0.05, 0.09, 0.14];
+      for (let i = 0; i < n; i++) {
+        const t = i / sr;
+        let v = Math.sin(TAU * (58 + 50 * Math.exp(-t * 35)) * t) * Math.exp(-t * 8) * 1.3 + lp.p(wn()) * Math.exp(-t * 20) * 1.6 + bp.p(wn()) * Math.exp(-t * 55) * 0.8;
+        let e = 0; for (const a of rat) if (t > a) e += Math.exp(-(t - a) * 110);
+        d[i] = v + hi.p(wn()) * e * 0.35;
+      }
+    });
     B.drip = this.buf(0.3, (d, sr, n) => { let ph = 0; for (let i = 0; i < n; i++) { const t = i / sr; const f = t < 0.03 ? lerp(1700, 700, t / 0.03) : 700; ph += f / sr; d[i] = Math.sin(TAU * ph) * Math.exp(-t * 24); } });
     B.clank = this.buf(1.8, (d, sr, n) => { const P = [[233, 0.5, 3], [587, 0.35, 4], [1123, 0.3, 6], [1811, 0.2, 8], [2690, 0.12, 12]]; const bp = new BQ('bp', 1500, 1, sr); for (let i = 0; i < n; i++) { const t = i / sr; let v = bp.p(wn()) * Math.exp(-t * 120) * 0.6; for (const [f, a, k] of P) v += Math.sin(TAU * f * (1 + 0.002 * Math.sin(t * 20)) * t) * a * Math.exp(-t * k); d[i] = v; } });
     B.puff = this.buf(0.25, (d, sr, n) => { const bp = new BQ('bp', 700, 1.1, sr), lp = new BQ('lp', 300, 0.7, sr); for (let i = 0; i < n; i++) { const t = i / sr, e = Math.min(1, t / 0.015) * Math.exp(-t * 16); d[i] = (bp.p(wn()) * 0.9 + lp.p(wn()) * 0.5) * e; } });
@@ -5108,6 +5164,7 @@ const Ent = {
       Sound.tinnitus(0.5, 0.05); after(1.2, () => Sound.tinnitus(0, 0.8));
       const l = nearestLight(r); if (l && l.lit && !l.flick) { l.setFlicker('unstable'); after(1.2, () => { if (l.flick && l.flick.mode === 'unstable' && !l.keepFlicker) l.setFlicker(null); }); }
       Flash.stutter(0.5, 0.85); Fear.kick(1);
+      Jump.pin(H.head, 0.5, 0.85);   // for a moment the smudge is a face
     } else Sound.play('creaks', V3(r.x, r.y + 0.2, r.z), { gain: 0.4, rate: 0.7, hrtf: true });
   },
   /* the pale smudge of a face: only as bright as the light on it, and only from the front */
@@ -5160,7 +5217,11 @@ const Ent = {
     // idle: very still, breathing, the head tilted too far
     let hy = this.pose.headYaw ?? Math.sin(this.t * 0.4) * 0.05;
     if (this.snapT > 0) { const k = Math.min(1, this.snapT / 0.1); hy = lerp(hy, this.snapYaw, k * k); }
-    poseHuman(H, Object.assign({ walk: 0, amp: 0, lean: Math.sin(this.t * 0.5) * 0.02 + (this.pose.lean || 0), armsOut: true }, this.pose, { headYaw: hy, hunch: (this.pose.hunch || 0) + Math.sin(this.t * 1.1) * 0.015 }));
+    // now and then the head jerks aside, too fast, like a frame missing from a film
+    this.twT = (this.twT ?? 1.5) - dt;
+    if (this.twT <= 0) { this.twA = rand(0.35, 0.75) * (Math.random() < 0.5 ? -1 : 1); this.twK = rand(0.06, 0.13); this.twT = rand(1.4, 4.2); }
+    let tw = 0; if (this.twK > 0 && this.snapT === 0) { this.twK -= dt; tw = this.twA; }
+    poseHuman(H, Object.assign({ walk: 0, amp: 0, lean: Math.sin(this.t * 0.5) * 0.02 + (this.pose.lean || 0), armsOut: true }, this.pose, { headYaw: hy + tw * 0.35, roll: (this.pose.roll || 0) + tw, hunch: (this.pose.hunch || 0) + Math.sin(this.t * 1.1) * 0.015 }));
     if (this.snapT > 0) { this.snapT += dt; if (this.snapT > (d.stinger ? 0.55 : 0.4)) this.hide('look'); return; }
     if (d.update && d.update(dt, this) === false) return;
     if (!this.def) return;
@@ -5169,11 +5230,11 @@ const Ent = {
     const dist = chest.distanceTo(camera.position);
     if (d.mirrorOnly) { if (this.t > (d.timeout ?? 1.8)) this.hide('time'); return; }
     const vis = canSee(chest, 0.5);
-    Sound.presence(vis ? 1 : 0);
+    Sound.presence(vis ? 1 : d.presence ? d.presence() : 0);
     if (vis) {
       this.seen = true; this.gone = 0;
-      const thr = Math.max(7.5 * DEG, Math.atan2(0.38, dist));
-      if (viewAngleTo(chest) < thr) {
+      const thr = Math.max(7.5 * DEG, Math.atan2(0.42, dist));
+      if (Math.min(viewAngleTo(chest), viewAngleTo(_ev2.set(chest.x, chest.y + 0.55, chest.z))) < thr) {
         this.lookT += dt;
         if (this.lookT > (d.lookDelay ?? 0.06)) { if (d.snap && this.fade > 0.5) { this.startSnap(d); return; } this.hide('look'); return; }
       } else this.lookT = 0;
@@ -5366,7 +5427,7 @@ const Dir = {
     return false;
   },
 };
-const _ev = new THREE.Vector3(), _gz1 = new THREE.Vector3(), _gz2 = new THREE.Vector3(), _gz3 = new THREE.Vector3(), _gz4 = new THREE.Vector3();
+const _ev = new THREE.Vector3(), _ev2 = new THREE.Vector3(), _gz1 = new THREE.Vector3(), _gz2 = new THREE.Vector3(), _gz3 = new THREE.Vector3(), _gz4 = new THREE.Vector3();
 function nearestLight(p) { let b = null, bd = 1e9; for (const l of LIGHTS) { const d = l.pos.distanceTo(p); if (d < bd && l.intensity > 0) { bd = d; b = l; } } return bd < 6 ? b : null; }
 function faceYaw(from, to) { return Math.atan2(to.x - from.x, to.z - from.z); }
 
@@ -5413,6 +5474,7 @@ const Story = {
     W.studyStrip.visible = false;
     Ent.init();
     Lore.init();
+    Scare.init();
     DOORS.front.onUse = () => { this.frontDoor(); return true; };
     DOORS.basement.onUse = () => { if (!DOORS.basement.exists) return true; return false; };
     LN.kitchen.onSwitch = () => { F.kitchenSwitched = true; };
@@ -5596,7 +5658,7 @@ const Story = {
     Player.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
     Player.flashOn = stage === 'descent'; Player.flashK = Player.flashOn ? 1 : 0;
     this.ambNext = G.t + rand(12, 20); this.chgNext = G.t + rand(18, 30); this.spawnNext = G.t + 8;
-    Dir.reset(); Flash.reset(); Fear.reset();
+    Dir.reset(); Flash.reset(); Fear.reset(); Scare.reset(stage);
     postMat.uniforms.uFade.value = 1; postMat.uniforms.uWhite.value = 0; postMat.uniforms.uWarp.value = 0;
     UI.clearThoughts();
     this.fadeIn(stage === 'intro' || stage === 'morning' ? 3.5 : 1.2);
@@ -5630,6 +5692,7 @@ const Story = {
     if (si >= SI('p2') && si <= SI('descent')) this.updateSpawns();
     this.updateAmbient(dt);
     const fn = this['u_' + this.stage]; if (fn) fn.call(this, dt);
+    Scare.update(dt);
     this.prevX = Player.pos.x; this.prevZ = Player.pos.z;
   },
 
@@ -6700,6 +6763,500 @@ function wallWriting(c, text, seed, heavy) {
   for (let i = 0; i < (heavy ? 14 : 6); i++) { const x = 30 + r() * (w - 60), y = 20 + r() * (h - 40); g.beginPath(); g.moveTo(x, y); g.lineTo(x + (r() - 0.5) * 60, y + (r() - 0.5) * 16); g.stroke(); }
   g.globalAlpha = 1;
 }
+
+/* ---- 08d_scare.js ---- */
+/* ============================================================
+   Scares: the face up close, the one that comes up behind you,
+   and the small cruelties in between
+   ============================================================ */
+
+/* ---------- the face, seen from far too close ----------
+   Pale and hollow like the smudge you glimpse in the dark, but now
+   there is no mistaking it: sockets with a pinprick of light deep
+   inside, no nose, a jaw that has come loose and hangs open far past
+   where a chin should be. Drawn once, on a canvas. */
+function screamFaceCanvas() {
+  const W = 512, H = 640, c = mkCanvas(W, H), g = c.getContext('2d'), r = seeded(1313);
+  const blob = (x, y, rx, ry, col, rot = 0) => {
+    g.save(); g.translate(x, y); g.rotate(rot); g.scale(rx, ry);
+    const q = g.createRadialGradient(0, 0, 0, 0, 0, 1); q.addColorStop(0, col); q.addColorStop(1, col.replace(/[\d.]+\)$/, '0)'));
+    g.fillStyle = q; g.beginPath(); g.arc(0, 0, 1, 0, TAU); g.fill(); g.restore();
+  };
+  // the head: a wide skull, hollow cheeks, and below them a jaw drawn out long and narrow
+  const headPath = (k) => {
+    g.beginPath(); g.moveTo(256, 34 - k);
+    g.bezierCurveTo(372 + k, 34 - k, 432 + k, 150, 424 + k, 262);
+    g.bezierCurveTo(418 + k, 340, 392 + k, 392, 360 + k, 452);
+    g.bezierCurveTo(338 + k, 520, 322 + k, 600, 262, 646 + k);
+    g.bezierCurveTo(200, 600, 174 - k, 520, 152 - k, 452);
+    g.bezierCurveTo(120 - k, 392, 94 - k, 340, 88 - k, 262);
+    g.bezierCurveTo(80 - k, 150, 140 - k, 34 - k, 256, 34 - k);
+  };
+  let q = g.createRadialGradient(256, 250, 10, 256, 320, 330); q.addColorStop(0, 'rgb(210,207,194)'); q.addColorStop(0.5, 'rgb(164,160,146)'); q.addColorStop(1, 'rgb(60,58,52)');
+  g.fillStyle = q; headPath(0); g.fill();
+  g.save(); headPath(0); g.clip();
+  // mottled: old bruises and grey-green under the skin
+  for (let i = 0; i < 70; i++) blob(100 + r() * 312, 60 + r() * 540, 10 + r() * 34, 10 + r() * 34, r() < 0.3 ? `rgba(70,50,70,${0.05 + r() * 0.08})` : `rgba(60,70,55,${0.05 + r() * 0.1})`);
+  for (let i = 0; i < 40; i++) blob(100 + r() * 312, 60 + r() * 500, 8 + r() * 20, 8 + r() * 20, `rgba(235,232,220,${0.04 + r() * 0.07})`);
+  // bone under thin skin: sunken temples and cheeks, a brow and cheekbones that catch the light
+  blob(104, 214, 62, 96, 'rgba(18,16,14,0.6)'); blob(408, 214, 62, 96, 'rgba(18,16,14,0.6)');
+  blob(150, 372, 58, 86, 'rgba(22,19,17,0.55)', 0.2); blob(362, 372, 58, 86, 'rgba(22,19,17,0.55)', -0.2);
+  blob(256, 150, 128, 52, 'rgba(236,233,222,0.32)'); blob(162, 306, 54, 22, 'rgba(232,228,216,0.3)', -0.2); blob(350, 306, 54, 22, 'rgba(232,228,216,0.3)', 0.2);
+  blob(256, 60, 150, 70, 'rgba(30,28,25,0.35)');
+  // veins: thin, dark, branching, as if the skin were paper
+  const crack = (x, y, a, len, w, depth) => {
+    g.strokeStyle = `rgba(28,20,22,${0.35 + 0.25 * r()})`; g.lineWidth = w; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(x, y);
+    for (let i = 0; i < len; i++) { a += (r() - 0.5) * 0.7; x += Math.cos(a) * 5; y += Math.sin(a) * 5; g.lineTo(x, y); if (depth > 0 && r() < 0.08) { g.stroke(); crack(x, y, a + (r() < 0.5 ? -0.8 : 0.8), len * 0.5, w * 0.7, depth - 1); g.beginPath(); g.moveTo(x, y); } }
+    g.stroke();
+  };
+  for (let i = 0; i < 5; i++) crack(150 + r() * 40, 200 + r() * 20, Math.PI + 0.6 + r() * 0.9, 14 + r() * 10, 1.4, 2);
+  for (let i = 0; i < 5; i++) crack(342 + r() * 40, 210 + r() * 20, -0.4 - r() * 0.9 + (r() < 0.5 ? 0 : Math.PI / 2), 14 + r() * 10, 1.4, 2);
+  for (let i = 0; i < 4; i++) crack(256 + (r() - 0.5) * 80, 110 + r() * 30, -Math.PI / 2 + (r() - 0.5) * 1.2, 10 + r() * 8, 1.2, 1);
+  // the eyes: too big, not level, black all the way in
+  const socket = (x, y, rx, ry, rot) => {
+    g.save(); g.translate(x, y); g.rotate(rot); g.scale(rx, ry);
+    const s = g.createRadialGradient(0, 0.05, 0, 0, 0, 1); s.addColorStop(0, 'rgba(0,0,0,1)'); s.addColorStop(0.62, 'rgba(2,1,1,0.97)'); s.addColorStop(0.85, 'rgba(20,14,12,0.6)'); s.addColorStop(1, 'rgba(40,30,26,0)');
+    g.fillStyle = s; g.beginPath(); g.arc(0, 0, 1, 0, TAU); g.fill(); g.restore();
+  };
+  socket(180, 236, 58, 70, -0.18); socket(334, 246, 62, 74, 0.14);
+  // what runs out of them
+  for (const [x0, y0, n] of [[176, 296, 3], [338, 312, 4]]) {
+    for (let k = 0; k < n; k++) {
+      const x = x0 + (r() - 0.5) * 46, y = y0 - 10, w = 3 + r() * 5, len = 40 + r() * (k ? 120 : 200), ph = r() * 6;
+      const pts = [];
+      for (let t = 0; t <= 1.001; t += 0.05) pts.push([x + Math.sin(t * 7 + ph) * 4 * t + t * t * (r() - 0.5) * 6, y + len * t, w * (1 - t * 0.6) * (0.8 + 0.4 * Math.sin(t * 13 + ph))]);
+      g.fillStyle = `rgba(10,5,5,${0.62 + r() * 0.3})`; g.beginPath(); g.moveTo(pts[0][0] - pts[0][2] / 2, pts[0][1]);
+      for (const p of pts) g.lineTo(p[0] - p[2] / 2, p[1]);
+      for (let i = pts.length - 1; i >= 0; i--) g.lineTo(pts[i][0] + pts[i][2] / 2, pts[i][1]);
+      g.closePath(); g.fill();
+      const e = pts[pts.length - 1]; blob(e[0], e[1] + 2, w * 0.7, w * 0.95, 'rgba(10,5,5,0.85)');
+    }
+  }
+  // a pinprick of light in each, both of them on you
+  for (const [x, y] of [[186, 244], [328, 254]]) { blob(x, y, 11, 11, 'rgba(255,250,235,0.55)'); g.fillStyle = '#fffaf0'; g.beginPath(); g.arc(x, y, 3.2, 0, TAU); g.fill(); }
+  // no nose: two slits
+  g.fillStyle = 'rgba(6,3,3,0.95)';
+  for (const [x, rot] of [[244, 0.35], [268, -0.35]]) { g.save(); g.translate(x, 336); g.rotate(rot); g.beginPath(); g.ellipse(0, 0, 5, 17, 0, 0, TAU); g.fill(); g.restore(); }
+  blob(256, 318, 16, 40, 'rgba(30,24,22,0.4)');
+  // the mouth: the jaw has come loose and hangs open, far below where the chin was
+  const mouth = (grow, col) => {
+    g.fillStyle = col; g.beginPath();
+    g.moveTo(204 - grow, 398);
+    g.bezierCurveTo(222, 384 - grow, 290, 384 - grow, 308 + grow, 398);
+    g.bezierCurveTo(330 + grow, 470, 312 + grow, 580, 262, 632 + grow);
+    g.bezierCurveTo(244, 640 + grow, 206 - grow, 590, 190 - grow, 480);
+    g.bezierCurveTo(186 - grow, 440, 192 - grow, 410, 204 - grow, 398);
+    g.fill();
+  };
+  mouth(16, 'rgba(34,18,16,0.7)'); mouth(7, 'rgba(38,10,10,0.95)'); mouth(1, 'rgba(10,2,2,1)'); mouth(-12, 'rgba(0,0,0,1)');
+  // teeth: a ragged row hanging from the top lip, some broken, some gone; a few left in the jaw far below
+  for (let x = 208; x < 302;) {
+    const w = 4 + r() * 7, top = 392 + Math.pow((x - 256) / 50, 2) * 7, gone = r() < 0.18, len = gone ? 0 : (r() < 0.25 ? 5 + r() * 6 : 12 + r() * 22);
+    if (len) {
+      const y = 170 + r() * 40 | 0; g.fillStyle = `rgb(${y + 20},${y + 10},${y - 22})`;
+      g.beginPath(); g.moveTo(x, top); g.lineTo(x + w, top); g.lineTo(x + w * (0.4 + r() * 0.4) + (r() - 0.5) * 4, top + len); g.lineTo(x + w * 0.2, top + len * 0.7); g.closePath(); g.fill();
+      g.fillStyle = 'rgba(60,40,20,0.35)'; g.fillRect(x, top, w, 2.5);
+    }
+    x += w + 1 + r() * 4;
+  }
+  for (let x = 228; x < 292; x += 8 + r() * 10) { const len = 6 + r() * 14, top = 606 - Math.pow((x - 262) / 30, 2) * 18; g.fillStyle = `rgba(160,148,118,${0.6 + r() * 0.3})`; g.beginPath(); g.moveTo(x, top); g.lineTo(x + 4 + r() * 3, top); g.lineTo(x + 2.5, top - len); g.closePath(); g.fill(); }
+  // skin stretched thin down both sides of the open jaw
+  g.strokeStyle = 'rgba(24,16,14,0.55)'; g.lineWidth = 3.5;
+  for (const s of [-1, 1]) { g.beginPath(); g.moveTo(256 + s * 58, 402); g.bezierCurveTo(256 + s * 92, 470, 256 + s * 96, 540, 256 + s * 70, 610); g.stroke(); g.lineWidth = 2; g.beginPath(); g.moveTo(256 + s * 66, 420); g.bezierCurveTo(256 + s * 110, 470, 256 + s * 118, 520, 256 + s * 104, 580); g.stroke(); g.lineWidth = 3.5; }
+  g.restore();
+  // hair: long wet clumps from a parting in the crown, down the sides and across one eye
+  const clumps = [];
+  for (let i = 0; i < 16; i++) { const side = i < 8 ? -1 : 1, k = (i % 8) / 7; clumps.push({ x: 256 + side * (18 + k * 150), side, len: 120 + k * 380 + r() * 90, sway: side * (10 + k * 40) + (r() - 0.5) * 24, n: 6 + (r() * 8 | 0) }); }
+  clumps.push({ x: 300, side: 1, len: 330, sway: -95, n: 16 });   // the one across the left eye
+  clumps.push({ x: 330, side: 1, len: 260, sway: -60, n: 10 });
+  for (const cl of clumps) {
+    for (let j = 0; j < cl.n; j++) {
+      const x0 = cl.x + (r() - 0.5) * 22, y0 = 26 + Math.abs(x0 - 256) * 0.28 + r() * 12, len = cl.len * (0.75 + r() * 0.35), sw = cl.sway + (r() - 0.5) * 18;
+      g.strokeStyle = `rgba(${4 + r() * 10 | 0},${4 + r() * 7 | 0},${4 + r() * 7 | 0},${0.3 + r() * 0.55})`; g.lineWidth = 0.7 + r() * 2.2;
+      g.beginPath(); g.moveTo(x0, y0);
+      g.bezierCurveTo(x0 + cl.side * 22, y0 + len * 0.25, x0 + sw * 0.8 + (r() - 0.5) * 10, y0 + len * 0.6, x0 + sw + (r() - 0.5) * 14, y0 + len);
+      g.stroke();
+    }
+  }
+  blob(256, 40, 170, 60, 'rgba(8,6,6,0.9)');
+  // a little ghosting, so it never quite holds still on the paper
+  const src = mkCanvas(W, H); src.getContext('2d').drawImage(c, 0, 0);
+  for (let i = 0; i < 6; i++) { g.globalAlpha = 0.06; g.drawImage(src, (i - 2.5) * 3, Math.sin(i * 2.1) * 2); }
+  g.globalAlpha = 1;
+  grain(g, W, H, 30, 1717);
+  // not quite straight: the whole face is pulled a little out of true
+  { const im = g.getImageData(0, 0, W, H), sd = new Uint8ClampedArray(im.data), dd = im.data;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const sx = Math.round(x + Math.sin(y * 0.021 + 1.3) * 7 + Math.sin(y * 0.07) * 1.5), sy = Math.round(y + Math.sin(x * 0.017 + 0.4) * 5);
+      const o = (y * W + x) * 4; if (sx < 0 || sy < 0 || sx >= W || sy >= H) { dd[o + 3] = 0; continue; }
+      const i2 = (sy * W + sx) * 4; dd[o] = sd[i2]; dd[o + 1] = sd[i2 + 1]; dd[o + 2] = sd[i2 + 2]; dd[o + 3] = sd[i2 + 3];
+    }
+    g.putImageData(im, 0, 0); }
+  // fade into the dark at every edge
+  const img = g.getImageData(0, 0, W, H), d = img.data;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const dx = (x - 256) / 172, dy = (y - (y < 330 ? 300 : 330)) / (y < 330 ? 262 : 318), rr = Math.sqrt(dx * dx + dy * dy);
+    d[(y * W + x) * 4 + 3] *= clamp((1 - rr) / 0.28, 0, 1);
+  }
+  g.putImageData(img, 0, 0);
+  return c;
+}
+
+const _sc1 = new THREE.Vector3(), _sc2 = new THREE.Vector3();
+function lightCovers(l, p) { return l.eff > 0.5 && l.pos.distanceTo(p) < l.radius && (boxDist(l.box, p) === 0 || (l.box2 && boxDist(l.box2, p) === 0)); }
+function surfaceAt(p) { const r = roomOf(p.x, p.y + 1, p.z); return r === 'bathroom' || r === 'kitchen' ? 'tile' : r === 'deep' || r === 'basement' ? 'concrete' : r === 'stairs' ? 'stairs' : 'wood'; }
+
+/* ---------- the face, laid over the picture ----------
+   Either filling the view (when it has you), or pinned to its head for
+   a moment, so the smudge sharpens into a face as it turns to you. */
+const Jump = {
+  a: 0, t: 0, dur: 0, z0: 1, z1: 1, peak: 1, dim: 0.9, sub: 0, track: null,
+  init() { postMat.uniforms.tScare.value = toTex(screamFaceCanvas(), false); },
+  face(dur = 1, z0 = 0.95, z1 = 1.5, peak = 1) { this.track = null; this.t = 0; this.dur = dur; this.z0 = z0; this.z1 = z1; this.peak = peak; this.dim = 0.9; this.a = 1; },
+  /* follow a head in the world for a moment */
+  pin(obj, dur = 0.45, peak = 0.85) { this.track = obj; this.t = 0; this.dur = dur; this.peak = peak; this.dim = 0.35; this.a = 1; },
+  subliminal(k = 0.3) { if (this.a > 0) return; this.sub = 2; this.subK = k; this.subOff = [rand(-0.28, 0.28), rand(-0.12, 0.08)]; this.subZ = rand(0.75, 1.05); },
+  stop() { this.a = 0; this.sub = 0; this.track = null; if (postMat) postMat.uniforms.uScare.value = 0; },
+  update(dt) {
+    const u = postMat.uniforms;
+    if (this.a > 0) {
+      this.t += dt; const k = this.t / this.dur;
+      if (k >= 1) { this.stop(); return; }
+      const drop = Math.random() < 0.1 ? 0.3 : 1;   // a frame here and there where it drops out
+      if (this.track) {
+        const p = this.track.getWorldPosition(_sc1); p.y += 0.06;
+        const dist = p.distanceTo(camera.position), s = _sc2.copy(p).project(camera);
+        if (s.z > 1 || dist < 0.05) { u.uScare.value = 0; return; }
+        u.uScareOff.value.set(s.x * 0.5, s.y * 0.5);
+        u.uScareZ.value = 0.42 / (2 * dist * Math.tan(camera.fov * DEG * 0.5)) * (1 + k * 0.25);
+        u.uScare.value = this.peak * sstep(0, 0.12, k) * (1 - sstep(0.7, 1, k)) * drop;
+      } else {
+        u.uScare.value = this.peak * sstep(0, 0.04, k) * drop;
+        u.uScareZ.value = lerp(this.z0, this.z1, 1 - Math.pow(1 - k, 2.2));
+        u.uScareOff.value.set((Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.015 - 0.03);
+      }
+      u.uScareDim.value = this.dim;
+      return;
+    }
+    if (this.sub > 0) {
+      this.sub--;
+      u.uScare.value = this.sub ? this.subK : 0; u.uScareZ.value = this.subZ; u.uScareOff.value.set(this.subOff[0], this.subOff[1]); u.uScareDim.value = 0.5;
+    }
+  },
+};
+
+/* ---------- the one that comes up behind you ----------
+   It walks the path you walked, a few steps behind. You hear it: steps
+   that are not yours, closer each time, and at the end its breath. While
+   you cannot see it, it comes. At the edge of your view it comes in jerks.
+   Look at it, or put your light on it, and it comes apart. Let it reach
+   you and it has you, and you wake up in bed again. A closed door stops it
+   for as long as it takes to beat on it and let itself in. */
+const Hunt = {
+  next: 0, st: null,
+  level() { return { p2b: 0.65, p3: 1, descent: 1.25 }[Story.stage] || 0; },
+  reset(stage) { this.st = null; this.next = G.t + ({ p2b: 50, p3: 30, descent: 22 }[stage] ?? 40); },
+  update() {
+    const lv = this.level(); if (!lv || this.st) return;
+    if (G.t < this.next || Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 16) return;
+    if (Story.dbl || Scare.strobeBusy || Scare.front || Story.stage === 'descent' && Player.pos.x > 28.5) return;
+    this.next = G.t + 0.7;
+    this.start(lv);
+  },
+  /* the trail you left, from `dist` metres back up to where you are (no jumps in it) */
+  pathBack(dist) {
+    const trail = Dir.trail, P = Player; if (trail.length < 4) return null;
+    let acc = 0, px = P.pos.x, pz = P.pos.z;
+    for (let i = trail.length - 1; i >= 0; i--) {
+      const p = trail[i], d = Math.hypot(p.x - px, p.z - pz);
+      if (d > 1.3 || Math.abs(p.y - (i === trail.length - 1 ? P.pos.y : trail[i + 1].y)) > 1.2) return null;
+      acc += d; px = p.x; pz = p.z;
+      if (acc >= dist) return trail.slice(i).map((v) => v.clone());
+    }
+    return null;
+  },
+  start(lv) {
+    const P = Player;
+    for (const dd of [8.5, 7.2, 9.8]) {
+      const path = this.pathBack(dd); if (!path) continue;
+      const s = path[0], chest = V3(s.x, s.y + 1.25, s.z);
+      if (roomOf(s.x, s.y + 1, s.z) === 'outside' || canSee(chest, 0.6) || !Dir.free(s)) continue;
+      this.st = { path, i: 0, stepAcc: 0, jerkT: 0.4, breathT: 0.5, door: null, doorT: 0, bangs: 0, rattled: false, warned: false, speed: ((F.caughtN || F.huntSeen ? 1.0 : 0.85) + 0.3 * lv) * (isTouch ? 0.85 : 1), lastPt: Dir.trail[Dir.trail.length - 1], near: 0 };
+      Ent.spawn({ id: 'hunt', pos: s.clone(), yaw: faceYaw(s, P.pos), pose: { hunch: 0.32, roll: 0.42, pitch: 0.08 }, fadeIn: 0.5, eyesOn: true,
+        lookDelay: 0.1, minDist: 0.2, timeout: 45, unseenGrace: 999, snap: true, stinger: true, flashDelay: 0.3,
+        presence: () => (this.st ? this.st.near * 0.75 : 0), update: (dt, E) => this.step(dt, E), onHide: (why) => this.end(why) });
+      return true;
+    }
+    return false;
+  },
+  end(why) { const lv = this.level() || 1; this.st = null; this.next = G.t + rand(70, 115) / lv; if (why === 'look' || why === 'flash') F.huntSeen = true; },
+  doorBetween(a, b) {
+    for (const d of Object.values(DOORS)) {
+      if (!d.exists || d.isOpen || d.name === 'front') continue;
+      const c = d.pos, hw = d.w / 2 + 0.15;
+      if (d.axis === 'x') { const s0 = a.z - c.z, s1 = b.z - c.z; if (s0 * s1 > 0 || s0 === s1) continue; const x = a.x + (b.x - a.x) * (s0 / (s0 - s1)); if (Math.abs(x - c.x) < hw) return d; }
+      else { const s0 = a.x - c.x, s1 = b.x - c.x; if (s0 * s1 > 0 || s0 === s1) continue; const z = a.z + (b.z - a.z) * (s0 / (s0 - s1)); if (Math.abs(z - c.z) < hw) return d; }
+    }
+    return null;
+  },
+  step(dt, E) {
+    const st = this.st; if (!st) return;
+    const P = Player, r = E.H.root.position, cam = camera.position;
+    // the path grows with every step you take
+    const trail = Dir.trail, last = trail[trail.length - 1];
+    if (last && last !== st.lastPt) { let k = trail.indexOf(st.lastPt); if (k < 0) k = trail.length - 2; for (let j = k + 1; j < trail.length; j++) st.path.push(trail[j].clone()); st.lastPt = last; }
+    if (UI.overlay || ClockUI.active) return;   // not while you are reading something
+    const hd = Math.hypot(r.x - P.pos.x, r.z - P.pos.z); st.near = clamp(1 - (hd - 1) / 6.5, 0, 1);
+    if (hd < 0.8 && Math.abs(r.y - P.pos.y) < 1.2 && !Scare.busy) { Scare.caught(); return false; }
+    const chest = _sc1.set(r.x, r.y + 1.25, r.z), vis = canSee(chest, 0.45), va = viewAngleTo(chest);
+    if (!st.warned && hd < 6.8 && !vis) { st.warned = true; if (!F.huntWarned) { F.huntWarned = true; UI.thought(tr('t_behindMe'), 3); } }
+    E.H.root.rotation.y = faceYaw(r, P.pos);
+    // a door in the way: it beats on it, tries the handle, and lets itself in
+    if (st.door) {
+      const d = st.door; st.doorT += dt;
+      if (d.isOpen) { st.door = null; return; }
+      if (st.bangs < 4 && st.doorT > 0.25 + st.bangs * 0.5) {
+        st.bangs++; Sound.play('bang', V3(r.x, r.y + 1.2, r.z), { gain: 0.9 + st.bangs * 0.07, hrtf: true, pri: 2 }); d.shake = 0.3;
+        if (st.bangs === 1) { Fear.kick(0.85); Flash.stutter(0.4, 0.7); if (!F.huntDoor) { F.huntDoor = true; after(1.6, () => UI.thought(tr('t_dontOpen'), 2.6)); } }
+      }
+      if (st.doorT > 3.4 && !st.rattled) { st.rattled = true; Sound.play('rattle', d.pos, { gain: 0.6 }); d.shake = 0.45; }
+      if (st.doorT > 4.4) { d.open(0.9, 'slow'); st.door = null; st.rattled = false; st.bangs = 0; st.doorT = 0; }
+      return;
+    }
+    let mv = 0;
+    if (!vis) mv = st.speed * (hd < 2.8 ? 1.5 : 1) * dt;                   // unseen it walks, and the last metres it is quick
+    else if (va > 0.32 && hd > 2.2) {                                        // at the edge of your view: in jerks, like a film missing frames
+      st.jerkT -= dt;
+      if (st.jerkT <= 0) { st.jerkT = rand(0.4, 0.8); mv = rand(0.3, 0.5); Sound.play('creaks', V3(r.x, r.y + 0.1, r.z), { gain: 0.32, rate: 1.25, hrtf: true, pri: 2 }); }
+    }
+    if (mv > 0) {
+      const moved = this.advance(st, mv, E);
+      if (!vis) {
+        st.stepAcc += moved; E.pose.walk = (E.pose.walk || 0) + moved * 8; E.pose.amp = 0.55;
+        if (st.stepAcc > 0.64) { st.stepAcc = 0; const near = clamp(1 - hd / 9, 0, 1); Sound.step(surfaceAt(r), V3(r.x, r.y + 0.1, r.z), { gain: 0.28 + 0.5 * near, rate: 0.8, vary: 0.05, hrtf: true, pri: 2 }); }
+      }
+    } else E.pose.amp = 0;
+    // its breath, once it is close
+    if (hd < 3.6) { st.breathT -= dt; if (st.breathT <= 0) { st.breathT = rand(1.8, 2.6); Sound.play('exhale', V3(r.x, r.y + 1.7, r.z), { gain: 0.22 + 0.35 * (1 - hd / 3.6), ref: 0.6, rate: 0.78, hrtf: true, noOcc: true, pri: 2 }); } }
+  },
+  /* walk `mv` metres along the path; returns how far it got */
+  advance(st, mv, E) {
+    const r = E.H.root.position, P = Player; let done = 0, guard = 10;
+    while (mv > 1e-4 && guard-- > 0) {
+      const end = st.i + 1 >= st.path.length, tgt = end ? P.pos : st.path[st.i + 1];
+      const dx = tgt.x - r.x, dy = tgt.y - r.y, dz = tgt.z - r.z, d = Math.hypot(dx, dz);
+      if (d > 1.3) {
+        // you went through a loop, or a doorway that was not one: it follows the same way, where you cannot see
+        if (end || canSee(V3(tgt.x, tgt.y + 1.25, tgt.z), 0.6)) return done;
+        r.copy(tgt); st.i++; continue;
+      }
+      const dr = this.doorBetween(r, tgt); if (dr) { st.door = dr; st.doorT = 0; st.bangs = 0; return done; }
+      if (d <= mv) { r.set(tgt.x, tgt.y, tgt.z); mv -= d; done += d; if (end) return done; st.i++; }
+      else { const k = mv / d; r.x += dx * k; r.y += dy * k; r.z += dz * k; done += mv; mv = 0; }
+    }
+    return done;
+  },
+};
+
+/* ---------- the director of the worst moments ---------- */
+const Scare = {
+  off: false, busy: false, strobeBusy: false, front: null, clk: null, clkT: 0, strobeNext: 0, subNext: 0, doorNext: 0, dtNext: 0,
+  init() { Jump.init(); },
+  reset(stage) {
+    Jump.stop(); this.busy = false; this.strobeBusy = false; this.front = null; this.clk = null; this.clkT = 0;
+    for (const l of LIGHTS) l.kill = 1;
+    Hunt.reset(stage);
+    this.strobeNext = G.t + rand(25, 45); this.subNext = G.t + 40; this.doorNext = G.t + 20; this.dtNext = G.t + rand(50, 80);
+    Player.fovT = 72;
+  },
+  update(dt) {
+    Jump.update(dt);
+    const s = Story.stage, P = Player;
+    if (this.off || this.busy || G.stage === 'black') return;
+    if (s === 'p1') this.clockSteps(dt);
+    if (!['p2', 'p2b', 'p3', 'descent'].includes(s)) return;
+    if (this.front) this.frontStep(dt);
+    if (!P.enabled || ClockUI.active || UI.overlay) return;
+    Hunt.update();
+    const idle = !Ent.def && Ent.out <= 0 && !Hunt.st && !this.front && !this.strobeBusy;
+    // the lights go, and come back for a moment with it standing there
+    if (idle && !F['strobe_' + s] && G.t > this.strobeNext && Story.st > 15 && G.t - Ent.lastEnd > 12) { this.strobeNext = G.t + 1.2; if (this.strobe()) F['strobe_' + s] = true; }
+    // breath on your neck: look round, nothing; look back, it is there
+    if (idle && (s === 'p3' || s === 'descent') && !F['front_' + s] && G.t > this.dtNext && G.t - Ent.lastEnd > 18) { this.dtNext = G.t + 1.5; if (this.frontStart()) F['front_' + s] = true; }
+    // a face for a frame, when it is bad already
+    if ((s === 'p3' || s === 'descent') && Fear.level > 0.42 && G.t > this.subNext) { this.subNext = G.t + rand(22, 50); Jump.subliminal(rand(0.22, 0.38)); }
+  },
+
+  /* ---- it has you ---- */
+  caught() {
+    if (this.busy) return; this.busy = true;
+    const P = Player, E = Ent, H = E.H, cam = camera.position, r = H.root.position;
+    Hunt.st = null; this.front = null; UI.clearThoughts(); UI.prompt(null);
+    if (E.def) { E.def.update = () => false; E.def.persistent = true; E.def.onHide = null; E.def.forceFade = 1; }
+    // the view is whipped round to it, and it is right there, head to head
+    P.enabled = false; P.look = false; P.autoLook = null;
+    P.yaw = Math.atan2(-(r.x - cam.x), -(r.z - cam.z)); P.pitch = 0.04; P.applyCamera(0);
+    const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw);
+    r.set(P.pos.x + fx * 0.62, P.pos.y, P.pos.z + fz * 0.62); H.root.rotation.y = faceYaw(r, P.pos);
+    E.pose = Object.assign(E.pose, { hunch: 0.05, pitch: -0.25, roll: 0.55, headYaw: 0 }); E.snapT = 0;
+    poseHuman(H, E.pose); H.root.updateMatrixWorld(true);
+    const hp = H.head.getWorldPosition(_sc1); r.y += camera.position.y - hp.y - 0.08;
+    E.fade = 1; shadeMat().uniforms.uFade.value = 1; E.eyeOn = true;
+    Jump.face(1.05, 0.92, 1.6, 1);
+    Sound.duckTo(0.2, 0.02); Sound.muffle(0, 0.01);
+    Sound.play('shriek', null, { gain: 0.6, pure: true, direct: true, pri: 2 });
+    Sound.play('stinger', null, { gain: 0.32, pure: true, direct: true, pri: 2 });
+    Sound.play('thud', null, { gain: 0.7, pure: true, direct: true, pri: 2 });
+    P.shake = 1.1; P.fovT = 56; Fear.kick(1); Flash.stutter(1.1, 0.9);
+    Candles.gust(r, 5, 4);
+    after(1.05, () => {
+      Jump.stop(); H.root.visible = false; H.smoke.pts.visible = false; E.def = null; E.out = 0; E.lastEnd = G.t; Sound.presence(0);
+      postMat.uniforms.uFade.value = 1; Story.fade = null;
+      Sound.duckTo(0, 0.01); Sound.tinnitus(0.6, 0.05);
+      P.shake = 0; P.fovT = 72;
+    });
+    after(1.9, () => Sound.tinnitus(0, 1.4));
+    after(2.4, () => { Sound.play('heart', null, { gain: 0.32, lp: 300, pure: true, direct: true }); after(0.85, () => Sound.play('heart', null, { gain: 0.26, lp: 300, pure: true, direct: true })); });
+    after(3.9, () => this.respawn());
+  },
+  /* and you wake up in your bed again; the night carries on where it was */
+  respawn() {
+    const P = Player, st = Story.stage;
+    const sp = st === 'descent' ? [14.5, 0, 8.85, -Math.PI / 2, -0.15, false] : [3.3, 0, 1.35, -0.36, -0.22, true];
+    const flash = P.flashOn;
+    P.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
+    P.flashOn = flash || st === 'descent'; P.flashK = P.flashOn ? 1 : 0; P.fovT = 72;
+    Dir.reset(); Flash.reset(); Fear.reset(); Fear.kick(0.55);
+    Story.fadeIn(3); Sound.duckTo(1, 1.2); Sound.muffle(0.55, 0.01); after(0.3, () => Sound.muffle(0, 2.5));
+    if (st !== 'descent') Sound.play('creaks', V3(2.8, 0.4, 0.9), { gain: 0.25, rate: 0.8 });
+    F.caughtN = (F.caughtN || 0) + 1;
+    after(2.2, () => UI.thought(tr(F.caughtN === 1 ? 't_caught1' : F.caughtN === 2 ? 't_caught2' : 't_caught3'), 3.2));
+    if (F.caughtN === 1) after(6.2, () => UI.thought(tr('t_lookAtIt'), 3.6));
+    this.busy = false; Hunt.next = G.t + rand(45, 70);
+  },
+
+  /* ---- the lights go out; for a blink they come back, and it is standing there ---- */
+  strobe() {
+    const P = Player, cam = camera.position;
+    const ls = LIGHTS.filter((l) => l.name !== 'sun' && lightCovers(l, cam));
+    if (!ls.length || lightLevel(cam) < 0.45) return false;
+    let spot = null;
+    for (const dd of [2.6, 2.2, 3.1, 1.9]) {
+      for (const da of [0, 0.22, -0.22]) {
+        const a = P.yaw + da, x = P.pos.x - Math.sin(a) * dd, z = P.pos.z - Math.cos(a) * dd, gy = groundAt(x, z, P.pos.y + 0.5);
+        if (gy === null || Math.abs(gy - P.pos.y) > 0.5) continue;
+        const sp = V3(x, gy, z), ch = V3(x, gy + 1.25, z);
+        if (roomOf(x, gy + 1, z) === 'outside' || !Dir.free(sp) || !losClear(cam, ch) || lightLevel(ch) < 0.25) continue;
+        spot = sp; break;
+      }
+      if (spot) break;
+    }
+    if (!spot) return false;
+    this.strobeBusy = true;
+    const prev = ls.map((l) => l.flick && l.flick.mode), kill = (v) => { for (const l of ls) l.kill = v; };
+    kill(0); Sound.play('pop', ls[0].pos, { gain: 0.45 }); Sound.duckTo(0.3, 0.06); Fear.kick(0.5);
+    if (P.flashOn) Flash.die(1.6, 0.02);
+    after(0.85, () => {
+      kill(1);
+      Ent.spawn({ id: 'strobe', pos: spot, yaw: faceYaw(spot, Player.pos), pose: { hunch: 0.2, roll: 0.52, pitch: -0.08 }, persistent: true, flashKill: false, noFalter: true, eyesOn: true });
+      Sound.play('stinger', null, { gain: 0.7, pure: true, pri: 2 }); Fear.kick(1); Player.shake = 0.22;
+      Jump.pin(Ent.H.head, 0.2, 0.75);
+    });
+    after(1.02, () => { kill(0); Ent.hide('strobe'); Jump.stop(); });
+    after(2.0, () => {
+      kill(1); Sound.duckTo(1, 0.6); this.strobeBusy = false;
+      for (const l of ls) l.setFlicker('unstable');
+      after(2.4, () => ls.forEach((l, i) => l.setFlicker(prev[i] || null)));
+    });
+    return true;
+  },
+
+  /* ---- right behind you ---- */
+  frontStart() {
+    const P = Player, cam = camera.position;
+    if (P.amp < 0.3 || lightLevel(cam) > 1.4) return false;
+    const bx = Math.sin(P.yaw) * 0.45, bz = Math.cos(P.yaw) * 0.45, ear = V3(cam.x + bx + Math.cos(P.yaw) * 0.12, cam.y - 0.02, cam.z + bz - Math.sin(P.yaw) * 0.12);
+    this.front = { t: 0, yaw0: P.yaw, spawned: false };
+    Sound.play('name', ear, { gain: 0.42, ref: 0.5, hrtf: true, noOcc: true, pri: 2 });
+    Sound.play('exhale', ear, { gain: 0.5, ref: 0.5, hrtf: true, noOcc: true, delay: 0.9, pri: 2 });
+    Fear.kick(0.7);
+    after(0.6, () => UI.thought(tr('t_rightBehind'), 2.6));
+    return true;
+  },
+  frontStep(dt) {
+    const f = this.front, P = Player; f.t += dt;
+    if (f.spawned) { if (!Ent.def || Ent.def.id !== 'front') this.front = null; return; }
+    if (Math.abs(angNorm(P.yaw - f.yaw0)) > 2.0 && P.enabled) {
+      // nothing behind you. Which leaves where you were looking free for it
+      const fx = -Math.sin(f.yaw0), fz = -Math.cos(f.yaw0), cam = camera.position;
+      for (const dd of [1.5, 1.25, 1.9]) {
+        const x = P.pos.x + fx * dd, z = P.pos.z + fz * dd, gy = groundAt(x, z, P.pos.y + 0.5);
+        if (gy === null || Math.abs(gy - P.pos.y) > 0.5) continue;
+        const sp = V3(x, gy, z), ch = V3(x, gy + 1.25, z);
+        if (roomOf(x, gy + 1, z) === 'outside' || !Dir.free(sp) || !losClear(cam, ch) || canSee(ch, 0.5)) continue;
+        Ent.spawn({ id: 'front', pos: sp, yaw: faceYaw(sp, P.pos), pose: { hunch: 0.14, roll: 0.55, pitch: -0.12 }, eyesOn: true, lookDelay: 0.02, minDist: 0.7, timeout: 9, unseenGrace: 99, snap: true, stinger: true, flashDelay: 0.6, noFalter: true });
+        f.spawned = true; return;
+      }
+    }
+    if (f.t > 9) {
+      // you never looked: it goes, and touches you on the way
+      const cam = camera.position; Sound.play('exhale', V3(cam.x + Math.sin(P.yaw) * 0.3, cam.y, cam.z + Math.cos(P.yaw) * 0.3), { gain: 0.6, ref: 0.4, hrtf: true, noOcc: true, pri: 2 });
+      Player.shake = 0.25; Fear.kick(0.9); this.front = null;
+    }
+  },
+
+  /* ---- you shut a door; something on the other side did not want you to ---- */
+  onDoorClosed(d) {
+    const s = Story.stage;
+    if (this.off || this.busy || !['p2b', 'p3', 'descent'].includes(s) || G.t < this.doorNext || Ent.def || Hunt.st || d.name === 'front') return;
+    const n = F['pound_' + s] || 0; if (n >= 2 || Math.random() > (n ? 0.3 : 0.65)) return;
+    F['pound_' + s] = n + 1; this.doorNext = G.t + 80;
+    const cam = camera.position, c = d.pos.clone(), far = (d.axis === 'x' ? Math.sign(c.z - cam.z) : Math.sign(c.x - cam.x)) || 1;
+    const bp = d.axis === 'x' ? V3(c.x, c.y + 0.1, c.z + far * 0.3) : V3(c.x + far * 0.3, c.y + 0.1, c.z);
+    const t0 = 1.4;
+    after(t0 - 0.3, () => Sound.duckTo(0.45, 0.15));
+    [0, 0.36, 0.66, 0.9, 1.1, 1.26].forEach((dt, i) => after(t0 + dt, () => {
+      if (d.isOpen) return;
+      Sound.play('bang', bp, { gain: 0.85 + i * 0.07, hrtf: true, pri: 2 }); d.shake = 0.28; Player.shake = Math.max(Player.shake, 0.04);
+      if (i === 0) Fear.kick(0.9);
+      if (i === 3) { const l = nearestLight(cam); if (l && l.lit && !l.keepFlicker && (!l.flick || l.flick.mode !== 'candle')) { l.setFlicker('unstable'); after(1.6, () => { if (!l.keepFlicker) l.setFlicker(null); }); } }
+    }));
+    after(t0 + 1.6, () => Sound.duckTo(1, 1.5));
+    if (!F.poundThought) { F.poundThought = true; after(t0 + 2.0, () => UI.thought(tr('t_dontOpen'), 2.6)); }
+    after(t0 + 4.6, () => { if (!d.isOpen) { Sound.play('rattle', bp, { gain: 0.5 }); d.shake = 0.4; } });
+    after(t0 + 6.4, () => {
+      if (d.isOpen || this.busy) return;
+      d.open(0.5, 'slow');
+      // half the time it is still standing there, in the dark behind the door
+      if (!Ent.def && Ent.out <= 0 && Math.random() < 0.55) {
+        const q = d.axis === 'x' ? V3(c.x, 0, c.z + far * 1.3) : V3(c.x + far * 1.3, 0, c.z); q.y = groundAt(q.x, q.z, c.y) ?? (c.y - 1.1);
+        if (Dir.free(q) && roomOf(q.x, q.y + 1, q.z) !== 'outside' && !canSee(V3(q.x, q.y + 1.25, q.z), 0.4))
+          Ent.spawn({ id: 'doorway', pos: q, yaw: faceYaw(q, Player.pos), pose: { hunch: 0.3, roll: 0.45 }, fadeIn: 1.4, eyesOn: true, lookDelay: 0.35, minDist: 1.2, timeout: 8, unseenGrace: 1.5, snap: true, stinger: true });
+      }
+    });
+  },
+
+  /* ---- p1: while your eyes are on the clock, someone walks up behind you ---- */
+  clockSteps(dt) {
+    if (this.clk) {
+      this.clk.t += dt;
+      if (this.clk.armed && (!ClockUI.active || this.clk.t > 12)) {
+        const P = Player, cam = camera.position, ear = V3(cam.x + Math.sin(P.yaw) * 0.35, cam.y - 0.03, cam.z + Math.cos(P.yaw) * 0.35);
+        after(0.25, () => { Sound.play('exhale', ear, { gain: 0.55, ref: 0.45, hrtf: true, noOcc: true, pri: 2 }); Fear.kick(0.75); });
+        this.clk = null;
+      }
+      return;
+    }
+    if (!ClockUI.active) { this.clkT = 0; return; }
+    if (F.clockSteps || !Object.values(CLOCKS).some((c) => c.isSet())) return;
+    this.clkT += dt; if (this.clkT < 2.4) return;
+    F.clockSteps = true;
+    const P = Player, cam = camera.position.clone(), fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw), surf = P.surface(), y = P.pos.y + 0.1;
+    [3.4, 2.7, 2.0, 1.4, 0.95].forEach((dd, i) => after(i * 0.74, () => Sound.step(surf, V3(cam.x - fx * dd, y, cam.z - fz * dd), { gain: 0.28 + i * 0.07, rate: 0.85, hrtf: true, noOcc: true, pri: 2 })));
+    this.clk = { t: 0, armed: false }; after(5 * 0.74, () => { if (this.clk) this.clk.armed = true; });
+  },
+};
 
 /* ---- 09_ui.js ---- */
 /* ============================================================
