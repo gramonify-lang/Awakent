@@ -447,6 +447,7 @@ const STR = {
     t_diary: 'Elke nacht dezelfde tijd.', t_letter: 'Half wakker.', t_card1: '3:33.', t_card2: 'Daarom.',
     t_mom: 'Mama.', t_vm1: 'Ik had haar terug moeten bellen.', t_vm2: 'Dat is nu.', t_vm3: 'Ik bel haar terug.',
     cal_month: 'MAART', box_mama: 'MAMA', box_xmas: 'KERST',
+    t_cantLook: 'Ik kan mezelf niet aankijken.',
     intro_date: '27 maart', k_space: 'Spatie', k_skip: 'overslaan', t_again2: 'Weer.', t_knock1: 'Er klopt iemand.', t_knock2: 'Om 3:33?', t_hello: 'Hallo?',
     t_sleepNow: '„Slaap maar, lieverd.”', t_flashDead: 'Kom op…',
     wall_tally: 'IIII IIII IIII IIII IIII II',
@@ -529,6 +530,7 @@ const STR = {
     t_diary: 'Every night, the same time.', t_letter: 'Half awake.', t_card1: '3:33.', t_card2: "That's why.",
     t_mom: 'Mom.', t_vm1: 'I should have called her back.', t_vm2: "That's now.", t_vm3: "I'll call her back.",
     cal_month: 'MARCH', box_mama: 'MOM', box_xmas: 'CHRISTMAS',
+    t_cantLook: "I can't look myself in the eye.",
     intro_date: '27 March', k_space: 'Space', k_skip: 'skip', t_again2: 'Again.', t_knock1: "Someone's knocking.", t_knock2: 'At 3:33?', t_hello: 'Hello?',
     t_sleepNow: '"Go to sleep, sweetheart."', t_flashDead: 'Come on…',
     wall_tally: 'IIII IIII IIII IIII IIII II',
@@ -856,7 +858,7 @@ function faceCanvas(kind) {
    A plain, tired face: small eyes, shadows under them, a day of stubble. */
 function headTex(kind) {
   const W = 512, H = 256, c = mkCanvas(W, H), g = c.getContext('2d');
-  const smile = kind === 'smile';
+  const smile = kind === 'smile' || kind === 'noneSmile', none = kind === 'none' || kind === 'noneSmile';
   g.fillStyle = '#c09a86'; g.fillRect(0, 0, W, H);
   const blob = (x, y, rx, ry, col) => { const rg = g.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry)); rg.addColorStop(0, col); rg.addColorStop(1, 'rgba(0,0,0,0)'); g.save(); g.translate(x, y); g.scale(rx / Math.max(rx, ry), ry / Math.max(rx, ry)); g.translate(-x, -y); g.fillStyle = rg; g.beginPath(); g.arc(x, y, Math.max(rx, ry), 0, TAU); g.fill(); g.restore(); };
   // shading: jaw and neck darker, cheeks a touch warm, temples cooler
@@ -907,8 +909,29 @@ function headTex(kind) {
     g.strokeStyle = '#7a4640'; g.lineWidth = 2.4; g.beginPath(); g.moveTo(115, 162); g.quadraticCurveTo(128, 160.5, 141, 162.5); g.stroke();
     g.strokeStyle = 'rgba(150,90,80,0.35)'; g.lineWidth = 3; g.beginPath(); g.moveTo(119, 166); g.quadraticCurveTo(128, 168, 137, 166); g.stroke();
   }
+  if (none) smearFace(c, kind === 'noneSmile');
   grain(g, W, H, 7, smile ? 31 : 30);
   const t = toTex(c, false); t.wrapS = THREE.RepeatWrapping; return t;
+}
+/* the face as you cannot bring yourself to see it: dragged sideways and washed out,
+   with a soft edge into the rest of the head. With a grin, the mouth alone stays sharp. */
+function smearFace(c, grin) {
+  const W = c.width, H = c.height, g = c.getContext('2d');
+  const src = mkCanvas(W, H); src.getContext('2d').drawImage(c, 0, 0);
+  const sm = mkCanvas(W, H), s = sm.getContext('2d');
+  s.drawImage(src, 0, 0);
+  for (let i = 0; i < 34; i++) { const dx = (i - 17) * 2.1, dy = Math.sin(i * 1.9) * 4 + (i % 3 - 1) * 2; s.globalAlpha = 0.11; s.drawImage(src, dx, dy); }
+  for (let i = 0; i < 10; i++) { s.globalAlpha = 0.08; s.drawImage(sm, 0, (i - 5) * 2.5); }
+  s.globalAlpha = 0.5; s.fillStyle = '#b48f7c'; s.fillRect(0, 0, W, H);
+  s.globalAlpha = 1;
+  const hole = (x, y, rx, ry, a) => { s.save(); s.translate(x, y); s.scale(rx, ry); const q = s.createRadialGradient(0, 0, 0, 0, 0, 1); q.addColorStop(0, `rgba(70,40,35,${a})`); q.addColorStop(1, 'rgba(70,40,35,0)'); s.fillStyle = q; s.beginPath(); s.arc(0, 0, 1, 0, TAU); s.fill(); s.restore(); };
+  hole(101, 124, 26, 16, 0.22); hole(155, 124, 26, 16, 0.22); hole(128, 160, 22, 12, 0.14);
+  // keep only an oval over the face, fading out at its edge
+  s.globalCompositeOperation = 'destination-in';
+  s.save(); s.translate(128, 136); s.scale(1, 0.92); const m = s.createRadialGradient(0, 0, 30, 0, 0, 74); m.addColorStop(0, 'rgba(0,0,0,1)'); m.addColorStop(1, 'rgba(0,0,0,0)'); s.fillStyle = m; s.fillRect(-128, -136, W, H); s.restore();
+  s.globalCompositeOperation = 'source-over';
+  g.drawImage(sm, 0, 0);
+  if (grin) { g.strokeStyle = '#5e2e28'; g.lineWidth = 2.6; g.beginPath(); g.moveTo(104, 154); g.quadraticCurveTo(128, 171, 152, 154); g.stroke(); g.fillStyle = '#ddd2c2'; g.beginPath(); g.moveTo(110, 157); g.quadraticCurveTo(128, 168, 146, 157); g.quadraticCurveTo(128, 162, 110, 157); g.fill(); }
 }
 /* the entity's face: a pale smudge with two hollows and an open mouth, never sharp */
 function ghostSmudgeTex() {
@@ -1056,7 +1079,7 @@ function buildTextures() {
   IMG.photo0 = photoBeach(0); IMG.photo1 = photoBeach(1); IMG.photo2 = photoBeach(2);
   T.photo0 = toTex(IMG.photo0, false); T.photo1 = toTex(IMG.photo1, false); T.photo2 = toTex(IMG.photo2, false);
   T.facePlayer = faceCanvas('player'); T.faceSmile = faceCanvas('smile'); T.faceEntity = faceCanvas('entity');
-  T.headPlayer = headTex('player'); T.headSmile = headTex('smile'); T.pajama = pajamaTex(); T.ghostSmudge = ghostSmudgeTex();
+  T.headPlayer = headTex('player'); T.headSmile = headTex('smile'); T.headNone = headTex('none'); T.headNoneSmile = headTex('noneSmile'); T.pajama = pajamaTex(); T.ghostSmudge = ghostSmudgeTex();
   IMG.poster = posterCanvas(); T.poster = toTex(IMG.poster, false);
   IMG.doorText = doorTextCanvas(); T.doorText = toTex(IMG.doorText, false);
   T.d333r = digitsTex('03:33', '#ff3a22'); T.d334r = digitsTex('03:34', '#ff3a22'); T.d714r = digitsTex('07:14', '#ff3a22');
@@ -1376,10 +1399,27 @@ uniform mat4 textureMatrix; varying vec4 vTc; varying vec2 vUv;
 void main(){ vUv = uv; vTc = textureMatrix * vec4(position,1.0); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
 const MIRROR_FS = `
 uniform sampler2D tMirror; uniform sampler2D tDirt; uniform float uActive; uniform float uTint; uniform float uDirt; uniform float uDark;
+uniform vec3 uFace; uniform float uFaceK; uniform float uAspect;
 varying vec4 vTc; varying vec2 vUv;
 void main(){
   vec3 c = vec3(0.012, 0.013, 0.016);
-  if(uActive > 0.5) c = texture2D(tMirror, vTc.xy / vTc.w).rgb * uTint;
+  if(uActive > 0.5) {
+    vec2 tc = vTc.xy / vTc.w;
+    c = texture2D(tMirror, tc).rgb * uTint;
+    // where your own face would be, the glass has misted over
+    if (uFaceK > 0.0) {
+      vec2 d = tc - uFace.xy; d.x *= uAspect;
+      float k = uFaceK * (1.0 - smoothstep(uFace.z * 0.32, uFace.z * 0.8, length(d * vec2(1.0, 0.8))));
+      if (k > 0.002) {
+        vec3 b = vec3(0.0); float rr = uFace.z * 0.32;
+        for (int i = 0; i < 8; i++) { float a = float(i) * 0.785 + 0.3; vec2 o = vec2(cos(a) * 1.7 / uAspect, sin(a) * 0.8) * rr; b += texture2D(tMirror, tc + o).rgb; }
+        b = b * (uTint / 8.0);
+        float l = dot(b, vec3(0.3, 0.5, 0.2));
+        b = mix(b, vec3(l), 0.6) * 1.06 + 0.003;
+        c = mix(c, b, k);
+      }
+    }
+  }
   float dt = texture2D(tDirt, vUv*1.3).r;
   c = mix(c, c*0.72 + vec3(0.01), clamp(dt*uDirt*3.0, 0.0, 1.0));
   float e = smoothstep(0.0, 0.04, vUv.x)*smoothstep(1.0, 0.96, vUv.x)*smoothstep(0.0, 0.04, vUv.y)*smoothstep(1.0, 0.96, vUv.y);
@@ -1391,7 +1431,7 @@ class Mirror {
   constructor(name, w, h, { parent, pos, ry, dirt = 0.18, tint = 0.86 }) {
     this.name = name; this.w = w; this.h = h;
     this.mat = new THREE.ShaderMaterial({
-      uniforms: { tMirror: { value: mirrorRT.texture }, tDirt: { value: T.dirt }, textureMatrix: { value: new THREE.Matrix4() }, uActive: { value: 0 }, uTint: { value: tint }, uDirt: { value: dirt }, uDark: { value: 0 } },
+      uniforms: { tMirror: { value: mirrorRT.texture }, tDirt: { value: T.dirt }, textureMatrix: { value: new THREE.Matrix4() }, uActive: { value: 0 }, uTint: { value: tint }, uDirt: { value: dirt }, uDark: { value: 0 }, uFace: { value: new THREE.Vector3(0.5, 0.5, 0.1) }, uFaceK: { value: 0 }, uAspect: { value: 1 } },
       vertexShader: MIRROR_VS, fragmentShader: MIRROR_FS,
     });
     this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), this.mat);
@@ -1461,6 +1501,7 @@ function renderMirror(m) {
   vCam.projectionMatrixInverse.copy(vCam.projectionMatrix).invert();
 
   Actors.prepareMirror(m);
+  Actors.faceInMirror(m, vCam);
   const was = mesh.visible; mesh.visible = false;
   for (const o of MIRRORS) { o.mat.uniforms.uActive.value = 0; o.mat.uniforms.tMirror.value = T.dirt; }
   SU.uCamPos.value.copy(vCam.position);
@@ -3858,6 +3899,7 @@ function poseHuman(H, p) {
   H.head.rotation.set(-(p.pitch || 0) * 0.85 - (p.hunch || 0) * 0.6, p.headYaw || 0, p.roll || 0);
 }
 
+const _fc = new THREE.Vector3(), _fu = new THREE.Vector3(), _fc2 = new THREE.Vector3(), _fu2 = new THREE.Vector3();
 const Actors = {
   avatar: null, double: null, ent: null,
   init() {
@@ -3872,12 +3914,14 @@ const Actors = {
   prepareMirror(m) {
     const A = this.avatar; let pose = Player.pose();
     let extra = { headYaw: 0, roll: 0 };
-    A.mFace.uniforms.uMap.value = T.headPlayer;
+    const night = G.stage !== 'morning' && G.stage !== 'end';
+    A.mFace.uniforms.uMap.value = night ? T.headNone : T.headPlayer;
+    this.grin = false;
     let vis = true;
     switch (m.mode) {
       case 'delay': pose = Player.poseAt(G.t - 0.5); break;
       case 'lookAway': extra.headYaw = 0.95; pose = Object.assign({}, pose, { pitch: -0.12 }); break;
-      case 'smile': pose = Player.poseAt(G.t - 0.15); A.mFace.uniforms.uMap.value = T.headSmile; extra.roll = 0.14; break;
+      case 'smile': pose = Player.poseAt(G.t - 0.15); A.mFace.uniforms.uMap.value = night ? T.headNoneSmile : T.headSmile; extra.roll = 0.14; this.grin = true; break;
       case 'stillHead': extra.headYaw = angNorm((m.sessionYaw ?? pose.yaw) - pose.yaw); break;
       case 'frozen': case 'frozenPose': pose = m.frozenPose || pose; break;
       case 'missing': vis = false; break;
@@ -3892,6 +3936,20 @@ const Actors = {
     A.mFace.uniforms.uEmissive.value.setScalar(bounce * 0.05);
   },
   afterMirror() { },
+  /* where the reflected face lands in the mirror's picture, for the mist on the glass */
+  faceInMirror(m, cam) {
+    const A = this.avatar, u = m.mat.uniforms;
+    const night = G.stage !== 'morning' && G.stage !== 'end';
+    if (!night || !A.root.visible) { u.uFaceK.value = 0; return; }
+    A.root.updateMatrixWorld(true);
+    const f = A.head.localToWorld(_fc.set(0, 0.1, 0.08)), up = A.head.localToWorld(_fu.set(0, 0.25, 0.08));
+    const p = _fc2.copy(f).project(cam), q = _fu2.copy(up).project(cam);
+    if (p.z > 1 || p.z < -1) { u.uFaceK.value = 0; return; }
+    u.uFace.value.set(p.x * 0.5 + 0.5, p.y * 0.5 + 0.5, Math.max(0.01, Math.abs(q.y - p.y) * 0.5));
+    u.uAspect.value = RW / RH;
+    u.uFaceK.value = this.grin ? 0.55 : 0.92;
+    this.faceWorld = f;
+  },
 };
 
 /* ---- 06_audio.js ---- */
@@ -5213,7 +5271,7 @@ const Dir = {
     return false;
   },
 };
-const _ev = new THREE.Vector3();
+const _ev = new THREE.Vector3(), _gz1 = new THREE.Vector3(), _gz2 = new THREE.Vector3(), _gz3 = new THREE.Vector3(), _gz4 = new THREE.Vector3();
 function nearestLight(p) { let b = null, bd = 1e9; for (const l of LIGHTS) { const d = l.pos.distanceTo(p); if (d < bd && l.intensity > 0) { bd = d; b = l; } } return bd < 6 ? b : null; }
 function faceYaw(from, to) { return Math.atan2(to.x - from.x, to.z - from.z); }
 
@@ -5418,7 +5476,7 @@ const Story = {
     for (const k of ['draftL', 'voidL']) if (this[k]) { this[k].stop(0.02); this[k] = null; }
     for (const k of Object.keys(F)) delete F[k];
     Ent.hide(); Ent.used = {}; Ent.lastEnd = -60; Ent.out = 0; Ent.H.root.visible = false;
-    Actors.double.root.visible = false; Actors.double.mFace.uniforms.uMap.value = T.headPlayer;
+    Actors.double.root.visible = false; Actors.double.mFace.uniforms.uMap.value = stage === 'morning' ? T.headPlayer : T.headNone;
     // reset doors & clocks for a fresh run
     DOORS.bedroom.set(true); DOORS.bathroom.set(false); DOORS.study.set(true); DOORS.basement.set(false); DOORS.front.set(false);
     for (const [k, v] of Object.entries({ hall: 430, living: 708, kitchen: 325, basement: 542 })) { CLOCKS[k].min = v; CLOCKS[k].ticking = true; }
@@ -6000,7 +6058,25 @@ const Story = {
   },
 
   /* ---------- mirrors ---------- */
+  /* you cannot look yourself in the eye: hold your gaze on your reflected face and it slides away */
+  mirrorGaze(dt) {
+    const m = activeMirror, A = Actors;
+    if (!m || !A.faceWorld || m.mat.uniforms.uFaceK.value <= 0 || !A.avatar.root.visible || this.stage === 'morning' || !Player.enabled || Player.autoLook) { this.gazeT = 0; return; }
+    const c = m.worldCenter(_gz1), n = m.worldNormal(_gz2);
+    const f = _gz3.copy(A.faceWorld), d = _gz4.subVectors(f, c).dot(n);
+    f.addScaledVector(n, -2 * d);                                   // the face as it appears in the glass
+    const dist = f.distanceTo(camera.position);
+    if (dist > 4.5 || viewAngleTo(f) > Math.max(0.07, Math.atan2(0.11, dist))) { this.gazeT = Math.max(0, (this.gazeT || 0) - dt * 2); return; }
+    this.gazeT = (this.gazeT || 0) + dt;
+    if (this.gazeT < 0.55 || G.t < (this.gazeNext || 0)) return;
+    this.gazeT = 0; this.gazeNext = G.t + 2.5;
+    const side = Math.random() < 0.5 ? -1 : 1, rx = Math.cos(Player.yaw), rz = -Math.sin(Player.yaw);
+    Player.autoLook = { target: V3(f.x + rx * side * 0.25, f.y - 0.5, f.z + rz * side * 0.25), k: 2.2, until: G.t + 0.75 };
+    Fear.kick(0.3); Sound.play('breathIn', null, { gain: 0.1, rate: 1.5, lp: 1600, pure: true });
+    if (!F.cantLook) { F.cantLook = true; after(0.6, () => UI.thought(tr('t_cantLook'), 3)); }
+  },
   updateMirrors(dt) {
+    this.mirrorGaze(dt);
     for (const m of MIRRORS) {
       const viewing = activeMirror === m && this.mirrorViewing(m);
       if (viewing) {
