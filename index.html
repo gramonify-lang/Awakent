@@ -111,6 +111,9 @@
   .meta { margin: 0; font-size: 11.5px; letter-spacing: 0.04em; color: var(--dust-2); }
   #loading { margin: 0; font-size: 11px; letter-spacing: 0.1em; color: var(--dust); }
   #pause { background: rgba(10, 11, 15, 0.86); }
+  #pause.guard { pointer-events: none; }
+  /* on a phone: carry on right away, without scrolling down for it */
+  body.touch #pause .eyebrow { order: -3; } body.touch #objText { order: -2; } body.touch #pause .actions { order: -1; }
   #pause .wrap, #end .wrap { margin-block: auto; }
   #pause .wrap { gap: 20px; }
   #stuck { border-top: 1px solid rgba(230, 223, 210, 0.14); border-bottom: 1px solid rgba(230, 223, 210, 0.14); padding-block: 12px; }
@@ -127,12 +130,13 @@
   #dragNote span { color: var(--dust); }
 
   /* ---------- touch ---------- */
-  #touch { position: absolute; inset: 0; pointer-events: none; }
+  #touch { position: absolute; inset: 0; pointer-events: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+  body.touch { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overscroll-behavior: none; }
   #touch[hidden] { display: none; }
-  #stickzone { position: absolute; left: 0; top: 0; width: 45%; height: 100%; pointer-events: auto; touch-action: none; }
-  #stick { position: absolute; left: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: 128px; height: 128px; margin: 0; border-radius: 50%; border: 1px solid rgba(230, 223, 210, 0.22); pointer-events: none; opacity: 0.55; transition: opacity 0.25s ease; }
+  #stickzone { position: absolute; left: calc(-12px + env(safe-area-inset-left, 0px)); bottom: calc(-12px + env(safe-area-inset-bottom, 0px)); width: 196px; height: 196px; border-radius: 50%; pointer-events: auto; touch-action: none; z-index: 2; }
+  #stick { position: absolute; left: calc(22px + env(safe-area-inset-left, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); z-index: 2; width: 128px; height: 128px; margin: 0; border-radius: 50%; border: 1px solid rgba(230, 223, 210, 0.22); pointer-events: none; opacity: 0.55; transition: opacity 0.25s ease; }
   #stick.on { opacity: 1; transition: none; }
-  #clockpad { position: absolute; inset: 0; pointer-events: auto; touch-action: none; }
+  #clockpad { position: absolute; inset: 0; pointer-events: auto; touch-action: none; z-index: 2; }
   #clockpad[hidden] { display: none; }
   #touch.clock #stickzone, #touch.clock #stick, #touch.clock #lookpad, #touch.clock #tF { display: none; }
   #touch.ovl #stickzone, #touch.ovl #stick, #touch.ovl #lookpad, #touch.ovl #tF, #touch.ovl #clockpad { display: none; }
@@ -154,11 +158,11 @@
   body.touch #hint { left: 50%; transform: translateX(-50%); bottom: auto; top: calc(58px + env(safe-area-inset-top, 0px)); justify-content: center; text-align: center; max-width: calc(100% - 140px); }
   body.touch #clockInfo .keys, body.touch #clockInfo .help { display: none; }
   #nub { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: rgba(230, 223, 210, 0.16); }
-  #lookpad { position: absolute; right: 0; top: 0; width: 55%; height: 100%; pointer-events: auto; touch-action: none; }
-  #touch button { position: absolute; pointer-events: auto; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(230, 223, 210, 0.3); background: rgba(10, 11, 15, 0.45); font-size: 15px; letter-spacing: 0.05em; }
-  #tE { right: 22px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
-  #tF { right: 90px; bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
-  #tM { right: 22px; top: calc(22px + env(safe-area-inset-top, 0px)); width: 44px !important; height: 44px !important; font-size: 12px !important; }
+  #lookpad { position: absolute; inset: 0; pointer-events: auto; touch-action: none; z-index: 1; }
+  #touch button { position: absolute; z-index: 3; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; pointer-events: auto; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(230, 223, 210, 0.3); background: rgba(10, 11, 15, 0.45); font-size: 15px; letter-spacing: 0.05em; }
+  #tE { right: calc(22px + env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  #tF { right: calc(90px + env(safe-area-inset-right, 0px)); bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
+  #tM { right: calc(22px + env(safe-area-inset-right, 0px)); top: calc(22px + env(safe-area-inset-top, 0px)); width: 44px !important; height: 44px !important; font-size: 12px !important; }
 
   @media (max-width: 520px) {
     .screen { background: linear-gradient(0deg, rgba(10, 11, 15, 0.95) 0%, rgba(10, 11, 15, 0.8) 55%, rgba(10, 11, 15, 0.35) 100%); }
@@ -529,8 +533,9 @@ const STR = {
     t_diary: 'Elke nacht dezelfde tijd.', t_letter: 'Half wakker.', t_card1: '3:33.', t_card2: 'Daarom.',
     t_mom: 'Mama.', t_vm1: 'Ik had haar terug moeten bellen.', t_vm2: 'Dat is nu.', t_vm3: 'Ik bel haar terug.',
     cal_month: 'MAART', box_mama: 'MAMA', box_xmas: 'KERST',
-    t_cantLook: 'Ik kan mezelf niet aankijken.', k_tapskip: 'Tik om over te slaan', k_twalk: 'duim links: lopen (ver duwen = rennen)', k_tlook: 'rechts slepen: kijken', k_tilt: 'of kantel je telefoon', gyro: 'Kijken door te kantelen', gyro_sens: 'Kantelgevoeligheid', perf_on_plain: 'Aan', rotate: 'Draai je telefoon voor het beste beeld',
+    t_cantLook: 'Ik kan mezelf niet aankijken.', k_tapskip: 'Tik om over te slaan', k_twalk: 'rondje linksonder: lopen (ver duwen = rennen)', k_tlook: 'overal anders slepen: kijken', k_tilt: 'of kantel je telefoon', gyro: 'Kijken door te kantelen', gyro_sens: 'Kantelgevoeligheid', perf_on_plain: 'Aan', rotate: 'Draai je telefoon voor het beste beeld',
     intro_date: '27 maart', k_space: 'Spatie', k_skip: 'overslaan', t_again2: 'Weer.', t_knock1: 'Er klopt iemand.', t_knock2: 'Om 3:33?', t_hello: 'Hallo?',
+    gl_lost: 'Het beeld wordt hersteld…',
     t_caught1: 'Weer in bed. Het had me.', t_caught2: 'Niet weer…', t_caught3: 'Ik word steeds hier wakker.',
     t_lookAtIt: 'Als ik het aankijk, valt het uit elkaar.', t_behindMe: 'Er loopt iemand achter me.', t_rightBehind: 'Vlak achter me…', t_dontOpen: 'Niet opendoen.',
     t_sleepNow: '„Slaap maar, lieverd.”', t_flashDead: 'Kom op…',
@@ -614,8 +619,9 @@ const STR = {
     t_diary: 'Every night, the same time.', t_letter: 'Half awake.', t_card1: '3:33.', t_card2: "That's why.",
     t_mom: 'Mom.', t_vm1: 'I should have called her back.', t_vm2: "That's now.", t_vm3: "I'll call her back.",
     cal_month: 'MARCH', box_mama: 'MOM', box_xmas: 'CHRISTMAS',
-    t_cantLook: "I can't look myself in the eye.", k_tapskip: 'Tap to skip', k_twalk: 'left thumb: walk (push far to run)', k_tlook: 'drag right: look', k_tilt: 'or tilt your phone', gyro: 'Look by tilting', gyro_sens: 'Tilt sensitivity', perf_on_plain: 'On', rotate: 'Turn your phone sideways for the best view',
+    t_cantLook: "I can't look myself in the eye.", k_tapskip: 'Tap to skip', k_twalk: 'circle bottom left: walk (push far to run)', k_tlook: 'drag anywhere else: look', k_tilt: 'or tilt your phone', gyro: 'Look by tilting', gyro_sens: 'Tilt sensitivity', perf_on_plain: 'On', rotate: 'Turn your phone sideways for the best view',
     intro_date: '27 March', k_space: 'Space', k_skip: 'skip', t_again2: 'Again.', t_knock1: "Someone's knocking.", t_knock2: 'At 3:33?', t_hello: 'Hello?',
+    gl_lost: 'Restoring the picture…',
     t_caught1: 'Back in bed. It had me.', t_caught2: 'Not again…', t_caught3: 'I keep waking up here.',
     t_lookAtIt: 'If I look at it, it comes apart.', t_behindMe: 'Someone is walking behind me.', t_rightBehind: 'Right behind me…', t_dontOpen: "Don't open it.",
     t_sleepNow: '"Go to sleep, sweetheart."', t_flashDead: 'Come on…',
@@ -4397,7 +4403,9 @@ const Sound = {
     const c = this.ctx;
     const e = { g: c.createGain(), lp: c.createBiquadFilter(), pan: c.createPanner(), send: c.createGain(), pos: pos.clone(), room: '', occ: 1, noOcc: !!o.noOcc };
     e.lp.type = 'lowpass'; e.lp.frequency.value = 18000;
-    const p = e.pan; p.panningModel = o.hrtf ? 'HRTF' : 'equalpower'; p.distanceModel = 'inverse'; p.refDistance = o.ref || 1.3; p.rolloffFactor = o.roll ?? 1.25; p.maxDistance = 80;
+    // HRTF is costly; beyond a few at once the rest pan plainly (phones choke on many)
+    e.hr = !!o.hrtf && (this.hrtfN || 0) < (isTouch ? 6 : 10); if (e.hr) this.hrtfN = (this.hrtfN || 0) + 1;
+    const p = e.pan; p.panningModel = e.hr ? 'HRTF' : 'equalpower'; p.distanceModel = 'inverse'; p.refDistance = o.ref || 1.3; p.rolloffFactor = o.roll ?? 1.25; p.maxDistance = 80;
     e.send.gain.value = o.rev ?? 0.4;
     e.g.connect(e.lp); e.lp.connect(p); p.connect(o.direct ? this.master : this.bus); p.connect(e.send); e.send.connect(this.revIn);
     this.setPos(e, pos);
@@ -4418,7 +4426,7 @@ const Sound = {
     if (instant) { e.lp.frequency.value = f; e.g.gain.value = g * (e.base ?? 1); }
     else { e.lp.frequency.setTargetAtTime(f, t, 0.12); e.g.gain.setTargetAtTime(g * (e.base ?? 1), t, 0.12); }
   },
-  dispose(e) { try { e.g.disconnect(); e.lp.disconnect(); e.pan.disconnect(); e.send.disconnect(); } catch (err) { /* ignore */ } },
+  dispose(e) { if (e.hr) { e.hr = false; this.hrtfN = Math.max(0, (this.hrtfN || 0) - 1); } try { e.g.disconnect(); e.lp.disconnect(); e.pan.disconnect(); e.send.disconnect(); } catch (err) { /* ignore */ } },
 
   /* ---------- playback ---------- */
   play(name, pos, o = {}) {
@@ -4431,7 +4439,7 @@ const Sound = {
   playBuf(b, pos, o = {}) {
     if (!this.ok) return null;
     const pri = o.pri ?? 1;
-    if ((this.active > 22 && pri < 2) || (this.active > 14 && pri < 1)) return null;   // voice limit
+    if (this.active > 40 || (this.active > 22 && pri < 2) || (this.active > 14 && pri < 1)) return null;   // voice limit (a hard one too)
     const c = this.ctx, src = c.createBufferSource(); src.buffer = b;
     let rate = (o.rate || 1) * (o.vary ? rand(1 - o.vary, 1 + o.vary) : 1);
     if (!o.pure && this.wrongEff > 0.25) rate *= 1 - this.wrongEff * rand(0, 0.09);   // the world plays back a little too slow
@@ -7294,7 +7302,7 @@ const UI = {
     this.el.langSel.addEventListener('change', () => setLang(this.el.langSel.value));
     // performance meter
     this.el.perfSel.addEventListener('change', () => Perf.set(this.el.perfSel.value === '1'));
-    this.el.resumeBtn.addEventListener('click', () => { Gyro.request(); App.resume(); });
+    this.el.resumeBtn.addEventListener('click', () => { if (performance.now() - (App.pausedAt || 0) < 400) return; Gyro.request(); App.resume(); });
     this.el.againBtn.addEventListener('click', () => { Store.del('ckpt'); App.start('intro'); });
     this.el.restartBtn.addEventListener('click', () => {
       if (G.t - this.restartArm < 4 && this.restartArm) { this.restartArm = 0; this.el.restartBtn.textContent = tr('restart'); Store.del('ckpt'); App.start('intro'); return; }
@@ -7409,27 +7417,28 @@ const UI = {
     if (document.exitPointerLock && document.pointerLockElement) document.exitPointerLock();
     setTimeout(() => this.el.againBtn.focus(), 50);
   },
-  /* touch: a stick that appears where your thumb lands on the left, looking on the right,
-     and while a clock is being set, circling anywhere on the screen turns the hands */
+  /* touch: a stick that stays where it is, bottom left (only the round patch around it walks),
+     looking everywhere else, and while a clock is being set, circling anywhere on the screen turns the hands */
   initTouch() {
     if (isTouch) document.body.classList.add('touch');
-    const st = this.el.stick, nub = this.el.nub, lp = this.el.lookpad, zone = this.el.stickzone, R = 56, DEAD = 0.12;
+    const st = this.el.stick, nub = this.el.nub, lp = this.el.lookpad, zone = this.el.stickzone, R = 56, DEAD = 0.14;
     let sid = null, cx = 0, cy = 0, lid = null, lx = 0, ly = 0;
-    const place = () => { st.style.left = (cx - 64) + 'px'; st.style.top = (cy - 64) + 'px'; st.style.bottom = 'auto'; };
-    zone.addEventListener('pointerdown', (e) => { Input.tap = true; if (sid !== null) return; sid = e.pointerId; cx = e.clientX; cy = e.clientY; place(); st.classList.add('on'); zone.setPointerCapture(e.pointerId); move(e); });
+    zone.addEventListener('pointerdown', (e) => {
+      Input.tap = true; if (sid !== null) return;
+      sid = e.pointerId; const r = st.getBoundingClientRect(); cx = r.left + r.width / 2; cy = r.top + r.height / 2;
+      st.classList.add('on'); try { zone.setPointerCapture(e.pointerId); } catch (err) { /* */ } move(e);
+    });
     const move = (e) => {
       if (e.pointerId !== sid) return;
-      let dx = e.clientX - cx, dy = e.clientY - cy, l = Math.hypot(dx, dy);
-      // dragged far past the edge: the stick follows the thumb
-      if (l > R * 1.3) { const k = (l - R * 1.3) / l; cx += dx * k; cy += dy * k; place(); dx = e.clientX - cx; dy = e.clientY - cy; l = Math.hypot(dx, dy); }
+      const dx = e.clientX - cx, dy = e.clientY - cy, l = Math.hypot(dx, dy);
       const mag = Math.min(1, l / R), m = mag < DEAD ? 0 : (mag - DEAD) / (1 - DEAD), ux = l > 0 ? dx / l : 0, uy = l > 0 ? dy / l : 0;
-      Input.tmx = ux * m; Input.tmz = -uy * m; Input.trun = mag > 0.97 && l > R * 1.1;
+      Input.tmx = ux * m; Input.tmz = -uy * m; Input.trun = l > R * 1.25;   // pushed out past the rim: run
       nub.style.transform = `translate(${ux * mag * 40}px, ${uy * mag * 40}px)`;
     };
     zone.addEventListener('pointermove', move);
-    const end = (e) => { if (e.pointerId !== sid) return; sid = null; Input.tmx = Input.tmz = 0; Input.trun = false; nub.style.transform = ''; st.classList.remove('on'); st.style.left = ''; st.style.top = ''; st.style.bottom = ''; };
-    zone.addEventListener('pointerup', end); zone.addEventListener('pointercancel', end);
-    lp.addEventListener('pointerdown', (e) => { Input.tap = true; if (lid !== null) return; lid = e.pointerId; lx = e.clientX; ly = e.clientY; lp.setPointerCapture(e.pointerId); });
+    const end = (e) => { if (e.pointerId !== sid) return; sid = null; Input.tmx = Input.tmz = 0; Input.trun = false; nub.style.transform = ''; st.classList.remove('on'); };
+    zone.addEventListener('pointerup', end); zone.addEventListener('pointercancel', end); zone.addEventListener('lostpointercapture', end);
+    lp.addEventListener('pointerdown', (e) => { Input.tap = true; if (lid !== null) return; lid = e.pointerId; lx = e.clientX; ly = e.clientY; try { lp.setPointerCapture(e.pointerId); } catch (err) { /* */ } });
     lp.addEventListener('pointermove', (e) => {
       if (e.pointerId !== lid) return;
       const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
@@ -7437,7 +7446,7 @@ const UI = {
       Input.tlook.x += (last.clientX - lx); Input.tlook.y += (last.clientY - ly); lx = last.clientX; ly = last.clientY;
     });
     const lend = (e) => { if (e.pointerId === lid) lid = null; };
-    lp.addEventListener('pointerup', lend); lp.addEventListener('pointercancel', lend);
+    lp.addEventListener('pointerup', lend); lp.addEventListener('pointercancel', lend); lp.addEventListener('lostpointercapture', lend);
     // the dial: the angle your finger moves around the middle of the screen is the angle the hand moves
     const cp = this.el.clockpad; let cid = null, ca = 0;
     const ang = (e) => Math.atan2(e.clientX - innerWidth / 2, -(e.clientY - innerHeight / 2));
@@ -7453,9 +7462,15 @@ const UI = {
     this.el.clockDoneT.addEventListener('click', (e) => { e.preventDefault(); if (ClockUI.active) ClockUI.close(); });
     // documents and pictures: a tap puts them down
     for (const id of ['note', 'image', 'doc']) this.el[id].addEventListener('click', () => { if (this.overlay) this.closeOverlay(); });
-    this.el.tE.addEventListener('pointerdown', (e) => { e.preventDefault(); Input.ePress = true; });
-    this.el.tF.addEventListener('pointerdown', (e) => { e.preventDefault(); Input.fPress = true; });
-    this.el.tM.addEventListener('pointerdown', (e) => { e.preventDefault(); App.pause(); });
+    // buttons: a hammering finger counts once per short while, so nothing piles up
+    const guard = (el, gap, fn) => { let last = -1e9; el.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); const t = performance.now(); if (t - last < gap) return; last = t; fn(); }); el.addEventListener('click', (e) => e.preventDefault()); };
+    guard(this.el.tE, 180, () => { Input.ePress = true; });
+    guard(this.el.tF, 220, () => { Input.fPress = true; });
+    guard(this.el.tM, 450, () => { if (performance.now() - (App.resumedAt || 0) > 500) App.pause(); });
+    // no long-press menus, text selection, double-tap zoom or pinch on the game
+    const stop = (e) => { if (G.running && !G.paused) e.preventDefault(); };
+    for (const ev of ['contextmenu', 'selectstart', 'dblclick', 'gesturestart']) document.addEventListener(ev, stop, { passive: false });
+    this.el.touch.addEventListener('touchstart', (e) => { if (e.touches.length > 1 || e.target.tagName === 'BUTTON') e.preventDefault(); }, { passive: false });
   },
 };
 
@@ -7523,6 +7538,7 @@ const App = {
   async boot(data) {
     UI.init();
     Perf.init();
+    watchContext();
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     try { await Promise.race([Promise.all([document.fonts.load('40px "Reenie Beanie"'), document.fonts.load('30px "IM Fell English"'), document.fonts.load('italic 20px "IM Fell English"')]), wait(3000)]); } catch (e) { /* fonts optional */ }
     try {
@@ -7572,7 +7588,9 @@ const App = {
     UI.hint(`<span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> ${tr('k_walk')}</span><span><kbd>${tr('k_mouse')}</kbd> ${tr('k_look')}</span><span><kbd>E</kbd> ${tr('k_use')}</span><span><kbd>F</kbd> ${tr('k_flash')}</span><span><kbd>Esc</kbd> ${tr('k_menu')}</span>`, dur); },
   pause() {
     if (!G.running || G.paused || G.stage === 'end') return;
-    G.paused = true;
+    G.paused = true; this.pausedAt = performance.now();
+    // taps still on their way to the game must not land on the menu
+    UI.el.pause.classList.add('guard'); clearTimeout(this.guardTO); this.guardTO = setTimeout(() => UI.el.pause.classList.remove('guard'), 400);
     if (ClockUI.active) ClockUI.close();
     if (UI.overlay) UI.closeOverlay();
     Sound.suspend();
@@ -7582,6 +7600,8 @@ const App = {
     setTimeout(() => UI.el.resumeBtn.focus({ preventScroll: true }), 30);
   },
   resume() {
+    if (this.glLost) return;
+    this.resumedAt = performance.now();
     UI.el.pause.hidden = true; UI.el.hud.hidden = false; G.paused = false; Sound.resume();
     if (isTouch) UI.el.touch.hidden = false;
     // Chrome refuses a new lock right after Esc; wait out that short cooldown
@@ -7621,6 +7641,20 @@ addEventListener('mousedown', (e) => {
 addEventListener('mousemove', (e) => { if (Input.dragging) dragMoved += Math.abs(e.movementX || 0) + Math.abs(e.movementY || 0); });
 addEventListener('mouseup', () => { if (Input.dragging) { Input.dragging = false; if (dragMoved < 5 && !Input.locked && Input.dragLook) Input.click = true; } });
 document.addEventListener('visibilitychange', () => { if (document.hidden && G.running && !G.paused) App.pause(); });
+/* the phone may take the graphics away (memory, a driver reset). Ask for them back instead of dying,
+   pause meanwhile, and carry on once they are restored. */
+function watchContext() {
+  const c = UI.el.view;
+  c.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault(); App.glLost = true;
+    if (G.running && !G.paused && G.stage !== 'end') App.pause();
+    UI.el.loading.textContent = tr('gl_lost'); UI.el.loading.hidden = false;
+  }, false);
+  c.addEventListener('webglcontextrestored', () => {
+    App.glLost = false; UI.el.loading.hidden = true;
+    try { resize(); Cull.all(camera); renderer.compile(scene, camera); } catch (err) { /* compiled on first draw instead */ }
+  }, false);
+}
 
 function loop(now) {
   requestAnimationFrame(loop);
@@ -7656,7 +7690,7 @@ function loop(now) {
     for (const d of DIGITALS) d.mesh.material.uniforms.uEmissive.value.setScalar(!d.blink || (App.titleT % 1.2) < 0.75 ? 1.6 : 0.05);
     updateLights(dt);
   }
-  renderFrame();
+  if (!App.glLost) renderFrame();
   if (Perf.on) Perf.frame(raw);
   endInputFrame();
 }
