@@ -212,8 +212,6 @@
   body.comfort .ttitle .flk, body.comfort .ttitle .apo { animation: none; }
   @keyframes flk { 0%, 90%, 100% { opacity: 1; } 91% { opacity: 0.2; } 92% { opacity: 1; } 94% { opacity: 0.55; } 95% { opacity: 1; } }
   .tdesc { margin: 0; max-width: 54ch; font-family: var(--display); font-size: clamp(15px, min(1.25vw, 2.25vh), 18px); line-height: 1.58; color: #b9b1a3; }
-  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
-  .tags li { padding: 5px 11px 4px; border: 1px solid rgba(230, 223, 210, 0.16); border-radius: 999px; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dust); background: rgba(10, 11, 15, 0.35); }
   .tmenu { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
   .tbtn { position: relative; display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding: 7px 0 7px 0; border: 0; background: none; color: #cfc8ba; font-family: var(--display); font-size: clamp(24px, 2.3vw, 31px); line-height: 1.1; text-align: left; cursor: pointer; transition: padding-left 0.22s ease, color 0.2s ease; }
   .tbtn::before { content: ''; position: absolute; left: 0; top: calc(50% - 1px); width: 0; height: 2px; background: var(--amber); transition: width 0.22s ease; }
@@ -222,42 +220,81 @@
   .tbtn.primary { color: var(--bone); font-size: clamp(30px, min(3.2vw, 5vh), 44px); }
   .tbtn small { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); }
   .tbtn:disabled { opacity: 0.35; cursor: wait; }
-  .tsub { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 12px; padding-top: 14px; border-top: 1px solid rgba(230, 223, 210, 0.14); }
-  .tlink { display: inline-flex; gap: 8px; align-items: center; padding: 7px 0 5px; border: 0; border-bottom: 1px solid transparent; background: none; color: var(--dust); font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
-  .tlink:hover:not(:disabled), .tlink:focus-visible { color: var(--bone); border-bottom-color: var(--amber); outline: none; }
-  .tlink svg { width: 15px; height: 15px; }
-  .tlink.danger:hover:not(:disabled), .tlink.danger:focus-visible { color: #ff9a80; border-bottom-color: #ff9a80; }
+  .tsub { display: flex; flex-wrap: wrap; gap: 2px 22px; margin-top: 6px; }
+  .tlink { display: inline-flex; align-items: baseline; padding: 4px 0 3px; border: 0; background: none; color: #a9a193; font-family: var(--display); font-style: italic; font-size: clamp(17px, 1.5vw, 20px); letter-spacing: 0; cursor: pointer; transition: color 0.2s; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+  .tlink:hover:not(:disabled), .tlink:focus-visible { color: var(--bone); text-decoration-color: rgba(230, 223, 210, 0.5); outline: none; }
+  .tlink.danger:hover:not(:disabled), .tlink.danger:focus-visible { color: #cf5a48; text-decoration-color: rgba(207, 90, 72, 0.6); }
   .tlink:disabled { opacity: 0.6; cursor: default; }
   .tmenu #loading { max-width: 36ch; margin-top: 10px; line-height: 1.5; }
   body.sheetOpen #title .tmain { opacity: 0.35; transition: opacity 0.25s; }
-  /* the side sheet: settings, controls, about */
-  #tsheet { position: absolute; inset: 0; z-index: 7; display: flex; justify-content: flex-end; background: rgba(4, 5, 8, 0.45); }
+  /* ---------- settings, controls, about ----------
+     Set like the left side of the start screen: the same dark, the same book type, no boxes. The room
+     fades out towards the right and the page is simply written there. */
+  #tsheet { position: absolute; inset: 0; z-index: 7; display: flex; justify-content: flex-end; background: linear-gradient(270deg, rgba(8, 9, 12, 0.97) 0%, rgba(8, 9, 12, 0.93) 38%, rgba(8, 9, 12, 0.55) 70%, rgba(8, 9, 12, 0.25) 100%); }
   #tsheet[hidden] { display: none; }
-  .sheetBox { display: flex; flex-direction: column; gap: 24px; width: min(560px, 100%); height: 100%; overflow-y: auto; padding: clamp(18px, 4.5vh, 40px) clamp(18px, 3.4vw, 40px) 44px; border-left: 1px solid rgba(230, 223, 210, 0.12); background: rgba(12, 13, 18, 0.97); box-shadow: -30px 0 70px rgba(0, 0, 0, 0.55); animation: sheetIn 0.28s cubic-bezier(0.2, 0.7, 0.2, 1); }
-  @keyframes sheetIn { from { transform: translateX(36px); opacity: 0; } to { transform: none; opacity: 1; } }
-  .sheetHead { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .sheetHead h2 { font-size: clamp(26px, 3vw, 36px); }
-  #tsheetClose { flex: none; width: 42px; height: 42px; border: 1px solid rgba(230, 223, 210, 0.3); border-radius: 50%; background: none; color: var(--bone); font-size: 15px; cursor: pointer; }
-  #tsheetClose:hover, #tsheetClose:focus-visible { border-color: var(--amber); color: var(--amber); outline: none; }
-  .sheetBody { display: flex; flex-direction: column; gap: 26px; }
+  .sheetBox { box-sizing: border-box; display: flex; flex-direction: column; gap: clamp(18px, 3vh, 28px); width: min(560px, 100%); height: 100%; overflow-y: auto; padding: clamp(28px, 8vh, 88px) clamp(20px, 6vw, 88px) 48px clamp(20px, 3vw, 40px); animation: sheetIn 0.35s ease; scrollbar-width: thin; scrollbar-color: rgba(230, 223, 210, 0.2) transparent; }
+  @keyframes sheetIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+  .sheetHead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .sheetHead h2 { font-size: clamp(34px, min(3.4vw, 5.5vh), 48px); line-height: 1; color: var(--bone); }
+  #tsheetClose { flex: none; padding: 4px 0; border: 0; background: none; color: #a9a193; font-family: var(--display); font-style: italic; font-size: 18px; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 5px; transition: color 0.2s; }
+  #tsheetClose:hover, #tsheetClose:focus-visible { color: var(--bone); text-decoration-color: rgba(230, 223, 210, 0.5); outline: none; }
+  .sheetBody { display: flex; flex-direction: column; gap: clamp(20px, 3.4vh, 30px); }
   .sheetBody[hidden] { display: none; }
-  .settings { display: flex; flex-direction: column; gap: 20px; }
-  .setActions { display: flex; flex-wrap: wrap; gap: 6px 26px; padding-top: 18px; border-top: 1px solid rgba(230, 223, 210, 0.12); }
-  .ctl h3, .awarn h3, .acred h3 { margin: 0 0 12px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dust); }
-  .ctl dl { display: grid; grid-template-columns: 11.5em 1fr; gap: 10px 18px; align-items: baseline; margin: 0; }
-  .ctl dt { display: flex; flex-wrap: wrap; gap: 4px; }
-  .ctl dd { margin: 0; font-family: var(--display); font-size: 17px; line-height: 1.35; color: #d8d1c3; }
-  .ctl.tips ul { display: grid; gap: 9px; margin: 0; padding-left: 18px; font-family: var(--display); font-size: 16.5px; line-height: 1.45; color: #d8d1c3; }
-  .ctl.tips li::marker { color: var(--amber); }
-  .ap { margin: 0; font-family: var(--display); font-size: 17.5px; line-height: 1.55; color: #d2cabb; }
-  .ap:first-child { font-size: 22px; font-style: italic; color: var(--bone); }
-  .awarn { padding: 14px 16px 16px; border: 1px solid rgba(255, 58, 34, 0.35); border-radius: 4px; background: rgba(255, 58, 34, 0.06); }
-  .awarn h3 { color: #ff8f78; margin-bottom: 6px; }
-  .awarn p, .acred p { margin: 0; font-family: var(--display); font-size: 16.5px; line-height: 1.45; color: #d2cabb; }
-  .acred { display: flex; flex-direction: column; gap: 4px; }
-  .acred h3 { margin: 12px 0 4px; }
+
+  /* the settings (here and on the pause screen): a label in the book type, the control quietly beside it */
+  .settings { display: flex; flex-direction: column; gap: 16px; }
+  .settings .row { grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 4px 20px; align-items: center; font-family: var(--display); font-size: 17px; letter-spacing: 0; color: #cfc8ba; }
+  .settings .row .rowNote { margin: -4px 0 2px; font-family: var(--display); font-style: italic; font-size: 14.5px; line-height: 1.45; letter-spacing: 0; color: #8e877a; opacity: 1; }
+  .settings input[type=range] { -webkit-appearance: none; appearance: none; height: 28px; margin: 0; background: transparent; cursor: pointer; }
+  .settings input[type=range]::-webkit-slider-runnable-track { height: 1px; background: rgba(230, 223, 210, 0.32); }
+  .settings input[type=range]::-moz-range-track { height: 1px; background: rgba(230, 223, 210, 0.32); border: 0; }
+  .settings input[type=range]::-moz-range-progress { height: 1px; background: rgba(230, 223, 210, 0.75); }
+  .settings input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; margin-top: -6px; border: 0; border-radius: 50%; background: var(--bone); box-shadow: 0 0 0 4px rgba(8, 9, 12, 0.9); transition: transform 0.15s; }
+  .settings input[type=range]::-moz-range-thumb { width: 13px; height: 13px; border: 0; border-radius: 50%; background: var(--bone); }
+  .settings input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
+  .settings input[type=range]:disabled { opacity: 0.35; }
+  .settings select { -webkit-appearance: none; appearance: none; width: 100%; padding: 3px 24px 4px 0; border: 0; border-bottom: 1px solid rgba(230, 223, 210, 0.22); border-radius: 0; font-family: var(--display); font-style: italic; font-size: 17px; color: var(--bone); cursor: pointer;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23a9a193' stroke-width='1.3'/%3E%3C/svg%3E") no-repeat right 4px center; }
+  .settings select:hover { border-bottom-color: rgba(230, 223, 210, 0.5); }
+  .settings select option { font-family: var(--display); font-style: normal; color: var(--bone); background: #111319; }
+  .settings .switch { gap: 12px; min-height: 36px; }
+  .settings .switch .knob { width: 15px; height: 15px; border: 1px solid rgba(230, 223, 210, 0.55); border-radius: 0; background: transparent; }
+  .settings .switch .knob::after { left: 3px; top: 3px; width: 7px; height: 7px; border-radius: 0; background: var(--bone); opacity: 0; transform: none; transition: opacity 0.15s; }
+  .settings .switch input:checked + .knob { background: transparent; border-color: var(--bone); }
+  .settings .switch input:checked + .knob::after { opacity: 1; transform: none; background: var(--bone); }
+  .settings .switch .st::after { font-family: var(--display); font-style: italic; font-size: 17px; letter-spacing: 0; text-transform: none; color: #8e877a; }
+  .settings .switch input:checked ~ .st::after { color: var(--bone); }
+  .settings :focus-visible, .settings .switch input:focus-visible + .knob { outline: 1px solid var(--bone); outline-offset: 4px; }
+  .setActions { display: flex; flex-wrap: wrap; gap: 4px 26px; margin-top: 6px; }
+
+  /* the controls: the key, then what it does */
+  .ctl h3 { margin: 0 0 10px; font-family: var(--display); font-style: italic; font-size: 20px; font-weight: 400; color: #a9a193; }
+  .ctl .lead { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+  .ctl .lead li { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 20px; align-items: baseline; font-family: var(--display); font-size: 17px; line-height: 1.35; color: #cfc8ba; }
+  .ctl .lead .k { display: inline-flex; flex-wrap: wrap; gap: 0 9px; color: var(--bone); font-variant: small-caps; letter-spacing: 0.04em; }
+  .ctl .lead .dots { display: none; }
+  .ctl .lead kbd { padding: 0; border: 0; background: none; font-family: var(--display); font-size: 17px; line-height: 1.35; color: var(--bone); }
+  .ctl.tips ul { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; font-family: var(--display); font-size: 16.5px; line-height: 1.5; color: #bdb5a6; }
+  .ctl.tips li { position: relative; padding-left: 22px; }
+  .ctl.tips li::before { content: '—'; position: absolute; left: 0; color: #6f695f; }
+
+  /* about */
+  .ap { margin: 0; font-family: var(--display); font-size: 17px; line-height: 1.6; color: #b9b1a3; max-width: 52ch; }
+  .ap:first-child { font-size: clamp(19px, 1.7vw, 22px); font-style: italic; line-height: 1.45; color: #cfc8ba; }
+  .awarn { display: flex; flex-direction: column; gap: 2px; padding-left: 16px; border-left: 1px solid rgba(184, 57, 43, 0.7); }
+  .awarn h3 { margin: 0; font-family: var(--display); font-style: italic; font-size: 17px; font-weight: 400; color: #cf5a48; }
+  .awarn p { margin: 0; font-family: var(--display); font-size: 16px; line-height: 1.5; color: #b9b1a3; }
+  .acred { display: flex; flex-direction: column; gap: 2px; }
+  .acred h3 { margin: 12px 0 0; font-family: var(--display); font-style: italic; font-size: 15px; font-weight: 400; color: #8e877a; }
+  .acred p { margin: 0; font-family: var(--display); font-size: 16px; line-height: 1.5; color: #b9b1a3; }
   .acred .aby { font-size: 24px; color: var(--bone); }
-  .acred .aver { margin-top: 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dust-2); }
+  .acred .aver { margin-top: 18px; font-style: italic; font-size: 14.5px; color: #6f695f; }
+  @media (max-width: 560px) {
+    #tsheet { background: rgba(8, 9, 12, 0.96); }
+    .sheetBox { width: 100%; padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 40px; }
+    .settings .row, .ctl .lead li { grid-template-columns: 1fr; gap: 2px; }
+    .ctl .lead li { margin-bottom: 4px; }
+  }
   /* short screens (phones on their side): what it is on the left, the menu on the right */
   @media (max-height: 640px) and (min-width: 620px) and (max-width: 1000px) {
     .tmain { display: grid; grid-template-columns: minmax(0, 1fr) fit-content(320px); align-items: end; column-gap: clamp(22px, 4vw, 56px); width: 100%; max-width: none; }
@@ -439,13 +476,12 @@
         <h1 class="ttitle" aria-label="Awaken’t">Awa<span class="flk">k</span>en<span class="apo">’t</span></h1>
         <p class="lede" data-i18n="lede">Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.</p>
         <p class="tdesc" id="tdesc" data-i18n="t_desc"></p>
-        <ul class="tags" id="tags"></ul>
       </div>
       <nav class="tmenu" aria-label="Menu">
         <button id="contBtn" type="button" class="tbtn" hidden><span data-i18n="btn_resume2">Verder spelen</span><small id="contWhere"></small></button>
         <button id="startBtn" type="button" class="tbtn primary" disabled><span>Begin</span></button>
         <div class="tsub">
-          <button type="button" class="tlink" data-sheet="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Zm8.1 4.8.1-1.4-.1-1.4 2-1.6-2-3.4-2.4 1a8 8 0 0 0-2.4-1.4L15 2.5h-4l-.4 2.7a8 8 0 0 0-2.4 1.4l-2.4-1-2 3.4 2 1.6-.1 1.4.1 1.4-2 1.6 2 3.4 2.4-1a8 8 0 0 0 2.4 1.4l.4 2.7h4l.4-2.7a8 8 0 0 0 2.4-1.4l2.4 1 2-3.4Z"/></svg><span data-i18n="btn_settings">Instellingen</span></button>
+          <button type="button" class="tlink" data-sheet="settings"><span data-i18n="btn_settings">Instellingen</span></button>
           <button type="button" class="tlink" data-sheet="controls"><span data-i18n="btn_controls">Besturing</span></button>
           <button type="button" class="tlink" data-sheet="about"><span data-i18n="btn_about">Over het spel</span></button>
         </div>
@@ -456,7 +492,7 @@
 
   <section id="tsheet" hidden role="dialog" aria-modal="true" aria-labelledby="tsheetTitle">
     <div class="sheetBox">
-      <header class="sheetHead"><h2 id="tsheetTitle"></h2><button id="tsheetClose" type="button" aria-label="Sluiten" data-i18n-aria="close">&#x2715;</button></header>
+      <header class="sheetHead"><h2 id="tsheetTitle"></h2><button id="tsheetClose" type="button" data-i18n="close">Sluiten</button></header>
       <div class="sheetBody" data-for="settings"><div id="setSlot"></div><div class="setActions"><button id="calibBtn" type="button" class="tlink" data-i18n="set_cal">Helderheid afstellen</button><button id="wipeBtn" type="button" class="tlink danger">Voortgang wissen</button></div></div>
       <div class="sheetBody" data-for="controls" id="ctlBody"></div>
       <div class="sheetBody" data-for="about" id="aboutBody"></div>
@@ -9706,7 +9742,7 @@ const Title = {
   tease: null, teaseNext: 9,
   init() {
     this.el = {};
-    for (const id of ['title', 'tsheet', 'tsheetTitle', 'tsheetClose', 'setSlot', 'pauseSlot', 'settingsRows', 'calibBtn', 'wipeBtn', 'contWhere', 'startBtn', 'contBtn', 'ctlBody', 'aboutBody', 'tags', 'tdesc']) this.el[id] = $(id);
+    for (const id of ['title', 'tsheet', 'tsheetTitle', 'tsheetClose', 'setSlot', 'pauseSlot', 'settingsRows', 'calibBtn', 'wipeBtn', 'contWhere', 'startBtn', 'contBtn', 'ctlBody', 'aboutBody', 'tdesc']) this.el[id] = $(id);
     for (const b of document.querySelectorAll('[data-sheet]')) b.addEventListener('click', () => this.open(b.dataset.sheet, b));
     this.el.tsheetClose.addEventListener('click', () => this.close());
     this.el.tsheet.addEventListener('pointerdown', (e) => { if (e.target === this.el.tsheet) this.close(); });
@@ -9718,23 +9754,22 @@ const Title = {
   },
   /* the words that are built from lists (language changes rebuild them) */
   fill() {
-    const tags = this.el.tags; tags.textContent = '';
-    for (const t of tr('tags')) mk('li', null, tags, t);
-    // controls: the list for this device first
+    // controls: typed out like a list on an index card, key ...... what it does. This device's list first.
     const cb = this.el.ctlBody; cb.textContent = '';
     const list = (head, rows) => {
       const s = mk('section', 'ctl', cb); mk('h3', null, s, head);
-      const dl = mk('dl', null, s);
+      const ul = mk('ul', 'lead', s);
       for (const [k, v] of rows) {
-        const dt = mk('dt', null, dl);
-        for (const part of k.split('|')) mk('kbd', null, dt, part);
-        mk('dd', null, dl, v);
+        const li = mk('li', null, ul), kk = mk('span', 'k', li);
+        for (const part of k.split('|')) mk('kbd', null, kk, part);
+        mk('span', 'dots', li); mk('span', 'v', li, v);
       }
     };
     const kb = () => list(tr('ctl_kb_h'), tr('ctl_kb')), tc = () => list(tr('ctl_touch_h'), tr('ctl_touch'));
     if (isTouch) { tc(); kb(); } else { kb(); tc(); }
+    // the tips: written underneath in pen
     { const s = mk('section', 'ctl tips', cb); mk('h3', null, s, tr('ctl_tips_h')); const ul = mk('ul', null, s); for (const t of tr('ctl_tips')) mk('li', null, ul, t); }
-    // about
+    // about: a letter, a stamp, a signature
     const ab = this.el.aboutBody; ab.textContent = '';
     for (const p of tr('about_p')) mk('p', 'ap', ab, p);
     { const w = mk('div', 'awarn', ab); mk('h3', null, w, tr('about_warn_h')); mk('p', null, w, tr('about_warn')); }
