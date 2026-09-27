@@ -1372,6 +1372,17 @@ function ghostSmudgeTex() {
   g.putImageData(img, 0, 0);
   return toTex(c, false);
 }
+/* two points of light in the dark: a hard white core and a little halo, the way eyes throw a torch beam back */
+function eyeGlowTex() {
+  const W = 64, c = mkCanvas(W, W), g = c.getContext('2d'), img = g.createImageData(W, W), d = img.data;
+  for (let y = 0; y < W; y++) for (let x = 0; x < W; x++) {
+    const r = Math.hypot(x - 31.5, (y - 31.5) * 1.25) / 32, core = Math.exp(-r * r * 30), halo = Math.exp(-r * 5) * 0.45;
+    const v = Math.min(1, core + halo) * Math.max(0, 1 - r), o = (y * W + x) * 4;
+    d[o] = d[o + 1] = d[o + 2] = 255; d[o + 3] = v * 255;
+  }
+  g.putImageData(img, 0, 0);
+  return toTex(c, false);
+}
 function pajamaTex() {
   const W = 128, H = 128, c = mkCanvas(W, H), g = c.getContext('2d');
   g.fillStyle = '#8c9aa6'; g.fillRect(0, 0, W, H);
@@ -1504,7 +1515,7 @@ function buildTextures() {
   IMG.photo0 = photoBeach(0); IMG.photo1 = photoBeach(1); IMG.photo2 = photoBeach(2);
   T.photo0 = toTex(IMG.photo0, false); T.photo1 = toTex(IMG.photo1, false); T.photo2 = toTex(IMG.photo2, false);
   T.facePlayer = faceCanvas('player'); T.faceSmile = faceCanvas('smile'); T.faceEntity = faceCanvas('entity');
-  T.headPlayer = headTex('player'); T.headSmile = headTex('smile'); T.headNone = headTex('none'); T.headNoneSmile = headTex('noneSmile'); T.pajama = pajamaTex(); T.ghostSmudge = ghostSmudgeTex();
+  T.headPlayer = headTex('player'); T.headSmile = headTex('smile'); T.headNone = headTex('none'); T.headNoneSmile = headTex('noneSmile'); T.pajama = pajamaTex(); T.ghostSmudge = ghostSmudgeTex(); T.eyeGlow = eyeGlowTex();
   IMG.poster = posterCanvas(); T.poster = toTex(IMG.poster, false);
   IMG.doorText = doorTextCanvas(); T.doorText = toTex(IMG.doorText, false);
   T.d333r = digitsTex('03:33', '#ff3a22'); T.d334r = digitsTex('03:34', '#ff3a22'); T.d714r = digitsTex('07:14', '#ff3a22');
@@ -3075,7 +3086,7 @@ function mergeWorld() {
   const dyn = [W.photo, W.wekker, W.brickDoor, W.long, W.curtainOpen, W.curtainClosed, W.cabDoor, W.mug, W.hallMug, W.duvet, W.deskLamp,
     W.hallPainting, W.hallPaintFrame, W.alarmBody, W.basePatch, W.bathText, W.studyStrip, W.tvScreen, W.normalSteps, W.stairCeil,
     W.livingCeil, W.livingCeil2, W.livingPendant.cord, W.livingPendant.sh, W.livingPendant.b, W.studyChair, W.livingChair,
-    W.fridgeNote, W.studyNote, Actors.avatar.root, Actors.double.root, Actors.ent.root,
+    W.fridgeNote, W.studyNote, Actors.avatar.root, Actors.double.root, Actors.ent.root, Actors.hand.root,
     ...W.books, ...W.coats, ...W.kitChairs, ...W.stairBlock, ...W.landingEast];
   for (const o of dyn) if (o) DYN.add(o);
   const stats = [];
@@ -3251,7 +3262,7 @@ function meshRooms(o) {
 }
 /* give every mesh its room bits; call once after mergeWorld() */
 function assignRooms() {
-  const skip = new Set([Actors.avatar.root, Actors.double.root, Actors.ent.root]);
+  const skip = new Set([Actors.avatar.root, Actors.double.root, Actors.ent.root, Actors.hand.root]);
   const tag = (o, rooms) => { o.userData.roomTag = rooms.reduce((a, r) => a | RBIT[r], 0); };
   for (const p of PORTALS) if (p.door && DOORS[p.door]) tag(DOORS[p.door].pivot, [p.a, p.b]);
   tag(W.long, ['hall']); tag(W.exterior, ['outside']);
@@ -4337,7 +4348,9 @@ void main(){
   vec4 w = modelMatrix * vec4(position, 1.0);
   vec3 n = normalize(mat3(modelMatrix) * normal);
   float crawl = sin(w.y * 7.0 + uTime * 1.9) * sin(w.x * 6.0 - uTime * 1.3 + w.z * 5.0) + 0.5 * sin(w.y * 17.0 - uTime * 3.1 + w.x * 13.0);
-  w.xyz += n * (0.016 * crawl + 0.0 * uJit);
+  // when it is seen, or lit, its surface shivers: a fine, fast tremble, as if it could barely hold its shape
+  float shiver = sin(w.y * 43.0 + uTime * 57.0) * sin(w.x * 37.0 - uTime * 61.0 + w.z * 29.0);
+  w.xyz += n * (0.016 * crawl + uJit * shiver);
   vW = w.xyz; vN = n;
   gl_Position = projectionMatrix * viewMatrix * w;
 }`;
@@ -4356,7 +4369,7 @@ void main(){
   if (cut > 0.98 + ign * 0.32) discard;
   vec3 col = uTint * (0.45 + 0.9 * smoke) + vec3(0.010, 0.011, 0.014) * pow(fres, 3.0);
   if (uFlashOn > 0.001) { vec3 L = vW - uFlashPos; float d2 = dot(L, L); float c = dot(L * inversesqrt(max(d2, 1e-6)), uFlashDir);
-    float cone = smoothstep(0.83, 0.94, c) + smoothstep(0.55, 0.86, c) * 0.07; col += uFlashCol * (uFlashOn * cone / (1.0 + 0.16 * d2)) * 0.02 * (0.6 + 0.8 * smoke); }
+    float cone = smoothstep(0.83, 0.94, c) + smoothstep(0.55, 0.86, c) * 0.07; col += uFlashCol * (uFlashOn * cone / (1.0 + 0.16 * d2)) * 0.004 * (0.6 + 0.8 * smoke); }   // it swallows the beam
   vec3 dv = vW - uCamPos;
   float f = 1.0 - exp(-uFogDensity * uFogDensity * dot(dv, dv));
   col = mix(col, uFogColor, clamp(f, 0.0, 1.0));
@@ -4478,12 +4491,12 @@ void main(){
     vec4 mn = uLMin[i];
     if (!(inBox(w, mn.xyz, uLMax[i]) || inBox(w, uLMin2[i], uLMax2[i]))) continue;
     vec3 L = uLPos[i] - w; float d2 = dot(L, L); float q = clamp(1.0 - d2 / (mn.w * mn.w), 0.0, 1.0);
-    lit += uLCol[i] * (q * q / (1.0 + 0.5 * d2)) * 0.3;
+    lit += uLCol[i] * (q * q / (1.0 + 0.5 * d2)) * 0.1;
   }
   if (uFlashOn > 0.001) {
     vec3 L = w - uFlashPos; float d2 = dot(L, L); float c = dot(L * inversesqrt(max(d2, 1e-6)), uFlashDir);
     float cone = smoothstep(0.83, 0.94, c) + smoothstep(0.965, 0.995, c) * 0.6 + smoothstep(0.55, 0.86, c) * 0.07;
-    lit += uFlashCol * (uFlashOn * cone / (1.0 + 0.16 * d2));
+    lit += uFlashCol * (uFlashOn * cone / (1.0 + 0.16 * d2)) * 0.12;   // the beam does not light it up: it is a hole in the light
   }
   vLit = lit;
   vec4 mv = viewMatrix * vec4(w, 1.0);
@@ -4531,9 +4544,13 @@ function makeShade(o) {
     tube(el, fo + 0.12, 0.02, 0.004);   // the forearm runs out into a long hand, no fingers
     arms.push({ sh, el, fo });
   }
-  // the face: a pale smudge that only shows when light falls on it
-  const face = new THREE.Sprite(new THREE.SpriteMaterial({ map: T.ghostSmudge, color: 0x101010, transparent: true, opacity: 0, depthWrite: false, fog: false }));
-  face.scale.set(0.19, 0.25, 1); face.position.set(0, 0.125 * hs, 0.075); head.add(face);
+  // no face at all: only two points of light deep in the dark of the head, the way an animal's eyes
+  // throw a torch beam back at you. Not quite level, and not quite the same size.
+  const eyeMat = () => new THREE.SpriteMaterial({ map: T.eyeGlow, color: 0x000000, transparent: true, opacity: 1, depthWrite: false, fog: false, blending: THREE.AdditiveBlending });
+  const eyes = new THREE.Group(); eyes.position.set(0, 0.132 * hs, 0.108); head.add(eyes);   // in front of the shivering surface
+  const eL = new THREE.Sprite(eyeMat()), eR = new THREE.Sprite(eyeMat());
+  eL.position.set(-0.028, 0.005, 0); eR.position.set(0.025, -0.004, 0); eL.scale.setScalar(0.075); eR.scale.setScalar(0.066);
+  eyes.add(eL, eR); eyes.userData = { l: eL, r: eR };
   // smoke: particles anchored to capsules along the body
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
   const segs = [
@@ -4563,7 +4580,7 @@ function makeShade(o) {
   const vel = new Float32Array(n * 3), a0 = new Float32Array(n), s0 = new Float32Array(n);
   const flush = () => { geo.attributes.position.needsUpdate = true; geo.attributes.aAlpha.needsUpdate = true; geo.attributes.aSize.needsUpdate = true; sm.uniforms.uScale.value = RH / (2 * Math.tan(camera.fov * DEG * 0.5)); };
   const smoke = {
-    pts, gather: 1, dis: null,
+    pts, gather: 1, dis: null, jit: 0,
     /* come apart: every wisp keeps its place, then drifts off, pushed by what broke it */
     dissolve(c, push) {
       for (let i = 0; i < n; i++) {
@@ -4610,6 +4627,8 @@ function makeShade(o) {
         alpha[i] = (0.38 + 0.5 * (1 - p.rf)) * fade * (p.si === 0 ? 1 - p.t * 0.45 : 1);
         size[i] = p.sz * (1 + life * 0.8);
       }
+      // trembling: every wisp a little somewhere else each frame
+      if (this.jit > 0.001) { const j = this.jit; for (let i = 0; i < n * 3; i++) pos[i] += (Math.random() - 0.5) * j; }
       // gathering: while it fades in, the wisps are still scattered and drawing together
       const g = 1 - this.gather;
       if (g > 0.001) {
@@ -4625,7 +4644,7 @@ function makeShade(o) {
       flush();
     },
   };
-  return { root, hips, chest, neck, head, headMesh, mFace: null, lHip, rHip, legs, arms, lens: null, torch: null, eyes: null, P, hipY, smoke, face };
+  return { root, hips, chest, neck, head, headMesh, mFace: null, lHip, rHip, legs, arms, lens: null, torch: null, eyes, P, hipY, smoke, face: null };
 }
 function setLayer(obj, layer) { obj.traverse((c) => c.layers.set(layer)); }
 
@@ -4657,7 +4676,44 @@ function poseHuman(H, p) {
     H.arms[1].sh.rotation.set(-0.3 * up, 0, 2.1 * up);
     H.arms[1].el.rotation.set(0, 0, (1.0 + Math.sin(w * 7.5) * 0.45) * up);
   }
-  H.head.rotation.set(-(p.pitch || 0) * 0.85 - (p.hunch || 0) * 0.6, p.headYaw || 0, p.roll || 0);
+  // on all fours: tipped forward from the hips, the long arms down to the floor as front legs, elbows out
+  // like a spider's, the rest of it dragging behind. (The same pose, turned over, crawls on a ceiling.)
+  const cr = p.crawl || 0;
+  H.hips.rotation.set(0, 0, p.side || 0);
+  if (cr > 0.001) {
+    const th = 1.32 * cr, sw = Math.sin(p.walk || 0), a = p.amp || 0;
+    H.hips.rotation.x = th; H.hips.rotation.z += sw * 0.08 * a * cr;
+    H.hips.position.y = lerp(H.hipY, 0.5, cr) + Math.abs(Math.cos(p.walk || 0)) * 0.035 * a * cr;
+    H.chest.rotation.x = lerp(H.chest.rotation.x, 0.12, cr);
+    for (let i = 0; i < 2; i++) {
+      const A = H.arms[i], s = i ? 1 : -1, ph = (i ? sw : -sw) * a;
+      A.sh.rotation.x = lerp(A.sh.rotation.x, -(th + 0.12) - 0.55 + ph * 0.55, cr);
+      A.sh.rotation.y = lerp(A.sh.rotation.y, 0, cr);
+      A.sh.rotation.z = lerp(A.sh.rotation.z, s * 0.62, cr);
+      A.el.rotation.x = lerp(A.el.rotation.x, 0.95 - ph * 0.35, cr);
+    }
+  }
+  H.head.rotation.set(-(p.pitch || 0) * 0.85 - (p.hunch || 0) * 0.6 - cr * 1.25, p.headYaw || 0, p.roll || 0);
+}
+
+/* ---------- a hand round a door frame ----------
+   Four fingers, far too long, over the edge of the frame; the rest of it behind the wall.
+   Origin at the corner of the frame, +x along the wall away from the opening, +z out of the wall. */
+function makeFingers() {
+  const mat = M({ color: '#120f0e', noise: 0.06 }), g = new THREE.Group(), fingers = [];
+  const seg = (a, b, r0, r1, parent) => {
+    const len = a.distanceTo(b), geo = new THREE.CylinderGeometry(r1, r0, len, 6, 1, false); geo.translate(0, len / 2, 0);
+    const m = new THREE.Mesh(geo, mat); m.position.copy(a); m.quaternion.setFromUnitVectors(V3(0, 1, 0), b.clone().sub(a).normalize()); parent.add(m);
+    const k = new THREE.Mesh(new THREE.SphereGeometry(r0 * 1.15, 6, 4), mat); k.position.copy(a); parent.add(k);
+  };
+  [[0.0, 1.0, 0.004], [-0.036, 1.12, 0.0], [-0.07, 1.04, -0.004], [-0.1, 0.82, -0.009]].forEach(([y, L, dy]) => {
+    const f = new THREE.Group(); f.position.set(0, y, 0); g.add(f);
+    const pts = [V3(-0.05, 0, -0.07), V3(-0.004, 0.002, 0.009), V3(0.08 * L, dy, 0.014), V3(0.15 * L, dy * 2, -0.002), V3(0.21 * L, dy * 2.5, -0.022)];
+    for (let i = 0; i < pts.length - 1; i++) seg(pts[i], pts[i + 1], 0.013 - i * 0.0017, 0.0118 - i * 0.002, f);
+    fingers.push(f);
+  });
+  g.visible = false;
+  return { root: g, fingers, mat };
 }
 
 const _fc = new THREE.Vector3(), _fu = new THREE.Vector3(), _fc2 = new THREE.Vector3(), _fu2 = new THREE.Vector3();
@@ -4671,6 +4727,7 @@ const Actors = {
     // the entity: taller, narrow, arms too long, neck too long; made of shade
     this.ent = makeHuman({ shade: true });
     scene.add(this.ent.root); this.ent.root.visible = false; scene.add(this.ent.smoke.pts);
+    this.hand = makeFingers(); scene.add(this.hand.root);
   },
   prepareMirror(m) {
     const A = this.avatar; let pose = Player.pose();
@@ -5049,6 +5106,51 @@ const Sound = {
     B.water = this.buf(2.0, (d, sr, n) => { const bp = new BQ('bp', 1700, 0.6, sr), hp = new BQ('hp', 4200, 0.7, sr); let a = 1; for (let i = 0; i < n; i++) { if (i % 400 === 0) a = 0.7 + Math.random() * 0.5; d[i] = bp.p(wn()) * a + hp.p(wn()) * 0.25; } });
     B.wind = this.buf(6.0, (d, sr, n) => { const lp = new BQ('lp', 520, 0.6, sr), bp = new BQ('bp', 340, 2, sr); for (let i = 0; i < n; i++) { const t = i / sr; const m = 0.55 + 0.3 * Math.sin(TAU * t / 3) + 0.15 * Math.sin(TAU * t / 2 + 1); d[i] = (lp.p(wn()) + bp.p(wn()) * 0.4) * m; } });
     B.tone = this.buf(4.0, (d, sr, n) => { let b = 0; const lp = new BQ('lp', 160, 0.7, sr); for (let i = 0; i < n; i++) { b = (b + 0.02 * wn()) * 0.995; d[i] = lp.p(b); } });
+    /* ---- the thing itself ---- */
+    // the clicking in its throat: a slow rattle of glottal clicks through a mouth that is open too far,
+    // speeding up and slowing down, with air dragging through it
+    const clickT = (dur, seed, rate0) => this.buf(dur, (d, sr, n) => {
+      const r = seeded(seed), f1 = new BQ('bp', 380, 5, sr), f2 = new BQ('bp', 1150, 6, sr), f3 = new BQ('bp', 2500, 7, sr), air = new BQ('bp', 900, 1.2, sr);
+      let next = 0.02, amp = 0;
+      for (let i = 0; i < n; i++) {
+        const t = i / sr, u = t / dur, env = Math.min(1, t / 0.08) * Math.min(1, (dur - t) / 0.18);
+        let src = 0;
+        if (t >= next) { amp = 0.6 + r() * 0.6; src = amp * (r() < 0.5 ? 1 : -1); const rate = rate0 * (0.7 + 0.6 * Math.sin(Math.PI * u) + (r() - 0.5) * 0.5); next = t + 1 / Math.max(6, rate); }
+        if (i % 64 === 0) { const m = 1 + 0.18 * Math.sin(TAU * 1.7 * t + seed); f1.set(380 * m, 5); f2.set(1150 / m, 6); }
+        d[i] = ((f1.p(src) * 1.2 + f2.p(src) * 0.8 + f3.p(src) * 0.35) * 3 + air.p(wn()) * 0.05) * env;
+      }
+    });
+    B.click = [clickT(1.1, 71, 24), clickT(0.8, 72, 34), clickT(1.5, 73, 18)];
+    // a joint giving: two or three dry cracks, a knuckle, a neck
+    B.crack = [0, 1, 2].map((k) => this.buf(0.4, (d, sr, n) => {
+      const r = seeded(80 + k), hits = []; let t0 = 0.005; for (let j = 0; j < 2 + k; j++) { hits.push([t0, 0.5 + r() * 0.5]); t0 += 0.025 + r() * 0.06; }
+      const bp = new BQ('bp', 2300 + k * 400, 1.4, sr), lp = new BQ('lp', 300, 0.8, sr);
+      for (let i = 0; i < n; i++) { const t = i / sr; let e = 0, th = 0; for (const [a, g] of hits) if (t >= a) { const q = t - a; e += g * Math.exp(-q * 380); th += g * Math.sin(TAU * 170 * q) * Math.exp(-q * 70); } const nz = wn(); d[i] = bp.p(nz) * e * 1.4 + lp.p(nz) * e * 0.8 + th * 0.5; }
+    }));
+    // wet breathing: in and out through something that bubbles
+    B.wetbreath = this.buf(1.8, (d, sr, n) => {
+      const bp = new BQ('bp', 700, 1.3, sr), lp = new BQ('lp', 260, 0.7, sr), gur = new BQ('bp', 420, 7, sr); let ph = 0, bub = 0;
+      for (let i = 0; i < n; i++) {
+        const t = i / sr, inn = t < 0.75, u = inn ? t / 0.75 : (t - 0.85) / 0.95;
+        const env = t > 0.75 && t < 0.85 ? 0 : Math.pow(Math.sin(Math.PI * Math.min(1, Math.max(0, u))), 1.2) * (inn ? 0.6 : 1);
+        if (i % 128 === 0) bp.set(inn ? lerp(600, 1100, u) : lerp(1000, 450, u), 1.3);
+        if (i % 700 === 0) bub = Math.random() < 0.6 ? 0.4 + Math.random() * 0.8 : 0.1;
+        ph += (28 + 10 * Math.sin(t * 9)) / sr; const flutter = 0.55 + 0.45 * Math.sin(TAU * ph) * bub;
+        d[i] = (bp.p(wn()) * 0.8 * flutter + lp.p(wn()) * 0.4 + gur.p(wn()) * 1.2 * bub * (inn ? 0.3 : 1)) * env;
+      }
+    });
+    // hands and knees on floorboards: palm slap, knee thump, palm, knee, not quite in time
+    B.crawl = [0, 1, 2].map((k) => this.buf(0.55, (d, sr, n) => {
+      const r = seeded(90 + k), hits = [[0, 1, 'p'], [0.08 + r() * 0.04, 0.7, 'k'], [0.2 + r() * 0.05, 0.9, 'p'], [0.27 + r() * 0.05, 0.6, 'k']];
+      const bp = new BQ('bp', 1300 + k * 150, 1.1, sr), lp = new BQ('lp', 190, 0.8, sr), nail = new BQ('bp', 4200, 3, sr);
+      for (let i = 0; i < n; i++) { const t = i / sr; let v = 0; for (const [a, g, kind] of hits) if (t >= a) { const q = t - a; v += kind === 'p' ? (bp.p(wn()) * Math.exp(-q * 110) * 0.9 + nail.p(wn()) * Math.exp(-q * 300) * 0.35) * g : (lp.p(wn()) * Math.exp(-q * 30) * 1.6 + Math.sin(TAU * 85 * q) * Math.exp(-q * 32) * 0.5) * g; } d[i] = v; }
+    }));
+    // across the ceiling: many small, hard, quick taps (nails)
+    B.skitter = this.buf(0.9, (d, sr, n) => {
+      const r = seeded(97), hits = []; let t0 = 0.01; while (t0 < 0.8) { hits.push([t0, 0.4 + r() * 0.6]); t0 += 0.03 + r() * 0.06; }
+      const bp = new BQ('bp', 3600, 2.5, sr), lp = new BQ('lp', 500, 0.8, sr);
+      for (let i = 0; i < n; i++) { const t = i / sr; let e = 0; for (const [a, g] of hits) if (t >= a && t < a + 0.03) e += g * Math.exp(-(t - a) * 260); const nz = wn(); d[i] = bp.p(nz) * e + lp.p(nz) * e * 0.5; }
+    });
     B.scrape = this.buf(1.2, (d, sr, n) => { const bp = new BQ('bp', 900, 3, sr); for (let i = 0; i < n; i++) { const t = i / sr; if (i % 200 === 0) bp.set(700 + Math.random() * 600, 3); d[i] = bp.p(wn()) * Math.sin(Math.PI * t / 1.2) * (0.6 + 0.4 * Math.random()); } });
   },
 
@@ -5788,13 +5890,16 @@ const WRONG = { intro: 0, p1: 0.02, p2: 0.07, p2b: 0.12, s1: 0.17, s2: 0.22, s3:
 
 
 /* ---------------- the entity ----------------
-   A dark shape with a pale, hollow face. It fades in rather than
-   appearing. When you look straight at it, its head turns to you first,
-   and only then is it gone. Seen rarely, and mostly in the dark. */
+   A dark shape with no face: only two points of light where eyes would be. It does not move the way
+   anything alive moves. The body goes in stop-motion, a few frames a second, while the head is never
+   still: it keeps turning to you, further round than a neck should go, shivers, tips slowly over onto
+   its shoulder and cracks back. Now and then, while you are looking, it is simply closer. */
 const Ent = {
   H: null, def: null, t: 0, lookT: 0, seen: false, gone: 0, lastEnd: -60, used: {}, pose: {},
   fade: 1, fadeSpeed: 99, out: 0, eyeT: 0, eyeOn: false, eye: 0, flickT: 0, snapT: 0, snapYaw: 0,
-  init() { this.H = Actors.ent; },
+  smT: 0, snap0: null, held: false, lp: null, lyaw: 0, dpos: null, dyaw: 0,
+  trk: 0, trem: 0, tremNext: 0, tilt: 0, tiltSt: 0, tiltT: 0, tiltDir: 1, vis: false, visT: 0, lunged: false, blinkT: 2, blink: 1, clickNext: 0,
+  init() { this.H = Actors.ent; this.lp = V3(); this.dpos = V3(); },
   spawn(def) {
     // too early in the night for it to turn its head to you, or to come with a sting
     const h = horror();
@@ -5803,10 +5908,15 @@ const Ent = {
     H.root.visible = true; H.smoke.dis = null;
     setLayer(H.root, def.mirrorOnly ? 2 : 0);
     H.root.position.copy(def.pos);
-    H.root.rotation.y = def.yaw ?? 0;
+    // on a ceiling it hangs the other way up
+    this.ceil = !!def.ceiling;
+    H.root.rotation.set(0, def.yaw ?? 0, this.ceil ? Math.PI : 0);
     this.pose = Object.assign({ pitch: -0.1, roll: 0.34, hunch: 0.2, headYaw: undefined }, def.pose || {});
     this.fade = def.fadeIn ? 0 : 1; this.fadeSpeed = def.fadeIn ? 1 / def.fadeIn : 99;
     this.eyeOn = false; this.eyeT = rand(0.6, 1.8); this.eye = 0;
+    this.smT = 0; this.snap0 = null; this.held = false;
+    this.trk = def.stare === false ? 0 : 0.8; this.trem = 0; this.tremNext = G.t + rand(0.4, 1.5); this.tilt = 0; this.tiltSt = 0; this.tiltT = rand(1.2, 3);
+    this.vis = false; this.visT = 0; this.lunged = false; this.lungeAt = rand(0.5, 1.4); this.clickNext = G.t + rand(2, 5);
     { const tv = def.tint ?? 0.0022; shadeMat().uniforms.uTint.value.set(tv, tv * 0.95, tv * 1.1); H.smoke.pts.material.uniforms.uAlbedo.value = def.albedo ?? 0.016; }
     this.used[def.id] = true;
     shadeMat().uniforms.uFade.value = this.fade;
@@ -5816,6 +5926,7 @@ const Ent = {
   hide(reason) {
     if (!this.def) return;
     const d = this.def; this.def = null; this.lastEnd = G.t; Sound.presence(0); this.snapT = 0;
+    if (this.held) { this.H.root.position.copy(this.lp); this.H.root.rotation.y = this.lyaw; this.held = false; }
     // looked at, lit or approached: it comes apart into smoke instead of vanishing on the spot
     if (this.H.root.visible && !d.mirrorOnly && (reason === 'look' || reason === 'flash' || reason === 'close' || reason === 'done')) {
       this.out = reason === 'done' ? 0.4 : 0.16;
@@ -5824,7 +5935,7 @@ const Ent = {
     if (d.onHide) d.onHide(reason);
   },
   dissolve(reason) {
-    const H = this.H, c = _dc.copy(H.root.position); c.y += 1.2;
+    const H = this.H, c = _dc.copy(H.root.position); c.y += this.ceil ? -0.6 : 1.2;
     const push = _dpush.set(0, 0, 0);
     if (reason === 'flash') push.copy(Player.flashDir).multiplyScalar(1.25);                    // blown back by the beam
     else if (reason === 'close') push.subVectors(camera.position, c).normalize().multiplyScalar(1.15);   // it rushes through you
@@ -5837,30 +5948,37 @@ const Ent = {
   /* the scare: the head turns to you, the room answers, then it is gone */
   startSnap(d) {
     const H = this.H, r = H.root.position, cam = camera.position;
-    this.snapT = 0.001;
+    this.snapT = 0.001; this.smT = 0;
     this.snapYaw = clamp(angNorm(faceYaw(r, cam) - H.root.rotation.y), -1.5, 1.5);
     this.eyeOn = true; this.eyeT = 1;
+    this.headSound('crack', 0.5);
     if (d.stinger) {
       Sound.play('stinger', null, { gain: 0.75, pure: true, pri: 2 });
       Sound.tinnitus(0.5, 0.05); after(1.2, () => Sound.tinnitus(0, 0.8));
       const l = nearestLight(r); if (l && l.lit && !l.flick) { l.setFlicker('unstable'); after(1.2, () => { if (l.flick && l.flick.mode === 'unstable' && !l.keepFlicker) l.setFlicker(null); }); }
       Flash.stutter(0.5, 0.85); Fear.kick(1);
-      Jump.pin(H.head, 0.5, 0.85);   // for a moment the smudge is a face
+      Jump.pin(H.head, 0.32, 0.6);   // for a blink the dark of the head is a face
     } else Sound.play('creaks', V3(r.x, r.y + 0.2, r.z), { gain: 0.4, rate: 0.7, hrtf: true });
   },
-  /* the pale smudge of a face: only as bright as the light on it, and only from the front */
-  faceLight(dt) {
-    const H = this.H; if (!H.face) return;
-    const p = _fl.copy(H.root.position); p.y += 1.65;
-    let k = 0.025 + Math.min(0.2, lightLevel(p) * 0.05);
-    if (flashHits(p, 12, 26 * DEG)) k += 0.55;
-    this.fl = damp(this.fl ?? k, k, 10, dt);
-    const m = H.face.material, v = clamp(this.fl * 1.4, 0.03, 0.9);
-    m.color.setRGB(v, v, v * 0.97);
-    H.head.getWorldDirection(_fd); H.head.getWorldPosition(_fp);
-    const facing = _fd.dot(_fp.subVectors(camera.position, _fp).normalize());
-    m.opacity = 0.85 * shadeMat().uniforms.uFade.value * sstep(-0.05, 0.45, facing);
+  headSound(name, gain = 0.45, o = {}) { const hp = this.H.head.getWorldPosition(_fp); Sound.play(name, V3(hp.x, hp.y, hp.z), Object.assign({ gain, ref: 0.9, hrtf: true, pri: 2 }, o)); },
+  /* the eyes: they throw a torch beam straight back; in a lit room a glint, in the dark an ember.
+     Only from the front, and now and then they go out for a blink. */
+  eyesLight(dt) {
+    const H = this.H, E = H.eyes; if (!E) return;
+    const p = E.getWorldPosition(_fl);
+    let k = 0.32 + Math.min(0.2, lightLevel(p) * 0.05);
+    if (flashHits(p, 15, 26 * DEG) || flashHits(_fp.copy(this.H.root.position).setY(this.H.root.position.y + (this.ceil ? -0.6 : 1.4)), 15, 26 * DEG)) k = 1.05;
+    this.fl = damp(this.fl ?? k, k, 14, dt);
+    this.blinkT -= dt;
+    if (this.blinkT <= 0) { this.blink = this.blink ? 0 : 1; this.blinkT = this.blink ? rand(1.5, 5) : rand(0.08, 0.16); }
+    const d = this.def, on = d ? (d.noEyes ? 0 : d.eyesOn || this.eyeOn || this.snapT > 0 || this.trk > 0.5 ? 1 : 0) : 1;
+    this.eye = damp(this.eye, on * this.blink, 16, dt);
+    H.head.getWorldDirection(_fd);
+    const facing = _fd.dot(_fp.subVectors(camera.position, p).normalize());
+    const a = this.eye * sstep(0.05, 0.5, facing) * shadeMat().uniforms.uFade.value * this.fl;
+    for (const s of [E.userData.l, E.userData.r]) s.material.color.setRGB(a * 1.9, a * 1.8, a * 1.5);
   },
+  faceLight(dt) { this.eyesLight(dt); },
   /* the smoke lives in world space: follow the body, the layer and the visibility */
   syncSmoke(dt = 0) {
     const H = this.H, S = H.smoke, pts = S.pts;
@@ -5875,15 +5993,95 @@ const Ent = {
   },
   shadeUniforms(dt) {
     const u = shadeMat().uniforms, H = this.H;
-    u.uJit.value = 0; u.uBase.value = H.root.position.y;
-    // eyes: two faint points in the sockets, there only some of the time
-    if (H.eyes) {
-      this.eyeT -= dt; if (this.eyeT <= 0) { this.eyeOn = !this.eyeOn; this.eyeT = this.eyeOn ? rand(0.6, 2.2) : rand(0.25, 3.5); }
-      this.eye = damp(this.eye, this.def && !this.def.noEyes && (this.eyeOn || this.def.eyesOn || this.snapT > 0) ? 1 : 0, 10, dt);
-      H.eyes.userData.mat.opacity = this.eye * u.uFade.value * 0.8;
-    }
+    u.uBase.value = this.ceil ? -99 : H.root.position.y;
   },
-  update(dt) { this.step(dt); this.faceLight(dt); this.syncSmoke(dt); },
+  /* stop-motion: the body only moves on the frames of a film running far too slow (and now and then
+     a frame sticks). Between them the picture holds, whatever it is really doing. */
+  JOINTS: null,
+  grab(out) {
+    const H = this.H, J = this.JOINTS || (this.JOINTS = [H.hips.rotation, H.chest.rotation, H.lHip.rotation, H.rHip.rotation, H.legs[0].rotation, H.legs[1].rotation, H.arms[0].sh.rotation, H.arms[0].el.rotation, H.arms[1].sh.rotation, H.arms[1].el.rotation, H.head.rotation]);
+    out = out || new Float32Array(J.length * 3 + 1);
+    J.forEach((r, i) => { out[i * 3] = r.x; out[i * 3 + 1] = r.y; out[i * 3 + 2] = r.z; });
+    out[J.length * 3] = H.hips.position.y;
+    return out;
+  },
+  put(a) { const J = this.JOINTS; J.forEach((r, i) => r.set(a[i * 3], a[i * 3 + 1], a[i * 3 + 2])); this.H.hips.position.y = a[J.length * 3]; },
+  stopMotion(dt) {
+    const H = this.H, d = this.def;
+    if (!d || !H.root.visible || d.smooth) { this.snap0 = null; return; }
+    this.smT -= dt;
+    if (this.smT <= 0 || !this.snap0) {
+      this.smT = Math.random() < 0.12 ? rand(0.2, 0.32) : rand(0.075, 0.13);
+      this.snap0 = this.grab(this.snap0);
+      this.dpos.copy(H.root.position); this.dyaw = H.root.rotation.y;
+      return;
+    }
+    this.lp.copy(H.root.position); this.lyaw = H.root.rotation.y; this.held = true;
+    H.root.position.copy(this.dpos); H.root.rotation.y = this.dyaw;
+    this.put(this.snap0);
+  },
+  /* the head, every frame: turned to you, shivering, tipping over and cracking back */
+  headFx(dt) {
+    const H = this.H, d = this.def, u = shadeMat().uniforms, S = H.smoke;
+    if (!d || !H.root.visible || d.mirrorOnly) { u.uJit.value = 0; S.jit = 0; return; }
+    const h = horror(), r = H.root.position, cam = camera.position;
+    if (this.visF !== G.frame) { this.visF = G.frame; this.vis = canSee(_ev.set(r.x, r.y + (this.ceil ? -0.6 : 1.25), r.z), 0.5); }
+    const vis = this.vis;
+    this.visT = vis ? this.visT + dt : 0;
+    // it keeps its eyes on you; the one that walks past a doorway only turns its head once it knows you are there
+    const want = d.stare === false ? (vis && this.visT > 0.35 ? 1 : 0) : 1;
+    this.trk = damp(this.trk, this.snapT > 0 ? 0 : want, d.stare === false ? 1.6 : 6, dt);
+    let rel = angNorm(faceYaw(r, cam) - H.root.rotation.y); if (this.ceil) rel = -rel;
+    rel = clamp(rel, -2.7, 2.7);   // much further round than a neck goes
+    const hr = H.head.rotation;
+    hr.y = lerp(hr.y, rel, this.trk);
+    // tipping over onto its shoulder, slowly, then back with a crack
+    if (h >= HZ.close && vis) {
+      if (this.tiltSt === 0) { this.tiltT -= dt; if (this.tiltT <= 0) { this.tiltSt = 1; this.tiltDir = Math.random() < 0.5 ? -1 : 1; } }
+      else if (this.tiltSt === 1) { this.tilt += dt * 0.75; if (this.tilt >= 1.35) { this.tilt = 1.35; this.tiltSt = 2; this.tiltT = rand(0.3, 0.9); } }
+      else if (this.tiltSt === 2) { this.tiltT -= dt; if (this.tiltT <= 0) { this.tilt = 0; this.tiltSt = 0; this.tiltT = rand(2.5, 5); this.headSound('crack', 0.55); Fear.kick(0.45); } }
+    } else if (this.tiltSt !== 0 && !vis) { this.tilt = damp(this.tilt, 0, 3, dt); if (this.tilt < 0.02) { this.tilt = 0; this.tiltSt = 0; } }
+    hr.z += this.tilt * this.tiltDir;
+    // shivering: the head a blur for a moment, with that clicking in its throat
+    if (h >= HZ.near && vis && this.trem <= 0 && G.t > this.tremNext) { this.trem = rand(0.45, 1.2); this.tremNext = G.t + rand(2.5, 6); this.headSound('click', 0.5); }
+    if (this.trem > 0) {
+      this.trem -= dt;
+      hr.y += (Math.random() - 0.5) * 0.45; hr.x += (Math.random() - 0.5) * 0.22; hr.z += (Math.random() - 0.5) * 0.35;
+    }
+    // near you and out of sight, you hear it before you see it
+    if (!vis && h >= HZ.close && G.t > this.clickNext && r.distanceTo(cam) < 8 && !d.mirrorOnly) { this.clickNext = G.t + rand(5, 10); this.headSound('click', 0.35, { rate: rand(0.85, 1.1) }); }
+    // its surface shivers when it is seen, lit, or shaking its head
+    const lit = flashHits(_ev.set(r.x, r.y + (this.ceil ? -0.6 : 1.25), r.z), 12, 26 * DEG);
+    const j = this.trem > 0 ? 1 : lit ? 0.6 : vis ? 0.25 : 0;
+    u.uJit.value = j * 0.014; S.jit = j * 0.022;
+  },
+  update(dt) {
+    const H = this.H;
+    if (this.held) { H.root.position.copy(this.lp); H.root.rotation.y = this.lyaw; this.held = false; }
+    this.step(dt);
+    this.stopMotion(dt);
+    this.headFx(dt);
+    this.eyesLight(dt);
+    this.syncSmoke(dt);
+  },
+  /* while you are looking at it, it is suddenly a lot closer: one frame it is there, the next here */
+  canLunge(d) {
+    if (d.lunge === false || d.persistent || d.mirrorOnly || d.ceiling || (d.pose && d.pose.sit)) return false;
+    return !['cross', 'hunt', 'front', 'peek', 'loopChair', 'final', 'follower', 'strobe', 'doorPeek'].includes(d.id);
+  },
+  lunge(dist) {
+    const H = this.H, r = H.root.position, cam = camera.position, P = Player;
+    const want = Math.max(2.3, dist * 0.45), k = 1 - want / dist;
+    const nx = r.x + (P.pos.x - r.x) * k, nz = r.z + (P.pos.z - r.z) * k, gy = groundAt(nx, nz, r.y + 0.6);
+    if (gy === null || Math.abs(gy - r.y) > 0.7) return false;
+    const np = V3(nx, gy, nz), nc = V3(nx, gy + 1.25, nz);
+    if (roomOf(nx, gy + 1, nz) === 'outside' || !Dir.free(np) || !losClear(cam, nc)) return false;
+    r.copy(np); H.root.rotation.y = faceYaw(np, P.pos);
+    this.smT = 0; this.lunged = true; this.trem = rand(0.6, 1.1);
+    this.headSound('crack', 0.6); Sound.play('thud', V3(nx, gy + 0.1, nz), { gain: 0.35, lp: 400, hrtf: true, pri: 2 });
+    Fear.kick(0.8); P.shake = Math.max(P.shake, 0.08);
+    return true;
+  },
   step(dt) {
     const H = this.H, d = this.def, u = shadeMat().uniforms;
     if (!d) {
@@ -5907,18 +6105,24 @@ const Ent = {
     if (d.update && d.update(dt, this) === false) return;
     if (!this.def) return;
     if (d.persistent) return;
-    const chest = _ev.copy(H.root.position); chest.y += 1.25;
+    const chest = _ev.copy(H.root.position); chest.y += this.ceil ? -0.6 : 1.25;
     const dist = chest.distanceTo(camera.position);
     if (d.mirrorOnly) { if (this.t > (d.timeout ?? 1.8)) this.hide('time'); return; }
-    const vis = canSee(chest, 0.5);
+    const vis = canSee(chest, 0.5); this.vis = vis; this.visF = G.frame;
     Sound.presence(vis ? 1 : d.presence ? d.presence() : 0);
     if (vis) {
       this.seen = true; this.gone = 0;
       const thr = Math.max(7.5 * DEG, Math.atan2(0.42, dist));
       if (Math.min(viewAngleTo(chest), viewAngleTo(_ev2.set(chest.x, chest.y + 0.55, chest.z))) < thr) {
         this.lookT += dt;
-        if (this.lookT > (d.lookDelay ?? 0.06)) { if (d.snap && this.fade > 0.5) { this.startSnap(d); return; } this.hide('look'); return; }
-      } else this.lookT = 0;
+        if (this.lookT > (d.lookDelay ?? 0.06)) {
+          // later in the night, the first time you look straight at it, it comes at you instead of going
+          if (!this.lunged && horror() >= HZ.close && dist > 3.6 && this.fade > 0.5 && this.canLunge(d) && this.lunge(dist)) { this.lookT = -0.7; return; }
+          if (d.snap && this.fade > 0.5) { this.startSnap(d); return; } this.hide('look'); return;
+        }
+      } else this.lookT = Math.min(this.lookT, 0);
+      // or at the edge of your eye
+      if (!this.lunged && horror() >= HZ.close && dist > 4.2 && this.fade > 0.8 && this.canLunge(d) && this.t > 1 && (this.visT || 0) > this.lungeAt && Math.random() < 0.02) this.lunge(dist);
     } else if (this.seen) { this.gone += dt; if (this.gone > (d.unseenGrace ?? 0.35)) { this.hide('unseen'); return; } }
     if (dist < (d.minDist ?? 3.4)) { if (d.snap && vis && this.fade > 0.5) { this.startSnap(d); return; } this.hide('close'); return; }
     if (d.flashKill !== false && flashHits(chest, 11, 24 * DEG)) { this.flashT += dt; if (this.flashT > (d.flashDelay ?? 0)) { this.hide('flash'); return; } } else this.flashT = 0;
@@ -5964,7 +6168,7 @@ const Dir = {
       if (b && roomOf(b.x, b.y + 1, b.z) !== 'outside') { const k = irand(1, 2), s = P.surface(); for (let i = 0; i < k; i++) after(0.32 + i * 0.52, () => Sound.step(s, V3(b.x, b.y + 0.1, b.z), { gain: 0.3 + 0.25 * horror(), hrtf: true, vary: 0.05 })); }
     }
     this.wasMoving = moving;
-    if (Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 35) return;
+    if (Ent.def || Ent.out > 0 || Reveal.busy || G.t - Ent.lastEnd < 35) return;
     // first sighting (after the third clock): someone crossing a doorway, far off
     if (Story.stage === 'p1') {
       if (F.p1CrossAt && !F.p1Cross && G.t > F.p1CrossAt && G.t > this.pollNext) { this.pollNext = G.t + 0.5; if (this.crossing()) { F.p1Cross = true; } }
@@ -5978,12 +6182,13 @@ const Dir = {
     if (G.t > this.pollNext) {
       this.pollNext = G.t + 0.6;
       const edge = h >= 0.35;
-      const ok = (h >= 0.45 && !F['bo_' + Story.stage] && Math.random() < 0.5 && this.blackout()) || (edge && Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || (edge && this.peripheral()));
+      // half-seen things (a head round a door frame, fingers on a jamb, the front door, the ceiling) take their turn with the rest
+      const ok = (h >= 0.45 && !F['bo_' + Story.stage] && Math.random() < 0.5 && this.blackout()) || (h >= HZ.near && Math.random() < 0.45 && Reveal.tryAny(h)) || (edge && Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || (edge && this.peripheral()));
       if (ok) this.schedule(lv);
     }
   },
-  free(p) {
-    for (const c of colliders) if (c.on && c.y1 > p.y + 0.2 && c.y0 < p.y + 1.8 && p.x > c.x0 - 0.3 && p.x < c.x1 + 0.3 && p.z > c.z0 - 0.3 && p.z < c.z1 + 0.3) return false;
+  free(p, m = 0.3) {
+    for (const c of colliders) if (c.on && c.y1 > p.y + 0.2 && c.y0 < p.y + 1.8 && p.x > c.x0 - m && p.x < c.x1 + m && p.z > c.z0 - m && p.z < c.z1 + m) return false;
     return true;
   },
   dark(chest) { return lightLevel(chest) < 0.4 && lightLevel(camera.position) < 0.9 && !flashHits(chest, 14, 32 * DEG); },
@@ -6367,7 +6572,7 @@ const Story = {
     if (stage === 's1') DOORS.bathroom.set(true);
     if (stage === 's2') { DOORS.basement.set(true); after(1.0, () => { Radio.power(true, 97.9); UI.thought(tr('t_radioOn'), 3.4); }); }
     this.ambNext = G.t + rand(12, 20); this.chgNext = G.t + rand(18, 30); this.spawnNext = G.t + 8;
-    Dir.reset(); Flash.reset(); Fear.reset(); Scare.reset(stage);
+    Dir.reset(); Flash.reset(); Fear.reset(); Scare.reset(stage); Reveal.reset();
     postMat.uniforms.uFade.value = 1; postMat.uniforms.uWhite.value = 0; postMat.uniforms.uWarp.value = 0;
     UI.clearThoughts();
     this.fadeIn(stage === 'intro' || stage === 'morning' ? 3.5 : 1.2);
@@ -6400,6 +6605,7 @@ const Story = {
     if (W.tvOn) { W.tvScreen.material.uniforms.uTexOff.value.set(Math.random(), Math.random()); }
     if (this.dbl) this.dbl(dt);
     Ent.update(dt);
+    Reveal.update(dt);
     Dir.update(dt);
     this.updateMirrors(dt);
     const si = SI(this.stage);
@@ -6892,7 +7098,7 @@ const Story = {
         const r = E.H.root.position, chest = _ev.set(r.x, r.y + 1.25, r.z);
         const seen = canSee(chest, 0.4) && viewAngleTo(chest) < 0.65;
         // the first time you see it on the stairs behind you, its face comes at you
-        if (seen && !F.dlSeen) { F.dlSeen = true; Fear.kick(1); Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Jump.pin(E.H.head, 0.4, 0.8); Player.shake = 0.2; Distort.pulse(0.9, 1.4, 'all'); }
+        if (seen && !F.dlSeen) { F.dlSeen = true; Fear.kick(1); Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Jump.pin(E.H.head, 0.3, 0.6); Player.shake = 0.2; Distort.pulse(0.9, 1.4, 'all'); }
         if (F.descentOpen) {
           E.pose.amp = 0; Sound.presence(0.15);
           if (P.pos.x > 29.5 && !seen) { E.hide('done'); F.follower = false; }
@@ -7868,7 +8074,7 @@ const Hunt = {
   update() {
     const lv = this.level(); if (!lv || this.st) return;
     if (Player.room === 'attic' || Player.hold || Player.pos.y > 1) return;   // never up the ladder or in the crawl space
-    if (G.t < this.next || Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 16) return;
+    if (G.t < this.next || Ent.def || Ent.out > 0 || Reveal.busy || G.t - Ent.lastEnd < 16) return;
     if (Story.dbl || Scare.strobeBusy || Scare.front || Story.stage === 'descent' && Player.pos.x > 28.5) return;
     this.next = G.t + 0.7;
     this.start(lv);
@@ -7933,8 +8139,12 @@ const Hunt = {
       if (st.doorT > 4.4) { d.open(0.9, 'slow'); st.door = null; st.rattled = false; st.bangs = 0; st.doorT = 0; }
       return;
     }
+    // it comes upright from far off; closer (and at the worst of the night, all the way) it drops onto all fours
+    const cw = hd < 5.5 || this.level() >= 1 ? 1 : 0;
+    E.pose.crawl = damp(E.pose.crawl || 0, cw, 3.5, dt);
+    const cr = E.pose.crawl;
     let mv = 0;
-    if (!vis) mv = st.speed * (hd < 2.8 ? 1.5 : 1) * dt;                   // unseen it walks, and the last metres it is quick
+    if (!vis) mv = st.speed * (hd < 2.8 ? 1.5 : 1) * (1 + 0.35 * cr) * dt;   // unseen it walks, and the last metres it is quick
     else if (va > 0.32 && hd > 2.2) {                                        // at the edge of your view: in jerks, like a film missing frames
       st.jerkT -= dt;
       if (st.jerkT <= 0) { st.jerkT = rand(0.4, 0.8); mv = rand(0.3, 0.5); Sound.play('creaks', V3(r.x, r.y + 0.1, r.z), { gain: 0.32, rate: 1.25, hrtf: true, pri: 2 }); }
@@ -7942,12 +8152,16 @@ const Hunt = {
     if (mv > 0) {
       const moved = this.advance(st, mv, E);
       if (!vis) {
-        st.stepAcc += moved; E.pose.walk = (E.pose.walk || 0) + moved * 8; E.pose.amp = 0.55;
-        if (st.stepAcc > 0.64) { st.stepAcc = 0; const near = clamp(1 - hd / 9, 0, 1); Sound.step(surfaceAt(r), V3(r.x, r.y + 0.1, r.z), { gain: 0.28 + 0.5 * near, rate: 0.8, vary: 0.05, hrtf: true, pri: 2 }); }
+        st.stepAcc += moved; E.pose.walk = (E.pose.walk || 0) + moved * (8 + 3 * cr); E.pose.amp = 0.55 + 0.4 * cr;
+        const near = clamp(1 - hd / 9, 0, 1);
+        if (cr > 0.5) {
+          // hands and knees on the boards, in a lopsided gallop
+          if (st.stepAcc > 0.95) { st.stepAcc = 0; Sound.play('crawl', V3(r.x, r.y + 0.1, r.z), { gain: 0.35 + 0.5 * near, vary: 0.08, hrtf: true, pri: 2 }); }
+        } else if (st.stepAcc > 0.64) { st.stepAcc = 0; Sound.step(surfaceAt(r), V3(r.x, r.y + 0.1, r.z), { gain: 0.28 + 0.5 * near, rate: 0.8, vary: 0.05, hrtf: true, pri: 2 }); }
       }
     } else E.pose.amp = 0;
     // its breath, once it is close
-    if (hd < 3.6) { st.breathT -= dt; if (st.breathT <= 0) { st.breathT = rand(1.8, 2.6); Sound.play('exhale', V3(r.x, r.y + 1.7, r.z), { gain: 0.22 + 0.35 * (1 - hd / 3.6), ref: 0.6, rate: 0.78, hrtf: true, noOcc: true, pri: 2 }); } }
+    if (hd < 4.2) { st.breathT -= dt; if (st.breathT <= 0) { st.breathT = rand(1.6, 2.4); const hp = E.H.head.getWorldPosition(_sc2); Sound.play(Math.random() < 0.7 ? 'wetbreath' : 'click', V3(hp.x, hp.y, hp.z), { gain: 0.25 + 0.4 * (1 - hd / 4.2), ref: 0.6, hrtf: true, noOcc: true, pri: 2 }); } }
   },
   /* walk `mv` metres along the path; returns how far it got */
   advance(st, mv, E) {
@@ -7988,7 +8202,7 @@ const Scare = {
     if (this.front) this.frontStep(dt);
     if (!P.enabled || ClockUI.active || UI.overlay || P.room === 'attic' || P.hold) return;
     Hunt.update();
-    const idle = !Ent.def && Ent.out <= 0 && !Hunt.st && !this.front && !this.strobeBusy, h = horror();
+    const idle = !Ent.def && Ent.out <= 0 && !Hunt.st && !this.front && !this.strobeBusy && !Reveal.busy, h = horror();
     // the lights go, and come back for a moment with it standing there (not on the endless stairs: that one has its own).
     // Only once it is well under way; at the worst of it, more than once
     const strobes = h >= 0.8 ? 2 : 1, sn = F['strobe_' + s] || 0;
@@ -8011,7 +8225,7 @@ const Scare = {
     P.yaw = Math.atan2(-(r.x - cam.x), -(r.z - cam.z)); P.pitch = 0.04; P.applyCamera(0);
     const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw);
     r.set(P.pos.x + fx * 0.62, P.pos.y, P.pos.z + fz * 0.62); H.root.rotation.y = faceYaw(r, P.pos);
-    E.pose = Object.assign(E.pose, { hunch: 0.05, pitch: -0.25, roll: 0.55, headYaw: 0 }); E.snapT = 0;
+    E.pose = Object.assign(E.pose, { hunch: 0.05, pitch: -0.25, roll: 0.55, headYaw: 0, crawl: 0, amp: 0 }); E.snapT = 0; E.smT = 0; E.tilt = 0; E.tiltSt = 0;
     poseHuman(H, E.pose); H.root.updateMatrixWorld(true);
     const hp = H.head.getWorldPosition(_sc1); r.y += camera.position.y - hp.y - 0.08;
     E.fade = 1; shadeMat().uniforms.uFade.value = 1; E.eyeOn = true;
@@ -8039,7 +8253,7 @@ const Scare = {
     const flash = P.flashOn;
     P.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
     P.flashOn = flash || st === 'descent'; P.flashK = P.flashOn ? 1 : 0; P.fovT = 72;
-    Dir.reset(); Flash.reset(); Fear.reset(); Fear.kick(0.55);
+    Dir.reset(); Flash.reset(); Fear.reset(); Reveal.reset(); Fear.kick(0.55);
     Story.fadeIn(3); Sound.duckTo(1, 1.2); Sound.muffle(0.55, 0.01); after(0.3, () => Sound.muffle(0, 2.5));
     if (st !== 'descent') Sound.play('creaks', V3(2.8, 0.4, 0.9), { gain: 0.25, rate: 0.8 });
     F.caughtN = (F.caughtN || 0) + 1; Run.caught++;
@@ -8073,7 +8287,7 @@ const Scare = {
       kill(1);
       Ent.spawn({ id: 'strobe', pos: spot, yaw: faceYaw(spot, Player.pos), pose: { hunch: 0.2, roll: 0.52, pitch: -0.08 }, persistent: true, flashKill: false, noFalter: true, eyesOn: true });
       Sound.play('stinger', null, { gain: 0.7, pure: true, pri: 2 }); Fear.kick(1); Player.shake = 0.22;
-      Jump.pin(Ent.H.head, 0.2, 0.75);
+      Jump.pin(Ent.H.head, 0.2, 0.6);
     });
     after(1.02, () => { kill(0); Ent.hide('strobe'); Jump.stop(); });
     after(2.0, () => {
@@ -8182,6 +8396,257 @@ const Scare = {
   },
 };
 
+/* ---- 08h_reveal.js ---- */
+/* ============================================================
+   Half of it. The worst is not seeing all of it: a head that leans
+   out round a door frame and snaps back, four fingers far too long
+   over the edge of a jamb, a shape behind the frosted glass of the
+   front door, something folded into a corner of the ceiling.
+   ============================================================ */
+const _rv1 = new THREE.Vector3(), _rv2 = new THREE.Vector3(), _rm = new THREE.Matrix4();
+function shuffled(a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = irand(0, i); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+
+const Reveal = {
+  busy: false, hand: null, sil: null,
+  reset() { this.handOff(true); this.silOff(true); this.busy = false; },
+  /* one that fits where you are and how far the night has gone (Dir asks, when a sighting is due) */
+  tryAny(h) {
+    if (this.busy || Player.room === 'attic' || Player.hold || Player.pos.y < -0.5 || Player.pos.y > 0.5) return false;
+    const opts = [];
+    if (h >= HZ.near) opts.push(() => this.doorPeek(h), () => this.fingers());
+    if (h >= HZ.close && !F.frontSil) opts.push(() => this.frontSil());
+    if (h >= 0.55) opts.push(() => this.ceiling());
+    for (const f of shuffled(opts)) if (f()) return true;
+    return false;
+  },
+
+  /* ---------- doorways you can see into from here ---------- */
+  /* frontal: only doorways you are looking more or less straight into (at a slant the wall hides nothing) */
+  doorways(minD, maxD, maxAng, frontal = 9) {
+    const cam = camera.position, here = roomOf(cam.x, cam.y, cam.z), out = [];
+    for (const p of PORTALS) {
+      if (p.axis === 'y' || p.y0 < -0.5 || p.y0 > 0.5 || p.y1 - p.y0 < 1.9 || !portalOpen(p) || p.b === 'outside') continue;
+      const wx = p.axis === 'x', c = p.c + (p.move && !wx ? -VEST.D : 0), side = Math.sign(wx ? cam.z - c : cam.x - c) || 1;
+      const mid = wx ? V3((p.lo + p.hi) / 2, p.y0 + 1.5, c) : V3(c, p.y0 + 1.5, (p.lo + p.hi) / 2);
+      const d = mid.distanceTo(cam); if (d < minD || d > maxD || viewAngleTo(mid) > maxAng || !losClear(cam, mid)) continue;
+      const dn = Math.abs(wx ? cam.z - c : cam.x - c), du = Math.abs(wx ? cam.x - mid.x : cam.z - mid.z);
+      if (du > dn * frontal) continue;
+      const farPt = wx ? V3(mid.x, p.y0 + 1, c - side * 0.6) : V3(c - side * 0.6, p.y0 + 1, mid.z);
+      const far = roomOf(farPt.x, farPt.y, farPt.z); if (far === 'outside' || far === here) continue;
+      out.push({ p, wx, c, side, mid, far, d });
+    }
+    return shuffled(out);
+  },
+  /* the edges of a doorway worth using: with a door in it, only the free one (the open leaf hides the hinge side) */
+  edges(D) {
+    const p = D.p, d = p.door && DOORS[p.door];
+    if (!d) return shuffled([p.lo, p.hi]);
+    const h = D.wx ? d.pivot.position.x : d.pivot.position.z + (p.move ? 0 : 0);
+    return [Math.abs(h - p.lo) > Math.abs(h - p.hi) ? p.lo : p.hi];
+  },
+  /* a point on a doorway: `along` metres past the edge (into the wall), `off` out from the wall's centre */
+  at(D, edge, along, off, y) {
+    const p = D.p, sg = edge === p.lo ? -1 : 1, u = edge + sg * along, n = D.c + D.side * off;
+    return D.wx ? V3(u, p.y0 + y, n) : V3(n, p.y0 + y, u);
+  },
+
+  /* ---------- a head round the frame ---------- */
+  doorPeek(h) {
+    const P = Player;
+    for (const D of this.doorways(3.0, 8, 0.5, 0.8)) {
+      const p = D.p;
+      for (const edge of this.edges(D)) {
+        const pos = this.at(D, edge, 0.3, -0.34, 0), sg = edge === p.lo ? -1 : 1;
+        if (roomOf(pos.x, p.y0 + 1, pos.z) !== D.far || !Dir.free(pos, 0.1)) continue;
+        if (canSee(V3(pos.x, p.y0 + 1.1, pos.z), 0.12) || canSee(V3(pos.x, p.y0 + 0.4, pos.z), 0.12)) continue;   // the body stays behind the wall
+        const head = this.at(D, edge, -0.2, -0.34, 1.72);
+        if (!losClear(camera.position, head) || lightLevel(head) > 2.4) continue;
+        // a black head is only a head against something lighter: the room behind it lit, or your torch on it
+        const behind = this.at(D, edge, -0.3, -1.6, 1.6);
+        if (lightLevel(behind) < 0.3 && !(Player.flashOn && viewAngleTo(head) < 0.3)) continue;
+        const face = D.wx ? V3(pos.x, 0, pos.z + D.side) : V3(pos.x + D.side, 0, pos.z), yaw = faceYaw(pos, face);
+        // lean towards the opening: which way that is in its own frame
+        const toward = D.wx ? V3(-sg, 0, 0) : V3(0, 0, -sg), dot = Math.cos(yaw) * toward.x - Math.sin(yaw) * toward.z;
+        const lean = -Math.sign(dot || 1) * 0.55;
+        const withHand = Math.random() < 0.65;
+        let lookT = 0, back = 0, k = 0;
+        Ent.spawn({ id: 'doorPeek', pos, yaw, pose: { side: 0, roll: 0, hunch: 0.05, pitch: 0.02, armsOut: false }, eyesOn: true, fadeIn: 0.2, persistent: true, lunge: false, flashKill: false,
+          update: (dt, E) => {
+            const hp = E.H.head.getWorldPosition(_rv1), cam = camera.position;
+            if (back > 0) {   // gone back behind the wall in one frame
+              back -= dt; if (back <= 0) { E.hide('unseen'); return false; }
+              E.pose.side = 0; E.pose.roll = 0; return;
+            }
+            // it leans out slowly, the head tipped right over onto its shoulder
+            k = Math.min(1, k + dt / 1.6);
+            E.pose.side = lean * sstep(0, 1, k); E.pose.roll = Math.sign(lean) * 1.0 * sstep(0.3, 1, k);
+            const seen = canSee(hp, 0.1), direct = seen && viewAngleTo(hp) < Math.max(0.1, Math.atan2(0.3, hp.distanceTo(cam)));
+            lookT = direct ? lookT + dt : Math.max(0, lookT - dt * 0.5);
+            const lit = flashHits(hp, 12, 24 * DEG), close = Math.hypot(pos.x - P.pos.x, pos.z - P.pos.z) < 2.4;
+            if (seen && !F.peekSeen) { F.peekSeen = true; Fear.kick(0.6); }
+            if (lookT > (h >= 0.55 ? 0.9 : 1.4) || (lit && k > 0.6) || close || E.t > 14) {
+              back = 0.25; E.smT = 0; E.pose.side = 0; E.pose.roll = 0;
+              if (seen) { E.headSound('crack', 0.55); Fear.kick(0.7); }
+              this.handWithdraw();
+            }
+          },
+          onHide: () => this.handOff() });
+        if (withHand) { const hy = rand(1.18, 1.42); this.handAt(D, edge, hy, false); }
+        return true;
+      }
+    }
+    return false;
+  },
+
+  /* ---------- fingers over the edge of a door frame ---------- */
+  handAt(D, edge, y, alone) {
+    const H = Actors.hand, p = D.p, sg = edge === p.lo ? -1 : 1;
+    const corner = this.at(D, edge, 0, WT / 2 + 0.026, y);
+    const X = D.wx ? V3(sg, 0, 0) : V3(0, 0, sg), Z = D.wx ? V3(0, 0, D.side) : V3(D.side, 0, 0), Y = new THREE.Vector3().crossVectors(Z, X);
+    _rm.makeBasis(X, Y, Z); H.root.quaternion.setFromRotationMatrix(_rm);
+    H.root.position.copy(corner); H.root.visible = true; H.base = corner.clone(); H.X = X; H.out = 0; H.t = 0; H.alone = alone;
+    this.hand = H;
+    if (alone) this.busy = true;
+    return true;
+  },
+  fingers() {
+    for (const D of this.doorways(2.4, 7.5, 0.55)) {
+      const p = D.p;
+      for (const edge of this.edges(D)) {
+        const y = rand(1.15, 1.45), t2 = this.at(D, edge, 0.12, WT / 2 + 0.03, y);   // where the fingertips will lie
+        if (!losClear(camera.position, t2) || lightLevel(t2) > 1.2) continue;
+        this.handAt(D, edge, y, true);
+        this.lookT = 0;
+        return true;
+      }
+    }
+    return false;
+  },
+  handWithdraw() { const H = this.hand; if (H && H.root.visible && !H.out) { H.out = 0.001; Sound.play('scrape', H.root.position, { gain: 0.18, rate: 1.9, hrtf: true }); } },
+  handOff(silent) { const H = Actors.hand; if (H) H.root.visible = false; if (this.hand && this.hand.alone && !silent) Ent.lastEnd = G.t; this.hand = null; if (!this.sil) this.busy = false; },
+  updateHand(dt) {
+    const H = this.hand; if (!H || !H.root.visible) return;
+    H.t += dt;
+    // the fingers tap on the wood, one after another, slowly
+    H.fingers.forEach((f, i) => { f.rotation.y = Math.max(0, Math.sin(H.t * 2.2 - i * 0.7)) * 0.12; });
+    if (H.out > 0) {
+      H.out += dt; const k = Math.min(1, H.out / 0.14);
+      H.root.position.copy(H.base).addScaledVector(H.X, -0.22 * k);
+      if (k >= 1) this.handOff();
+      return;
+    }
+    if (!H.alone) return;
+    const tipW = _rv2.set(0.1, -0.03, 0).applyMatrix4(H.root.matrixWorld), seen = canSee(tipW, 0.05);
+    const direct = seen && viewAngleTo(tipW) < 0.14;
+    this.lookT = direct ? (this.lookT || 0) + dt : Math.max(0, (this.lookT || 0) - dt * 0.4);
+    if (seen && !F.handSeen && viewAngleTo(tipW) < 0.3) { F.handSeen = true; Fear.kick(0.55); }
+    const close = tipW.distanceTo(camera.position) < 1.9, lit = flashHits(tipW, 10, 22 * DEG);
+    if (this.lookT > 1.1 || close || (lit && this.lookT > 0.3) || H.t > 25) this.handWithdraw();
+  },
+
+  /* ---------- a shape behind the frosted glass of the front door ---------- */
+  silMesh() {
+    if (this.silM) return this.silM;
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { uGlow: { value: new THREE.Vector3(0.1, 0.12, 0.16) }, uL: { value: 0 }, uK: { value: 0 }, uTilt: { value: 0 }, uOff: { value: 0 }, uTime: SU.uTime },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `varying vec2 vUv; uniform vec3 uGlow; uniform float uL, uK, uTilt, uOff, uTime;
+        float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
+        void main(){
+          vec2 uv = vUv; float fr = h12(floor(uv * 90.0)) * 0.5 + h12(floor(uv * 23.0)) * 0.5;   // frosting
+          vec2 q = uv - vec2(0.5 + uOff, 0.0); float c = cos(uTilt), s = sin(uTilt);
+          vec2 hq = q - vec2(0.0, 0.62); hq = vec2(c * hq.x - s * hq.y, s * hq.x + c * hq.y);
+          float head = smoothstep(0.26, 0.14, length(hq * vec2(1.15, 0.9)));
+          float neck = smoothstep(0.1, 0.04, abs(q.x)) * step(uv.y, 0.5);
+          float sh = smoothstep(0.06, -0.06, abs(q.x) - (0.5 - 0.6 * max(0.0, uv.y - 0.1))) * smoothstep(0.42, 0.3, uv.y);
+          float sil = clamp(max(head, max(neck, sh)), 0.0, 1.0) * uK;
+          float g = (0.7 + 0.3 * uv.y) * (0.85 + 0.3 * fr);
+          vec3 col = uGlow * g * uL * (1.0 - sil * 0.93);
+          gl_FragColor = vec4(pow(col, vec3(0.4545)), 1.0);
+        }` });
+    const d = DOORS.front, m = new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.4), mat);
+    // just inside the little window of the door (the same place in the leaf as its glass)
+    m.position.set(0.03, 1.55 - d.leaf.position.y - d.y, 0); m.rotation.y = Math.PI / 2; m.visible = false; m.layers.mask = 1;
+    d.leaf.add(m);
+    this.silM = m; return m;
+  },
+  frontSil() {
+    const d = DOORS.front, P = Player; if (!d || !d.exists || d.isOpen) return false;
+    if (P.room !== 'vestibule' && P.room !== 'hall') return false;
+    const m0 = this.silMesh(), gp = m0.getWorldPosition(_rv1).add(_rv2.set(0.12, 0, 0)), dist = gp.distanceTo(camera.position);   // (a hair in front of the door, which blocks sight lines itself)
+    if (dist < 2.2 || dist > 8.5 || viewAngleTo(gp) > 0.75 || !losClear(camera.position, gp)) return false;
+    const m = this.silMesh(); m.visible = true;
+    F.frontSil = true; this.busy = true;
+    this.sil = { t: 0, look: 0, st: 0, knocks: 0 };
+    return true;
+  },
+  silOff(silent) { if (this.silM) { this.silM.visible = false; this.silM.material.uniforms.uL.value = 0; } if (this.sil && !silent) Ent.lastEnd = G.t; this.sil = null; if (!this.hand) this.busy = false; },
+  updateSil(dt) {
+    const S = this.sil; if (!S) return;
+    const m = this.silM, u = m.material.uniforms, d = DOORS.front; S.t += dt;
+    const gp = m.getWorldPosition(_rv1).add(_rv2.set(0.12, 0, 0)), dist = gp.distanceTo(camera.position);
+    const seen = canSee(gp, 0.15) && viewAngleTo(gp) < 0.3;
+    // the street lamp behind the glass: as if someone had just stepped in front of it
+    u.uL.value = Math.min(1, S.t / 0.8) * (S.st === 3 ? Math.max(0, 1 - S.out / 1.5) : 1);
+    if (S.st === 0) { u.uK.value = 1; if (seen) { S.look += dt; if (S.look > 1.2) { S.st = 1; S.t1 = 0; Fear.kick(0.6); } } if (S.t > 25) { S.st = 3; S.out = 0; } }
+    if (S.st === 1) {   // it bends its head to look in at you; then it knocks
+      S.t1 += dt; u.uTilt.value = sstep(0, 2.2, S.t1) * 0.55;
+      if (S.t1 > 2.4 && S.knocks < 3 && S.t1 > 2.4 + S.knocks * 0.9) { S.knocks++; Sound.play('knock', d.pos, { gain: 0.75, rate: 0.85, hrtf: true, pri: 2 }); d.shake = 0.18; if (S.knocks === 1) Fear.kick(0.8); }
+      if (S.knocks >= 3 && S.t1 > 5.6) { S.st = 2; S.t2 = 0; Sound.play('rattle', d.pos, { gain: 0.55 }); d.shake = 0.4; }
+    }
+    if (S.st === 2) { S.t2 += dt; if (S.t2 > 0.7) { u.uK.value = 0; S.st = 3; S.out = 0; } }   // and it is not there any more
+    if (S.st === 3) { S.out += dt; if (S.out > 1.6) { this.silOff(); return; } }
+    // come too close, or open the door, and it is gone in a frame
+    if (S.st < 3 && (dist < 1.6 || d.isOpen)) { u.uK.value = 0; S.st = 3; S.out = 0.9; }
+  },
+
+  /* ---------- folded into a corner of the ceiling ---------- */
+  ceiling() {
+    const P = Player, cam = camera.position, room = P.room;
+    if (!['hall', 'living', 'kitchen', 'bedroom', 'study'].includes(room)) return false;
+    for (let i = 0; i < 12; i++) {
+      const a = P.yaw + Math.PI + rand(-1.1, 1.1), dd = rand(2.0, 3.6);
+      const x = P.pos.x - Math.sin(a) * dd, z = P.pos.z - Math.cos(a) * dd, y = P.pos.y + CEIL - 0.03;
+      let ok = roomOf(x, y - 0.3, z) === room;
+      for (const [ox, oz] of [[0.45, 0], [-0.45, 0], [0, 0.45], [0, -0.45]]) if (roomOf(x + ox, y - 0.3, z + oz) !== room) ok = false;
+      if (!ok) continue;
+      const ch = V3(x, y - 0.55, z);
+      if (canSee(ch, 0.4) || !losClear(cam, ch) || lightLevel(ch) > 2.4) continue;
+      let lookT = 0, run = 0, dir = null, clickT = 1;
+      Ent.spawn({ id: 'ceiling', ceiling: true, pos: V3(x, y, z), yaw: faceYaw(V3(x, 0, z), P.pos), pose: { crawl: 1, hunch: 0, roll: 0.35, pitch: 0 }, fadeIn: 0.3, eyesOn: true, persistent: true, lunge: false, flashKill: false,
+        update: (dt, E) => {
+          const r = E.H.root.position, c = _rv1.set(r.x, r.y - 0.55, r.z), seen = canSee(c, 0.45);
+          if (run > 0) {   // off across the ceiling, far too fast, and gone round the corner of your eye
+            run += dt; const sp = 5.5 * dt;
+            const nx = r.x + dir.x * sp, nz = r.z + dir.z * sp;
+            if (roomOf(nx, r.y - 0.3, nz) === room) { r.x = nx; r.z = nz; E.pose.walk = (E.pose.walk || 0) + sp * 12; E.pose.amp = 1; }
+            if (run > 0.7 || (!seen && run > 0.25)) { E.hide(seen ? 'look' : 'unseen'); return false; }
+            return;
+          }
+          E.pose.amp = 0;
+          clickT -= dt; if (clickT <= 0) { clickT = rand(2.5, 4); E.headSound('click', 0.4, { rate: 1.15 }); }
+          const direct = seen && viewAngleTo(c) < 0.3;
+          lookT = direct ? lookT + dt : lookT;
+          if (seen && !F.ceilSeen) { F.ceilSeen = true; Fear.kick(0.9); Player.shake = Math.max(Player.shake, 0.06); }
+          const close = Math.hypot(r.x - P.pos.x, r.z - P.pos.z) < 1.2, lit = flashHits(c, 10, 24 * DEG);
+          if (lookT > 0.9 || close || (lit && lookT > 0.25)) {
+            // away from you, along the ceiling
+            dir = V3(r.x - P.pos.x, 0, r.z - P.pos.z).normalize(); const sd = V3(-dir.z, 0, dir.x).multiplyScalar(Math.random() < 0.5 ? 0.8 : -0.8); dir.add(sd).normalize();
+            E.H.root.rotation.y = Math.atan2(dir.x, dir.z); run = 0.001; E.smT = 0;
+            Sound.play('skitter', V3(r.x, r.y - 0.1, r.z), { gain: 0.6, hrtf: true, pri: 2 }); Fear.kick(0.8);
+          }
+          if (!seen && E.t > 18) { E.hide('unseen'); return false; }
+        } });
+      return true;
+    }
+    return false;
+  },
+
+  update(dt) {
+    if (this.hand) this.updateHand(dt);
+    if (this.sil) this.updateSil(dt);
+  },
+};
 /* ---- 08e_power.js ---- */
 /* ============================================================
    The power cut: the fuse box on the landing, what hangs on each
