@@ -192,6 +192,120 @@
   #calib .row { grid-template-columns: minmax(0, 8em) minmax(0, 1fr); }
   #calib p.lede { max-width: 52ch; font-size: clamp(16px, 1.8vw, 19px); }
 
+  /* ---------- what you carry ---------- */
+  #handItem { position: absolute; right: max(16px, 3vw); bottom: max(16px, calc(3vh + env(safe-area-inset-bottom, 0px))); display: flex; gap: 6px; align-items: baseline; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(230, 223, 210, 0.66); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); }
+  #handItem b { font-family: var(--display); font-style: italic; font-weight: 400; font-size: 17px; letter-spacing: 0; text-transform: none; color: var(--bone); }
+  body.touch #handItem { bottom: auto; top: calc(28px + env(safe-area-inset-top, 0px)); right: calc(80px + env(safe-area-inset-right, 0px)); }
+
+  /* ---------- puzzle panels ---------- */
+  #panel { gap: 0; padding-bottom: min(12vh, 70px); }
+  .pnl { width: min(660px, 100%); max-height: calc(100% - 24px); overflow: auto; display: flex; flex-direction: column; gap: 16px; color: var(--bone); padding: 4px; }
+  .pnl .phd { margin: 0; font-family: var(--display); font-size: 24px; line-height: 1.1; }
+  .pfoot { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: center; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dust); }
+  .pkeys { display: inline-flex; gap: 6px; align-items: center; }
+  body.touch .pkeys { display: none; }
+  .pdone { background: rgba(10, 11, 15, 0.6); border: 1px solid rgba(230, 223, 210, 0.4); border-radius: 22px; padding: 10px 24px; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bone); cursor: pointer; }
+  .pdone:hover, .pdone:focus-visible { border-color: var(--amber); color: var(--amber); outline: none; }
+  /* the fuse box */
+  .fbox { background: linear-gradient(#cbc7bb, #b2ada1); color: #25231f; padding: 20px 20px 16px; border-radius: 4px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(0, 0, 0, 0.18); }
+  .fbox .phd { color: #25231f; font-size: 21px; margin-bottom: 12px; }
+  .rail { display: grid; grid-template-columns: 1.25fr repeat(6, 1fr); gap: 7px; background: #8b877b; padding: 12px 10px; border-radius: 3px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35); }
+  .brk { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; background: #efece4; border: 0; border-radius: 3px; padding: 8px 3px; cursor: pointer; color: #25231f; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); font: inherit; }
+  .brk:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+  .brk .num { font-size: 11px; font-weight: 500; }
+  .brk .sw { position: relative; width: 22px; height: 46px; border-radius: 3px; background: #2b2a28; }
+  .brk.main .sw { width: 32px; }
+  .brk .lever { position: absolute; left: 3px; right: 3px; height: 19px; bottom: 3px; border-radius: 2px; background: #e9e6de; transition: bottom 0.1s ease, background 0.1s; }
+  .brk.on .lever { bottom: 24px; background: #d9a45b; }
+  .brk.main.on .lever { background: #4aa35f; }
+  .brk .lbl { font-family: var(--hand); font-size: 20px; line-height: 0.9; color: #23407a; text-align: center; overflow-wrap: break-word; max-width: 100%; }
+  .brk.warn .lbl { color: #9a2a1e; }
+  .brk.trip { animation: trip 0.35s ease; }
+  @keyframes trip { 0%, 100% { transform: none; } 20% { transform: translateX(-4px); } 45% { transform: translateX(4px); } 70% { transform: translateX(-2px); } }
+  .fstat { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #3d3a33; }
+  .lamp { width: 12px; height: 12px; border-radius: 50%; background: #3a1512; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4); }
+  .lamp.on { background: #ff4a2a; box-shadow: 0 0 10px #ff4a2a; }
+  .fwarn { margin: 8px 0 0; font-family: var(--hand); font-size: 26px; line-height: 1; color: #9a2a1e; transform: rotate(-1.5deg); }
+  @media (max-width: 560px) { .rail { grid-template-columns: repeat(4, 1fr); } }
+  /* the radio */
+  .rbox { background: linear-gradient(#5e4230, #45301f); padding: 20px 22px 18px; border-radius: 12px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+  .rbox .phd { color: #efe2c4; margin-bottom: 12px; }
+  .dial { position: relative; height: 96px; border-radius: 6px; background: radial-gradient(ellipse at center, #2c1d10, #120c07); box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.5), inset 0 0 34px rgba(255, 170, 80, 0.16); cursor: ew-resize; touch-action: none; overflow: hidden; }
+  .pnl canvas { max-width: none; max-height: none; border: 0; box-shadow: none; }
+  .dialc { display: block; width: 100%; height: 100%; }
+  .needle { position: absolute; top: 6px; bottom: 6px; left: 50%; width: 3px; margin-left: -1.5px; background: #ff5a2a; box-shadow: 0 0 10px rgba(255, 90, 42, 0.8); pointer-events: none; }
+  .rrow { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 16px; margin-top: 12px; }
+  .rread { font-family: var(--display); font-size: 28px; line-height: 1; color: #f4e6c4; font-variant-numeric: tabular-nums; }
+  .rsig { display: inline-flex; gap: 10px; align-items: center; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #d8c8a8; }
+  .rmeter { width: 120px; height: 8px; border-radius: 4px; background: rgba(0, 0, 0, 0.45); overflow: hidden; }
+  .rmeter i { display: block; width: 0; height: 100%; background: linear-gradient(90deg, #d9a45b, #ffd08a); }
+  .rsticker { display: inline-block; align-self: flex-start; margin: 12px 0 0; padding: 3px 12px 1px; background: #f2df7a; color: #23407a; font-family: var(--hand); font-size: 26px; line-height: 1.1; transform: rotate(-2deg); }
+  /* the combination lock */
+  .lbox { align-self: center; padding: 22px 28px 24px; border-radius: 16px; background: linear-gradient(#caa45a, #a4803a); color: #2a2010; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+  .lbox .phd { color: #2a2010; font-size: 21px; text-align: center; margin-bottom: 14px; }
+  .wheels { display: flex; gap: 12px; justify-content: center; }
+  .wheel { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .wheel button { width: 56px; height: 40px; border: 0; border-radius: 6px; background: rgba(0, 0, 0, 0.25); color: #f7ecd0; font-size: 14px; cursor: pointer; touch-action: manipulation; }
+  .wheel button:hover { background: rgba(0, 0, 0, 0.4); }
+  .wnum { display: grid; place-items: center; width: 56px; height: 72px; border-radius: 6px; background: linear-gradient(#141210, #3a3630 50%, #141210); color: #f7ecd0; font-family: var(--mono); font-size: 34px; cursor: pointer; box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.4); }
+  .wheel.sel .wnum { box-shadow: inset 0 0 0 2px #ffd08a, 0 0 14px rgba(255, 208, 138, 0.5); }
+  .wheels.open .wnum { color: #9df0a8; }
+  /* the xylophone */
+  .xwrap { display: flex; flex-wrap: nowrap; gap: clamp(10px, 2.5vw, 20px); align-items: center; justify-content: center; }
+  .pnl .xbook { flex: 0 1 auto; width: clamp(170px, 44%, 340px); height: auto; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); transform: rotate(-1.2deg); }
+  .xright { display: flex; flex-direction: column; gap: clamp(8px, 2vh, 12px); align-items: center; flex: 0 1 auto; min-width: 0; }
+  .xpips { display: flex; gap: 5px; }
+  .xpips i { width: 13px; height: 13px; border-radius: 50%; background: rgba(230, 223, 210, 0.14); box-shadow: inset 0 0 0 1px rgba(230, 223, 210, 0.3); transition: background 0.15s; }
+  .xpips i.bad { background: #7a1e16; }
+  .xbars { display: flex; gap: clamp(4px, 1vw, 8px); align-items: center; height: clamp(110px, 34vh, 190px); padding: 10px clamp(8px, 2vw, 16px); border-radius: 10px; background: #2f5f94; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 -4px 0 rgba(0, 0, 0, 0.2); }
+  .xbar { position: relative; display: flex; align-items: flex-end; justify-content: center; width: clamp(24px, 4.4vw, 36px); height: var(--h); padding: 0 0 6px; border: 0; border-radius: 5px; background: var(--c); color: rgba(0, 0, 0, 0.55); font-family: var(--mono); font-size: 12px; cursor: pointer; box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.18), 0 2px 0 rgba(0, 0, 0, 0.3); touch-action: manipulation; }
+  .xbar::before, .xbar::after { content: ''; position: absolute; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: rgba(255, 255, 255, 0.6); }
+  .xbar::before { top: 9px; } .xbar::after { bottom: 26px; }
+  .xbar.hit { animation: hitb 0.25s ease; }
+  @keyframes hitb { 0% { transform: translateY(3px) scale(0.97); filter: brightness(1.4); } 100% { transform: none; filter: none; } }
+  .xhint { margin: 0; font-family: var(--display); font-style: italic; font-size: 16px; color: #d8d1c3; text-align: center; max-width: 28ch; }
+  @media (max-width: 520px) { .xwrap { flex-wrap: wrap; } .pnl .xbook { width: min(340px, 100%); } }
+  @media (max-height: 420px) { .xhint { display: none; } .pnl { gap: 10px; } }
+
+  body.panelOpen #hint { opacity: 0; }
+  @media (max-height: 460px) {
+    #panel { padding-top: 6px; padding-bottom: 34px; }
+    .pnl { gap: 8px; }
+    .pnl .phd { font-size: 18px; }
+    .fbox { padding: 10px 12px 8px; } .fbox .phd { margin-bottom: 6px; }
+    .rail { padding: 8px; gap: 5px; }
+    .brk { gap: 3px; padding: 5px 3px; } .brk .sw { height: 34px; } .brk .lever { height: 14px; } .brk.on .lever { bottom: 17px; }
+    .brk .lbl { font-size: 17px; }
+    .fstat { margin-top: 6px; } .fwarn { margin-top: 2px; font-size: 19px; }
+    .pdone { padding: 7px 18px; }
+    .rbox { padding: 12px 16px; } .dial { height: 74px; } .rsticker { margin-top: 6px; font-size: 21px; }
+    .lbox { padding: 12px 18px 14px; } .wnum { height: 56px; font-size: 28px; } .wheel button { height: 32px; }
+  }
+  /* ---------- credits ---------- */
+  #credits { position: absolute; inset: 0; z-index: 6; overflow: hidden; background: #000; transition: opacity 0.9s ease; }
+  #credits.out { opacity: 0; }
+  #credRoll { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 14vh; padding: 0 20px 10vh; text-align: center; will-change: transform; }
+  .cs { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 580px; }
+  .cs.top { gap: 8px; }
+  .ct { margin: 0; font-family: var(--display); font-size: clamp(54px, 9vw, 110px); line-height: 0.92; color: var(--bone); }
+  .csub { margin: 0; font-family: var(--display); font-style: italic; font-size: clamp(18px, 2.2vw, 24px); color: #bdb4a4; }
+  .ch { margin: 8px 0 2px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--dust); }
+  .crow { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: min(540px, 90vw); margin: 0; font-family: var(--display); font-size: clamp(18px, 2vw, 22px); line-height: 1.3; }
+  .crow .cn { text-align: right; color: var(--bone); } .crow .cr { text-align: left; font-style: italic; color: #bdb4a4; }
+  .cbig { margin: 0; font-family: var(--display); font-size: clamp(28px, 3.6vw, 40px); color: var(--bone); }
+  .ctx { margin: 0; font-family: var(--display); font-size: clamp(16px, 1.8vw, 19px); line-height: 1.5; color: #d2cabb; text-wrap: balance; }
+  .cs.note .ctx { max-width: 46ch; font-style: italic; color: #bdb4a4; }
+  .cl { margin: 0; font-family: var(--display); font-style: italic; font-size: clamp(30px, 4.2vw, 46px); color: var(--bone); }
+  #credSkip { position: absolute; right: calc(22px + env(safe-area-inset-right, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); padding: 9px 18px; border: 1px solid rgba(230, 223, 210, 0.3); border-radius: 18px; background: none; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dust); opacity: 0; transition: opacity 0.6s; cursor: pointer; }
+  #credSkip.on { opacity: 1; }
+  #credSkip:hover, #credSkip:focus-visible { color: var(--bone); border-color: var(--bone); outline: none; }
+  /* the end card */
+  #endDigits { width: 170px; height: 60px; filter: drop-shadow(0 0 10px rgba(255, 58, 34, 0.55)) drop-shadow(0 0 28px rgba(255, 58, 34, 0.25)); }
+  #endStats { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 12px; letter-spacing: 0.06em; color: var(--dust); }
+  #endStats li { display: flex; gap: 14px; justify-content: center; }
+  #endStats b { font-weight: 500; color: var(--bone); }
+  #endStats li.thanks { margin-top: 10px; font-family: var(--display); font-style: italic; font-size: 19px; letter-spacing: 0; color: #cfc8ba; }
+
   @media (prefers-reduced-motion: reduce) { #digits { animation: none; } #thought { transition: none; } }
 </style>
 </head>
@@ -209,6 +323,7 @@
     <p id="voice" aria-live="polite"></p>
     <p id="thought" aria-live="polite"></p>
     <div id="hint"></div>
+    <p id="handItem" hidden></p>
     <div id="clockPanel" hidden>
       <div id="clockRing"><div id="clockDot"></div></div>
       <div id="clockInfo">
@@ -233,6 +348,7 @@
     <figure><canvas id="imgCanvas" width="360" height="240"></canvas><figcaption id="imgCap"></figcaption></figure>
     <p class="close" data-i18n="img_close">E of klik om terug te gaan</p>
   </div>
+  <div id="panel" class="overlay" hidden><div id="panelBody" class="pnl"></div></div>
 
   <section id="title" class="screen">
     <div class="wrap">
@@ -253,7 +369,7 @@
         <li><kbd>P</kbd> <span data-i18n="k_perf">prestaties</span></li>
         <li><kbd>Esc</kbd> <span data-i18n="k_menu">menu</span></li>
       </ul>
-      <p class="meta" data-i18n="meta">Koptelefoon aanbevolen · ongeveer 15 minuten · toetsenbord en muis · bevat harde schrikmomenten</p>
+      <p class="meta" data-i18n="meta">Koptelefoon aanbevolen · ongeveer 40 minuten · toetsenbord en muis · bevat harde schrikmomenten</p>
       <p id="loading" data-i18n="loading">Het huis wordt opgebouwd…</p>
     </div>
   </section>
@@ -287,11 +403,15 @@
 
   <section id="end" class="screen" hidden>
     <div class="wrap">
+      <canvas id="endDigits" width="340" height="120" aria-hidden="true"></canvas>
       <p class="eyebrow" data-i18n="the_end">Einde</p>
       <h2>Awakent</h2>
+      <ul id="endStats"></ul>
       <div class="actions"><button id="againBtn" type="button" data-i18n="play_again">Opnieuw spelen</button></div>
     </div>
   </section>
+
+  <section id="credits" hidden><div id="credRoll"></div><button id="credSkip" type="button">Overslaan</button></section>
 
   <section id="calib" class="screen" hidden>
     <div class="wrap">
@@ -630,6 +750,105 @@ const STR = {
     wall_end: ['walk up to him', "it's me."],
   },
 };
+/* ---------- the longer night: power cut, radio, attic, lullaby, the tape, the stairs, the credits ---------- */
+Object.assign(STR.nl, {
+  meta: 'Koptelefoon aanbevolen · ongeveer 40 minuten · toetsenbord en muis · bevat harde schrikmomenten',
+  lbl_fusebox: 'Meterkast', lbl_unplug: 'Stekker eruit', lbl_dryer: 'Föhn', lbl_radio: 'Radio', lbl_pole: 'Haakstok pakken', lbl_hatch: 'Luik',
+  lbl_climbUp: 'Naar boven klimmen', lbl_climbDown: 'Naar beneden', lbl_lock: 'Cijferslot', lbl_xylo: 'Xylofoon', lbl_tape: 'Bandje pakken',
+  lbl_insertTape: 'Bandje afspelen', lbl_chest: 'Kist', lbl_dress: 'Jurk', lbl_horse: 'Hobbelpaard',
+  hand: 'In je hand:', hand_pole: 'haakstok', hand_tape: 'bandje „14/3”',
+  p_done: 'klaar', p_keysFuse: '0–6 omzetten', p_keysRadio: '← → of slepen: afstemmen', p_keysLock: '0–9 of ↑ ↓ ← →', p_keysXylo: '1–7 of klikken',
+  fuse_title: 'Meterkast', fuse_main: 'hoofd', fuse_g: ['keuken', 'kamer', 'gang · slpk.', 'badkamer', 'kelder', 'zolder'],
+  fuse_warn: 'groep 6: NIET AANZETTEN', fuse_power: 'spanning',
+  radio_title: 'Radio', radio_sticker: 'nachtradio 91,8', radio_signal: 'ontvangst',
+  lock_title: 'Cijferslot',
+  xylo_title: 'mama’s slaapliedje', xylo_hint: 'hoe hoger de stip, hoe hoger de toon',
+  t_powerOut: 'De stroom is uitgevallen.', t_fuseWhere: 'De meterkast. Bij de keldertrap.',
+  t_trip1: 'Hij springt er meteen weer uit.', t_trip2: 'Het flitste in de badkamer.', t_trip3: 'Eén groep tegelijk…',
+  t_lightsBack: 'Licht. Behalve de badkamer.', t_dryer: 'Mama’s föhn. In de wastafel. Met de stekker erin.', t_unplugged: 'Wie legt er nou een föhn in het water…',
+  t_fuse6: 'Wat is er op zolder dat niet aan mag?', t_fuseOk: 'Alles staat aan.',
+  t_powerBack: 'Alles doet het weer.', t_radioOn: 'De radio staat aan. Die zet ik nooit aan.', t_radioOff: 'Hij doet het niet. Geen stroom.', t_radioOld: 'Mama’s oude radio.',
+  t_numbers: 'Iemand leest cijfers voor.', t_code: 'Nul, zeven, één, vier.', t_radioDead: 'Stil.', t_overhead: 'Er loopt iemand boven de gang.', t_attic: 'De vliering.',
+  t_hatchNo: 'Daar ga ik niet naar boven. Niet vannacht.', t_hatchPole: 'Ik kan er niet bij. De haakstok staat in de kelder.', t_hatchShut: 'Dicht.',
+  t_pole: 'De haakstok. Voor het luik.', t_poleNot: 'De haakstok. Voor het luik naar de vliering.',
+  t_atticIn: 'Mama’s spullen.', t_dress: 'Haar jurk.', t_dressTurn: 'Stond die zo?', t_horse: 'Mijn hobbelpaard.', t_chest: 'Er zit een cijferslot op.', t_lockOpen: 'Open.',
+  t_xylo: 'Mijn xylofoon. En het liedje.', t_xyloWrong: 'Zo ging het niet.', t_xyloHelp: 'Ik ken dit liedje. Ze zong het elke avond.',
+  t_drawer: 'Er zit een laatje onder.', t_tape: '14/3. Haar handschrift.', t_downThere: 'Er stond iemand onder aan de trap.',
+  t_tapeWhere: 'Het antwoordapparaat. In de gang.', t_slept: 'Ik lag te slapen.', t_neverCalled: 'Ik heb haar nooit teruggebeld.',
+  t_dl1: 'Weer bovenaan?', t_dl2: 'Hij blijft achter me.', t_dl3: 'Zolang ik hem mijn rug toekeer, houdt de trap niet op.', t_dl4: 'Blijf hem aankijken. Achteruit.', t_dlPass: 'Hij komt niet verder.',
+  t_wave: 'Dag.',
+  o_s1: ['De stroom is uitgevallen.', 'De meterkast hangt op de overloop: de deur achter in de keuken, naast de keldertrap. Druk op E om hem te openen en zet de hoofdschakelaar om. Springt hij er steeds weer uit? Zet de groepen één voor één uit tot hij blijft staan. De groep die het doet, wijst je naar het probleem.'],
+  o_s1b: ['De badkamer blijft donker.', 'Groep 4 is de badkamer. Daar ligt iets dat kortsluiting maakt. Neem je zaklamp mee (F), trek de stekker uit het stopcontact naast de spiegel en zet daarna groep 4 in de meterkast weer aan.'],
+  o_s2: ['De radio in de keuken staat aan.', 'Loop naar de radio op het aanrecht en druk op E. Draai langzaam over de hele schaal (slepen, pijltjes of scrollwiel). Tussen de ruis zitten drie zenders. Op één ervan leest iemand cijfers voor: onthoud ze.'],
+  o_s2b: ['Er loopt iemand op de vliering.', 'Het luik zit in het plafond van de gang, boven de radiator. Het gaat alleen open met de haakstok, en die staat beneden in de kelder, tegen de muur naast de ketel. Pak hem, kijk naar het ringetje in het luik en druk op E.'],
+  o_s2c: ['Een kist met een cijferslot.', 'Achter op de vliering staat een kist met een slot van vier cijfers. Gebruik de cijfers die je op de radio hoorde (103,3), in dezelfde volgorde.'],
+  o_s3: ['Een slaapliedje, met drie vlekken.', 'Speel het liedje uit het boekje na op de xylofoon (toetsen 1–7 of klikken). Elke kleur is een staafje: hoe hoger de stip, hoe hoger de toon. Drie stippen zijn grijze vlekken geworden, maar ze staan nog op de goede hoogte. Het is het liedje dat je de hele nacht al hoort.'],
+  o_s3b: ['Een bandje uit het antwoordapparaat.', 'Het antwoordapparaat staat op het tafeltje aan het eind van de gang. Kijk ernaar, druk op E en speel het bandje af.'],
+  o_descent: ['Naar beneden.', 'De trap herhaalt zich zolang je hem je rug toekeert. Lees de muren. Draai je om naar wat achter je loopt, blijf ernaar kijken en loop zo achteruit de trap af (S-toets, of de stick naar achteren).'],
+  wall_l0: ['3:33', 'nacht 41', 'de trap houdt niet op'], wall_l1: ['hij loopt achter je', 'draai je om', 'kijk hem aan'],
+  wall_l2: ['hou hem in het oog', 'loop achteruit', 'blijf kijken'], wall_l3: ['achteruit', 'naar beneden', 'niet wegkijken'],
+  r918: [['m', 8.6], ['d', 'Radio Nachtlicht, 91,8. Voor iedereen die nog wakker is.'], ['d', 'Het is… drie uur drieëndertig.'], ['m', 8.6], ['d', 'Kunt u niet slapen? U bent niet de enige.'], ['d', 'Blijf maar luisteren. Wij blijven wakker met u.']],
+  r974: [['a', 'U ligt in bed. U kunt niet bewegen. En er staat iemand in de kamer.'], ['b', 'Elke nacht. Aan het voeteneind. Hij kijkt alleen maar.'], ['a', 'Dat horen we vaker. Het heet slaapverlamming.'], ['b', 'Mijn moeder zei altijd: kijk hem gewoon aan. Dan gaat hij weg.'], ['a', 'Wijze vrouw. …We gaan even naar de muziek.'], ['p', 3]],
+  nums: ['nul…', 'zeven…', 'één…', 'vier…'], r_awake: '…ben je wakker?',
+  vmMom: [['s', 'Bericht één. Donderdag 14 maart, 3:31.'], ['m', '„Hoi lieverd, met mama. Ik weet het, het is midden in de nacht.”'], ['m', '„Ik kan niet slapen. Hij staat er weer, bij de deur. Net als vroeger bij jou.”'], ['m', '„Ik doe wat ik jou altijd zei. Ik kijk hem gewoon aan.”'], ['m', '„Hij is niet eng, hoor. Hij let alleen op.”'], ['m', '„…Ik ben zo moe. Bel je me morgen? Slaap maar, lieverd.”']],
+  cr_sub: 'een nacht in het huis van mama', cr_cast: 'Met',
+  cast: [['Jij', ''], ['De nachtman', 'ook jij'], ['Marijke van Dam', 'mama'], ['Lies', 'op het antwoordapparaat'], ['dr. M. Verhoef', 'in een brief'], ['Radio Nachtlicht 91,8', 'voor wie nog wakker is']],
+  cr_by: 'Gemaakt door', cr_sound: 'Geluid & muziek', cr_soundTxt: 'Elk geluid wordt ter plekke in je browser gemaakt. Het slaapliedje: een speeldoos in a-klein, in driekwartsmaat.',
+  cr_tech: 'Beeld', cr_techTxt: 'three.js r128 · MIT-licentie',
+  cr_fonts: 'Letters', cr_fontsTxt: 'IM Fell English (Igino Marini) · IBM Plex Mono (IBM) · Reenie Beanie (James Grieshaber) · SIL Open Font License',
+  cr_night: 'Jouw nacht', st_time: 'speeltijd', st_caught: 'keer gepakt', st_read: 'papieren gelezen', st_msgs: 'berichten beluisterd', st_of: 'van', st_min: 'min',
+  cr_note: 'Slaapverlamming bestaat echt. Je lichaam slaapt nog, je hoofd al niet meer, en soms staat er iemand in de kamer die er niet is. Het is niet gevaarlijk en het gaat voorbij. Maar als je nachten zo voelen: praat erover. Met iemand die je vertrouwt, of met je huisarts.',
+  cr_last: 'Bel iemand terug.', cr_skip: 'Overslaan', cr_thanks: 'Bedankt voor het spelen.',
+});
+Object.assign(STR.en, {
+  meta: 'Headphones recommended · about 40 minutes · keyboard and mouse · contains loud jump scares',
+  lbl_fusebox: 'Fuse box', lbl_unplug: 'Unplug', lbl_dryer: 'Hair dryer', lbl_radio: 'Radio', lbl_pole: 'Take the hook pole', lbl_hatch: 'Hatch',
+  lbl_climbUp: 'Climb up', lbl_climbDown: 'Climb down', lbl_lock: 'Combination lock', lbl_xylo: 'Xylophone', lbl_tape: 'Take the tape',
+  lbl_insertTape: 'Play the tape', lbl_chest: 'Chest', lbl_dress: 'Dress', lbl_horse: 'Rocking horse',
+  hand: 'In your hand:', hand_pole: 'hook pole', hand_tape: 'tape "14/3"',
+  p_done: 'done', p_keysFuse: '0–6 to flip', p_keysRadio: '← → or drag: tune', p_keysLock: '0–9 or ↑ ↓ ← →', p_keysXylo: '1–7 or click',
+  fuse_title: 'Fuse box', fuse_main: 'main', fuse_g: ['kitchen', 'living', 'hall · bed', 'bath', 'cellar', 'attic'],
+  fuse_warn: 'group 6: DO NOT TURN ON', fuse_power: 'power',
+  radio_title: 'Radio', radio_sticker: 'night radio 91.8', radio_signal: 'signal',
+  lock_title: 'Combination lock',
+  xylo_title: "mom's lullaby", xylo_hint: 'the higher the dot, the higher the note',
+  t_powerOut: 'The power went out.', t_fuseWhere: 'The fuse box. By the basement stairs.',
+  t_trip1: 'It trips again right away.', t_trip2: 'Something flashed in the bathroom.', t_trip3: 'One group at a time…',
+  t_lightsBack: 'Light. Except the bathroom.', t_dryer: "Mom's hair dryer. In the sink. Still plugged in.", t_unplugged: 'Who leaves a hair dryer in the water…',
+  t_fuse6: "What's in the attic that mustn't be turned on?", t_fuseOk: "Everything's on.",
+  t_powerBack: 'Everything works again.', t_radioOn: 'The radio is on. I never turn it on.', t_radioOff: "It's dead. No power.", t_radioOld: "Mom's old radio.",
+  t_numbers: 'Someone is reading out numbers.', t_code: 'Zero, seven, one, four.', t_radioDead: 'Silence.', t_overhead: 'Someone is walking above the hallway.', t_attic: 'The attic.',
+  t_hatchNo: "I'm not going up there. Not tonight.", t_hatchPole: "I can't reach it. The hook pole is in the basement.", t_hatchShut: 'Shut.',
+  t_pole: 'The hook pole. For the hatch.', t_poleNot: 'The hook pole. For the attic hatch.',
+  t_atticIn: "Mom's things.", t_dress: 'Her dress.', t_dressTurn: 'Was it facing this way?', t_horse: 'My rocking horse.', t_chest: "There's a combination lock on it.", t_lockOpen: 'Open.',
+  t_xylo: 'My xylophone. And the song.', t_xyloWrong: "That's not how it went.", t_xyloHelp: 'I know this song. She sang it every night.',
+  t_drawer: "There's a drawer underneath.", t_tape: '14/3. Her handwriting.', t_downThere: 'Someone was standing at the bottom of the ladder.',
+  t_tapeWhere: 'The answering machine. In the hallway.', t_slept: 'I was asleep.', t_neverCalled: 'I never called her back.',
+  t_dl1: 'Back at the top?', t_dl2: "It's staying behind me.", t_dl3: "As long as I turn my back on it, the stairs don't end.", t_dl4: 'Keep looking at it. Backwards.', t_dlPass: "It isn't coming any further.",
+  t_wave: 'Bye.',
+  o_s1: ['The power went out.', 'The fuse box is on the landing: the door at the back of the kitchen, next to the basement stairs. Press E to open it and flip the main switch. Does it keep tripping? Turn the groups off one by one until it stays on. The group that does it points you to the problem.'],
+  o_s1b: ['The bathroom stays dark.', 'Group 4 is the bathroom. Something in there is causing a short. Take your flashlight (F), pull the plug out of the socket next to the mirror, then switch group 4 back on in the fuse box.'],
+  o_s2: ['The radio in the kitchen is on.', 'Walk to the radio on the counter and press E. Tune slowly across the whole dial (drag, arrow keys or scroll wheel). Between the static there are three stations. On one of them someone reads out numbers: remember them.'],
+  o_s2b: ['Someone is walking in the attic.', 'The hatch is in the hallway ceiling, above the radiator. It only opens with the hook pole, which is down in the basement, against the wall next to the boiler. Take it, look at the ring in the hatch and press E.'],
+  o_s2c: ['A chest with a combination lock.', 'At the back of the attic there is a chest with a four-digit lock. Use the numbers you heard on the radio (103.3), in the same order.'],
+  o_s3: ['A lullaby, with three smudges.', "Play the song from the little book on the xylophone (keys 1–7 or click). Each colour is a bar: the higher the dot, the higher the note. Three dots have become grey smudges, but they are still at the right height. It's the song you've been hearing all night."],
+  o_s3b: ['A tape from the answering machine.', 'The answering machine is on the table at the end of the hallway. Look at it, press E and play the tape.'],
+  o_descent: ['Go down.', 'The stairs repeat for as long as you turn your back on them. Read the walls. Turn round to what is walking behind you, keep looking at it and walk down the stairs backwards like that (S key, or pull the stick back).'],
+  wall_l0: ['3:33', 'night 41', "the stairs don't end"], wall_l1: ["he's walking behind you", 'turn round', 'look at him'],
+  wall_l2: ['keep him in sight', 'walk backwards', 'keep looking'], wall_l3: ['backwards', 'down', "don't look away"],
+  r918: [['m', 8.6], ['d', 'Radio Nightlight, 91.8. For everyone still awake.'], ['d', "It's… three thirty-three."], ['m', 8.6], ['d', "Can't sleep? You're not the only one."], ['d', "Stay with us. We'll stay awake with you."]],
+  r974: [['a', "You're lying in bed. You can't move. And someone is standing in the room."], ['b', 'Every night. At the foot of the bed. He only watches.'], ['a', 'We hear that a lot. It is called sleep paralysis.'], ['b', 'My mother always said: just look at him. Then he goes away.'], ['a', 'A wise woman. …Let us go to some music.'], ['p', 3]],
+  nums: ['zero…', 'seven…', 'one…', 'four…'], r_awake: '…are you awake?',
+  vmMom: [['s', 'Message one. Thursday 14 March, 3:31 a.m.'], ['m', '"Hi sweetheart, it\'s mom. I know, it\'s the middle of the night."'], ['m', '"I can\'t sleep. He\'s there again, by the door. Just like with you, when you were little."'], ['m', '"I\'m doing what I always told you. I\'m just looking at him."'], ['m', '"He\'s not scary, you know. He\'s only keeping watch."'], ['m', '"…I\'m so tired. Will you call me tomorrow? Go to sleep, sweetheart."']],
+  cr_sub: "a night in mom's house", cr_cast: 'With',
+  cast: [['You', ''], ['The night man', 'also you'], ['Marijke van Dam', 'mom'], ['Lies', 'on the answering machine'], ['Dr M. Verhoef', 'in a letter'], ['Radio Nightlight 91.8', 'for everyone still awake']],
+  cr_by: 'Made by', cr_sound: 'Sound & music', cr_soundTxt: 'Every sound is made on the spot in your browser. The lullaby: a music box in A minor, in three-four time.',
+  cr_tech: 'Graphics', cr_techTxt: 'three.js r128 · MIT licence',
+  cr_fonts: 'Type', cr_fontsTxt: 'IM Fell English (Igino Marini) · IBM Plex Mono (IBM) · Reenie Beanie (James Grieshaber) · SIL Open Font License',
+  cr_night: 'Your night', st_time: 'play time', st_caught: 'times caught', st_read: 'papers read', st_msgs: 'messages heard', st_of: 'of', st_min: 'min',
+  cr_note: "Sleep paralysis is real. Your body is still asleep, your mind already isn't, and sometimes someone is standing in the room who isn't there. It isn't dangerous, and it passes. But if your nights feel like this: talk about it. With someone you trust, or with your doctor.",
+  cr_last: 'Call someone back.', cr_skip: 'Skip', cr_thanks: 'Thank you for playing.',
+});
 let LANG = (() => { const s = Store.get('lang'); if (s === 'nl' || s === 'en') return s; return ((navigator.language || '') + '').toLowerCase().startsWith('nl') ? 'nl' : 'en'; })();
 function tr(k) { const d = STR[LANG]; if (d && k in d) return d[k]; if (k in STR.nl) return STR.nl[k]; return k; }
 function applyLangDOM() {
@@ -1385,7 +1604,7 @@ class RoomLight {
     this.name = name; LIGHTS.push(this); LN[name] = this;
     this.pos = o.pos.clone(); this.color = lin(o.color || '#ffd9a8'); this.intensity = o.i ?? 3.5; this.radius = o.r ?? 7;
     this.box = o.box; this.box2 = o.box2 || null;
-    this.on = o.on ?? 1; this.sw = 1; this.dim = 1; this.kill = 1; this.flick = null; this.fk = 1; this.eff = 0; this._d = 0;
+    this.on = o.on ?? 1; this.sw = 1; this.dim = 1; this.kill = 1; this.pw = 1; this.flick = null; this.fk = 1; this.eff = 0; this._d = 0;
     this.fixtures = []; this.fixColor = lin(o.fix || '#ffe2b0'); this.fixK = o.fixK ?? 2.2; this._fk = -1;
   }
   setFlicker(mode) { this.flick = mode ? { mode, t: 0, next: rand(0.5, 2), burst: 0, bt: 0 } : null; this.fk = 1; }
@@ -1410,7 +1629,7 @@ class RoomLight {
     }
     const prev = this.fk; this.fk = f;
     if (prev > 0.5 && f < 0.5 && this.flick && typeof Sound !== 'undefined') Sound.flickerTick(this);
-    this.eff = this.intensity * this.on * this.sw * this.dim * this.kill * f;
+    this.eff = this.intensity * this.on * this.sw * this.dim * this.kill * this.pw * f;
     const k = this.intensity > 0 ? this.eff / this.intensity : 0;
     if (Math.abs(k - this._fk) > 0.004) { this._fk = k; for (const fx of this.fixtures) fx.material.uniforms.uEmissive.value.copy(this.fixColor).multiplyScalar(this.fixK * k); }
   }
@@ -1790,6 +2009,8 @@ const DIGITALS = [];
 const VEST = { D: 0, cols: [], group: null }; // moving vestibule (long hall)
 const DYN = new Set();   // objects that move, toggle or change and must not be merged
 const WALLS = [];         // every wall as built: decor adds skirting boards and cornices to them
+const HATCH = { x0: 11.35, x1: 12.95, z0: 5.05, z1: 5.75 };   // the attic hatch in the hallway ceiling
+const AF = 2.62;          // attic floor
 
 function addCollider(x0, x1, z0, z1, y0, y1, o = {}) {
   const c = { x0, x1, z0, z1, y0, y1, on: true, occ: o.occ !== false, tag: o.tag || '' };
@@ -2146,8 +2367,9 @@ function buildWorld() {
   new RoomLight('bedroom', { pos: V3(3.45, 1.0, 0.35), color: '#ffc98e', i: 5.2, r: 7.5, box: [0, GF[0], 0, 5.6, GF[1], 4.4] });
   new RoomLight('bathroom', { pos: V3(7.2, 2.45, 2.1), color: '#fff1dc', i: 4.2, r: 6.5, box: [5.6, GF[0], 0, 8.8, GF[1], 4.4] });
   new RoomLight('study', { pos: V3(11.4, 2.4, 2.2), color: '#ffcf96', i: 4.2, r: 7, box: [8.8, GF[0], 0, 14, GF[1], 4.4] });
-  new RoomLight('hallA', { pos: V3(5.0, 2.4, 5.4), color: '#ffd29a', i: 3.4, r: 6.5, box: [2.2, GF[0], 4.4, 14, GF[1], 6.4] });
-  new RoomLight('hallB', { pos: V3(11.0, 2.4, 5.4), color: '#ffd29a', i: 3.4, r: 6.5, box: [2.2, GF[0], 4.4, 14, GF[1], 6.4] });
+  new RoomLight('hallA', { pos: V3(5.0, 2.4, 5.4), color: '#ffd29a', i: 3.4, r: 6.5, box: [2.2, GF[0], 4.4, 14, CEIL + 0.01, 6.4] });
+  new RoomLight('hallB', { pos: V3(11.0, 2.4, 5.4), color: '#ffd29a', i: 3.4, r: 6.5, box: [2.2, GF[0], 4.4, 14, CEIL + 0.01, 6.4] });
+  new RoomLight('attic', { pos: V3(7.2, 3.86, 5.4), color: '#ffcf8c', i: 2.6, r: 7.5, box: [2.2, AF - 0.01, 4.4, 14, 4.5, 6.4] });
   new RoomLight('vest', { pos: V3(1.1, 2.4, 6.2), color: '#ffd6a0', i: 3.2, r: 6, box: [0, GF[0], 4.4, 2.2, GF[1], 8.2] });
   new RoomLight('living', { pos: V3(5.2, 2.4, 8.7), color: '#ffcf96', i: 4.4, r: 8, box: [2.2, GF[0], 6.4, 8.2, 6, 11], box2: [0, GF[0], 8.2, 2.2, 6, 11] });
   new RoomLight('floorlamp', { pos: V3(0.45, 1.45, 10.6), color: '#ffb877', i: 3.0, r: 6.5, box: [2.2, GF[0], 6.4, 8.2, 6, 11], box2: [0, GF[0], 8.2, 2.2, 6, 11] });
@@ -2166,7 +2388,9 @@ function buildWorld() {
   floorAt(0, 5.6, 0, 4.4, 0, m.wood); ceilAt(0, 5.6, 0, 4.4, CEIL, m.plaster);
   floorAt(5.6, 8.8, 0, 4.4, 0, m.tileSmall); ceilAt(5.6, 8.8, 0, 4.4, CEIL, m.plaster);
   floorAt(8.8, 14, 0, 4.4, 0, m.woodDarkFloor); ceilAt(8.8, 14, 0, 4.4, CEIL, m.plaster);
-  floorAt(2.2, 14, 4.4, 6.4, 0, m.wood); ceilAt(2.2, 14, 4.4, 6.4, CEIL, m.plaster);
+  floorAt(2.2, 14, 4.4, 6.4, 0, m.wood);
+  // the hallway ceiling, with the hole for the attic hatch
+  { const H = HATCH; ceilAt(2.2, H.x0, 4.4, 6.4, CEIL, m.plaster); ceilAt(H.x1, 14, 4.4, 6.4, CEIL, m.plaster); ceilAt(H.x0, H.x1, 4.4, H.z0, CEIL, m.plaster); ceilAt(H.x0, H.x1, H.z1, 6.4, CEIL, m.plaster); }
   floorAt(2.2, 8.2, 6.4, 11, 0, m.wood); W.livingCeil = ceilAt(2.2, 8.2, 6.4, 11, CEIL, m.plaster);
   floorAt(0, 2.2, 8.2, 11, 0, m.wood); W.livingCeil2 = ceilAt(0, 2.2, 8.2, 11, CEIL, m.plaster);
   floorAt(8.2, 14, 6.4, 11, 0, m.tileCheck); ceilAt(8.2, 14, 6.4, 11, CEIL, m.plaster);
@@ -2235,6 +2459,8 @@ function buildWorld() {
   buildLongHall();
   buildExterior();
   buildDecor();
+  buildAttic();
+  buildPuzzleProps();
 }
 
 /* the moving entrance: west wall, front door, two mirrors */
@@ -2794,6 +3020,7 @@ function roomOf(x, y, z) {
   const D = VEST.D;
   if (y < -4) { if (x >= 33.1) return 'final'; if (x >= 15.2 && z >= 8.2 && z <= 9.5) return 'deep'; }
   if (x >= 15.2 && z >= 8.2 && z <= 9.5 && y < 3) return 'deep';
+  if (y > AF - 0.01 && z >= 4.4 && z <= 6.4 && x >= 2.2 && x <= 14) return 'attic';
   if (y < -0.2 && z >= 13.25 && x >= 9.5 && x <= 15.2) return 'basement';
   if (x >= 14 && x <= 15.2 && z >= 9.5 && z <= 13.25) return 'stairs';
   if (x >= 14 && x <= 15.2 && z >= 8.2 && z < 9.5) return 'landing';
@@ -2812,7 +3039,7 @@ function roomOf(x, y, z) {
    each frame a portal walk from the camera's room decides which bits
    the camera renders. Doors, windows and archways are the portals.
    ============================================================ */
-const ROOMS = ['bedroom', 'bathroom', 'study', 'hall', 'vestibule', 'living', 'kitchen', 'landing', 'stairs', 'basement', 'deep', 'final', 'outside'];
+const ROOMS = ['bedroom', 'bathroom', 'study', 'hall', 'vestibule', 'living', 'kitchen', 'landing', 'stairs', 'basement', 'deep', 'final', 'outside', 'attic'];
 const RBIT = {}; ROOMS.forEach((r, i) => { RBIT[r] = 1 << (i + 3); });
 const ALLROOMS = ROOMS.reduce((a, r) => a | RBIT[r], 0);
 const PORTALS = [];
@@ -2831,6 +3058,7 @@ function portalOpen(p) {
 function portalCorners(p) {
   const s = p.move ? -VEST.D : 0, q = p.pts;
   if (p.axis === 'x') { q[0].set(p.lo + s, p.y0, p.c); q[1].set(p.hi + s, p.y0, p.c); q[2].set(p.hi + s, p.y1, p.c); q[3].set(p.lo + s, p.y1, p.c); }
+  else if (p.axis === 'y') { q[0].set(p.lo, p.c, p.y0); q[1].set(p.hi, p.c, p.y0); q[2].set(p.hi, p.c, p.y1); q[3].set(p.lo, p.c, p.y1); }   // a hole in a ceiling: x lo..hi, z y0..y1
   else { const x = p.c + s; q[0].set(x, p.y0, p.lo); q[1].set(x, p.y0, p.hi); q[2].set(x, p.y1, p.hi); q[3].set(x, p.y1, p.lo); }
   return q;
 }
@@ -2857,6 +3085,8 @@ function buildPortals() {
   addPortal('bedroom', 'outside', 'z', 0, 1.3, 2.6, 0.8, 2.15);
   addPortal('living', 'outside', 'z', 0, 9.0, 10.4, 0.8, 2.15);
   addPortal('hall', 'outside', 'z', 14, 5.05, 5.75, 1.0, 2.0);
+  // the attic hatch, open or shut
+  addPortal('hall', 'attic', 'y', CEIL + 0.01, HATCH.x0, HATCH.x1, HATCH.z0, HATCH.z1, { open: () => Attic.ang > 0.02 });
 }
 
 /* ---------- which rooms does a triangle face? ---------- */
@@ -2905,6 +3135,7 @@ function assignRooms() {
   const tag = (o, rooms) => { o.userData.roomTag = rooms.reduce((a, r) => a | RBIT[r], 0); };
   for (const p of PORTALS) if (p.door && DOORS[p.door]) tag(DOORS[p.door].pivot, [p.a, p.b]);
   tag(W.long, ['hall']); tag(W.exterior, ['outside']);
+  if (W.hatchPivot) tag(W.hatchPivot, ['hall', 'attic']);
   scene.updateMatrixWorld(true);
   const stats = { meshes: 0 };
   const walk = (o, inherited) => {
@@ -3250,7 +3481,7 @@ function setupAO() {
   setAO(1, 'bedroom', 0, 0, 5.6, 4.4, ...H, 0.07, 0.07, 5.53, 4.33, ...F);
   setAO(2, 'bathroom', 5.6, 0, 8.8, 4.4, ...H, 5.67, 0.07, 8.73, 4.33, ...F);
   setAO(3, 'study', 8.8, 0, 14, 4.4, ...H, 8.87, 0.07, 13.93, 4.33, ...F);
-  setAO(4, 'hall', 2.2, 4.4, 14, 6.4, ...H, -O, 4.47, 13.93, 6.33, ...F);
+  setAO(4, 'hall', 2.2, 4.4, 14, 6.4, -0.5, CEIL + 0.01, -O, 4.47, 13.93, 6.33, ...F);
   setAO(5, 'living', 2.2, 6.4, 8.2, 8.2, ...H, 2.27, 6.47, 8.13, O, ...F);
   setAO(6, 'living', 2.2, 8.2, 8.2, 11, ...H, -O, -O, 8.13, 10.93, ...F);
   setAO(7, 'living', 0, 8.2, 2.2, 11, ...H, 0.07, 8.27, O, 10.93, ...F);
@@ -3260,6 +3491,7 @@ function setupAO() {
   setAO(11, 'basement', 9.5, 13.25, 15.2, 18.5, -3, -0.2, 9.57, 13.32, 15.13, 18.43, -2.7, -0.3);
   setAO(12, 'deep', 15.2, 8.2, 33.1, 9.5, -14, 3, -O, 8.27, O, 9.43, -O, O);
   setAO(13, 'final', 33.1, 1.9, 47, 15.8, -13.5, -5, 33.17, 1.97, 46.93, 15.73, -12.8, -5.8);
+  setAO(14, 'attic', 2.2, 4.4, 14, 6.4, AF - 0.01, 4.4, 2.22, 4.47, 13.92, 6.33, AF, 4.2);
 }
 
 /* ---------- the rooms ---------- */
@@ -3611,9 +3843,9 @@ const Candles = {
   /* which rooms burn candles in which part of the night */
   plan(s) {
     return {
-      memorial: ['intro', 'p1', 'p2', 'p2b', 'p3'].includes(s),
+      memorial: ['intro', 'p1', 'p2', 'p2b', 's1', 's2', 's3', 'p3'].includes(s),
       coffee: s === 'intro' || s === 'p1',
-      kitchen: s === 'p2' || s === 'p2b',
+      kitchen: ['p2', 'p2b', 's1', 's2', 's3'].includes(s),
       bath: s === 'p3',
       dresser: s === 'p3',
     };
@@ -3673,6 +3905,301 @@ const Candles = {
   },
 };
 
+/* ---- 04e_attic.js ---- */
+/* ============================================================
+   The crawl space over the hallway, and the things the longer night
+   needs: the hatch with its folding ladder, mum's things under the roof
+   and the chest at the far end; the fuse box on the landing, her old
+   radio in the kitchen, a hair dryer in the bathroom sink and the hook
+   pole in the basement.
+   ============================================================ */
+const KW = 3.4, RIDGE = 4.2;                 // knee walls and ridge of the crawl space
+const LADDER_ANG = 1.134, LADDER_LEN = 2.87;  // the ladder, folded down: 65 degrees, foot at x = 12.56
+const CHEST = { x: 2.8, z: 5.4, w: 0.5, h: 0.44, d: 0.82 };
+const XYLO_COL = ['#d23a2e', '#ee8a24', '#e9c630', '#4f9a3c', '#2f6fc0', '#7a4aa8', '#e072a6'];
+
+function buildAttic() {
+  const H = HATCH;
+  const planks = M({ map: T.wood, ts: [1 / 1.6, 1 / 1.6], color: '#9c8a76' });
+  const boards = M({ map: T.wood, ts: [1 / 1.1, 1 / 2.4], color: '#7d6a55', side: THREE.DoubleSide });
+  const beam = M({ color: '#5c4633', noise: 0.3 });
+  // the floor, around the hole
+  floorAt(2.2, H.x0, 4.47, 6.33, AF, planks); floorAt(H.x1, 13.93, 4.47, 6.33, AF, planks);
+  floorAt(H.x0, H.x1, 4.47, H.z0, AF, planks); floorAt(H.x0, H.x1, H.z1, 6.33, AF, planks);
+  // the edges of the hole, so no crack shows between the ceiling below and the boards above
+  const ly = (CEIL + AF) / 2;
+  plane(H.x1 - H.x0, 0.06, MT.trim, (H.x0 + H.x1) / 2, ly, H.z0, 0, 0);
+  plane(H.x1 - H.x0, 0.06, MT.trim, (H.x0 + H.x1) / 2, ly, H.z1, 0, Math.PI);
+  plane(H.z1 - H.z0, 0.06, MT.trim, H.x0, ly, (H.z0 + H.z1) / 2, 0, Math.PI / 2);
+  plane(H.z1 - H.z0, 0.06, MT.trim, H.x1, ly, (H.z0 + H.z1) / 2, 0, -Math.PI / 2);
+  // a painted frame round the hatch, seen from the hallway
+  { const k = 0.06, hh = 0.022, y = CEIL - hh, w = H.x1 - H.x0 + 2 * k, d = H.z1 - H.z0;
+    box(w, hh, k, MT.trim, (H.x0 + H.x1) / 2, y, H.z0 - k / 2); box(w, hh, k, MT.trim, (H.x0 + H.x1) / 2, y, H.z1 + k / 2);
+    box(k, hh, d, MT.trim, H.x0 - k / 2, y, (H.z0 + H.z1) / 2); box(k, hh, d, MT.trim, H.x1 + k / 2, y, (H.z0 + H.z1) / 2); }
+  // knee walls, the roof and the two gable ends, all bare boards
+  const L = 13.93 - 2.22, cx = (2.22 + 13.93) / 2, sl = Math.hypot(0.93, RIDGE - KW), th = Math.atan2(0.93, RIDGE - KW);
+  plane(L, KW - AF, boards, cx, (AF + KW) / 2, 4.475, 0, 0);
+  plane(L, KW - AF, boards, cx, (AF + KW) / 2, 6.325, 0, Math.PI);
+  plane(L, sl, boards, cx, (KW + RIDGE) / 2, (4.47 + 5.4) / 2, th, 0);
+  plane(L, sl, boards, cx, (KW + RIDGE) / 2, (5.4 + 6.33) / 2, -th, 0);
+  plane(6.33 - 4.47, RIDGE - AF, boards, 2.215, (AF + RIDGE) / 2, 5.4, 0, Math.PI / 2);
+  plane(6.33 - 4.47, RIDGE - AF, boards, 13.925, (AF + RIDGE) / 2, 5.4, 0, -Math.PI / 2);
+  // rafters under the boards, and the ridge beam
+  const rot = Math.PI / 2 - th;
+  for (let x = 2.62; x < 13.9; x += 0.95) {
+    for (const s of [-1, 1]) {
+      const r = addMesh(new THREE.BoxGeometry(0.06, 0.09, sl), beam);
+      r.position.set(x, (KW + RIDGE) / 2 - 0.04, s < 0 ? (4.47 + 5.4) / 2 + 0.035 : (5.4 + 6.33) / 2 - 0.035);
+      r.rotation.x = s < 0 ? -rot : rot;
+    }
+  }
+  box(L, 0.1, 0.08, beam, cx, RIDGE - 0.14, 5.4);
+  // where you can and cannot go: the low sides, the far end, the hole
+  for (const c of [[2.2, 14, 4.4, 4.85], [2.2, 14, 5.95, 6.4], [2.2, 2.45, 4.4, 6.4], [11.3, 14, 4.4, 6.4]]) addCollider(c[0], c[1], c[2], c[3], AF, 4.4, { occ: false });
+  addRegion(2.2, H.x0 - 0.01, 4.4, 6.4, AF);
+  // one bulb on a cord
+  bareBulb(LN.attic, 7.2, 3.86, 5.4, scene, 0.3);
+  LN.attic.on = 0;
+
+  /* --- mum's things --- */
+  const cb = MT.cardboard;
+  const crate = (x, z, w, h, d, y = 0, ry = 0, mat = cb) => { const b = box(w, h, d, mat, x, AF + y, z); if (ry) b.rotation.y = ry; return b; };
+  const label = (x, y, z, ry, mat) => plane(0.28, 0.14, mat, x, AF + y, z, 0, ry);
+  // north side
+  crate(3.3, 4.66, 0.46, 0.4, 0.36, 0, 0.04); crate(3.28, 4.66, 0.4, 0.26, 0.3, 0.4, -0.1); label(3.3, 0.2, 4.842, 0, DEC.boxXmas);
+  crate(4.4, 4.64, 0.52, 0.34, 0.34, 0, -0.06);
+  { const rug = dcyl(0.12, 0.12, 1.5, M({ map: T.fabric, world: false, ts: [4, 2], color: '#7a3a30' }), 0, 0, 0); rug.rotation.z = Math.PI / 2; rug.position.set(6.1, AF + 0.12, 4.66); }
+  crate(7.35, 4.66, 0.44, 0.36, 0.36, 0, 0.08); label(7.35, 0.18, 4.842, 0, DEC.boxMama);
+  crate(7.9, 4.66, 0.4, 0.3, 0.34, 0, -0.12);
+  crate(10.15, 4.64, 0.5, 0.42, 0.36, 0, 0.05); crate(10.1, 4.64, 0.36, 0.22, 0.28, 0.42, 0.3);
+  { const p = picture(10.75, AF + 0.25, 4.62, 0.1, 0.42, 0.3, 5, DEC.frameGold); p.rotation.x = -0.3; }
+  // south side
+  crate(3.5, 6.15, 0.5, 0.36, 0.34, 0, 0.1); label(3.5, 0.18, 5.968, Math.PI, DEC.boxMama);
+  // a child's bed frame, taken apart
+  { const bw = M({ color: '#d9d2c2', noise: 0.12 });
+    box(1.5, 0.05, 0.06, bw, 6.4, AF + 0.1, 6.18); box(1.5, 0.05, 0.06, bw, 6.4, AF + 0.1, 5.98);
+    for (const x of [5.7, 7.1]) box(0.05, 0.42, 0.28, bw, x, AF, 6.08);
+    for (let x = 5.85; x < 7.05; x += 0.15) box(0.02, 0.36, 0.02, bw, x, AF + 0.03, 6.18); }
+  // suitcases, a lamp shade, a chair under a sheet
+  box(0.55, 0.19, 0.38, DEC.leather, 8.7, AF, 6.12); box(0.5, 0.16, 0.34, M({ color: '#5a3a3a', noise: 0.2 }), 8.72, AF + 0.19, 6.1).rotation.y = 0.1;
+  { const s = addMesh(new THREE.CylinderGeometry(0.13, 0.22, 0.2, 14, 1, true), MT.shade); s.position.set(9.55, AF + 0.1, 6.12); s.rotation.z = 0.5; }
+  { const sc = addMesh(drapedChairGeo(), MT.sheet); sc.position.set(10.3, AF, 6.08); sc.rotation.y = 0.3; sc.scale.set(0.85, 0.9, 0.85); }
+  // beyond the hole, out of reach
+  crate(13.45, 4.75, 0.5, 0.4, 0.4, 0, 0.2); crate(13.5, 6.0, 0.46, 0.3, 0.34, 0, -0.1); crate(13.6, 5.4, 0.4, 0.5, 0.4, 0, 0.05);
+  // the rocking horse (it rocks once you are past it)
+  { const g = new THREE.Group(); g.position.set(9.0, AF, 4.68); scene.add(g); DYN.add(g); W.horse = g;
+    const wh = M({ color: '#e6ddc8', noise: 0.1 }), red = M({ color: '#9a2f26', noise: 0.12 }), dark = MT.darkWood;
+    const add = (geo, mat, x, y, z) => { const o = new THREE.Mesh(geo, mat); o.position.set(x, y, z); g.add(o); return o; };
+    for (const s of [-1, 1]) { const r = add(new THREE.TorusGeometry(0.62, 0.014, 4, 18, 0.95), dark, 0, 0.64, s * 0.1); r.rotation.z = -Math.PI / 2 - 0.475; }
+    for (const [x, s] of [[-0.18, -1], [-0.18, 1], [0.18, -1], [0.18, 1]]) { const l = add(new THREE.BoxGeometry(0.03, 0.3, 0.03), wh, x, 0.2, s * 0.08); l.rotation.z = x > 0 ? -0.2 : 0.2; }
+    const body = add(new THREE.BoxGeometry(0.46, 0.14, 0.14), wh, 0, 0.4, 0);
+    const nk = add(new THREE.BoxGeometry(0.1, 0.24, 0.1), wh, -0.23, 0.52, 0); nk.rotation.z = 0.35;
+    add(new THREE.BoxGeometry(0.2, 0.09, 0.09), wh, -0.3, 0.63, 0);
+    add(new THREE.BoxGeometry(0.16, 0.03, 0.15), red, 0.02, 0.475, 0);
+    add(new THREE.BoxGeometry(0.03, 0.2, 0.04), dark, -0.17, 0.53, 0);
+    for (const s of [-1, 1]) add(new THREE.SphereGeometry(0.012, 6, 5), MT.black, -0.36, 0.65, s * 0.045);
+    use(body, 'lbl_horse', () => UI.thought(tr('t_horse'), 2.6)); }
+  // her dress on a dress form (it turns while you are not looking)
+  { const g = new THREE.Group(); g.position.set(4.55, AF, 5.8); scene.add(g); DYN.add(g); W.dress = g;
+    const dm = M({ map: T.fabric, world: false, ts: [3, 3], color: '#4f5f86' }), st = MT.darkWood;
+    const add = (geo, mat, x, y, z) => { const o = new THREE.Mesh(geo, mat); o.position.set(x, y, z); g.add(o); return o; };
+    for (let i = 0; i < 3; i++) { const a = i * TAU / 3, f = add(new THREE.BoxGeometry(0.02, 0.02, 0.24), st, Math.sin(a) * 0.1, 0.02, Math.cos(a) * 0.1); f.rotation.y = a; }
+    add(new THREE.CylinderGeometry(0.012, 0.012, 0.4, 6), st, 0, 0.2, 0);
+    add(new THREE.CylinderGeometry(0.13, 0.27, 0.52, 16, 1, true), M({ map: T.fabric, world: false, ts: [3, 3], color: '#4f5f86', side: THREE.DoubleSide }), 0, 0.62, 0);
+    add(new THREE.CylinderGeometry(0.12, 0.125, 0.26, 14), dm, 0, 1.0, 0).scale.z = 0.72;
+    add(new THREE.SphereGeometry(0.13, 14, 8, 0, TAU, 0, Math.PI / 2), dm, 0, 1.12, 0).scale.set(1.15, 0.45, 0.72);
+    add(new THREE.CylinderGeometry(0.025, 0.03, 0.06, 8), st, 0, 1.2, 0);
+    add(new THREE.SphereGeometry(0.03, 8, 6), st, 0, 1.25, 0);
+    { const c = add(new THREE.TorusGeometry(0.06, 0.012, 5, 12), M({ color: '#e9e2d0', noise: 0.05 }), 0, 1.16, 0.06); c.rotation.x = Math.PI / 2 - 0.3; c.scale.set(1.2, 1, 1); }   // a white collar
+    W.dressCol = addCollider(4.37, 4.73, 5.62, 5.98, AF, AF + 1.3, { occ: false });
+    for (const o of g.children) if (o.isMesh && o.geometry.type !== 'BoxGeometry') use(o, 'lbl_dress', () => UI.thought(tr('t_dress'), 2.6)); }
+
+  /* --- the chest at the far end --- */
+  { const C = CHEST, wood = M({ color: '#6e4b2e', noise: 0.25 }), band = M({ color: '#2e2a26', noise: 0.15 }), x0 = C.x - C.w / 2, x1 = C.x + C.w / 2;
+    const cg = new THREE.Group(); scene.add(cg); W.chest = cg;
+    box(C.w, 0.03, C.d, wood, C.x, AF + 0.1, C.z, { parent: cg });                                   // floor of the chest (a drawer below)
+    box(0.03, C.h, C.d, wood, x0 + 0.015, AF, C.z, { parent: cg });                                  // back
+    box(0.03, C.h - 0.1, C.d, wood, x1 - 0.015, AF + 0.1, C.z, { parent: cg });                      // front, over the drawer
+    box(C.w, C.h, 0.03, wood, C.x, AF, C.z - C.d / 2 + 0.015, { parent: cg }); box(C.w, C.h, 0.03, wood, C.x, AF, C.z + C.d / 2 - 0.015, { parent: cg });
+    for (const z of [C.z - 0.26, C.z + 0.26]) box(0.008, C.h - 0.1, 0.05, band, x1 + 0.004, AF + 0.1, z, { parent: cg });
+    addCollider(x0, x1 + 0.02, C.z - C.d / 2, C.z + C.d / 2, AF, AF + C.h, { occ: false });
+    // the drawer under it, shut
+    const dr = new THREE.Group(); dr.position.set(0, 0, 0); scene.add(dr); DYN.add(dr); W.drawer = dr;
+    box(0.03, 0.085, C.d - 0.1, wood, x1 - 0.015, AF + 0.01, C.z, { parent: dr });
+    box(C.w - 0.08, 0.012, C.d - 0.12, wood, C.x, AF + 0.012, C.z, { parent: dr });
+    box(0.012, 0.02, 0.1, MT.brass, x1 + 0.006, AF + 0.045, C.z, { parent: dr });
+    // the cassette in the drawer
+    const cas = new THREE.Group(); cas.position.set(C.x + 0.08, AF + 0.026, C.z - 0.08); cas.rotation.y = 0.35; dr.add(cas); W.cassette = cas;
+    { const b = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.014, 0.064), M({ color: '#1c1c1e', noise: 0.05 })); cas.add(b);
+      IMG.tapeLabel = mkCanvas(128, 64); T.tapeLabel = toTex(IMG.tapeLabel, false);
+      const lb = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.036), M({ map: T.tapeLabel, world: false, noise: 0 })); lb.rotation.x = -Math.PI / 2; lb.position.y = 0.0075; cas.add(lb);
+      use(b, 'lbl_tape', () => Attic.takeTape()); use(lb, 'lbl_tape', () => Attic.takeTape()); }
+    cas.visible = false;
+    // the lid, hinged at the back
+    const lp = new THREE.Group(); lp.position.set(x0, AF + C.h, C.z); scene.add(lp); DYN.add(lp); W.chestLid = lp;
+    const lid = new THREE.Mesh(new THREE.BoxGeometry(C.w + 0.02, 0.05, C.d + 0.02), wood); lid.position.set(C.w / 2, 0.025, 0); lp.add(lid);
+    for (const z of [-0.26, 0.26]) { const b = new THREE.Mesh(new THREE.BoxGeometry(C.w + 0.03, 0.055, 0.05), band); b.position.set(C.w / 2, 0.025, z); lp.add(b); }
+    use(lid, 'lbl_chest', () => Attic.useChest());
+    // the combination lock on the front
+    const lk = new THREE.Group(); lk.position.set(x1 + 0.02, AF + C.h - 0.14, C.z); scene.add(lk); DYN.add(lk); W.lock = lk;
+    const lb = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.1, 0.15), MT.brass); lk.add(lb);
+    for (let i = 0; i < 4; i++) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.024, 10), MT.black); w.rotation.z = Math.PI / 2; w.position.set(0.017, -0.012, -0.045 + i * 0.03); lk.add(w); }
+    const sh = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.006, 6, 12, Math.PI), MT.metal); sh.position.set(0, 0.05, 0); sh.rotation.y = Math.PI / 2; lk.add(sh);
+    for (const o of lk.children) use(o, 'lbl_lock', () => Attic.useLock());
+    // inside: a child's xylophone and a little song book
+    const xg = new THREE.Group(); xg.position.set(C.x + 0.02, AF + 0.13, C.z - 0.1); scene.add(xg); DYN.add(xg); W.xylo = xg;
+    const base = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.03, 0.5), M({ color: '#3c6fa8', noise: 0.1 })); base.position.y = 0.015; xg.add(base);
+    XYLO_COL.forEach((c, i) => { const len = 0.25 - i * 0.02, bar = new THREE.Mesh(new THREE.BoxGeometry(len, 0.014, 0.05), M({ color: c, noise: 0.05 })); bar.position.set(0, 0.037, 0.21 - i * 0.07); xg.add(bar); });
+    for (const o of xg.children) use(o, 'lbl_xylo', () => Attic.useXylo());
+    IMG.songbook = mkCanvas(420, 300); T.songbook = toTex(IMG.songbook, false);
+    const bk = plane(0.2, 0.143, M({ map: T.songbook, world: false, noise: 0 }), C.x + 0.03, AF + 0.132, C.z + 0.25, -Math.PI / 2, Math.PI / 2 - 0.12);
+    DYN.add(bk); W.songbook = bk; use(bk, 'lbl_xylo', () => Attic.useXylo());
+  }
+
+  /* --- the hatch in the hallway ceiling, with the ladder folded on top of it --- */
+  { const hp = new THREE.Group(); hp.position.set(H.x0, CEIL, 5.4); scene.add(hp); DYN.add(hp); W.hatchPivot = hp;
+    // a little larger than the hole, so it covers the seam when shut
+    const hw = H.x1 - H.x0 + 0.03, hd = H.z1 - H.z0 + 0.03;
+    const panel = new THREE.Mesh(new THREE.BoxGeometry(hw, 0.03, hd), M({ color: '#e8e4da', noise: 0.05 })); panel.position.set(hw / 2 - 0.015, -0.012, 0); hp.add(panel);
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.006, 0.06), MT.brass); plate.position.set(hw - 0.11, -0.03, 0); hp.add(plate);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.028, 0.005, 6, 14), MT.brass); ring.position.set(hw - 0.11, -0.062, 0); hp.add(ring);
+    const ld = new THREE.Group(); ld.position.set(0, 0.035, 0); hp.add(ld); W.ladder = ld;
+    const lw = M({ color: '#b08a5c', noise: 0.2 });
+    for (const s of [-1, 1]) { const r = new THREE.Mesh(new THREE.BoxGeometry(LADDER_LEN, 0.07, 0.03), lw); r.position.set(LADDER_LEN / 2, 0.035, s * 0.21); ld.add(r); }
+    for (let x = 0.3; x < LADDER_LEN - 0.1; x += 0.28) { const st = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.02, 0.42), lw); st.position.set(x, 0.06, 0); ld.add(st); }
+    ld.visible = false;
+    for (const o of [panel, ring, plate]) { use(o, 'lbl_hatch', () => Attic.useHatch()); o.userData.use.labelFn = () => Attic.hatchLabel(); }
+    for (const o of ld.children) { use(o, 'lbl_climbUp', () => Attic.useLadder()); o.userData.use.labelFn = () => (Player.room === 'attic' ? 'lbl_climbDown' : 'lbl_climbUp'); }
+    // light from above, through the cracks round the hatch
+    const gm = M({ color: '#000', emissive: '#ffcf8c', eI: 1.3, noise: 0 }), gg = new THREE.Group(); scene.add(gg); DYN.add(gg); W.hatchGlow = gg; gg.visible = false;
+    for (const [w, d, x, z] of [[H.x1 - H.x0 + 0.04, 0.01, (H.x0 + H.x1) / 2, H.z0 - 0.015], [H.x1 - H.x0 + 0.04, 0.01, (H.x0 + H.x1) / 2, H.z1 + 0.015], [0.01, H.z1 - H.z0 + 0.04, H.x0 - 0.015, (H.z0 + H.z1) / 2], [0.01, H.z1 - H.z0 + 0.04, H.x1 + 0.015, (H.z0 + H.z1) / 2]])
+      ceilAt(x - w / 2, x + w / 2, z - d / 2, z + d / 2, CEIL - 0.028, gm, gg);
+    W.ladderCol = addCollider(11.8, 12.62, 5.14, 5.66, 0, CEIL, { occ: false }); W.ladderCol.on = false;
+  }
+}
+
+/* ---------- the puzzles' things downstairs ---------- */
+function buildPuzzleProps() {
+  // the fuse box on the landing wall, facing the kitchen door
+  { const g = new THREE.Group(); scene.add(g); DYN.add(g); W.fuseBox = g;
+    IMG.fuse = mkCanvas(200, 256); T.fuse = toTex(IMG.fuse, false);
+    box(0.1, 0.64, 0.5, M({ color: '#cfccc2', noise: 0.08 }), 15.13 - 0.05, 1.16, 8.85, { parent: g });
+    const fr = plane(0.46, 0.6, M({ map: T.fuse, world: false, noise: 0.02 }), 15.13 - 0.101, 1.48, 8.85, 0, -Math.PI / 2, g);
+    box(0.03, CEIL - 1.8, 0.04, MT.white, 15.11, 1.8, 8.72, { parent: g });
+    use(fr, 'lbl_fusebox', () => Power.use());
+    W.fusePos = V3(15.03, 1.48, 8.85); }
+  // mum's radio on the kitchen counter
+  { const g = new THREE.Group(); g.position.set(10.6, 0.9, 10.72); g.rotation.y = Math.PI; scene.add(g); DYN.add(g); W.radio = g;
+    W.radioPos = V3(10.6, 1.0, 10.72);
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.19, 0.13), M({ color: '#6b4a33', noise: 0.2 })); body.position.y = 0.095; g.add(body);
+    const top = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.012, 0.14), M({ color: '#3e2a1c', noise: 0.15 })); top.position.y = 0.192; g.add(top);
+    const gr = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.14), M({ map: T.fabric, world: false, ts: [4, 4], color: '#3a332c' })); gr.position.set(-0.075, 0.095, 0.0656); g.add(gr);
+    IMG.radioDial = mkCanvas(256, 96); T.radioDial = toTex(IMG.radioDial, false); radioDialCanvas(IMG.radioDial);
+    const dial = new THREE.Mesh(new THREE.PlaneGeometry(0.13, 0.05), M({ map: T.radioDial, world: false, emap: true, emissive: '#ffb55a', eI: 0.05, color: '#2a2016', noise: 0 })); dial.position.set(0.085, 0.13, 0.0656); g.add(dial); W.radioDial = dial;
+    for (const x of [0.055, 0.12]) { const k = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.02, 0.022, 14), M({ color: '#d9d2c0', noise: 0.05 })); k.rotation.x = Math.PI / 2; k.position.set(x, 0.055, 0.076); g.add(k); }
+    const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.004, 0.46, 6), MT.metal); ant.position.set(0.2, 0.36, -0.03); ant.rotation.z = -0.45; g.add(ant);
+    IMG.radioSticker = mkCanvas(200, 80); T.radioSticker = toTex(IMG.radioSticker, false);
+    const stk = new THREE.Mesh(new THREE.PlaneGeometry(0.11, 0.044), M({ map: T.radioSticker, world: false, noise: 0 })); stk.rotation.x = -Math.PI / 2; stk.position.set(-0.06, 0.1985, 0.02); stk.rotation.z = 0.08; g.add(stk);
+    for (const o of [body, gr, dial, stk, top]) use(o, 'lbl_radio', () => Radio.use()); }
+  // her hair dryer, in the flooded sink, still plugged in
+  { const water = M({ color: '#16222b', opacity: 0.5, transparent: true, emissive: '#0a1418', eI: 0.25, noise: 0 });
+    W.sinkWater = plane(0.44, 0.28, water, 7.2, 0.925, 0.3, -Math.PI / 2, 0); DYN.add(W.sinkWater);
+    W.puddle = plane(1.1, 0.8, M({ color: '#0e161c', opacity: 0.55, transparent: true, emissive: '#081014', eI: 0.2, noise: 0 }), 7.3, 0.016, 0.8, -Math.PI / 2, 0.25); DYN.add(W.puddle);
+    const g = new THREE.Group(); g.position.set(7.14, 0.936, 0.3); g.rotation.y = 0.35; scene.add(g); DYN.add(g); W.dryer = g;
+    const pink = M({ color: '#b98aa3', noise: 0.08 });
+    const b = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.17, 14), pink); b.rotation.z = Math.PI / 2; g.add(b);
+    const nz = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.036, 0.07, 12), pink); nz.rotation.z = Math.PI / 2; nz.position.x = -0.115; g.add(nz);
+    const hd = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.03, 0.12), pink); hd.position.set(0.03, -0.012, 0.08); g.add(hd);
+    const gl = new THREE.Mesh(new THREE.CircleGeometry(0.04, 12), MT.black); gl.position.x = 0.0855; gl.rotation.y = Math.PI / 2; g.add(gl);
+    for (const o of [b, nz, hd]) use(o, 'lbl_dryer', () => Props.dryer());
+    outlet(7.72, 1.12, 0.07, 0);
+    W.plugIn = box(0.036, 0.046, 0.032, MT.white, 7.72, 1.097, 0.1); DYN.add(W.plugIn);
+    const cm = M({ color: '#d8d4cc', noise: 0.05 });
+    const tube = (pts) => { const c = new THREE.CatmullRomCurve3(pts.map((p) => V3(...p))); const m = addMesh(new THREE.TubeGeometry(c, 28, 0.0045, 5, false), cm); DYN.add(m); return m; };
+    W.cordIn = tube([[7.72, 1.1, 0.116], [7.71, 1.02, 0.15], [7.58, 0.95, 0.2], [7.42, 0.94, 0.25], [7.26, 0.935, 0.33]]);
+    W.cordOut = tube([[7.26, 0.935, 0.33], [7.44, 0.93, 0.38], [7.5, 0.84, 0.53], [7.53, 0.4, 0.57], [7.57, 0.03, 0.63], [7.66, 0.02, 0.74]]);
+    W.plugOut = box(0.036, 0.03, 0.046, MT.white, 7.68, 0.0, 0.78); DYN.add(W.plugOut);
+    for (const o of [W.plugIn, W.cordIn]) use(o, 'lbl_unplug', () => Props.unplug()); }
+  // the hook pole, against the basement wall by the boiler
+  { const g = new THREE.Group(); g.position.set(9.68, -2.7, 14.66); g.rotation.z = 0.05; scene.add(g); DYN.add(g); W.pole = g;
+    const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.016, 1.95, 8), M({ color: '#8a6a44', noise: 0.2 })); sh.position.y = 0.975; g.add(sh);
+    const ft = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.05, 8), MT.darkMetal); ft.position.y = 1.95; g.add(ft);
+    const hk = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.006, 6, 12, Math.PI * 1.3), MT.darkMetal); hk.position.set(0, 2.0, 0); hk.rotation.y = Math.PI / 2; g.add(hk);
+    for (const o of [sh, ft, hk]) use(o, 'lbl_pole', () => Attic.takePole()); }
+}
+
+/* ---------- paper and paint for the new things ---------- */
+function fuseFrontCanvas(c) {
+  const g = c.getContext('2d'), w = c.width, h = c.height, r = seeded(401);
+  g.fillStyle = '#c9c5ba'; g.fillRect(0, 0, w, h);
+  g.strokeStyle = 'rgba(0,0,0,0.35)'; g.lineWidth = 3; g.strokeRect(8, 8, w - 16, h - 16);
+  g.fillStyle = 'rgba(0,0,0,0.28)'; for (let y = 180; y < 236; y += 9) g.fillRect(40, y, w - 80, 3);
+  // the warning triangle
+  g.fillStyle = '#e8c21e'; g.strokeStyle = '#1a1a1a'; g.lineWidth = 5; g.beginPath(); g.moveTo(w / 2, 34); g.lineTo(w / 2 + 44, 110); g.lineTo(w / 2 - 44, 110); g.closePath(); g.fill(); g.stroke();
+  g.fillStyle = '#1a1a1a'; g.beginPath(); g.moveTo(w / 2 + 6, 52); g.lineTo(w / 2 - 10, 84); g.lineTo(w / 2 + 2, 84); g.lineTo(w / 2 - 6, 104); g.lineTo(w / 2 + 12, 74); g.lineTo(w / 2, 74); g.closePath(); g.fill();
+  // a strip of tape with her handwriting
+  g.save(); g.translate(w / 2, 146); g.rotate(-0.04); g.fillStyle = '#efe6c8'; g.fillRect(-70, -16, 140, 32);
+  g.fillStyle = '#23407a'; g.font = '30px "Reenie Beanie", cursive'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(tr('fuse_title').toLowerCase(), 0, 2); g.restore();
+  grain(g, w, h, 12, 402); void r;
+  return c;
+}
+function radioDialCanvas(c) {
+  const g = c.getContext('2d'), w = c.width, h = c.height;
+  g.fillStyle = '#000'; g.fillRect(0, 0, w, h);
+  g.strokeStyle = '#d9c9a0'; g.fillStyle = '#d9c9a0'; g.lineWidth = 2; g.font = '15px "IBM Plex Mono", monospace'; g.textAlign = 'center';
+  for (let f = 88; f <= 108; f += 1) { const x = 14 + (f - 87.5) / 20.5 * (w - 28); g.beginPath(); g.moveTo(x, 50); g.lineTo(x, f % 2 ? 58 : 64); g.stroke(); if (f % 4 === 0) g.fillText(String(f), x, 36); }
+  g.fillStyle = '#ff6a2a'; g.fillRect(14 + (91.8 - 87.5) / 20.5 * (w - 28) - 2, 44, 4, 36);
+  return c;
+}
+function radioStickerCanvas(c) {
+  const g = c.getContext('2d'), w = c.width, h = c.height;
+  g.fillStyle = '#f2df7a'; g.fillRect(0, 0, w, h);
+  g.fillStyle = '#23407a'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  let fs = 44; g.font = `${fs}px "Reenie Beanie", cursive`; const t = tr('radio_sticker');
+  while (fs > 20 && g.measureText(t).width > w - 16) { fs -= 2; g.font = `${fs}px "Reenie Beanie", cursive`; }
+  g.fillText(t, w / 2, h / 2 + 3);
+  grain(g, w, h, 10, 403);
+  return c;
+}
+function tapeLabelCanvas(c) {
+  const g = c.getContext('2d'), w = c.width, h = c.height;
+  g.fillStyle = '#efe8d4'; g.fillRect(0, 0, w, h);
+  g.fillStyle = '#23407a'; g.font = '40px "Reenie Beanie", cursive'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('14/3', w / 2, h / 2 + 2);
+  g.fillStyle = '#1c1c1e'; for (const x of [34, 94]) { g.beginPath(); g.arc(x, h - 10, 7, 0, TAU); g.fill(); }
+  return c;
+}
+/* the song book: the melody as coloured dots, one per note, the higher the dot the higher the note.
+   Three of them have been smudged grey (but they are still at the right height). */
+const XYLO_MEL = [6, 4, 2, 3, 4, 3, 2, 1, 2, 0];
+const XYLO_SMUDGE = [3, 6, 7];
+function songbookCanvas(c) {
+  const g = c.getContext('2d'), w = c.width, h = c.height, r = seeded(404);
+  g.fillStyle = '#f3ecd9'; g.fillRect(0, 0, w, h);
+  blotches(g, w, h, 6, 'rgba(160,130,70,A)', 20, 70, 0.07, 405);
+  g.fillStyle = '#2a2a2a'; g.font = '34px "Reenie Beanie", cursive'; g.textBaseline = 'middle'; g.fillText(tr('xylo_title'), 22, 30);
+  const y0 = h - 40, dy = (h - 110) / 6, x0 = 44, dx = (w - 80) / 9;
+  // faint lines for each bar
+  for (let i = 0; i < 7; i++) { g.strokeStyle = 'rgba(80,90,120,0.18)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(24, y0 - i * dy); g.lineTo(w - 20, y0 - i * dy); g.stroke(); }
+  XYLO_MEL.forEach((n, i) => {
+    const x = x0 + i * dx + (r() - 0.5) * 3, y = y0 - n * dy + (r() - 0.5) * 2;
+    if (XYLO_SMUDGE.includes(i)) {
+      for (let k = 0; k < 7; k++) { g.fillStyle = `rgba(90,86,80,${0.12 + r() * 0.12})`; g.beginPath(); g.ellipse(x + (r() - 0.5) * 10, y + (r() - 0.5) * 6, 13 + r() * 6, 10 + r() * 5, r() * 3, 0, TAU); g.fill(); }
+      g.fillStyle = 'rgba(70,66,60,0.55)'; g.beginPath(); g.arc(x, y, 10, 0, TAU); g.fill();
+    } else {
+      g.fillStyle = XYLO_COL[n]; g.beginPath(); g.arc(x, y, 11, 0, TAU); g.fill();
+      g.strokeStyle = 'rgba(0,0,0,0.35)'; g.lineWidth = 1.5; g.stroke();
+    }
+  });
+  grain(g, w, h, 10, 406);
+  return c;
+}
+/* everything above that carries words */
+function puzzleLangTextures() {
+  if (IMG.fuse) { fuseFrontCanvas(IMG.fuse); T.fuse.needsUpdate = true; }
+  if (IMG.radioSticker) { radioStickerCanvas(IMG.radioSticker); T.radioSticker.needsUpdate = true; }
+  if (IMG.songbook) { songbookCanvas(IMG.songbook); T.songbook.needsUpdate = true; }
+  if (IMG.tapeLabel) { tapeLabelCanvas(IMG.tapeLabel); T.tapeLabel.needsUpdate = true; }
+}
 /* ---- 05_actors.js ---- */
 /* ============================================================
    Actors: the reflection, the double, and the thing that follows
@@ -4004,6 +4531,12 @@ function poseHuman(H, p) {
     H.hips.position.y = 0.52; H.lHip.rotation.x = H.rHip.rotation.x = -1.5; H.legs[0].rotation.x = H.legs[1].rotation.x = 1.5;
     H.arms[0].sh.rotation.x = H.arms[1].sh.rotation.x = -0.35; H.arms[0].el.rotation.x = H.arms[1].el.rotation.x = -0.5;
   }
+  // waving: one hand up by the head, the forearm swinging from the elbow
+  if (p.wave != null) {
+    const w = p.wave, up = p.waveK ?? 1;
+    H.arms[1].sh.rotation.set(-0.3 * up, 0, 2.1 * up);
+    H.arms[1].el.rotation.set(0, 0, (1.0 + Math.sin(w * 7.5) * 0.45) * up);
+  }
   H.head.rotation.set(-(p.pitch || 0) * 0.85 - (p.hunch || 0) * 0.6, p.headYaw || 0, p.roll || 0);
 }
 
@@ -4033,12 +4566,13 @@ const Actors = {
       case 'stillHead': extra.headYaw = angNorm((m.sessionYaw ?? pose.yaw) - pose.yaw); break;
       case 'frozen': case 'frozenPose': pose = m.frozenPose || pose; break;
       case 'missing': vis = false; break;
+      case 'wave': extra.wave = G.t; extra.waveK = sstep(0, 0.5, G.t - (m.waveT0 ?? G.t)); pose = Object.assign({}, pose, { pitch: 0.05 }); break;
     }
     if (m.name === 'final') vis = false;
     A.root.visible = vis;
     A.root.position.set(pose.x, pose.y, pose.z);
     A.root.rotation.y = pose.yaw + Math.PI;
-    poseHuman(A, { walk: pose.phase, amp: pose.amp, pitch: pose.pitch, flash: pose.flash, headYaw: clamp(extra.headYaw, -1.2, 1.2), roll: extra.roll });
+    poseHuman(A, { walk: pose.phase, amp: pose.amp, pitch: pose.pitch, flash: pose.flash, headYaw: clamp(extra.headYaw, -1.2, 1.2), roll: extra.roll, wave: extra.wave, waveK: extra.waveK });
     // light bounce from the flashlight on the mirror onto the reflection
     const bounce = Player.flashOn && viewAngleTo(m.worldCenter(_tv3)) < 0.5 ? 0.5 : 0;
     A.mFace.uniforms.uEmissive.value.setScalar(bounce * 0.05);
@@ -4767,9 +5301,10 @@ const Player = {
   seated: true, standT: 0, phase: 0, amp: 0, stepDist: 0, still: 0,
   flashOn: false, flashK: 0, flashDir: V3(0, 0, -1), shake: 0,
   enabled: true, look: true, speedMul: 1, fovT: 72, hist: [], room: 'bedroom', prevRoom: '', eyeOverride: null, rollOverride: null,
-  autoLook: null, stepCount: 0, onStep: null, lastMoveDir: V3(),
+  autoLook: null, stepCount: 0, onStep: null, lastMoveDir: V3(), crouch: 0, crouchT: 0, hold: null,
   reset(x, y, z, yaw, pitch, seated) {
     this.pos.set(x, y, z); this.vel.set(0, 0, 0); this.yaw = yaw; this.pitch = pitch; this.seated = !!seated; this.standT = 0;
+    this.hold = null; this.crouch = this.crouchT = y > AF - 0.2 ? 1 : 0;
     this.phase = 0; this.amp = 0; this.stepDist = 0; this.hist.length = 0; this.autoLook = null; this.enabled = true; this.look = true; this.eyeOverride = null; this.rollOverride = null;
     this.room = roomOf(x, y + 1, z); this.prevRoom = this.room;
     this.applyCamera(0);
@@ -4825,7 +5360,22 @@ const Player = {
       if (a.until && G.t > a.until) this.autoLook = null;
     }
     this.pitch = clamp(this.pitch, -1.35, 1.35);
-    // move
+    this.crouch = damp(this.crouch, this.crouchT, 5, dt);
+    // carried along a path (a ladder): no walking, no falling, no walls
+    if (this.hold) {
+      this.hold(dt); this.vel.set(0, 0, 0); this.amp = damp(this.amp, 0.5, 6, dt); this.phase += dt * 3; this.still = 0;
+    } else this.move(dt);
+    // flashlight
+    if (Input.fPress && this.enabled && !ClockUI.active && !UI.overlay && G.stage !== 'black') this.toggleFlash();
+    this.flashK = damp(this.flashK, this.flashOn ? 1 : 0, 18, dt);
+    Flash.update(dt);
+    if (this.shake > 0) this.shake = Math.max(0, this.shake - dt);
+    this.applyCamera(dt);
+    this.room = roomOf(this.pos.x, this.pos.y + 1, this.pos.z);
+    this.hist.push(this.pose()); this.hist[this.hist.length - 1].t = G.t;
+    while (this.hist.length && this.hist[0].t < G.t - 3) this.hist.shift();
+  },
+  move(dt) {
     let ix = 0, iz = 0;
     if (this.enabled && !ClockUI.active && !UI.overlay) {
       if (keyDown('KeyW') || keyDown('ArrowUp') || keyDown('KeyZ')) iz += 1;
@@ -4841,7 +5391,7 @@ const Player = {
       ix = iz = 0;
     }
     const run = keyDown('ShiftLeft') || keyDown('ShiftRight') || Input.trun;
-    const spd = (run ? 2.6 : 1.55) * this.speedMul;
+    const spd = (run ? 2.6 : 1.55) * this.speedMul * (1 - 0.42 * this.crouch);
     const fx = -Math.sin(this.yaw), fz = -Math.cos(this.yaw), rx = Math.cos(this.yaw), rz = -Math.sin(this.yaw);
     const wx = (fx * iz + rx * ix) * spd, wz = (fz * iz + rz * ix) * spd;
     this.vel.x = damp(this.vel.x, wx, 9, dt); this.vel.z = damp(this.vel.z, wz, 9, dt);
@@ -4857,15 +5407,6 @@ const Player = {
     this.stepDist += moved; this.phase += moved / stride * Math.PI;
     if (this.stepDist > stride) { this.stepDist -= stride; this.footstep(); }
     this.still = sp < 0.05 ? this.still + dt : 0;
-    // flashlight
-    if (Input.fPress && this.enabled && !ClockUI.active && !UI.overlay && G.stage !== 'black') this.toggleFlash();
-    this.flashK = damp(this.flashK, this.flashOn ? 1 : 0, 18, dt);
-    Flash.update(dt);
-    if (this.shake > 0) this.shake = Math.max(0, this.shake - dt);
-    this.applyCamera(dt);
-    this.room = roomOf(this.pos.x, this.pos.y + 1, this.pos.z);
-    this.hist.push(this.pose()); this.hist[this.hist.length - 1].t = G.t;
-    while (this.hist.length && this.hist[0].t < G.t - 3) this.hist.shift();
   },
   toggleFlash(force) {
     // dead in your hand: pressing the switch only gets you a knock against your palm
@@ -4876,7 +5417,7 @@ const Player = {
     G.flags.usedFlash = true;
   },
   applyCamera(dt) {
-    const eye = this.eyeOverride ?? (this.seated ? lerp(1.12, 1.63, sstep(0.15, 1.15, this.standT)) : 1.63);
+    const eye = this.eyeOverride ?? (this.seated ? lerp(1.12, 1.63, sstep(0.15, 1.15, this.standT)) : lerp(1.63, 1.08, this.crouch));
     const a = Math.min(1, this.amp);
     const bob = (Math.abs(Math.sin(this.phase)) - 0.5) * 0.034 * a;
     this.roll = this.rollOverride ?? (Math.sin(this.phase) * 0.005 * a + (this.look && Gyro.active() ? Gyro.roll * Gyro.rollK : 0));
@@ -4954,7 +5495,7 @@ const Flash = {
   hazard(dt) {
     if (G.t < this.next || Player.flashK < 0.9 || typeof Story === 'undefined') return;
     const st = Story.stage;
-    let rate = { p2: 0.006, p2b: 0.01, p3: 0.018, descent: 0.03 }[st] || 0, near = 0, seen = false;
+    let rate = { p2: 0.006, p2b: 0.01, s1: 0.012, s2: 0.01, s3: 0.006, p3: 0.018, descent: 0.03 }[st] || 0, near = 0, seen = false;
     const E = typeof Ent !== 'undefined' ? Ent : null;
     if (E && E.def && E.H.root.visible && !E.def.mirrorOnly && !E.def.noFalter) {
       const r = E.H.root.position, d = Math.hypot(r.x - camera.position.x, r.z - camera.position.z);
@@ -5111,7 +5652,7 @@ const ClockUI = {
 /* ============================================================
    Story director: stages, events, puzzles, the entity
    ============================================================ */
-const STAGES = ['intro', 'p1', 'p2', 'p2b', 'p3', 'descent', 'final', 'black', 'morning', 'end'];
+const STAGES = ['intro', 'p1', 'p2', 'p2b', 's1', 's2', 's3', 'p3', 'descent', 'final', 'black', 'morning', 'end'];
 const SI = (s) => STAGES.indexOf(s);
 const F = G.flags;
 
@@ -5263,7 +5804,10 @@ function mirrorOnly(obj, on) { obj.traverse((o) => { if (o.isMesh) o.layers.mask
    a doorway further off, or right behind you when you spin round. */
 const Dir = {
   trail: [], tNext: 0, cueNext: 0, sightNext: 0, pollNext: 0, lastYaw: 0, wasMoving: false, n: 0, cross: new Map(),
-  level() { return { p1: 0.3, p2: 0.5, p2b: 0.7, p3: 1, descent: 0.8 }[Story.stage] || 0; },
+  level() {
+    if (Player.room === 'attic' || Player.hold || F.follower) return 0;
+    return { p1: 0.3, p2: 0.5, p2b: 0.7, s1: 0.6, s2: 0.6, s3: 0.3, p3: 1, descent: 0.8 }[Story.stage] || 0;
+  },
   reset() { this.trail.length = 0; this.cueNext = G.t + 30; this.sightNext = G.t + 70; this.pollNext = 0; this.lastYaw = Player.yaw; this.wasMoving = false; this.n = 0; },
   behind(dist) {
     let acc = 0, px = Player.pos.x, pz = Player.pos.z;
@@ -5447,7 +5991,8 @@ const SPAWNS = [
   { id: 'armchair', stages: ['p3'], pos: V3(0.98, 0, 10.14), yaw: 2.4, pose: { sit: true, roll: 0.4 }, minDist: 3, snap: true, cond: () => ['hall', 'kitchen', 'bathroom', 'bedroom'].includes(Player.room) },
   { id: 'darkStudy', stages: ['p3'], pos: V3(13.1, 0, 0.95), yaw: faceYaw(V3(13.1, 0, 0.95), V3(9.9, 0, 4.4)), minDist: 3, snap: true, stinger: true, cond: () => Player.room === 'hall' && DOORS.study.isOpen },
   { id: 'longBehind', stages: ['p3'], dyn: true, minDist: 4, snap: true, stinger: true, cond: () => VEST.D > 9 && Player.room === 'hall' && Player.vel.x < -0.2 },
-  { id: 'stairsBottom', stages: ['descent'], pos: V3(32.4, -12.8, 8.85), yaw: -Math.PI / 2, minDist: 3.2, timeout: 120, snap: true, cond: () => F.loops >= 2 && Player.pos.x > 24 },
+  { id: 'bathDark', stages: ['s1'], pos: V3(6.25, 0, 3.1), yaw: 0.4, pose: { hunch: 0.3, roll: 0.5 }, minDist: 2.2, snap: true, stinger: true, cond: () => Player.room === 'bathroom' && Player.pos.z < 1.6 && !Power.dryer },
+  { id: 'studyDoorway', stages: ['s2'], pos: V3(9.9, 0, 3.3), yaw: 0, pose: { hunch: 0.25, roll: 0.45 }, minDist: 3, snap: true, cond: () => Player.room === 'hall' && Player.pos.x > 11.5 && DOORS.study.isOpen && F.radioCode },
 ];
 
 /* ---------------- unseen changes ---------------- */
@@ -5502,6 +6047,7 @@ const Story = {
     set(W.frontNote, this.notes.door);
     if (old) for (const k in old) old[k].t.dispose();
     langWorldTextures();
+    puzzleLangTextures();
   },
 
   /* ---------- world state per stage (used for checkpoints and transitions) ---------- */
@@ -5526,6 +6072,9 @@ const Story = {
     if (at('p1')) { base.floorlamp = F.lampOff ? 0 : 1; if (F.stairPop) base.stairs = 0; }
     if (at('p2')) { base.vest = 0; base.living = 0; base.study = 0; base.bathroom = 1; L.bathroom.sw = 1; L.hallA.setFlicker('unstable'); L.hallA.keepFlicker = true; L.hallA.dim = 0.7; }
     if (at('p2b')) { base.study = 1; L.study.sw = 1; base.bathroom = 0; }
+    // after the room that repeats: the house on the mains again (or not, in the power cut)
+    if (at('s1') && !at('p3')) { base.bathroom = 1; base.hallB = 1; L.hallB.dim = 0.6; base.stairs = 1; }
+    if (s === 's1') { L.stairs.sw = 1; L.kitchen.sw = 1; }   // on when the power went: they come back on with it
     if (at('p3')) {
       base.study = 0; base.hallA = 0; base.bedroom = 1; L.bedroom.dim = 0.7;
       L.bathroom.color = lin('#e8f0ff'); L.bathroom.intensity = 13;
@@ -5545,7 +6094,7 @@ const Story = {
     }
     for (const k in base) L[k].on = base[k];
     // environment
-    const env = morning ? [0.075, 0.075, 0.085, 0.012, 1.3] : at('final') ? [0.004, 0.004, 0.006, 0.075, 1.25] : at('descent') ? [0.0016, 0.0016, 0.002, 0.2, 1.3] : at('p3') ? [0.0022, 0.0024, 0.0034, 0.06, 1.2] : at('p2') ? [0.004, 0.0045, 0.0065, 0.04, 1.25] : [0.0055, 0.0062, 0.0095, 0.03, 1.25];
+    const env = morning ? [0.075, 0.075, 0.085, 0.012, 1.3] : at('final') ? [0.004, 0.004, 0.006, 0.075, 1.25] : at('descent') ? [0.0016, 0.0016, 0.002, 0.2, 1.3] : at('p3') ? [0.0022, 0.0024, 0.0034, 0.06, 1.2] : s === 's1' ? [0.003, 0.0034, 0.005, 0.045, 1.25] : at('p2') ? [0.004, 0.0045, 0.0065, 0.04, 1.25] : [0.0055, 0.0062, 0.0095, 0.03, 1.25];
     SU.uAmbient.value.set(env[0], env[1], env[2]); SU.uFogDensity.value = env[3]; SU.uExposure.value = env[4];
     postMat.uniforms.uDesat.value = at('p3') ? 0.22 : at('p2') ? 0.14 : 0.08;
     postMat.uniforms.uGrain.value = at('p3') ? 0.075 : 0.055;
@@ -5585,12 +6134,16 @@ const Story = {
     if (s === 'p1') { W.hallMirror.queue = ['delay']; W.coatMirror.queue = ['delay']; }
     if (s === 'p2') { W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['delay']; }
     if (s === 'p2b') { W.hallMirror.queue = ['stillHead']; W.bathMirror.queue = ['smile']; W.coatMirror.queue = ['lookAway']; }
+    if (s === 's1') { W.hallMirror.queue = ['delay']; W.bathMirror.queue = ['smile']; W.coatMirror.queue = ['lookAway']; }
+    if (s === 's2') { W.hallMirror.queue = ['stillHead']; W.coatMirror.queue = ['delay']; W.bathMirror.queue = ['lookAway']; }
+    if (s === 's3') { W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['stillHead']; }
     if (s === 'p3') { W.hallMirror.queue = ['frozen', 'behind', 'missing']; W.coatMirror.queue = ['missing']; W.bathMirror.queue = ['missing']; }
     if (at('p3')) W.hallMirror.mat.uniforms.uDark.value = 0.15;
     // basement door / deep stairs
     const deep = at('p3') && !morning;
     W.deep.visible = deep; for (const c of W.deepCols) c.on = deep; W.deepRegion.on = deep; W.finalRegion.on = deep;
     for (const w of W.landingEast) { w.visible = !deep; w.userData.col.on = !deep; }
+    W.fuseBox.visible = !deep;
     for (const w of W.stairBlock) { w.visible = deep; w.userData.col.on = deep; }
     W.normalSteps.visible = !deep; W.stairCeil.visible = !deep;
     this.setBasementDoor(!deep || at('descent'));
@@ -5608,7 +6161,8 @@ const Story = {
       else Sound.lullaby(false);
       if (this.waterL) { this.waterL.stop(0.05); this.waterL = null; } F.water = false;
       if (s === 'p2' && F.waterStarted) this.startWater();
-      Sound.setWrong({ intro: 0, p1: 0.04, p2: 0.14, p2b: 0.24, p3: 0.38, descent: 0.5, final: 0.55 }[s] ?? 0);
+      if (s === 's1') { F.water = true; this.waterL = Sound.loop('water', V3(7.2, 1.0, 0.3), { gain: 0.55, ref: 1.0, roll: 1.2, rev: 0.4 }); }
+      Sound.setWrong({ intro: 0, p1: 0.04, p2: 0.14, p2b: 0.24, s1: 0.26, s2: 0.28, s3: 0.3, p3: 0.38, descent: 0.5, final: 0.55 }[s] ?? 0);
       Sound.breathe(s === 'p3' ? 0.7 : s === 'descent' ? 0.4 : 0);
       Sound.shepard(s === 'descent' ? 1 : 0);
       Sound.muffle(0, 0.5); Sound.tinnitus(0, 0.5); Sound.stretch(0);
@@ -5616,6 +6170,10 @@ const Story = {
     Player.speedMul = at('p3') && !morning ? 0.9 : 1;
     Lore.applyState(s);
     Candles.applyState(s);
+    Attic.applyState(s);
+    Props.applyState(s);
+    Radio.applyState(s);
+    Power.applyState(s);
   },
   setCeiling(h) {
     this.livingH = h;
@@ -5654,17 +6212,22 @@ const Story = {
     if (W.endBar) W.endBar.on = false; if (W.barrier) W.barrier.on = false;
     LN.special.on = 0; LN.special.dim = 1; W.brickDoorPivot.rotation.y = 0; W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(1.6);
     for (const d of DIGITALS) d.seen = false;
-    if (SI(stage) >= SI('p2') && SI(stage) <= SI('descent')) Object.assign(F, { doorFailed: true, bathSlam: SI(stage) >= SI('p2b'), waterStarted: stage === 'p2', mirrorDone: SI(stage) >= SI('p2b'), loopDone: SI(stage) >= SI('p3') });
+    if (SI(stage) >= SI('p2') && SI(stage) <= SI('descent')) Object.assign(F, { doorFailed: true, bathSlam: SI(stage) >= SI('p2b'), waterStarted: stage === 'p2', mirrorDone: SI(stage) >= SI('p2b'), loopDone: SI(stage) >= SI('s1') });
     if (stage === 'p1') F.doorFailed = true;
     if (stage === 'descent') { F.baseOpen = true; F.frontDone = true; }
+    if (stage === 's3') Object.assign(F, { radioCode: true, hatchOpen: true, atticIn: true, lockSeen: true, numThought: true });
+    this.objKey = null; Hand.set(null);
     this.applyState(stage);
     const spawns = {
       intro: [3.3, 0, 1.35, -0.36, -0.22, true], p1: [3.3, 0, 1.35, -0.36, -0.22, true], p2: [7, 0, 5.4, Math.PI / 2, 0, false], p2b: [7.2, 0, 3.4, Math.PI, 0, false],
+      s1: [11.2, 0, 2.6, Math.PI, 0, false], s2: [14.45, 0, 8.85, Math.PI / 2, 0, false], s3: [13.05, 0, 5.4, Math.PI / 2, 0.35, false],
       p3: [11.2, 0, 2.6, Math.PI, 0, false], descent: [14.5, 0, 8.85, -Math.PI / 2, -0.15, false], morning: [3.3, 0, 1.35, -0.36, -0.22, true],
     };
     const sp = spawns[stage] || spawns.intro;
     Player.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
-    Player.flashOn = stage === 'descent'; Player.flashK = Player.flashOn ? 1 : 0;
+    Player.flashOn = stage === 'descent' || stage === 's1'; Player.flashK = Player.flashOn ? 1 : 0;
+    if (stage === 's1') DOORS.bathroom.set(true);
+    if (stage === 's2') { DOORS.basement.set(true); after(1.0, () => { Radio.power(true, 97.9); UI.thought(tr('t_radioOn'), 3.4); }); }
     this.ambNext = G.t + rand(12, 20); this.chgNext = G.t + rand(18, 30); this.spawnNext = G.t + 8;
     Dir.reset(); Flash.reset(); Fear.reset(); Scare.reset(stage);
     postMat.uniforms.uFade.value = 1; postMat.uniforms.uWhite.value = 0; postMat.uniforms.uWarp.value = 0;
@@ -5675,19 +6238,25 @@ const Story = {
     UI.objective(stage);
     if (stage === 'p2b') { F.bathSlam = true; F.mirrorDone = true; }
     if (stage === 'p3') { after(1.5, () => UI.thought(tr('t_wakeUp'), 3.5)); }
+    if (stage === 's1') { after(1.2, () => UI.thought(tr('t_powerOut'), 3)); after(4.8, () => UI.thought(tr('t_fuseWhere'), 3)); }
     if (stage === 'intro') { this.fade = null; postMat.uniforms.uFade.value = 1; Player.enabled = false; Player.look = false; this.introPose(0); }
     this.save();
   },
   fadeIn(dur) { this.fade = { from: 1, to: 0, t: 0, dur }; },
   fadeTo(v, dur) { this.fade = { from: postMat.uniforms.uFade.value, to: v, t: 0, dur }; },
-  setStage(s) { if (Ent.def && !Ent.def.persistent) Ent.hide('stage'); this.stage = s; G.stage = s; this.st = 0; UI.objective(s); this.save(); },
-  save() { if (['p2', 'p2b', 'p3', 'descent'].includes(this.stage)) Store.set('ckpt', this.stage); if (this.stage === 'morning' || this.stage === 'end') Store.del('ckpt'); },
+  setStage(s) { if (Ent.def && !Ent.def.persistent) Ent.hide('stage'); this.stage = s; G.stage = s; this.st = 0; this.objKey = null; UI.objective(s); this.save(); },
+  /* a new goal within the same part of the night */
+  setObj(k) { this.objKey = k; UI.objective(this.stage); },
+  save() {
+    if (['p2', 'p2b', 's1', 's2', 's3', 'p3', 'descent'].includes(this.stage)) { Store.set('ckpt', this.stage); Run.save(); }
+    if (this.stage === 'morning' || this.stage === 'end') Store.del('ckpt');
+  },
 
   /* ---------- per-frame ---------- */
   update(dt) {
     this.st += dt;
     if (this.fade) { const f = this.fade; f.t += dt; postMat.uniforms.uFade.value = lerp(f.from, f.to, sstep(0, 1, f.t / f.dur)); if (f.t >= f.dur) this.fade = null; }
-    for (const d of DIGITALS) { const on = !d.blink || (G.t % 1.2) < 0.75; d.mesh.material.uniforms.uEmissive.value.setScalar(on ? 1.6 : 0.05); }
+    for (const d of DIGITALS) { const on = !d.blink || (G.t % 1.2) < 0.75; d.mesh.material.uniforms.uEmissive.value.setScalar((on ? 1.6 : 0.05) * Power.dig(d)); }
     for (const c of Object.values(CLOCKS)) c.update(dt);
     for (const d of Object.values(DOORS)) d.update(dt);
     if (W.tvOn) { W.tvScreen.material.uniforms.uTexOff.value.set(Math.random(), Math.random()); }
@@ -5699,6 +6268,8 @@ const Story = {
     if (si >= SI('p1') && si <= SI('p3')) this.updateUnseen();
     if (si >= SI('p2') && si <= SI('descent')) this.updateSpawns();
     this.updateAmbient(dt);
+    Attic.update(dt);
+    Radio.update(dt);
     const fn = this['u_' + this.stage]; if (fn) fn.call(this, dt);
     Scare.update(dt);
     this.prevX = Player.pos.x; this.prevZ = Player.pos.z;
@@ -5843,7 +6414,7 @@ const Story = {
   darkHint() {
     if (Player.flashOn) return;
     const lv = lightLevel(camera.position);
-    if (lv < 0.12 && (Player.room === 'stairs' || Player.room === 'basement' || SI(this.stage) >= SI('p3'))) {
+    if (lv < 0.12 && (Player.room === 'stairs' || Player.room === 'basement' || Player.room === 'attic' || SI(this.stage) >= SI('s1'))) {
       this.darkT = (this.darkT || 0) + G.dt;
       if (this.darkT > 1.2 && (!F.fHint || (G.t - F.fHint > 70 && !F.usedFlash))) { F.fHint = G.t; UI.hint('<kbd>F</kbd> ' + tr('k_flash'), 5); }
     } else this.darkT = 0;
@@ -6001,11 +6572,45 @@ const Story = {
       postMat.uniforms.uWarp.value = 0;
     });
     after(4.2, () => { Sound.restore(1.5); UI.thought(tr('t_bedside'), 3.5); });
-    after(6.5, () => this.toP3());
+    after(7.5, () => this.toS1());
   },
+
+  /* ---------- the power cut ---------- */
+  toS1() {
+    this.setStage('s1');
+    this.applyState('s1');
+    W.wekker.visible = false; W.studyNote.visible = false; W.alarm.mesh.visible = W.alarmBody.visible = true;
+    Sound.play('bang', V3(15.05, 1.5, 8.85), { gain: 0.5, lp: 900 }); Sound.play('pop', V3(11.4, 2.3, 2.2), { gain: 0.5 });
+    DOORS.bathroom.set(true);
+    after(1.4, () => UI.thought(tr('t_powerOut'), 3));
+    after(5.2, () => UI.thought(tr('t_fuseWhere'), 3));
+  },
+  u_s1(dt) {
+    this.darkHint();
+    const P = Player;
+    // the bathroom mirror, the sink, the dryer: say what it is once you look at it
+    if (!F.dryerSeen && P.room === 'bathroom' && W.dryer.visible) {
+      const d = W.dryer.getWorldPosition(_ev);
+      if (d.distanceTo(camera.position) < 2.4 && viewAngleTo(d) < 0.3) { this.drAcc = (this.drAcc || 0) + dt; if (this.drAcc > 0.6 && Power.dryer) { F.dryerSeen = true; UI.thought(tr('t_dryer'), 3.2); } } else this.drAcc = 0;
+    }
+  },
+  /* the lights come back, and the radio in the kitchen switches itself on */
+  toS2() {
+    if (this.stage !== 's1') return;
+    this.setStage('s2');
+    Sound.play('clank', W.fusePos, { gain: 0.1, rate: 2 });
+    for (const d of DIGITALS) d.seen = false;
+    after(0.9, () => UI.thought(tr('t_powerBack'), 2.6));
+    after(3.2, () => { Radio.power(true, 97.9); Sound.play('static', W.radioPos, { gain: 0.5 }); UI.thought(tr('t_radioOn'), 3.4); });
+  },
+  u_s2() { this.darkHint(); },
+  toS3() { this.setStage('s3'); },
+  u_s3() { this.darkHint(); },
   toP3() {
+    if (this.stage === 'p3') return;
     this.setStage('p3');
     this.applyState('p3');
+    Hand.set(null);
     W.wekker.visible = false; W.studyNote.visible = false;
     W.alarm.mesh.visible = W.alarmBody.visible = true;
     Sound.play('thud', V3(7, -0.5, 5.4), { gain: 0.8 });
@@ -6108,10 +6713,19 @@ const Story = {
     const P = Player;
     this.darkHint();
     if (!F.closeTop && P.pos.x > 19) { F.closeTop = true; after(1, () => { DOORS.basement.close(0.6, 'slow'); }); }
-    if ((F.loops || 0) < 2 && P.pos.x > 26.4 && P.vel.x > 0) {
-      P.teleport(-5.6, 4.0, 0); F.loops = (F.loops || 0) + 1; Sound.wrongSpike(0.55, 0.9); Lore.onLoop(F.loops);
-      if (F.loops === 1) after(2, () => Sound.play('whispers', V3(P.pos.x + 6, P.pos.y - 3, 8.85), { gain: 0.7 }));
-      if (F.loops === 2) { this.echo = 12; }
+    // the stairs repeat for as long as you turn your back on what comes down behind you
+    if (!F.descentOpen && P.pos.x > 26.4 && P.vel.x > 0 && (this.prevX ?? 0) <= 26.4) {
+      const facingBack = F.follower && -Math.sin(P.yaw) < -0.35;
+      if (facingBack || (F.loops || 0) >= 8) { F.descentOpen = true; after(0.9, () => UI.thought(tr('t_dlPass'), 3)); Sound.wrongSpike(0.3, 1.5); }
+      else {
+        P.teleport(-5.6, 4.0, 0); F.loops = (F.loops || 0) + 1; Sound.wrongSpike(0.55, 0.9); Lore.onLoop(Math.min(F.loops, 3));
+        if (Ent.def && Ent.def.id === 'follower') { const r = Ent.H.root.position; r.x -= 5.6; r.y += 4.0; }
+        const n = F.loops;
+        if (n === 1) { after(1.2, () => UI.thought(tr('t_dl1'), 2.6)); after(2.4, () => this.followerStart()); after(2, () => Sound.play('whispers', V3(P.pos.x + 6, P.pos.y - 3, 8.85), { gain: 0.6 })); }
+        if (n === 2) after(1.0, () => UI.thought(tr('t_dl2'), 2.8));
+        if (n === 3) after(1.0, () => UI.thought(tr('t_dl3'), 3.6));
+        if (n >= 4 && n % 2 === 0) after(1.0, () => UI.thought(tr('t_dl4'), 3.2));
+      }
     }
     // bulbs light the stairwell around you
     const bx = W.deepBulbs.map((b) => b).sort((a, b) => Math.abs(a.x - P.pos.x) - Math.abs(b.x - P.pos.x));
@@ -6121,6 +6735,39 @@ const Story = {
     // the lullaby swells the deeper you go, and each loop of the stairs breaks it further
     if (Sound.lul && Sound.lul.on) { Sound.lul.gT = 0.075 + clamp(-P.pos.y / 12.8, 0, 1) * 0.04; Sound.lul.cT = Math.min(1, 0.88 + (F.loops || 0) * 0.05); }
     if (P.pos.x > 33.4 && P.pos.y < -11) this.toFinal();
+  },
+  /* the one on the stairs: it comes down while you are not looking, it keeps a few steps away,
+     and when you look at it, it does not go */
+  followerStart() {
+    if (this.stage !== 'descent' || F.descentOpen || F.follower) return;
+    if (Ent.def) Ent.hide('stage');
+    F.follower = true;
+    const P = Player, gy = (x, y) => groundAt(x, 8.85, y) ?? y;
+    const x0 = Math.max(15.8, P.pos.x - 4.4), p0 = V3(x0, gy(x0, P.pos.y + 4), 8.85);
+    let stepAcc = 0;
+    Ent.spawn({ id: 'follower', persistent: true, flashKill: false, noFalter: true, eyesOn: true, fadeIn: 1.8, pos: p0, yaw: faceYaw(p0, P.pos), pose: { hunch: 0.22, roll: 0.42, pitch: 0.14 },
+      update: (dt, E) => {
+        const r = E.H.root.position, chest = _ev.set(r.x, r.y + 1.25, r.z);
+        const seen = canSee(chest, 0.4) && viewAngleTo(chest) < 0.65;
+        if (seen && !F.dlSeen) { F.dlSeen = true; Fear.kick(0.6); }
+        if (F.descentOpen) {
+          E.pose.amp = 0; Sound.presence(0.15);
+          if (P.pos.x > 29.5 && !seen) { E.hide('done'); F.follower = false; }
+          E.H.root.rotation.y = faceYaw(r, P.pos);
+          return false;
+        }
+        if (!seen) {
+          const want = Math.max(15.8, P.pos.x - 4.2), nx = r.x + clamp(want - r.x, -2.2 * dt, 1.8 * dt), moved = Math.abs(nx - r.x);
+          r.x = nx; r.y = gy(r.x, r.y + 1);
+          stepAcc += moved; E.pose.walk = (E.pose.walk || 0) + moved * 8; E.pose.amp = moved > 1e-4 ? 0.6 : 0;
+          if (stepAcc > 0.62) { stepAcc = 0; Sound.step('concrete', V3(r.x, r.y + 0.1, 8.85), { gain: 0.5, rate: 0.85, hrtf: true, pri: 2 }); }
+        } else E.pose.amp = 0;
+        if (P.pos.x - r.x < 2.4) { r.x = Math.max(15.6, P.pos.x - 2.4); r.y = gy(r.x, r.y + 3); }
+        E.H.root.rotation.y = faceYaw(r, P.pos);
+        Sound.presence(seen ? 0.5 : 0.25);
+        return false;
+      } });
+    after(1.6, () => { if (!F.dlSeen) UI.thought(tr('t_behindMe'), 3); });
   },
 
   /* ---------- the confrontation ---------- */
@@ -6196,31 +6843,34 @@ const Story = {
     }
     if (this.ending) this.ending(dt);
   },
+  /* the door opens at once. A tap on the glass behind you: in the coat mirror you wave goodbye to
+     yourself. Then the light takes everything, whether you step out into it or not. */
   endingOpen() {
-    const d = DOORS.front; d.open(1.2, 'open');
+    const d = DOORS.front; d.open(2.2, 'open');
     const L = LN.special; L.pos.set(-0.6, 1.6, 7.375); L.color = lin('#fff3dc'); L.radius = 7; L.box = [-0.5, -0.3, 4.4, 2.2, 4.5, 8.2]; L.box2 = null; L.on = 1;
-    Sound.play('chirps', V3(-3, 2, 7.4), { gain: 0.6 });
-    W.coatMirror.mode = 'frozenPose'; W.coatMirror.frozenPose = Player.pose(); W.coatMirror.keep = true;
-    const bar = W.endBar || (W.endBar = addCollider(-0.4, 0.3, 6.85, 7.9, 0, 3, { occ: false })); bar.on = true;
-    let t = 0, looked = -1, tapped = 0;
-    const mc = W.coatMirror.worldCenter(new THREE.Vector3());
+    Sound.play('chirps', V3(-3, 2, 7.4), { gain: 0.6 }); Sound.wind(0.12, 1);
+    const m = W.coatMirror; m.keep = true; m.mode = 'wave'; m.waveT0 = G.t + 1.1; m.frozenPose = null;
+    const mc = m.worldCenter(new THREE.Vector3()), door = V3(-2, 1.55, 7.375);
+    let t = 0, out = -1;
     this.ending = (dt) => {
       t += dt;
-      if (tapped === 0 && t > 1.3) { tapped = 1; Sound.play('glass', mc, { gain: 0.8 }); }
-      if (tapped === 1 && looked < 0 && t > 6.5) { tapped = 2; Sound.play('glass', mc, { gain: 0.9 }); }
-      if (looked < 0 && t > 10) Player.autoLook = { target: mc, k: 2.2 };
-      if (looked < 0 && t > 1.3 && activeMirror === W.coatMirror && viewAngleTo(mc) < 0.45) {
-        looked = t; this.endSilent = true; Sound.duckTo(0, 0.12); Sound.fridge(false);
-        for (const c of Object.values(CLOCKS)) c.ticking = false;
-        Player.autoLook = null;
-      }
-      if (looked > 0 && t - looked > 4.2) {
-        this.ending = null; postMat.uniforms.uFade.value = 1; postMat.uniforms.uWhite.value = 0; this.fade = null;
-        Player.enabled = false; Player.look = false;
-        this.setStage('end');
-        after(2.2, () => UI.showEnd());
+      if (!F.eTap && t > 0.55) { F.eTap = true; Sound.play('glass', mc, { gain: 0.8 }); after(0.3, () => Sound.play('glass', mc, { gain: 0.65 })); }
+      if (!F.eLook && t > 0.85) { F.eLook = true; Player.autoLook = { target: mc, k: 3.4, until: G.t + 2.6 }; }
+      if (!F.eWave && t > 2.2) { F.eWave = true; UI.thought(tr('t_wave'), 2.2); }
+      if (!F.eBack && t > 3.6) { F.eBack = true; Player.autoLook = { target: door, k: 2.6, until: G.t + 1.5 }; }
+      if (out < 0 && (Player.pos.x < -0.15 || t > 7.2)) { out = t; this.endSilent = true; Player.enabled = false; Sound.duckTo(0, 1.4); for (const c of Object.values(CLOCKS)) c.ticking = false; }
+      if (out >= 0) {
+        postMat.uniforms.uWhite.value = Math.max(postMat.uniforms.uWhite.value, sstep(0, 1.8, t - out));
+        if (t - out > 2.3) { this.ending = null; this.toCredits(); }
       }
     };
+  },
+  toCredits() {
+    postMat.uniforms.uFade.value = 1; postMat.uniforms.uWhite.value = 0; this.fade = null;
+    Player.enabled = false; Player.look = false; Player.autoLook = null;
+    UI.clearThoughts();
+    this.setStage('end');
+    Credits.start();
   },
 
   /* ---------- mirrors ---------- */
@@ -6287,7 +6937,7 @@ const Story = {
   updateSpawns() {
     if (Ent.def || G.t < this.spawnNext) return;
     this.spawnNext = G.t + 0.5;
-    const cool = { p2: 60, p2b: 50, p3: 40, descent: 30 }[this.stage] ?? 999;
+    const cool = { p2: 60, p2b: 50, s1: 35, s2: 45, p3: 40, descent: 30 }[this.stage] ?? 999;
     if (G.t - Ent.lastEnd < cool) return;
     for (const s of SPAWNS) {
       if (Ent.used[s.id] || !s.stages.includes(this.stage) || !s.cond()) continue;
@@ -6323,7 +6973,8 @@ const Story = {
     // basement drips
     if ((P.room === 'basement' || P.room === 'stairs') && G.t > (this.dripNext || 0)) { this.dripNext = G.t + rand(1.2, 4); Sound.play('drip', W.dripPos, { gain: 0.35, vary: 0.15 }); }
     if (G.t < this.ambNext) return;
-    const ranges = { intro: [16, 30], p1: [13, 24], p2: [9, 18], p2b: [9, 16], p3: [7, 13], descent: [6, 10] };
+    const ranges = { intro: [16, 30], p1: [13, 24], p2: [9, 18], p2b: [9, 16], s1: [9, 16], s2: [10, 18], s3: [12, 20], p3: [7, 13], descent: [6, 10] };
+    if (P.room === 'attic' || P.hold) { this.ambNext = G.t + 4; return; }
     const r = ranges[s]; if (!r) return;
     this.ambNext = G.t + rand(r[0], r[1]);
     const n = SI(s);
@@ -6370,7 +7021,7 @@ const Story = {
 
   /* ---------- small interactions ---------- */
   readNote(name) {
-    const n = this.notes[name]; UI.showNote(n.text);
+    const n = this.notes[name]; UI.showNote(n.text); Run.read[name] = 1;
     UI.onClose = () => {
       if (name === 'fridge' && !F.noteRead) { F.noteRead = true; after(0.4, () => UI.thought(tr('t_handwriting'), 3)); after(3.8, () => UI.thought(tr('t_dontRemember'), 3.5)); }
       if (name === 'study' && !F.studyNoteRead) { F.studyNoteRead = true; after(0.4, () => UI.thought(tr('t_again'), 3)); }
@@ -6414,9 +7065,9 @@ const Fear = {
   reset() { this.level = 0; this.imp = 0; this.pulse = 0; this.beatT = 0.5; this.breathT = 2; this.near = 0; },
   /* a fright: at least this much, for a while */
   kick(v) { this.imp = Math.max(this.imp, clamp(v, 0, 1)); },
-  base(s) { return { p1: 0.02, p2: 0.08, p2b: 0.12, p3: 0.18, descent: 0.28, final: 0.35 }[s] || 0; },
+  base(s) { return { p1: 0.02, p2: 0.08, p2b: 0.12, s1: 0.13, s2: 0.12, s3: 0.1, p3: 0.18, descent: 0.28, final: 0.35 }[s] || 0; },
   update(dt) {
-    const s = G.stage, live = ['p1', 'p2', 'p2b', 'p3', 'descent', 'final'].includes(s) && !G.paused;
+    const s = G.stage, live = ['p1', 'p2', 'p2b', 's1', 's2', 's3', 'p3', 'descent', 'final'].includes(s) && !G.paused;
     if (!live) {
       this.level = s === 'intro' ? this.level * Math.exp(-dt) : 0; this.imp = 0; this.pulse = 0;
       if (postMat) { postMat.uniforms.uPulse.value = 0; postMat.uniforms.uFear.value = 0; }
@@ -6507,6 +7158,7 @@ const Lore = {
     P.led = dyn(plane(0.012, 0.012, M({ color: '#000000', emissive: '#ff2a1a', eI: 2.2, noise: 0 }), 13.7 - 0.0855, 0.83, 5.39, 0, -Math.PI / 2));
     P.led2 = dyn(plane(0.012, 0.012, M({ color: '#000000', emissive: '#4dff7a', eI: 0.5, noise: 0 }), 13.7 - 0.0855, 0.83, 5.42, 0, -Math.PI / 2));
     use(P.machine, 'lbl_play', () => this.playMachine());
+    P.machine.userData.use.labelFn = () => (Hand.item === 'tape' ? 'lbl_insertTape' : 'lbl_play');
     // --- mum's card, leaning against the wall behind the record player ---
     this.C.mom = mkCanvas(200, 280);
     P.mom = plane(0.1, 0.14, paper(this.C.mom), 9.47, 0.83, 0.115, -0.26, 0);
@@ -6549,7 +7201,7 @@ const Lore = {
   setDrawing(v) { this.drawV = v; if (this.P.drawing) this.P.drawing.material.uniforms.uMap.value = v ? T.drawing1 : T.drawing0; },
   setWall(n) {
     this.loop = n;
-    const L = tr('wall_l' + clamp(n, 0, 2)), E = tr('wall_end');
+    const L = tr('wall_l' + clamp(n, 0, 3)), E = tr('wall_end');
     const text = { tally: tr('wall_tally'), a: L[0], b: L[1], c: L[2], d: E[0], e: E[1] };
     this.decals.forEach((d, i) => { wallWriting(d.c, text[d.id], 71 + i * 13 + n * 5, d.id === 'e' || n >= 2); d.t.needsUpdate = true; });
   },
@@ -6558,19 +7210,20 @@ const Lore = {
     const s = G.stage, n = SI(s);
     if (s === 'morning') return 'vm3';
     if (n >= SI('p3') && n <= SI('descent')) return 'vm2';
-    if (n <= SI('p2b')) return 'vm1';
+    if (n <= SI('s3')) return 'vm1';
     return null;
   },
   update(dt) {
     if (!this.ready) return;
     this.ledT += dt;
-    const key = this.msgKey(), fresh = key && !this.heard[key] && !this.vm;
+    const key = this.msgKey(), fresh = (key && !this.heard[key] && !this.vm) || (Hand.item === 'tape' && !this.vm);
     this.P.led.material.uniforms.uEmissive.value.copy(_ledRed).multiplyScalar(this.vm ? 2.2 : fresh ? (this.ledT % 1.1 < 0.55 ? 2.4 : 0.05) : 0.05);
   },
 
   /* ---------- the answering machine ---------- */
   playMachine() {
     if (this.vm) return;
+    if (Hand.item === 'tape') { this.playTape(); return; }
     const pos = this.P.machinePos, key = this.msgKey(), id = ++this.vmId;
     const at = (t, fn) => after(t, () => { if (this.vmId === id) fn(); });
     this.vm = true;
@@ -6586,12 +7239,34 @@ const Lore = {
     at(t, () => { Sound.play('beep', pos, { gain: 0.28 }); UI.voice(tr('vm_end'), 2, true); });
     at(t + 2.4, () => {
       this.vm = null;
-      const first = !this.heard[key]; this.heard[key] = true;
+      const first = !this.heard[key]; this.heard[key] = true; Run.msgs[key] = 1;
       if (first) UI.thought(tr({ vm1: 't_vm1', vm2: 't_vm2', vm3: 't_vm3' }[key]), 3.2);
     });
   },
+  /* the tape from the attic: her last message, the night she died */
+  playTape() {
+    const pos = this.P.machinePos, id = ++this.vmId;
+    const at = (t, fn) => after(t, () => { if (this.vmId === id) fn(); });
+    this.vm = true; Hand.set(null); F.tapePlaying = true;
+    UI.clearThoughts();
+    Sound.play('switch', pos, { gain: 0.5 }); Sound.play('clank', pos, { gain: 0.12, rate: 2.4, lp: 3000 });
+    Sound.duckTo(0.55, 1.5); Sound.setWrong(0.08);
+    const hiss = Sound.loop('static', pos, { gain: 0.03, lp: 2000, ref: 0.8, fade: 0.3 });
+    let t = 1.1;
+    at(0.6, () => Sound.play('beep', pos, { gain: 0.3 }));
+    for (const [k, txt] of tr('vmMom')) {
+      const dur = clamp(1.6 + txt.length * 0.058, 2.4, 6.2);
+      at(t, () => { UI.voice(txt, dur - 0.2, k === 's'); this.lineAudio(k, pos, dur); });
+      t += dur + (k === 's' ? 0.5 : 0.35);
+    }
+    at(t, () => { Sound.play('beep', pos, { gain: 0.26 }); UI.voice(tr('vm_end'), 2, true); if (hiss) hiss.stop(0.6); });
+    at(t + 2.2, () => { this.vm = null; Run.msgs.mom = 1; Sound.duckTo(1, 2); UI.thought(tr('t_slept'), 3); });
+    at(t + 6.0, () => UI.thought(tr('t_neverCalled'), 3.6));
+    at(t + 10.4, () => Story.toP3());
+  },
   lineAudio(k, pos, dur) {
     const o = { lp: 2900, ref: 0.8, pri: 2 };
+    if (k === 'm') { const n = Math.max(1, Math.ceil(dur / 3.2)); for (let i = 0; i < n; i++) Sound.play('voices', pos, Object.assign({}, o, { gain: 0.42, rate: 1.3, lp: 2300, delay: i * 2.9 })); }
     if (k === 's') Sound.play('static', pos, Object.assign({}, o, { gain: 0.035, lp: 1800 }));
     if (k === 'v') { const n = Math.max(1, Math.ceil(dur / 3.4)); for (let i = 0; i < n; i++) Sound.play('voices', pos, Object.assign({}, o, { gain: 0.5, rate: 1.17, delay: i * 3.1 })); }
     if (k === 'b') { Sound.play('breathIn', pos, Object.assign({}, o, { gain: 0.42, lp: 2300 })); Sound.play('breathOut', pos, Object.assign({}, o, { gain: 0.38, lp: 2300, delay: 1.35 })); }
@@ -6602,6 +7277,7 @@ const Lore = {
   read(kind) {
     const el = (tag, cls, text, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; parent.appendChild(e); return e; };
     const once = (k, fn) => { if (F['lore_' + k]) return; F['lore_' + k] = true; UI.onClose = fn; };
+    Run.read[kind] = 1;
     if (kind === 'diary') {
       const morning = G.stage === 'morning';
       UI.showDoc('diary', (b) => {
@@ -6963,10 +7639,11 @@ const Jump = {
    for as long as it takes to beat on it and let itself in. */
 const Hunt = {
   next: 0, st: null,
-  level() { return { p2b: 0.65, p3: 1, descent: 1.25 }[Story.stage] || 0; },
-  reset(stage) { this.st = null; this.next = G.t + ({ p2b: 50, p3: 30, descent: 22 }[stage] ?? 40); },
+  level() { return { p2b: 0.65, s1: 0.5, s2: 0.6, p3: 1 }[Story.stage] || 0; },
+  reset(stage) { this.st = null; this.next = G.t + ({ p2b: 50, s1: 55, s2: 45, p3: 30 }[stage] ?? 40); },
   update() {
     const lv = this.level(); if (!lv || this.st) return;
+    if (Player.room === 'attic' || Player.hold || Player.pos.y > 1) return;   // never up the ladder or in the crawl space
     if (G.t < this.next || Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 16) return;
     if (Story.dbl || Scare.strobeBusy || Scare.front || Story.stage === 'descent' && Player.pos.x > 28.5) return;
     this.next = G.t + 0.7;
@@ -7083,15 +7760,15 @@ const Scare = {
     const s = Story.stage, P = Player;
     if (this.off || this.busy || G.stage === 'black') return;
     if (s === 'p1') this.clockSteps(dt);
-    if (!['p2', 'p2b', 'p3', 'descent'].includes(s)) return;
+    if (!['p2', 'p2b', 's1', 's2', 's3', 'p3', 'descent'].includes(s)) return;
     if (this.front) this.frontStep(dt);
-    if (!P.enabled || ClockUI.active || UI.overlay) return;
+    if (!P.enabled || ClockUI.active || UI.overlay || P.room === 'attic' || P.hold) return;
     Hunt.update();
     const idle = !Ent.def && Ent.out <= 0 && !Hunt.st && !this.front && !this.strobeBusy;
-    // the lights go, and come back for a moment with it standing there
-    if (idle && !F['strobe_' + s] && G.t > this.strobeNext && Story.st > 15 && G.t - Ent.lastEnd > 12) { this.strobeNext = G.t + 1.2; if (this.strobe()) F['strobe_' + s] = true; }
+    // the lights go, and come back for a moment with it standing there (not on the endless stairs: that one has its own)
+    if (idle && s !== 'descent' && !F['strobe_' + s] && G.t > this.strobeNext && Story.st > 15 && G.t - Ent.lastEnd > 12) { this.strobeNext = G.t + 1.2; if (this.strobe()) F['strobe_' + s] = true; }
     // breath on your neck: look round, nothing; look back, it is there
-    if (idle && (s === 'p3' || s === 'descent') && !F['front_' + s] && G.t > this.dtNext && G.t - Ent.lastEnd > 18) { this.dtNext = G.t + 1.5; if (this.frontStart()) F['front_' + s] = true; }
+    if (idle && s === 'p3' && !F['front_' + s] && G.t > this.dtNext && G.t - Ent.lastEnd > 18) { this.dtNext = G.t + 1.5; if (this.frontStart()) F['front_' + s] = true; }
     // a face for a frame, when it is bad already
     if ((s === 'p3' || s === 'descent') && Fear.level > 0.42 && G.t > this.subNext) { this.subNext = G.t + rand(22, 50); Jump.subliminal(rand(0.22, 0.38)); }
   },
@@ -7138,7 +7815,7 @@ const Scare = {
     Dir.reset(); Flash.reset(); Fear.reset(); Fear.kick(0.55);
     Story.fadeIn(3); Sound.duckTo(1, 1.2); Sound.muffle(0.55, 0.01); after(0.3, () => Sound.muffle(0, 2.5));
     if (st !== 'descent') Sound.play('creaks', V3(2.8, 0.4, 0.9), { gain: 0.25, rate: 0.8 });
-    F.caughtN = (F.caughtN || 0) + 1;
+    F.caughtN = (F.caughtN || 0) + 1; Run.caught++;
     after(2.2, () => UI.thought(tr(F.caughtN === 1 ? 't_caught1' : F.caughtN === 2 ? 't_caught2' : 't_caught3'), 3.2));
     if (F.caughtN === 1) after(6.2, () => UI.thought(tr('t_lookAtIt'), 3.6));
     this.busy = false; Hunt.next = G.t + rand(45, 70);
@@ -7217,7 +7894,7 @@ const Scare = {
   /* ---- you shut a door; something on the other side did not want you to ---- */
   onDoorClosed(d) {
     const s = Story.stage;
-    if (this.off || this.busy || !['p2b', 'p3', 'descent'].includes(s) || G.t < this.doorNext || Ent.def || Hunt.st || d.name === 'front') return;
+    if (this.off || this.busy || !['p2b', 's1', 's2', 's3', 'p3'].includes(s) || G.t < this.doorNext || Ent.def || Hunt.st || d.name === 'front') return;
     const n = F['pound_' + s] || 0; if (n >= 2 || Math.random() > (n ? 0.3 : 0.65)) return;
     F['pound_' + s] = n + 1; this.doorNext = G.t + 80;
     const cam = camera.position, c = d.pos.clone(), far = (d.axis === 'x' ? Math.sign(c.z - cam.z) : Math.sign(c.x - cam.x)) || 1;
@@ -7266,6 +7943,701 @@ const Scare = {
   },
 };
 
+/* ---- 08e_power.js ---- */
+/* ============================================================
+   The power cut: the fuse box on the landing, what hangs on each
+   group, and the short in the bathroom that keeps tripping the main
+   switch. Also what you carry, and the panels the new puzzles open
+   on screen (fuse box, radio, lock, xylophone).
+   ============================================================ */
+function mk(tag, cls, parent, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+
+/* ---------- what you carry ---------- */
+const Hand = {
+  item: null,
+  set(k) {
+    this.item = k || null;
+    const el = UI.el.handItem; if (!el) return;
+    el.hidden = !this.item;
+    if (this.item) { el.textContent = ''; mk('span', null, el, tr('hand')); mk('b', null, el, ' ' + tr('hand_' + this.item)); }
+  },
+};
+
+/* ---------- a panel on screen: the mouse is free, the world waits ---------- */
+const Panel = {
+  cur: null, free: false,
+  open(kind, build, o = {}) {
+    if (UI.overlay || ClockUI.active) return false;
+    const el = UI.el.panelBody; el.className = 'pnl ' + kind; el.textContent = '';
+    this.cur = { kind, update: null, onClose: o.onClose || null };
+    build(el, this.cur);
+    const foot = mk('div', 'pfoot', el);
+    if (o.keys) mk('span', 'pkeys', foot, o.keys);
+    mk('span', 'pkeys', foot).innerHTML = `<kbd>E</kbd> ${tr('p_done')}`;
+    const done = mk('button', 'pdone', foot, tr('p_done')); done.type = 'button';
+    done.addEventListener('click', (e) => { e.preventDefault(); if (UI.overlay === 'panel') UI.closeOverlay(); });
+    UI.el.panel.hidden = false; UI.overlay = 'panel'; UI.touchOverlay(true); UI.prompt(null); document.body.classList.add('panelOpen');
+    Player.autoLook = null;
+    // let go of the mouse so the panel can be used; losing the lock now is not a pause
+    this.free = true;
+    if (document.pointerLockElement) document.exitPointerLock();
+    return true;
+  },
+  closed() {
+    const c = this.cur; this.cur = null; this.free = false; document.body.classList.remove('panelOpen');
+    if (c && c.onClose) c.onClose();
+    if (G.running && !G.paused && G.stage !== 'end') lockPointer();
+  },
+  update(dt) { if (this.cur && this.cur.update) this.cur.update(dt); },
+};
+
+/* ---------- the power ---------- */
+const PGROUP = { kitchen: 1, living: 2, floorlamp: 2, hallA: 3, hallB: 3, vest: 3, bedroom: 3, study: 3, bathroom: 4, stairs: 5, basement: 5 };
+const DGROUP = { micro: 1, vcr: 2, alarm: 3 };
+const Power = {
+  active: false, main: true, g: [true, true, true, true, true, true, false], dryer: false, trips: 0, done: true, pend: null, btn: null, lamp: null, g6seen: false,
+  applyState(s) {
+    const n = SI(s);
+    this.active = n >= SI('s1') && n <= SI('s3');
+    this.main = true; this.g = [true, true, true, true, true, true, false]; this.dryer = false; this.trips = 0; this.done = true;
+    if (this.pend) { cancelTimer(this.pend); this.pend = null; }
+    if (s === 's1') { this.main = false; this.dryer = true; this.done = false; }
+    this.apply(false);
+  },
+  live(i) { return !this.active || (this.main && this.g[i]); },
+  fault() { return this.dryer && this.g[4]; },
+  /* which lights and displays have power */
+  apply(flick) {
+    for (const l of LIGHTS) {
+      const gi = PGROUP[l.name]; if (!gi) continue;
+      const pw = this.live(gi) ? 1 : 0;
+      if (flick && pw && !l.pw && !l.keepFlicker && !l.candle) { l.setFlicker('buzz'); after(rand(0.35, 0.8), () => { if (l.flick && l.flick.mode === 'buzz' && !l.keepFlicker) l.setFlicker(null); }); }
+      l.pw = pw;
+    }
+    LN.attic.pw = this.active && this.main && this.g[6] ? 1 : 0; LN.attic.on = 1;
+    if (W.hatchGlow) W.hatchGlow.visible = LN.attic.pw > 0 && Attic.ang < 0.02;
+    if (typeof Radio !== 'undefined' && Radio.on && !this.live(1)) Radio.power(false);
+  },
+  dig(d) { const gi = DGROUP[d.name]; return gi && !this.live(gi) ? 0 : 1; },
+
+  use() {
+    if (!this.active) { UI.thought(tr('t_fuseOk'), 2.4); return; }
+    this.openPanel();
+  },
+  toggle(i) {
+    if (this.pend || !this.active) return;
+    if (i === 0) this.main = !this.main; else this.g[i] = !this.g[i];
+    Sound.play('switch', W.fusePos, { gain: 0.7, rate: i ? 0.85 : 0.65 });
+    if (i === 0 && this.main) Sound.play('clank', W.fusePos, { gain: 0.08, rate: 2.2, lp: 2500 });
+    if (this.main && this.fault()) {
+      // everything comes on for a blink, then the short takes it all down again
+      this.apply(false);
+      this.pend = after(0.3, () => { this.pend = null; this.trip(); });
+    } else this.apply(true);
+    if (i === 6 && this.g[6] && !this.g6seen) { this.g6seen = true; after(1.4, () => UI.thought(tr('t_fuse6'), 3)); if (this.main) this.overhead(); }
+    this.render();
+    this.check();
+  },
+  trip() {
+    this.main = false; this.trips++;
+    Sound.play('bang', W.fusePos, { gain: 0.75, rate: 1.3 }); Sound.play('pop', V3(7.3, 1.0, 0.35), { gain: 0.9 });
+    Sound.play('flick', V3(7.3, 1.0, 0.35), { gain: 0.6, rate: 0.7 });
+    // a blue-white flash in the bathroom, the spark of it
+    const L = LN.special; L.pos.set(7.3, 1.05, 0.4); L.color = lin('#cfe0ff'); L.intensity = 16; L.radius = 4.5; L.box = LN.bathroom.box.slice(); L.box2 = null; L.dim = 1;
+    L.on = 1; after(0.07, () => { L.on = 0; }); after(0.16, () => { L.on = 0.6; }); after(0.21, () => { L.on = 0; });
+    this.apply(false); this.render();
+    if (this.btn) { const b = this.btn[0]; b.classList.remove('trip'); void b.offsetWidth; b.classList.add('trip'); }
+    Fear.kick(0.35);
+    if (this.trips === 1) { F.tripScare = true; after(0.7, () => UI.thought(tr('t_trip1'), 2.8)); }
+    if (this.trips === 2) after(0.7, () => UI.thought(tr('t_trip2'), 3));
+    if (this.trips === 3) after(0.7, () => UI.thought(tr('t_trip3'), 3));
+  },
+  check() {
+    if (!this.active || this.done || Story.stage !== 's1') return;
+    if (this.main && !this.g[4] && [1, 2, 3, 5].every((i) => this.g[i]) && !F.s1b) { F.s1b = true; Story.setObj('s1b'); after(1.2, () => UI.thought(tr('t_lightsBack'), 3)); }
+    if (this.main && [1, 2, 3, 4, 5].every((i) => this.g[i]) && !this.fault()) { this.done = true; after(0.9, () => Story.toS2()); }
+  },
+  /* group six: something goes across the ceiling above the hallway */
+  overhead() {
+    const xs = [9.5, 8.9, 8.3, 7.7, 7.1];
+    xs.forEach((x, i) => after(1.2 + i * 0.6, () => Sound.step('wood', V3(x, AF + 0.05, 5.4), { gain: 0.7, lp: 700 })));
+    after(1.0, () => Sound.play('scrape', V3(9, AF + 0.1, 5.4), { gain: 0.6, lp: 800 }));
+  },
+
+  /* ---------- the panel ---------- */
+  openPanel() {
+    Panel.open('fuse', (el, P) => {
+      const box = mk('div', 'fbox', el);
+      mk('p', 'phd', box, tr('fuse_title'));
+      const rail = mk('div', 'rail', box);
+      this.btn = [];
+      for (let i = 0; i <= 6; i++) {
+        const b = mk('button', 'brk' + (i ? '' : ' main') + (i === 6 ? ' warn' : ''), rail); b.type = 'button';
+        mk('span', 'num', b, i ? String(i) : '0');
+        const sw = mk('span', 'sw', b); mk('span', 'lever', sw);
+        mk('span', 'lbl', b, i ? tr('fuse_g')[i - 1] : tr('fuse_main'));
+        b.addEventListener('click', (e) => { e.preventDefault(); this.toggle(i); });
+        this.btn.push(b);
+      }
+      const st = mk('div', 'fstat', box); this.lamp = mk('span', 'lamp', st); mk('span', null, st, tr('fuse_power'));
+      mk('p', 'fwarn', box, tr('fuse_warn'));
+      P.update = () => { for (let i = 0; i <= 6; i++) if (keyPressed('Digit' + i) || keyPressed('Numpad' + i)) this.toggle(i); };
+    }, { keys: tr('p_keysFuse'), onClose: () => this.panelClosed() });
+    this.render();
+    Sound.play('rattle', W.fusePos, { gain: 0.25, rate: 1.6 });
+  },
+  render() {
+    if (!this.btn) return;
+    this.btn.forEach((b, i) => b.classList.toggle('on', i ? this.g[i] : this.main));
+    if (this.lamp) this.lamp.classList.toggle('on', this.main);
+  },
+  /* after the first trip, when you turn round from the fuse box: it is in the dark kitchen */
+  panelClosed() {
+    this.btn = null; this.lamp = null;
+    if (F.tripScare && !F.tripScareDone && Story.stage === 's1' && DOORS.basement.isOpen && !Ent.def && Ent.out <= 0) {
+      F.tripScareDone = true;
+      after(0.5, () => {
+        if (Ent.def || Story.stage !== 's1') return;
+        const p = V3(12.7, 0, 8.9);
+        Ent.spawn({ id: 'fuseKitchen', pos: p, yaw: faceYaw(p, Player.pos), pose: { hunch: 0.26, roll: 0.46, pitch: 0.02 }, fadeIn: 0.25, eyesOn: true,
+          lookDelay: 0.3, minDist: 1.1, timeout: 7, unseenGrace: 2.5, snap: true, stinger: true, flashDelay: 0.2 });
+        Sound.play('exhale', V3(12.7, 1.6, 8.9), { gain: 0.35, ref: 0.8, hrtf: true, pri: 2 });
+      });
+    }
+  },
+};
+
+/* ---------- the hair dryer ---------- */
+const Props = {
+  applyState(s) {
+    const n = SI(s), on = n >= SI('s1') && n <= SI('s3');
+    W.dryer.visible = on; W.sinkWater.visible = on; W.puddle.visible = on;
+    this.setPlug(s === 's1');
+    W.pole.visible = s !== 's3' && !(SI(s) > SI('s3') && SI(s) <= SI('descent'));
+    W.radioDial.material.uniforms.uEmissive.value.copy(lin('#ffb55a')).multiplyScalar(0.05);
+  },
+  setPlug(inSocket) {
+    W.plugIn.visible = W.cordIn.visible = inSocket && W.dryer.visible;
+    W.cordOut.visible = W.plugOut.visible = !inSocket && W.dryer.visible;
+  },
+  dryer() { UI.thought(tr(Power.dryer ? 't_dryer' : 't_unplugged'), 3); },
+  unplug() {
+    if (!Power.dryer) return;
+    Power.dryer = false; this.setPlug(false);
+    Sound.play('switch', V3(7.72, 1.1, 0.1), { gain: 0.5, rate: 0.7 }); Sound.play('scrape', V3(7.6, 0.6, 0.5), { gain: 0.15, rate: 1.8 });
+    after(0.6, () => UI.thought(tr('t_unplugged'), 3));
+    Power.check();
+  },
+};
+/* ---- 08f_puzzles.js ---- */
+/* ============================================================
+   The radio in the kitchen, and the attic: the hatch, the ladder,
+   mum's things, the chest with its lock and the xylophone inside.
+   ============================================================ */
+
+/* ---------- the radio ----------
+   Three stations between the static. One plays music, one is a phone-in
+   about sleep, and on 103.3 someone reads out four numbers, over and over,
+   after the first notes of the lullaby. */
+const Radio = {
+  on: false, f: 97.9, nodes: null, st: [], sig: [0, 0, 0], FREQ: [91.8, 97.4, 103.3], B: null, heard: 0, needle: null, read: null, meter: null, holdT: 0, tickT: 0,
+  applyState(s) { this.power(false); this.f = 97.9; this.heard = 0; for (const st of this.st) { st.prog = null; st.i = -1; st.t = 0; } },
+  ensure() {
+    if (this.nodes) return true;
+    if (!Sound.ok || !Sound.B.static) return false;
+    const c = Sound.ctx;
+    this.build();
+    const e = Sound.emitter(W.radioPos, { ref: 1.1, roll: 1.35, rev: 0.3 }); e.base = 1; Sound.persist.push(e);
+    const out = c.createGain(); out.gain.value = 0;
+    const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 260;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3400;
+    const mix = c.createGain(); mix.gain.value = 0.9;
+    mix.connect(hp); hp.connect(lp); lp.connect(out); out.connect(e.g);
+    const sg = this.FREQ.map(() => { const g = c.createGain(); g.gain.value = 0; g.connect(mix); return g; });
+    const src = c.createBufferSource(); src.buffer = Sound.B.static; src.loop = true;
+    const statG = c.createGain(); statG.gain.value = 0; src.connect(statG); statG.connect(mix); src.start();
+    this.nodes = { e, out, mix, sg, statG };
+    this.st = this.FREQ.map((f, k) => ({ k, i: -1, t: rand(0, 2), prog: null }));
+    return true;
+  },
+  /* the sounds on the air, made once */
+  build() {
+    if (this.B) return;
+    const B = this.B = {};
+    // soft piano chords, a little out of tune, the way late night radio sounds
+    B.music = Sound.buf(8.6, (d, sr, n) => {
+      const ch = [[57, 60, 64, 69], [53, 57, 60, 65], [48, 55, 60, 64], [55, 59, 62, 67]];
+      const notes = [];
+      ch.forEach((c, i) => { const t0 = i * 2.15; notes.push([c[0] - 12, t0, 0.5]); for (let k = 0; k < 8; k++) notes.push([c[[0, 1, 2, 3, 2, 1, 2, 3][k]], t0 + k * 0.268, 0.28]); });
+      for (const [m, t0, a] of notes) {
+        const f = 440 * Math.pow(2, (m - 69) / 12) * (1 + 0.003 * Math.sin(m)), i0 = Math.floor(t0 * sr), len = Math.min(n - i0, Math.floor(2.2 * sr));
+        for (let i = 0; i < len; i++) { const t = i / sr, e = Math.exp(-t * 2.6) * Math.min(1, t / 0.004); d[i0 + i] += (Math.sin(TAU * f * t) + 0.35 * Math.sin(TAU * 2 * f * t) + 0.08 * Math.sin(TAU * 3 * f * t)) * e * a; }
+      }
+    });
+    // the interval signal: the first three notes of the lullaby, on a thin organ
+    B.jingle = Sound.buf(2.2, (d, sr, n) => {
+      [[76, 0], [72, 0.55], [69, 1.1]].forEach(([m, t0]) => { const f = 440 * Math.pow(2, (m - 69) / 12), i0 = Math.floor(t0 * sr); for (let i = 0; i < Math.floor(0.5 * sr) && i0 + i < n; i++) { const t = i / sr, e = Math.min(1, t / 0.02) * Math.min(1, (0.5 - t) / 0.05); d[i0 + i] += (Math.sin(TAU * f * t) + 0.3 * Math.sin(TAU * 2 * f * t)) * e; } });
+    });
+    // a voice counting: one syllable per number
+    const syl = (parts) => {
+      const total = parts.reduce((a, p) => a + p.dur, 0) + 0.06;
+      return Sound.buf(total, (d, sr, n) => {
+        const f1 = new BQ('bp', 500, 6, sr), f2 = new BQ('bp', 1500, 8, sr), f3 = new BQ('bp', 2700, 9, sr), hs = new BQ('hp', 3800, 0.8, sr), nas = new BQ('lp', 380, 1.2, sr);
+        let t0 = 0, pi = 0, ph = 0;
+        for (let i = 0; i < n; i++) {
+          const t = i / sr;
+          while (pi < parts.length - 1 && t >= t0 + parts[pi].dur) { t0 += parts[pi].dur; pi++; }
+          const p = parts[pi], u = clamp((t - t0) / p.dur, 0, 1);
+          ph += (182 - 30 * t / total) / sr; let src = 0; if (ph >= 1) { ph -= 1; src = 30; }
+          if (i % 64 === 0 && p.F1) { const q = parts[Math.min(pi + 1, parts.length - 1)], k = sstep(0.55, 1, u); f1.set(lerp(p.F1, q.F1 || p.F1, k), 6); f2.set(lerp(p.F2, q.F2 || p.F2, k), 8); }
+          let v = 0;
+          if (p.type === 'v') v = f1.p(src) + f2.p(src) * 0.6 + f3.p(src) * 0.18;
+          else if (p.type === 'n') v = nas.p(src) * 0.9;
+          else v = hs.p(wn()) * 0.35 * Math.sin(Math.PI * u);
+          d[i] = v * Math.min(1, t / 0.015) * Math.min(1, (total - 0.06 - t) / 0.06 + 0.001);
+        }
+      });
+    };
+    B.num = [
+      syl([{ type: 'n', dur: 0.07 }, { type: 'v', dur: 0.26, F1: 330, F2: 1600 }, { type: 'v', dur: 0.12, F1: 420, F2: 1000 }]),
+      syl([{ type: 'f', dur: 0.1 }, { type: 'v', dur: 0.2, F1: 420, F2: 2100 }, { type: 'f', dur: 0.05 }, { type: 'v', dur: 0.14, F1: 500, F2: 1500 }, { type: 'n', dur: 0.07 }]),
+      syl([{ type: 'v', dur: 0.34, F1: 400, F2: 2150 }, { type: 'n', dur: 0.09 }]),
+      syl([{ type: 'f', dur: 0.07 }, { type: 'v', dur: 0.28, F1: 290, F2: 2300 }, { type: 'v', dur: 0.1, F1: 450, F2: 1300 }]),
+    ];
+  },
+  power(on, f) {
+    if (on && !this.ensure()) return;
+    this.on = on; if (f !== undefined) this.f = f;
+    if (this.nodes) this.nodes.out.gain.setTargetAtTime(on ? 1 : 0, Sound.ctx.currentTime, on ? 0.04 : 0.015);
+    if (W.radioDial) W.radioDial.material.uniforms.uEmissive.value.copy(lin('#ffb55a')).multiplyScalar(on ? 1.3 : 0.05);
+  },
+  use() {
+    const n = SI(Story.stage);
+    if (n < SI('s1') || n > SI('s3')) { UI.thought(tr('t_radioOld'), 2.6); return; }
+    if (!Power.live(1)) { UI.thought(tr('t_radioOff'), 2.6); return; }
+    if (!this.on) { this.power(true); Sound.play('switch', W.radioPos, { gain: 0.4 }); }
+    this.openPanel();
+  },
+  talkDur(t) { return clamp(1.3 + t.length * 0.058, 2.4, 5.6); },
+  prog(k) {
+    const s = [];
+    if (k === 0) for (const [kind, v] of tr('r918')) s.push(kind === 'm' ? { kind: 'music', dur: v } : { kind: 'talk', text: v, rate: 1.0, dur: this.talkDur(v) });
+    if (k === 1) for (const [kind, v] of tr('r974')) s.push(kind === 'p' ? { kind: 'pause', dur: v } : { kind: 'talk', text: v, rate: kind === 'a' ? 0.88 : 1.16, dur: this.talkDur(v) });
+    if (k === 2) {
+      s.push({ kind: 'jingle', dur: 2.6 });
+      for (let rep = 0; rep < 2; rep++) { tr('nums').forEach((t, i) => s.push({ kind: 'num', d: i, text: t, dur: 1.3 })); s.push({ kind: 'pause', dur: 1.8 }); }
+      s.push({ kind: 'whisper', text: tr('r_awake'), dur: 2.4 }, { kind: 'pause', dur: 3.2 });
+    }
+    return s;
+  },
+  near() { return (Panel.cur && Panel.cur.kind === 'radio') || camera.position.distanceTo(W.radioPos) < 4.2; },
+  update(dt) {
+    if (!this.nodes) return;
+    const now = Sound.ctx.currentTime, N = this.nodes;
+    let bs = 0;
+    this.FREQ.forEach((f, k) => { const s = Math.pow(clamp(1 - Math.abs(this.f - f) / 0.42, 0, 1), 1.4); this.sig[k] = s; bs = Math.max(bs, s); N.sg[k].gain.setTargetAtTime(s * (k === 2 ? 1.15 : 0.9), now, 0.04); });
+    N.statG.gain.setTargetAtTime((0.05 + 0.32 * (1 - bs)) * (0.85 + 0.3 * Math.random()), now, 0.03);
+    // the programmes run whether anyone listens or not
+    for (const st of this.st) {
+      st.t -= dt; if (st.t > 0) continue;
+      if (!st.prog || st.i + 1 >= st.prog.length) { st.prog = this.prog(st.k); st.i = -1; }
+      const seg = st.prog[++st.i]; st.t = seg.dur;
+      if (!this.on) { if (st.k === 2 && seg.kind === 'num') this.heard = 0; continue; }
+      this.playSeg(st, seg);
+      const clear = this.sig[st.k] > 0.5;
+      if (seg.text && clear && this.near()) UI.voice(seg.text, Math.min(seg.dur, 5.6) - 0.15, false);
+      if (st.k === 2) {
+        if (seg.kind === 'num') {
+          this.heard = clear && seg.d === this.heard ? this.heard + 1 : clear && seg.d === 0 ? 1 : 0;
+          if (clear && !F.numThought && this.near()) { F.numThought = true; after(1.4, () => UI.thought(tr('t_numbers'), 2.6)); }
+          if (this.heard === 4) { this.heard = 0; this.codeHeard(); }
+        }
+      }
+    }
+  },
+  playSeg(st, seg) {
+    const c = Sound.ctx, dst = this.nodes.sg[st.k], t = c.currentTime + 0.02;
+    const play = (buf, o = {}) => {
+      const s = c.createBufferSource(); s.buffer = buf; s.playbackRate.value = o.rate || 1;
+      const g = c.createGain(); g.gain.value = o.gain ?? 1; s.connect(g); g.connect(dst);
+      s.start(t + (o.delay || 0)); s.stop(t + seg.dur + 0.05);
+      s.onended = () => { try { g.disconnect(); } catch (e) { /* */ } };
+    };
+    if (seg.kind === 'music') play(this.B.music, { gain: 0.75 });
+    else if (seg.kind === 'talk') { const n = Math.ceil(seg.dur / 3.1); for (let i = 0; i < n; i++) play(pick(Sound.B.voices), { rate: seg.rate, gain: 1.5, delay: i * 3.0 }); }
+    else if (seg.kind === 'jingle') play(this.B.jingle, { gain: 0.55 });
+    else if (seg.kind === 'num') play(this.B.num[seg.d], { gain: 1.2 });
+    else if (seg.kind === 'whisper') play(Sound.B.name, { gain: 1.6, rate: 0.85 });
+  },
+  /* the four numbers, heard clearly: then the radio dies, and something moves above the hallway */
+  codeHeard() {
+    if (F.radioCode || Story.stage !== 's2') return;
+    F.radioCode = true;
+    after(1.3, () => UI.thought(tr('t_code'), 3.2));
+    after(5.6, () => {
+      if (Panel.cur && Panel.cur.kind === 'radio') UI.closeOverlay();
+      this.power(false); Sound.play('pop', W.radioPos, { gain: 0.45 }); Sound.play('switch', W.radioPos, { gain: 0.4, rate: 0.6 });
+      UI.thought(tr('t_radioDead'), 2);
+    });
+    after(8.2, () => { Attic.dragging(); UI.thought(tr('t_overhead'), 3.2); Story.setObj('s2b'); });
+  },
+  openPanel() {
+    Panel.open('radio', (el, P) => {
+      const box = mk('div', 'rbox', el);
+      mk('p', 'phd', box, tr('radio_title'));
+      const dial = mk('div', 'dial', box);
+      const cv = mk('canvas', 'dialc', dial); cv.width = 620; cv.height = 96; this.drawScale(cv);
+      this.needle = mk('div', 'needle', dial);
+      const row = mk('div', 'rrow', box);
+      this.read = mk('span', 'rread', row);
+      const sg = mk('span', 'rsig', row); mk('span', null, sg, tr('radio_signal')); this.meter = mk('span', 'rmeter', sg); mk('i', null, this.meter);
+      mk('p', 'rsticker', box, tr('radio_sticker'));
+      let drag = false;
+      const at = (e) => { const r = dial.getBoundingClientRect(); this.tune(87.5 + clamp((e.clientX - r.left - r.width * 0.03) / (r.width * 0.94), 0, 1) * 20.5); };
+      dial.addEventListener('pointerdown', (e) => { e.preventDefault(); drag = true; try { dial.setPointerCapture(e.pointerId); } catch (x) { /* */ } at(e); });
+      dial.addEventListener('pointermove', (e) => { if (drag) at(e); });
+      const up = () => { drag = false; }; dial.addEventListener('pointerup', up); dial.addEventListener('pointercancel', up);
+      dial.addEventListener('wheel', (e) => { e.preventDefault(); this.tune(this.f + (e.deltaY > 0 ? -0.1 : 0.1)); }, { passive: false });
+      P.update = (dt) => {
+        const dir = (keyDown('ArrowRight') || keyDown('KeyD') ? 1 : 0) - (keyDown('ArrowLeft') || keyDown('KeyA') ? 1 : 0);
+        if (keyPressed('ArrowRight') || keyPressed('KeyD')) this.tune(this.f + 0.1);
+        else if (keyPressed('ArrowLeft') || keyPressed('KeyA')) this.tune(this.f - 0.1);
+        else if (dir) { this.holdT += dt; if (this.holdT > 0.3) this.tune(this.f + dir * dt * (this.holdT > 1.4 ? 4 : 1.3)); } else this.holdT = 0;
+        this.render();
+      };
+    }, { keys: tr('p_keysRadio'), onClose: () => { this.needle = this.read = this.meter = null; } });
+    this.render();
+  },
+  tune(f) {
+    const o = this.f; this.f = clamp(Math.round(f * 20) / 20, 87.5, 108);
+    if (Math.abs(this.f - o) > 0.01 && G.t - this.tickT > 0.06) { this.tickT = G.t; Sound.play('ratchet', null, { gain: 0.1, rate: 0.55, pure: true, pri: 0 }); }
+  },
+  render() {
+    if (!this.needle) return;
+    const k = (this.f - 87.5) / 20.5; this.needle.style.left = `${3 + k * 94}%`;
+    this.read.textContent = `${this.f.toFixed(1).replace('.', LANG === 'nl' ? ',' : '.')} MHz`;
+    this.meter.firstChild.style.width = `${Math.round(Math.max(...this.sig) * 100)}%`;
+  },
+  drawScale(cv) {
+    const g = cv.getContext('2d'), w = cv.width, h = cv.height, x = (f) => w * 0.03 + (f - 87.5) / 20.5 * w * 0.94;
+    g.clearRect(0, 0, w, h);
+    g.strokeStyle = '#e8d6a8'; g.fillStyle = '#e8d6a8'; g.lineWidth = 2; g.font = '18px "IBM Plex Mono", monospace'; g.textAlign = 'center';
+    for (let f = 88; f <= 108; f += 0.5) { const X = x(f), big = f % 2 === 0; g.globalAlpha = big ? 0.95 : 0.55; g.beginPath(); g.moveTo(X, h - 18); g.lineTo(X, h - (big ? 40 : f % 1 === 0 ? 32 : 26)); g.stroke(); if (f % 4 === 0) g.fillText(String(f), X, 28); }
+    g.globalAlpha = 1; g.fillStyle = '#ff6a2a'; g.fillRect(x(91.8) - 2, h - 46, 4, 32);
+  },
+};
+
+/* ---------- the attic ---------- */
+const _av = new THREE.Vector3(), _av2 = new THREE.Vector3();
+const Attic = {
+  ang: 0, target: 0, climb: null, lid: 0, lidT: 0, drawer: 0, drawerT: 0, horseT: 0, dragNext: 0, code: null,
+  applyState(s) {
+    const n = SI(s);
+    this.climb = null; Player.hold = null;
+    this.target = this.ang = s === 's3' ? 1 : 0;
+    this.lidT = this.lid = n >= SI('s3') && n <= SI('descent') ? 1 : 0;
+    this.drawerT = this.drawer = n > SI('s3') && n <= SI('descent') ? 1 : 0;
+    this.code = null; this.horseT = 0; this.dragNext = G.t + 20;
+    W.cassette.visible = false; W.lock.visible = this.lidT < 1;
+    W.dress.rotation.y = 0; W.horse.rotation.z = 0;
+    this.sync();
+  },
+  sync() {
+    const k = sstep(0, 1, this.ang);
+    W.hatchPivot.rotation.z = -LADDER_ANG * k;
+    W.ladder.visible = this.ang > 0.12; W.ladder.scale.x = lerp(0.56, 1, sstep(0.25, 1, this.ang));
+    W.ladderCol.on = this.ang > 0.9 && !this.climb;
+    W.chestLid.rotation.z = 1.95 * sstep(0, 1, this.lid);
+    W.drawer.position.x = 0.22 * sstep(0, 1, this.drawer);
+    W.hatchGlow.visible = LN.attic.pw > 0 && this.ang < 0.02;
+  },
+  move(cur, tgt, dt, up, down) { const d = tgt - cur; return Math.abs(d) < 1e-4 ? tgt : cur + Math.sign(d) * Math.min(Math.abs(d), dt / (d > 0 ? up : down)); },
+  update(dt) {
+    this.ang = this.move(this.ang, this.target, dt, 1.5, 0.5);
+    this.lid = this.move(this.lid, this.lidT, dt, 1.3, 0.6);
+    this.drawer = this.move(this.drawer, this.drawerT, dt, 0.8, 0.8);
+    this.sync();
+    const P = Player;
+    if (!P.hold) P.crouchT = P.room === 'attic' ? 1 : 0;
+    // walk into the ladder and you climb it; walk into the hole from above and you go down
+    if (!this.climb && this.ang > 0.95 && P.enabled && !UI.overlay && !ClockUI.active) {
+      if (P.room !== 'attic' && P.pos.y < 0.2 && P.pos.x > 12.55 && P.pos.x < 13.3 && Math.abs(P.pos.z - 5.4) < 0.36 && P.vel.x < -0.35 && -Math.sin(P.yaw) < -0.4) this.startClimb('up');
+      else if (P.room === 'attic' && P.pos.x > 10.9 && P.vel.x > 0.25) this.startClimb('down');
+    }
+    // something drags across the boards above the hallway, until you go and look
+    if (Story.stage === 's2' && F.radioCode && !F.atticIn && G.t > this.dragNext && P.room !== 'attic') { this.dragNext = G.t + rand(16, 24); this.dragging(); }
+    if (P.room === 'attic' && !P.hold) this.events(dt);
+    if (this.horseT > 0) {
+      this.horseT -= dt; const a = Math.sin(this.horseT * 5.4) * 0.13 * Math.min(1, this.horseT / 2);
+      if (Math.sign(a) !== Math.sign(W.horse.rotation.z) && Math.abs(a) > 0.02) Sound.play('creaks', V3(W.horse.position.x, AF + 0.2, W.horse.position.z), { gain: 0.3, rate: rand(1.2, 1.5), pri: 0 });
+      W.horse.rotation.z = this.horseT > 0 ? a : 0;
+    }
+  },
+  events() {
+    const P = Player, s = Story.stage;
+    // her dress turns to you while you are busy at the chest
+    const dp = W.dress.position, dch = _av.set(dp.x, AF + 0.9, dp.z);
+    if (!F.dressTurned && P.pos.x < 3.9 && !inFrustum(dch, 0.45)) { F.dressTurned = true; W.dress.rotation.y = faceYaw(dp, P.pos); Sound.play('creaks', dch, { gain: 0.25, rate: 1.4, pri: 0 }); }
+    if (F.dressTurned && !F.dressSeen && inFrustum(dch, 0.1) && viewAngleTo(dch) < 0.4) { F.dressSeen = true; Fear.kick(0.4); after(0.5, () => UI.thought(tr('t_dressTurn'), 2.8)); }
+    // the rocking horse, once you are past it
+    const hp = W.horse.position;
+    if (!F.horseRock && P.pos.x < 8.1 && !inFrustum(_av2.set(hp.x, AF + 0.4, hp.z), 0.4)) { F.horseRock = true; this.horseT = 4.6; }
+    // with the tape in your hand: someone at the foot of the ladder, looking up
+    if (s === 's3' && F.tapeTaken && !F.peek && P.pos.x > 8.3 && !Ent.def && Ent.out <= 0) this.peek();
+  },
+  peek() {
+    F.peek = true;
+    const p = V3(13.15, 0, 5.4), H = HATCH;
+    Ent.spawn({ id: 'peek', pos: p, yaw: faceYaw(p, V3(11, 0, 5.4)), pose: { pitch: -0.55, roll: 0.25, hunch: 0.02 }, eyesOn: true, fadeIn: 0.2, lookDelay: 0.3, minDist: 0.5, timeout: 16, unseenGrace: 8,
+      snap: true, stinger: true, flashDelay: 0.25, noFalter: true,
+      // only seen through the hole: the floor hides it otherwise
+      update: (dt, E) => {
+        if (E.t > 16) { E.hide('timeout'); return false; }
+        const cam = camera.position, r = E.H.root.position, cy = r.y + 1.25;
+        if (cam.y > CEIL) { const k = (cam.y - CEIL) / (cam.y - cy), x = cam.x + (r.x - cam.x) * k, z = cam.z + (r.z - cam.z) * k; if (!(x > H.x0 && x < H.x1 && z > H.z0 && z < H.z1)) { E.lookT = 0; return false; } }
+      },
+      onHide: (why) => { if (why === 'look' || why === 'flash') after(1.3, () => UI.thought(tr('t_downThere'), 3)); } });
+  },
+  dragging() {
+    const x0 = rand(5, 9);
+    Sound.play('scrape', V3(x0, AF + 0.1, 5.4), { gain: 0.75, lp: 750, rate: 0.7 });
+    for (let i = 0; i < 4; i++) after(0.5 + i * 0.62, () => Sound.step('wood', V3(x0 + 0.5 + i * 0.55, AF + 0.05, 5.4), { gain: 0.65, lp: 650 }));
+  },
+  hatchLabel() { return this.ang > 0.9 ? (Player.room === 'attic' ? 'lbl_climbDown' : 'lbl_climbUp') : 'lbl_hatch'; },
+  useHatch() {
+    const s = Story.stage;
+    if (this.ang > 0.9) { this.useLadder(); return; }
+    if (this.target > 0) return;
+    if (s === 's2' && F.radioCode) { if (Hand.item === 'pole') this.open(); else UI.thought(tr('t_hatchPole'), 3); return; }
+    UI.thought(tr(SI(s) > SI('s3') ? 't_hatchShut' : 't_hatchNo'), 2.8);
+  },
+  open() {
+    this.target = 1; Hand.set(null); F.hatchOpen = true;
+    Sound.play('clank', V3(12.8, 2.5, 5.4), { gain: 0.22, rate: 1.7 });
+    Sound.play('creakLong', V3(12, 2.5, 5.4), { gain: 0.8, rate: 0.8 });
+    after(0.8, () => Sound.play('scrape', V3(12.2, 1.4, 5.4), { gain: 0.5, rate: 0.7 }));
+    after(1.45, () => Sound.play('thud', V3(12.56, 0.1, 5.4), { gain: 0.45 }));
+    after(2.4, () => UI.thought(tr('t_attic'), 2.6));
+  },
+  useLadder() { if (this.ang < 0.9) return; this.startClimb(Player.room === 'attic' ? 'down' : 'up'); },
+  /* up or down the ladder: carried along a path, crouching as your head clears the hole */
+  startClimb(dir) {
+    if (this.climb || this.ang < 0.95) return;
+    const P = Player, up = dir === 'up';
+    const keys = up
+      ? [[P.pos.x, 0, P.pos.z, 0, 0], [12.88, 0, 5.4, 0, 0.15], [12.32, 1.1, 5.4, 0.05, 0.46], [11.86, 2.05, 5.4, 0.55, 0.74], [10.85, AF, 5.4, 1, 1]]
+      : [[P.pos.x, AF, P.pos.z, 1, 0], [11.0, AF, 5.4, 1, 0.14], [11.86, 2.05, 5.4, 0.55, 0.42], [12.32, 1.1, 5.4, 0.05, 0.7], [12.95, 0, 5.4, 0, 1]];
+    const dur = up ? 2.6 : 2.3; let t = 0, rung = -1;
+    this.climb = { dir }; UI.prompt(null); P.vel.set(0, 0, 0);
+    P.hold = (dt) => {
+      t += dt; const k = clamp(t / dur, 0, 1);
+      let i = 0; while (i < keys.length - 2 && k > keys[i + 1][4]) i++;
+      const a = keys[i], b = keys[i + 1], u = sstep(0, 1, (k - a[4]) / (b[4] - a[4]));
+      P.pos.set(lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u));
+      P.crouchT = P.crouch = lerp(a[3], b[3], u);
+      const r = Math.floor(P.pos.y / 0.3);
+      if (r !== rung && P.pos.y > 0.05 && P.pos.y < AF - 0.08) { rung = r; Sound.step('stairs', V3(P.pos.x, P.pos.y, 5.4), { gain: 0.24, rate: 1.1 }); if (Math.random() < 0.5) Sound.play('creaks', V3(P.pos.x, P.pos.y, 5.4), { gain: 0.18, rate: rand(1.2, 1.5), pri: 0 }); }
+      if (k >= 1) { P.hold = null; this.climb = null; this.climbed(dir); }
+    };
+  },
+  climbed(dir) {
+    if (dir === 'up') {
+      if (!F.atticIn) { F.atticIn = true; after(0.9, () => UI.thought(tr('t_atticIn'), 3)); if (Story.stage === 's2') Story.setObj('s2c'); }
+    } else if (F.tapeTaken && !F.hatchShut) { F.hatchShut = true; after(0.6, () => this.shut()); }
+  },
+  /* you are down with the tape: the ladder goes up behind you and the hatch slams */
+  shut() {
+    this.target = 0;
+    Sound.play('creakLong', V3(12, 2.2, 5.4), { gain: 0.75, rate: 1.1 });
+    after(0.5, () => { Sound.play('slam', V3(12, 2.5, 5.4), { gain: 1.0 }); Player.shake = 0.3; Fear.kick(0.6); });
+    after(1.8, () => { UI.thought(tr('t_tapeWhere'), 3); Story.setObj('s3b'); });
+  },
+  takePole() {
+    if (Story.stage !== 's2') { UI.thought(tr('t_poleNot'), 2.8); return; }
+    W.pole.visible = false; Hand.set('pole');
+    Sound.play('scrape', V3(9.65, -1.8, 14.66), { gain: 0.3, rate: 1.5 });
+    after(0.4, () => UI.thought(tr('t_pole'), 2.6));
+  },
+
+  /* ---------- the chest ---------- */
+  useChest() { if (this.lidT >= 1) this.useXylo(); else if (Story.stage === 's2') this.useLock(); else UI.thought(tr('t_chest'), 2.4); },
+  useLock() {
+    if (this.lidT > 0) return;
+    if (Story.stage !== 's2') { UI.thought(tr('t_chest'), 2.4); return; }
+    if (!F.lockSeen) { F.lockSeen = true; UI.thought(tr('t_chest'), 2.2); }
+    const dg = this.code || (this.code = [0, 0, 0, 0]); let sel = 0, done = false; const wheels = [];
+    Panel.open('lock', (el, P) => {
+      const box = mk('div', 'lbox', el); mk('p', 'phd', box, tr('lock_title'));
+      const row = mk('div', 'wheels', box);
+      const render = () => wheels.forEach((w, i) => { w.n.textContent = String(dg[i]); w.el.classList.toggle('sel', i === sel); });
+      const check = () => {
+        if (done || dg.join('') !== '0714') return;
+        done = true; row.classList.add('open'); Sound.play('clank', null, { gain: 0.25, rate: 1.9, pure: true });
+        after(0.8, () => { if (UI.overlay === 'panel') UI.closeOverlay(); this.unlock(); });
+      };
+      const set = (i, v) => { if (done) return; dg[i] = (v + 10) % 10; Sound.play('ratchet', null, { gain: 0.3, rate: 0.75, pure: true, pri: 0 }); render(); check(); };
+      for (let i = 0; i < 4; i++) {
+        const w = mk('div', 'wheel', row), up = mk('button', 'wup', w, '▲'), n = mk('span', 'wnum', w, '0'), dn = mk('button', 'wdn', w, '▼');
+        up.type = dn.type = 'button';
+        up.addEventListener('click', (e) => { e.preventDefault(); sel = i; set(i, dg[i] + 1); });
+        dn.addEventListener('click', (e) => { e.preventDefault(); sel = i; set(i, dg[i] - 1); });
+        n.addEventListener('click', () => { sel = i; render(); });
+        wheels.push({ el: w, n });
+      }
+      render();
+      P.update = () => {
+        if (done) return;
+        for (let d = 0; d <= 9; d++) if (keyPressed('Digit' + d) || keyPressed('Numpad' + d)) { set(sel, d); if (!done) { sel = (sel + 1) % 4; render(); } }
+        if (keyPressed('ArrowUp') || keyPressed('KeyW')) set(sel, dg[sel] + 1);
+        if (keyPressed('ArrowDown') || keyPressed('KeyS')) set(sel, dg[sel] - 1);
+        if (keyPressed('ArrowLeft') || keyPressed('KeyA')) { sel = (sel + 3) % 4; render(); }
+        if (keyPressed('ArrowRight') || keyPressed('KeyD')) { sel = (sel + 1) % 4; render(); }
+      };
+    }, { keys: tr('p_keysLock') });
+  },
+  unlock() {
+    W.lock.visible = false; this.lidT = 1;
+    Sound.play('creakLong', V3(CHEST.x, AF + 0.5, CHEST.z), { gain: 0.6, rate: 1.25 });
+    after(1.5, () => UI.thought(tr('t_xylo'), 3));
+    Story.toS3();
+  },
+  /* ---------- the xylophone: play her song back ---------- */
+  useXylo() {
+    if (this.lidT < 1) { this.useLock(); return; }
+    if (F.xyloDone || Story.stage !== 's3') { UI.thought(tr('t_xylo'), 2.2); return; }
+    let seq = 0, wrong = 0, busy = false; const bars = [], pips = [];
+    const hit = (i) => {
+      if (busy) return;
+      this.note(i); const b = bars[i]; b.classList.remove('hit'); void b.offsetWidth; b.classList.add('hit');
+      if (XYLO_MEL[seq] === i) { pips[seq].style.background = XYLO_COL[i]; pips[seq].className = 'on'; seq++; if (seq === XYLO_MEL.length) { busy = true; this.solved(); } }
+      else {
+        busy = true; wrong++; pips.forEach((p) => { p.className = 'bad'; p.style.background = ''; });
+        after(0.7, () => { pips.forEach((p) => { p.className = ''; }); seq = 0; busy = false; });
+        if (wrong === 2) UI.thought(tr('t_xyloWrong'), 2.4);
+        if (wrong === 5) UI.thought(tr('t_xyloHelp'), 3.4);
+      }
+    };
+    Panel.open('xylo', (el, P) => {
+      const wrap = mk('div', 'xwrap', el);
+      const book = mk('canvas', 'xbook', wrap); book.width = IMG.songbook.width; book.height = IMG.songbook.height; book.getContext('2d').drawImage(IMG.songbook, 0, 0);
+      const right = mk('div', 'xright', wrap);
+      const pr = mk('div', 'xpips', right); for (let i = 0; i < XYLO_MEL.length; i++) pips.push(mk('i', null, pr));
+      const bw = mk('div', 'xbars', right);
+      XYLO_COL.forEach((c, i) => {
+        const b = mk('button', 'xbar', bw); b.type = 'button'; b.style.setProperty('--c', c); b.style.setProperty('--h', `${100 - i * 9}%`);
+        mk('span', null, b, String(i + 1));
+        b.addEventListener('pointerdown', (e) => { e.preventDefault(); hit(i); });
+        bars.push(b);
+      });
+      mk('p', 'xhint', right, tr('xylo_hint'));
+      P.update = () => { for (let i = 0; i < 7; i++) if (keyPressed('Digit' + (i + 1)) || keyPressed('Numpad' + (i + 1))) hit(i); };
+    }, { keys: tr('p_keysXylo') });
+  },
+  note(i) {
+    if (!Sound.ok) return;
+    const c = Sound.ctx, t = c.currentTime, f = 440 * Math.pow(2, ([64, 68, 69, 71, 72, 74, 76][i] - 69) / 12);
+    const g = c.createGain(); g.gain.value = 0.3; g.connect(Sound.duck);
+    for (const [m, a, dec] of [[1, 1, 1.5], [2.76, 0.28, 0.5], [5.4, 0.1, 0.2], [8.93, 0.04, 0.08]]) {
+      const o = c.createOscillator(); o.frequency.value = f * m; const og = c.createGain();
+      og.gain.setValueAtTime(0, t); og.gain.linearRampToValueAtTime(a, t + 0.003); og.gain.exponentialRampToValueAtTime(0.0005, t + dec * 1.6);
+      o.connect(og); og.connect(g); o.start(t); o.stop(t + dec * 1.6 + 0.05);
+    }
+    setTimeout(() => { try { g.disconnect(); } catch (e) { /* */ } }, 2800);
+  },
+  /* played right: the song, clean for once, and a drawer opens under the chest */
+  solved() {
+    F.xyloDone = true;
+    after(1.0, () => { if (Panel.cur && Panel.cur.kind === 'xylo') UI.closeOverlay(); });
+    Sound.setWrong(0); Sound.lul.trans = 0; Sound.lul.transT = 0; Sound.lul.sag = 0;
+    after(1.3, () => Sound.lullaby(true, { c: 0, g: 0.12, trans: 0, pos: V3(CHEST.x, AF + 0.4, CHEST.z), from: 0 }));
+    after(3.4, () => { this.drawerT = 1; W.cassette.visible = true; Sound.play('scrape', V3(CHEST.x + 0.3, AF + 0.1, CHEST.z), { gain: 0.35, rate: 1.4 }); Sound.play('switch', V3(CHEST.x + 0.3, AF + 0.1, CHEST.z), { gain: 0.3, rate: 0.7 }); });
+    after(4.4, () => UI.thought(tr('t_drawer'), 3));
+    after(15, () => { Sound.lullaby(false, { tc: 1.8 }); Sound.setWrong(0.3); });
+  },
+  takeTape() {
+    if (!W.cassette.visible || F.tapeTaken) return;
+    F.tapeTaken = true; W.cassette.visible = false; Hand.set('tape');
+    Sound.play('switch', V3(CHEST.x + 0.3, AF + 0.1, CHEST.z), { gain: 0.3, rate: 1.6 });
+    after(0.5, () => UI.thought(tr('t_tape'), 2.8));
+  },
+};
+/* ---- 08g_credits.js ---- */
+/* ============================================================
+   The end: what your night was, the credits, and the card after.
+   To put your own name in the credits, fill in CREDITS.by below
+   (it is left out when empty).
+   ============================================================ */
+const CREDITS = { by: '' };
+
+/* ---------- the numbers of your night (kept with the checkpoint) ---------- */
+const Run = {
+  t: 0, caught: 0, read: {}, msgs: {},
+  reset() { this.t = 0; this.caught = 0; this.read = {}; this.msgs = {}; },
+  save() { Store.set('run', JSON.stringify({ t: Math.round(this.t), caught: this.caught, read: this.read, msgs: this.msgs })); },
+  load() {
+    this.reset();
+    try { const o = JSON.parse(Store.get('run') || 'null'); if (o) { this.t = +o.t || 0; this.caught = +o.caught || 0; this.read = o.read || {}; this.msgs = o.msgs || {}; } } catch (e) { /* a fresh count then */ }
+  },
+  stats() {
+    const n = (o) => Object.keys(o).length;
+    return [
+      [tr('st_time'), `${Math.max(1, Math.round(this.t / 60))} ${tr('st_min')}`],
+      [tr('st_caught'), String(this.caught)],
+      [tr('st_read'), `${Math.min(7, n(this.read))} ${tr('st_of')} 7`],
+      [tr('st_msgs'), `${Math.min(4, n(this.msgs))} ${tr('st_of')} 4`],
+    ];
+  },
+};
+
+/* ---------- the credits: a slow roll over her song, played clean ---------- */
+const Credits = {
+  on: false, t: 0, dur: 64, y0: 0, y1: 0, vh: 0, hold: 5,
+  start() {
+    const el = UI.el.credits, roll = UI.el.credRoll;
+    roll.textContent = '';
+    const sec = (cls) => mk('div', 'cs ' + (cls || ''), roll);
+    { const s = sec('top'); mk('p', 'ct', s, 'Awakent'); mk('p', 'csub', s, tr('cr_sub')); }
+    { const s = sec(); mk('p', 'ch', s, tr('cr_cast')); for (const [a, b] of tr('cast')) { const r = mk('p', 'crow', s); mk('span', 'cn', r, a); if (b) mk('span', 'cr', r, b); } }
+    if (CREDITS.by && String(CREDITS.by).trim()) { const s = sec(); mk('p', 'ch', s, tr('cr_by')); mk('p', 'cbig', s, String(CREDITS.by).trim()); }
+    { const s = sec(); mk('p', 'ch', s, tr('cr_sound')); mk('p', 'ctx', s, tr('cr_soundTxt')); }
+    { const s = sec(); mk('p', 'ch', s, tr('cr_tech')); mk('p', 'ctx', s, tr('cr_techTxt')); mk('p', 'ch', s, tr('cr_fonts')); mk('p', 'ctx', s, tr('cr_fontsTxt')); }
+    { const s = sec(); mk('p', 'ch', s, tr('cr_night')); for (const [a, b] of Run.stats()) { const r = mk('p', 'crow', s); mk('span', 'cn', r, a); mk('span', 'cr', r, b); } }
+    { const s = sec('note'); mk('p', 'ctx', s, tr('cr_note')); }
+    { const s = sec('last'); mk('p', 'cl', s, tr('cr_last')); }
+    UI.el.credSkip.textContent = tr('cr_skip');
+    UI.el.hud.hidden = true; UI.el.touch.hidden = true; UI.el.dragNote.hidden = true;
+    el.hidden = false; el.classList.remove('out');
+    if (document.exitPointerLock && document.pointerLockElement) document.exitPointerLock();
+    this.on = true; this.t = 0;
+    this.vh = el.clientHeight;
+    // roll until the last line stands in the middle, then hold it there for a moment
+    const last = roll.lastChild, lc = last.offsetTop + last.offsetHeight / 2;
+    this.y0 = this.vh; this.y1 = this.vh / 2 - lc;
+    this.dur = clamp((this.y0 - this.y1) / Math.max(30, this.vh * 0.07), 40, 78); this.hold = 5;
+    this.place(this.y0);
+    // her song, clean and slow, from nowhere
+    Sound.reset(); Sound.duckTo(1, 1.5); Sound.setWrong(0);
+    Sound.lul.trans = 0; Sound.lul.transT = 0;
+    Sound.lullaby(true, { c: 0, g: 0.0, trans: 0, pos: null, from: 0 }); Sound.lullaby(true, { g: 0.1 });
+    setTimeout(() => UI.el.credSkip.classList.add('on'), 1500);
+  },
+  place(y) { UI.el.credRoll.style.transform = `translate3d(0, ${Math.round(y)}px, 0)`; },
+  update(dt) {
+    if (!this.on) return;
+    this.t += dt;
+    const k = Math.min(1, this.t / this.dur);
+    this.place(lerp(this.y0, this.y1, k));
+    if (this.t >= this.dur + this.hold) this.finish();
+  },
+  skip() { if (this.on && this.t > 1.5) this.finish(); },
+  finish() {
+    if (!this.on) return;
+    this.on = false;
+    Sound.lullaby(false, { tc: 2.2 });
+    UI.el.credits.classList.add('out');
+    setTimeout(() => { UI.el.credits.hidden = true; UI.el.credSkip.classList.remove('on'); UI.showEnd(); }, 900);
+  },
+};
 /* ---- 09_ui.js ---- */
 /* ============================================================
    UI: HUD, thoughts, notes, menus, touch
@@ -7273,7 +8645,10 @@ const Scare = {
 const UI = {
   overlay: null, onClose: null, q: [], cur: null, tt: 0, gap: 0, el: {}, hintTO: 0, restartArm: 0,
   init() {
-    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard', 'stickzone', 'clockpad', 'clockDoneT', 'gyroSel', 'gyroSens']) this.el[id] = $(id);
+    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard', 'stickzone', 'clockpad', 'clockDoneT', 'gyroSel', 'gyroSens', 'handItem', 'panel', 'panelBody', 'credits', 'credRoll', 'credSkip', 'endStats', 'endDigits']) this.el[id] = $(id);
+    this.el.credits.addEventListener('pointerdown', (e) => { if (e.target !== this.el.credSkip) Credits.skip(); });
+    this.el.credSkip.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); Credits.skip(); });
+    this.el.credSkip.addEventListener('pointerdown', (e) => e.stopPropagation());
     applyLangDOM();
     const g = this.el.digits.getContext('2d');
     g.clearRect(0, 0, 340, 120); draw7(g, '03:33', 16, 16, 86, '#ff3a22', 'rgba(255,58,34,0.08)');
@@ -7385,7 +8760,9 @@ const UI = {
     clearTimeout(this.voiceTO); this.voiceTO = setTimeout(() => v.classList.remove('on'), dur * 1000);
   },
   closeOverlay() {
-    this.el.note.hidden = true; this.el.image.hidden = true; this.el.doc.hidden = true; this.overlay = null; this.touchOverlay(false);
+    const was = this.overlay;
+    this.el.note.hidden = true; this.el.image.hidden = true; this.el.doc.hidden = true; this.el.panel.hidden = true; this.overlay = null; this.touchOverlay(false);
+    if (was === 'panel') Panel.closed();
     const f = this.onClose; this.onClose = null; if (f) f();
   },
   gyroLabels() { const st = document.querySelector('.switch .st'); if (st) { st.dataset.on = tr('perf_on_plain'); st.dataset.off = tr('perf_off'); } },
@@ -7404,8 +8781,12 @@ const UI = {
     this.el.clockMirror.hidden = !mir;
     if (mir) { const mm = (720 - m) % 720; this.el.clockMirrorTime.textContent = fmt(mm); this.el.clockMirror.classList.toggle('ok', Math.abs(mm - TARGET_MIN) <= 1); }
   },
-  objective(stage) { const o = tr('o_' + stage); if (!Array.isArray(o)) return; this.el.objText.textContent = o[0]; this.el.hintText.textContent = o[1]; this.el.stuck.open = false; },
+  objective(stage) {
+    const k = typeof Story !== 'undefined' && Story.objKey && stage === Story.stage ? Story.objKey : stage;
+    const o = tr('o_' + k); if (!Array.isArray(o)) return; this.el.objText.textContent = o[0]; this.el.hintText.textContent = o[1]; this.el.stuck.open = false;
+  },
   onEscape() {
+    if (Credits.on) { Credits.skip(); return; }
     // Esc only ever pauses: resuming needs a click so the mouse can be captured again
     if (!G.running || G.stage === 'end' || G.paused) return;
     if (UI.overlay) { UI.closeOverlay(); return; }
@@ -7415,6 +8796,15 @@ const UI = {
   showEnd() {
     this.el.hud.hidden = true; this.el.touch.hidden = true; this.el.end.hidden = false;
     if (document.exitPointerLock && document.pointerLockElement) document.exitPointerLock();
+    // what your night was
+    const st = this.el.endStats; st.textContent = '';
+    for (const [a, b] of Run.stats()) { const li = mk('li', null, st); mk('span', null, li, a); mk('b', null, li, b); }
+    mk('li', 'thanks', st, tr('cr_thanks'));
+    // the clock by the bed says 7:14. Almost always.
+    const c = this.el.endDigits, g = c.getContext('2d'), draw = (s, col, off) => { g.clearRect(0, 0, c.width, c.height); draw7(g, s, 16, 16, 86, col, off); };
+    draw('07:14', '#ff3a22', 'rgba(255,58,34,0.08)');
+    clearTimeout(this.endTO);
+    this.endTO = setTimeout(() => { if (this.el.end.hidden) return; draw('03:33', '#ff3a22', 'rgba(255,58,34,0.08)'); setTimeout(() => draw('07:14', '#ff3a22', 'rgba(255,58,34,0.08)'), 110); }, 5200);
     setTimeout(() => this.el.againBtn.focus(), 50);
   },
   /* touch: a stick that stays where it is, bottom left (only the round patch around it walks),
@@ -7575,8 +8965,10 @@ const App = {
     Sound.init(); Sound.resume();
     if (Sound.ok && !this.ambStarted) { Sound.startAmbience(); this.ambStarted = true; }
     UI.el.title.hidden = true; UI.el.end.hidden = true; UI.el.pause.hidden = true; UI.el.hud.hidden = false;
+    Credits.on = false; UI.el.credits.hidden = true;
     UI.clearThoughts(); UI.prompt(null); UI.closeOverlay();
     if (ClockUI.active) ClockUI.close();
+    if (stage === 'intro') Run.reset(); else Run.load();
     G.running = true; G.paused = false;
     Story.start(stage);
     if (stage !== 'intro' && stage !== 'morning') this.controlsHint(6);
@@ -7628,7 +9020,7 @@ document.addEventListener('pointerlockchange', () => {
   Input.locked = document.pointerLockElement === UI.el.view;
   if (Input.locked) { Input.dragLook = false; Input.dragging = false; return; }
   lastUnlock = performance.now();
-  if (G.running && !G.paused && G.stage !== 'end') App.pause();
+  if (G.running && !G.paused && G.stage !== 'end' && !Panel.free) App.pause();
 });
 document.addEventListener('pointerlockerror', () => lockFailed());
 let dragMoved = 0;
@@ -7667,7 +9059,10 @@ function loop(now) {
     G.dt = dt; G.t += dt; G.frame++;
     Quality.sample(dt);
     runTimers();
-    if (UI.overlay && (Input.ePress || Input.click)) { UI.closeOverlay(); Input.ePress = false; Input.click = false; }
+    if (UI.overlay === 'panel') { Panel.update(dt); if (Input.ePress && UI.overlay === 'panel') UI.closeOverlay(); Input.ePress = false; Input.click = false; }
+    else if (UI.overlay && (Input.ePress || Input.click)) { UI.closeOverlay(); Input.ePress = false; Input.click = false; }
+    if (Credits.on) { Credits.update(dt); if (keyPressed('Space') || keyPressed('Enter') || Input.ePress) Credits.skip(); }
+    if (G.stage !== 'end' && G.stage !== 'title') Run.t += dt;
     if (ClockUI.active) { ClockUI.update(dt); if (!ClockUI.active) { Input.ePress = false; Input.click = false; } }
     Player.update(dt);
     Interact.update();
@@ -7679,7 +9074,7 @@ function loop(now) {
     Sound.update(dt);
     UI.updateThought(dt);
     SU.uTime.value = G.t;
-    const needLock = !isTouch && !Input.locked && G.stage !== 'end' && G.stage !== 'black';
+    const needLock = !isTouch && !Input.locked && G.stage !== 'end' && G.stage !== 'black' && UI.overlay !== 'panel';
     if (UI.el.dragNote.hidden === needLock) UI.el.dragNote.hidden = !needLock;
   } else if (!G.running) {
     App.titleT += dt;
