@@ -1957,7 +1957,7 @@ function canSee(p, r = 0.35) { return inFrustum(p, r) && losClear(camera.positio
 
 /* ---------- post ---------- */
 const POST_FS = `
-uniform sampler2D tScene, tScare; uniform vec2 uRes, uScareOff; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma, uPulse, uFear, uScare, uScareZ, uScareDim;
+uniform sampler2D tScene, tScare; uniform vec2 uRes, uScareOff; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma, uPulse, uFear, uScare, uScareZ, uScareDim; uniform vec4 uWob;
 varying vec2 vUv;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y)*p3.z); }
 void main(){
@@ -1966,10 +1966,17 @@ void main(){
     uv += uWarp*vec2(sin(uv.y*9.0 + uTime*0.9)*0.007, cos(uv.x*7.0 + uTime*0.7)*0.006);
     vec2 d0 = uv - 0.5; uv = 0.5 + d0*(1.0 - uWarp*0.05*dot(d0,d0));
   }
+  // the room not quite holding still: it breathes, it swims, it stands a little too tall
+  if(uWob.x + uWob.y + uWob.w > 0.0){
+    vec2 d1 = uv - 0.5;
+    uv = 0.5 + d1 * (1.0 - uWob.x * 0.03 * (0.5 + dot(d1, d1) * 2.0));
+    uv.y = 0.5 + (uv.y - 0.5) * (1.0 - uWob.w * 0.035);
+    uv += uWob.y * vec2(sin(uv.y * 5.0 + uTime * 1.3) * 0.006, sin(uv.x * 4.0 - uTime * 1.1) * 0.004);
+  }
   // heartbeat: the picture throbs inward a hair on every beat
   uv = 0.5 + (uv - 0.5) * (1.0 - uPulse * 0.01);
   vec2 d = uv - 0.5;
-  float ca = (uChroma*0.004 + uWarp*0.012 + uPulse*0.012) * dot(d,d) * 4.0;
+  float ca = (uChroma*0.004 + uWarp*0.012 + uPulse*0.012 + uWob.z*0.02) * dot(d,d) * 4.0;
   vec3 c;
   c.r = texture2D(tScene, uv + d*ca).r; c.g = texture2D(tScene, uv).g; c.b = texture2D(tScene, uv - d*ca).b;
   // the face, far too close: torn lines, colour fringes, the room gone dark around it
@@ -2062,7 +2069,7 @@ function initRenderer() {
   nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.magFilter = THREE.LinearFilter; nt.minFilter = THREE.LinearMipmapLinearFilter; nt.generateMipmaps = true; nt.needsUpdate = true;
   SU.uNoiseTex.value = nt;
   postMat = new THREE.ShaderMaterial({
-    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 }, tScare: { value: null }, uScare: { value: 0 }, uScareZ: { value: 1 }, uScareDim: { value: 0.9 }, uScareOff: { value: new THREE.Vector2() } },
+    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 }, tScare: { value: null }, uScare: { value: 0 }, uScareZ: { value: 1 }, uScareDim: { value: 0.9 }, uScareOff: { value: new THREE.Vector2() }, uWob: { value: new THREE.Vector4() } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: POST_FS, depthTest: false, depthWrite: false,
   });
@@ -5608,7 +5615,7 @@ const Flash = {
   hazard(dt) {
     if (G.t < this.next || Player.flashK < 0.9 || typeof Story === 'undefined') return;
     const st = Story.stage;
-    let rate = { p2: 0.006, p2b: 0.01, s1: 0.012, s2: 0.01, s3: 0.006, p3: 0.018, descent: 0.03 }[st] || 0, near = 0, seen = false;
+    let rate = { p2: 0.002, p2b: 0.004, s1: 0.008, s2: 0.01, s3: 0.006, p3: 0.022, descent: 0.035 }[st] || 0, near = 0, seen = false;
     const E = typeof Ent !== 'undefined' ? Ent : null;
     if (E && E.def && E.H.root.visible && !E.def.mirrorOnly && !E.def.noFalter) {
       const r = E.H.root.position, d = Math.hypot(r.x - camera.position.x, r.z - camera.position.z);
@@ -5768,6 +5775,15 @@ const ClockUI = {
 const STAGES = ['intro', 'p1', 'p2', 'p2b', 's1', 's2', 's3', 'p3', 'descent', 'final', 'black', 'morning', 'end'];
 const SI = (s) => STAGES.indexOf(s);
 const F = G.flags;
+/* ---------- the curve of the night ----------
+   How frightening each part of the night may be, from 0 (an ordinary night) to 1 (the worst of it).
+   Every scare asks this first. The start is a house that is only a little off: things moved, a
+   picture that wobbles, a sound that sags. What is really there comes later, and closer. */
+const HORROR = { intro: 0, p1: 0.1, p2: 0.25, p2b: 0.35, s1: 0.45, s2: 0.55, s3: 0.48, p3: 0.8, descent: 0.9, final: 1 };
+const HZ = { snap: 0.3, stinger: 0.4, near: 0.35, close: 0.45, hunt: 0.45, strobe: 0.5 };   // from where on each kind of scare may happen
+function horror() { return HORROR[Story.stage] ?? 0; }
+// how far off the sound of the world is (warble, detune), stage by stage along the same curve
+const WRONG = { intro: 0, p1: 0.02, p2: 0.07, p2b: 0.12, s1: 0.17, s2: 0.22, s3: 0.2, p3: 0.38, descent: 0.5, final: 0.55 };
 
 
 
@@ -5780,6 +5796,9 @@ const Ent = {
   fade: 1, fadeSpeed: 99, out: 0, eyeT: 0, eyeOn: false, eye: 0, flickT: 0, snapT: 0, snapYaw: 0,
   init() { this.H = Actors.ent; },
   spawn(def) {
+    // too early in the night for it to turn its head to you, or to come with a sting
+    const h = horror();
+    if ((def.stinger && h < HZ.stinger) || (def.snap && h < HZ.snap)) def = Object.assign({}, def, { stinger: !!def.stinger && h >= HZ.stinger, snap: !!def.snap && h >= HZ.snap });
     const H = this.H; this.def = def; this.t = 0; this.lookT = 0; this.seen = false; this.gone = 0; this.out = 0; this.snapT = 0; this.flashT = 0;
     H.root.visible = true; H.smoke.dis = null;
     setLayer(H.root, def.mirrorOnly ? 2 : 0);
@@ -5919,7 +5938,7 @@ const Dir = {
   trail: [], tNext: 0, cueNext: 0, sightNext: 0, pollNext: 0, lastYaw: 0, wasMoving: false, n: 0, cross: new Map(),
   level() {
     if (Player.room === 'attic' || Player.hold || F.follower) return 0;
-    return { p1: 0.3, p2: 0.5, p2b: 0.7, s1: 0.6, s2: 0.6, s3: 0.3, p3: 1, descent: 0.8 }[Story.stage] || 0;
+    return { p1: 0.15, p2: 0.3, p2b: 0.45, s1: 0.55, s2: 0.65, s3: 0.4, p3: 1, descent: 0.8 }[Story.stage] || 0;
   },
   reset() { this.trail.length = 0; this.cueNext = G.t + 30; this.sightNext = G.t + 70; this.pollNext = 0; this.lastYaw = Player.yaw; this.wasMoving = false; this.n = 0; },
   behind(dist) {
@@ -5939,24 +5958,27 @@ const Dir = {
     if (!lv || !P.enabled || ClockUI.active || UI.overlay) return;
     // steps behind you that stop just after you do
     const moving = P.amp > 0.35;
-    if (this.wasMoving && !moving && G.t > this.cueNext && Math.random() < 0.25 + lv * 0.35) {
+    if (horror() >= 0.25 && this.wasMoving && !moving && G.t > this.cueNext && Math.random() < 0.25 + lv * 0.35) {
       this.cueNext = G.t + rand(30, 55) / lv;
       const b = this.behind(rand(3.2, 5.5));
-      if (b && roomOf(b.x, b.y + 1, b.z) !== 'outside') { const k = irand(1, 2), s = P.surface(); for (let i = 0; i < k; i++) after(0.32 + i * 0.52, () => Sound.step(s, V3(b.x, b.y + 0.1, b.z), { gain: 0.5, hrtf: true, vary: 0.05 })); }
+      if (b && roomOf(b.x, b.y + 1, b.z) !== 'outside') { const k = irand(1, 2), s = P.surface(); for (let i = 0; i < k; i++) after(0.32 + i * 0.52, () => Sound.step(s, V3(b.x, b.y + 0.1, b.z), { gain: 0.3 + 0.25 * horror(), hrtf: true, vary: 0.05 })); }
     }
     this.wasMoving = moving;
     if (Ent.def || Ent.out > 0 || G.t - Ent.lastEnd < 35) return;
-    // first sighting (after the second clock): someone crossing a doorway, far off
+    // first sighting (after the third clock): someone crossing a doorway, far off
     if (Story.stage === 'p1') {
       if (F.p1CrossAt && !F.p1Cross && G.t > F.p1CrossAt && G.t > this.pollNext) { this.pollNext = G.t + 0.5; if (this.crossing()) { F.p1Cross = true; } }
       return;
     }
-    if (lv < 0.6 || G.t < this.sightNext) return;
-    // once per stage: right behind you when you spin round
-    if (Math.abs(yv) > 4.2 && !F['turn_' + Story.stage] && this.turnaround(yv)) { F['turn_' + Story.stage] = true; this.schedule(lv); return; }
+    // sightings, by how far the night has gone: first only someone far off crossing a doorway,
+    // then at the edge of your view, then in your own flashlight beam, then right behind you
+    const h = horror();
+    if (h < 0.25 || G.t < this.sightNext) return;
+    if (h >= 0.55 && Math.abs(yv) > 4.2 && !F['turn_' + Story.stage] && this.turnaround(yv)) { F['turn_' + Story.stage] = true; this.schedule(lv); return; }
     if (G.t > this.pollNext) {
       this.pollNext = G.t + 0.6;
-      const ok = (!F['bo_' + Story.stage] && Math.random() < 0.5 && this.blackout()) || (Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || this.peripheral());
+      const edge = h >= 0.35;
+      const ok = (h >= 0.45 && !F['bo_' + Story.stage] && Math.random() < 0.5 && this.blackout()) || (edge && Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || (edge && this.peripheral()));
       if (ok) this.schedule(lv);
     }
   },
@@ -6004,7 +6026,7 @@ const Dir = {
           if (!revealed) {
             revealed = true;
             const r = E.H.root.position;
-            if (flashHits(V3(r.x, r.y + 1.25, r.z), 11, 26 * DEG)) { Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Fear.kick(1); }
+            if (flashHits(V3(r.x, r.y + 1.25, r.z), 11, 26 * DEG) && horror() >= HZ.stinger) { Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Fear.kick(1); }
           }
         } });
       return true;
@@ -6026,7 +6048,7 @@ const Dir = {
       Ent.spawn({ id: 'edge', pos: spot, yaw: faceYaw(spot, P.pos), pose: { hunch: 0.34, roll: 0.42, pitch: 0.1 }, fadeIn: 2.2, lookDelay: 0.12, minDist: 1.6, timeout: 30, unseenGrace: 999, snap: true, stinger: false,
         update: (dt, E) => {
           const r = E.H.root.position, cam = camera.position, ch = V3(r.x, r.y + 1.25, r.z);
-          E.def.stinger = steps > 0;
+          E.def.stinger = steps > 0 && horror() >= HZ.stinger;
           if (canSee(ch, 0.5)) { awayT = 0; return; }
           if (!E.seen) return;
           awayT += dt;
@@ -6209,8 +6231,11 @@ const Story = {
     // environment
     const env = morning ? [0.075, 0.075, 0.085, 0.012, 1.3] : at('final') ? [0.004, 0.004, 0.006, 0.075, 1.25] : at('descent') ? [0.0016, 0.0016, 0.002, 0.2, 1.3] : at('p3') ? [0.0022, 0.0024, 0.0034, 0.06, 1.2] : s === 's1' ? [0.003, 0.0034, 0.005, 0.045, 1.25] : at('p2') ? [0.004, 0.0045, 0.0065, 0.04, 1.25] : [0.0055, 0.0062, 0.0095, 0.03, 1.25];
     SU.uAmbient.value.set(env[0], env[1], env[2]); SU.uFogDensity.value = env[3]; SU.uExposure.value = env[4];
-    postMat.uniforms.uDesat.value = at('p3') ? 0.22 : at('p2') ? 0.14 : 0.08;
-    postMat.uniforms.uGrain.value = at('p3') ? 0.075 : 0.055;
+    // the picture itself: a little greyer, grainier, darker at the edges and more fringed the deeper you go
+    { const h = HORROR[s] ?? 0, u = postMat.uniforms;
+      u.uDesat.value = morning ? 0.04 : 0.06 + 0.2 * h; u.uGrain.value = 0.05 + 0.03 * h;
+      u.uVig.value = 0.5 + 0.2 * h; u.uChroma.value = 0.25 + 0.35 * h; }
+    Distort.reset();
     // props
     W.fridgeNote.visible = at('p1') && !at('descent');
     W.photoPic.material.uniforms.uMap.value = morning ? T.photo0 : at('p3') ? T.photo2 : at('p2') ? T.photo1 : (F.photoV === 1 ? T.photo1 : T.photo0);
@@ -6275,7 +6300,7 @@ const Story = {
       if (this.waterL) { this.waterL.stop(0.05); this.waterL = null; } F.water = false;
       if (s === 'p2' && F.waterStarted) this.startWater();
       if (s === 's1') { F.water = true; this.waterL = Sound.loop('water', V3(7.2, 1.0, 0.3), { gain: 0.55, ref: 1.0, roll: 1.2, rev: 0.4 }); }
-      Sound.setWrong({ intro: 0, p1: 0.04, p2: 0.14, p2b: 0.24, s1: 0.26, s2: 0.28, s3: 0.3, p3: 0.38, descent: 0.5, final: 0.55 }[s] ?? 0);
+      Sound.setWrong(WRONG[s] ?? 0);
       Sound.breathe(s === 'p3' ? 0.7 : s === 'descent' ? 0.4 : 0);
       Sound.shepard(s === 'descent' ? 1 : 0);
       Sound.muffle(0, 0.5); Sound.tinnitus(0, 0.5); Sound.stretch(0);
@@ -6543,7 +6568,7 @@ const Story = {
       const n = Object.values(CLOCKS).filter((k) => k.isSet()).length;
       this.lullabyLevel(n);
       if (c === CLOCKS.basement) after(1.2, () => UI.thought(tr('t_mirrorRight'), 3));
-      if (n === 2 && !F.p1CrossAt) F.p1CrossAt = G.t + 5;
+      if (n === 3 && !F.p1CrossAt) F.p1CrossAt = G.t + 8;   // late in the first part, and only a glimpse
       if (n === 1 && !F.firstSet) { F.firstSet = true; after(0.6, () => UI.thought(tr('t_clockStopped'), 3)); }
       if (n === 3 && !CLOCKS.basement.isSet() && !F.thirdHint) { F.thirdHint = true; after(0.8, () => UI.thought(tr('t_oneMore'), 3)); }
     } else { c.ticking = true; }
@@ -6554,7 +6579,7 @@ const Story = {
   lullabyLevel(n) {
     if (this.stage !== 'p1' || n < 1) return;
     F.lulN = n;
-    const c = [0, 0.15, 0.35, 0.55, 0.72][n], g = [0, 0.06, 0.06, 0.07, 0.085][n];
+    const c = [0, 0.06, 0.16, 0.28, 0.4][n], g = [0, 0.055, 0.058, 0.064, 0.075][n];
     if (!F.lul) { F.lul = true; Sound.lullaby(true, { c, g, pos: null, from: 0 }); }
     else Sound.lullaby(true, { c, g });
   },
@@ -6563,14 +6588,15 @@ const Story = {
     Candles.toStage('p2');
     Sound.fridgeDie(1.6);
     Sound.tapeStop(1.9, 0.9, 1.4, () => { Sound.wind(0, 0.01); Sound.tone(0.02, 0.01); Sound.fridge(false); Sound.lullaby(false); });
-    Sound.setWrong(0.14);
+    Sound.setWrong(WRONG.p2);
     for (const c of Object.values(CLOCKS)) c.solvedLock = true;
     this.setStage('p2');
-    after(2.8, () => { const bd = DOORS.bedroom; if (bd.isOpen) bd.slam(); else Sound.play('thud', bd.pos, { gain: 1 }); });
+    // not a slam yet: the bedroom door swings shut on its own, the way a draught would do it
+    after(2.8, () => { const bd = DOORS.bedroom; if (bd.isOpen) bd.close(0.7, 'slow'); else Sound.play('thud', bd.pos, { gain: 0.5 }); });
     after(3.0, () => { LN.vest.on = 0; LN.living.on = 0; LN.study.on = 0; LN.hallA.setFlicker('unstable'); LN.hallA.keepFlicker = true; LN.hallA.dim = 0.7; });
     after(4.6, () => UI.thought(tr('t_silent'), 3.5));
     SU.uAmbient.value.set(0.004, 0.0045, 0.0065); SU.uFogDensity.value = 0.04;
-    postMat.uniforms.uDesat.value = 0.14;
+    postMat.uniforms.uDesat.value = 0.06 + 0.2 * HORROR.p2;
     W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['delay'];
   },
 
@@ -6594,7 +6620,8 @@ const Story = {
       F.bathSlam = true;
       after(0.35, () => {
         const d = DOORS.bathroom; W.bathText.visible = true;
-        d.slam(); LN.bathroom.setFlicker('unstable'); after(0.9, () => LN.bathroom.setFlicker(null));
+        // it swings shut behind you: hard, but it could have been the draught
+        d.close(5, 'shut'); LN.bathroom.setFlicker('unstable'); after(0.6, () => LN.bathroom.setFlicker(null));
       });
     }
     if (F.bathSlam && !F.textThought && P.room === 'bathroom') {
@@ -6615,7 +6642,9 @@ const Story = {
       F.mirrorDone = true;
       if (this.waterL) { this.waterL.stop(0.02); this.waterL = null; } F.water = false;
     }
-    Sound.muffle(0.72, 0.12); Sound.tinnitus(bath ? 0.9 : 0.6, 0.25); Sound.duckTo(0.2, 0.15);
+    // the first time (the bathroom, early in the night) it is a held breath; later it takes the air out of the room
+    const hard = horror() >= 0.5, k = hard ? 1 : 0.55;
+    Sound.muffle(0.72 * k, 0.12); Sound.tinnitus((bath ? 0.9 : 0.6) * k, 0.25); Sound.duckTo(hard ? 0.2 : 0.55, 0.15);
     Ent.spawn({
       id: bath ? 'behindBath' : 'behindHall', mirrorOnly: true, pos, yaw: P.yaw + Math.PI, pose: { pitch: 0.1, roll: 0.3 }, timeout: 99, persistent: true,
       update: (dt, E) => { if (E.t > 1.9 || Math.abs(angNorm(Player.yaw - yaw0)) > 0.55) { E.hide('turn'); return false; } },
@@ -6623,7 +6652,7 @@ const Story = {
         Sound.tinnitus(0, 0.01); Sound.duckTo(1, 1.0); Sound.muffle(0, 1.6);
         after(0.3, () => {
           const P = Player, rx = Math.cos(P.yaw), rz = -Math.sin(P.yaw), fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw);
-          Sound.play('exhale', V3(P.pos.x + rx * 0.3 - fx * 0.25, P.pos.y + 1.6, P.pos.z + rz * 0.3 - fz * 0.25), { gain: 0.8, ref: 0.4, hrtf: true, noOcc: true, direct: true, pri: 2 });
+          Sound.play('exhale', V3(P.pos.x + rx * 0.3 - fx * 0.25, P.pos.y + 1.6, P.pos.z + rz * 0.3 - fz * 0.25), { gain: hard ? 0.8 : 0.4, ref: 0.4, hrtf: true, noOcc: true, direct: true, pri: 2 });
         });
         if (!bath) return;
         after(1.5, () => { DOORS.bathroom.open(0.55, 'slow'); });
@@ -6862,7 +6891,8 @@ const Story = {
       update: (dt, E) => {
         const r = E.H.root.position, chest = _ev.set(r.x, r.y + 1.25, r.z);
         const seen = canSee(chest, 0.4) && viewAngleTo(chest) < 0.65;
-        if (seen && !F.dlSeen) { F.dlSeen = true; Fear.kick(0.6); }
+        // the first time you see it on the stairs behind you, its face comes at you
+        if (seen && !F.dlSeen) { F.dlSeen = true; Fear.kick(1); Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Jump.pin(E.H.head, 0.4, 0.8); Player.shake = 0.2; Distort.pulse(0.9, 1.4, 'all'); }
         if (F.descentOpen) {
           E.pose.amp = 0; Sound.presence(0.15);
           if (P.pos.x > 29.5 && !seen) { E.hide('done'); F.follower = false; }
@@ -7076,8 +7106,8 @@ const Story = {
         if (this.echo === 0) { P.onStep = null; }
       };
     }
-    // breathing when you stand still in the dark
-    if (SI(s) >= SI('p2') && SI(s) <= SI('descent') && P.still > 7 && !F.breathing && G.t > (this.breathNext || 0) && lightLevel(camera.position) < 0.9) {
+    // breathing when you stand still in the dark (only once the house has started to turn)
+    if (horror() >= HZ.near && SI(s) <= SI('descent') && P.still > 7 && !F.breathing && G.t > (this.breathNext || 0) && lightLevel(camera.position) < 0.9) {
       F.breathing = true; this.breathNext = G.t + rand(35, 60);
       const b = V3(P.pos.x + Math.sin(P.yaw) * 0.6, P.pos.y + 1.6, P.pos.z + Math.cos(P.yaw) * 0.6);
       Sound.play('breathIn', b, { gain: 0.5, ref: 0.6, hrtf: true, noOcc: true, pri: 2 }); Sound.play('breathOut', b, { gain: 0.45, ref: 0.6, delay: 1.35, hrtf: true, noOcc: true, pri: 2 });
@@ -7086,11 +7116,12 @@ const Story = {
     // basement drips
     if ((P.room === 'basement' || P.room === 'stairs') && G.t > (this.dripNext || 0)) { this.dripNext = G.t + rand(1.2, 4); Sound.play('drip', W.dripPos, { gain: 0.35, vary: 0.15 }); }
     if (G.t < this.ambNext) return;
-    const ranges = { intro: [16, 30], p1: [13, 24], p2: [9, 18], p2b: [9, 16], s1: [9, 16], s2: [10, 18], s3: [12, 20], p3: [7, 13], descent: [6, 10] };
+    // fewer and further away early on; closer and more often the deeper you go
+    const ranges = { intro: [16, 30], p1: [13, 24], p2: [14, 26], p2b: [12, 22], s1: [10, 18], s2: [9, 16], s3: [12, 20], p3: [6, 12], descent: [5, 9] };
     if (P.room === 'attic' || P.hold) { this.ambNext = G.t + 4; return; }
     const r = ranges[s]; if (!r) return;
     this.ambNext = G.t + rand(r[0], r[1]);
-    const n = SI(s);
+    const n = SI(s), h = horror();
     const back = (d) => V3(P.pos.x + Math.sin(P.yaw) * d, P.pos.y + 0.1, P.pos.z + Math.cos(P.yaw) * d);
     const ev = [];
     const far = () => { const rooms = [V3(2.5, 0.2, 2.2), V3(7.2, 0.2, 2.2), V3(11.4, 0.2, 2.2), V3(5, 0.2, 9), V3(11, 0.2, 9), V3(8, 0.2, 5.4)]; return pick(rooms.filter((p) => roomOf(p.x, 1, p.z) !== P.room)) || rooms[0]; };
@@ -7102,19 +7133,31 @@ const Story = {
     if (n === SI('p1')) ev.push([1, () => { if (F.voicesN) return; F.voicesN = 1; const p = far(); p.y = 1.3; Sound.play('voices', p, { gain: 0.6, hrtf: true, ref: 1.6 }); }]);
     if (n === SI('p1') && !F.tvDone && P.room !== 'living') ev.push([3, () => { F.tvDone = true; W.tvOn = true; W.tvScreen.material.uniforms.uEmissive.value.setScalar(0.6); const h = Sound.loop('static', V3(6.4, 0.8, 6.9), { gain: 0.5, fade: 0.02 }); after(rand(2, 3.2), () => { W.tvOn = false; W.tvScreen.material.uniforms.uEmissive.value.setScalar(0); h.stop(0.02); }); }]);
     if (n >= SI('p2') && n <= SI('p3')) {
-      ev.push([3, () => { const k = irand(3, 5); for (let i = 0; i < k; i++) after(i * 0.55, () => Sound.step('wood', back(4.2 - i * 0.45), { gain: 0.7, hrtf: true, noOcc: true })); }]);
-      ev.push([2, () => Sound.play('creaks', back(2.2), { gain: 0.65, hrtf: true, noOcc: true })]);
-      ev.push([2, () => { const side = Math.random() < 0.5 ? 1 : -1; Sound.play('scratch', V3(P.pos.x + Math.cos(P.yaw) * side * 0.9, P.pos.y + 0.9, P.pos.z - Math.sin(P.yaw) * side * 0.9), { gain: 0.5, hrtf: true, noOcc: true }); }]);
-      ev.push([1, () => Sound.play('groan', V3(P.pos.x + 1, -0.6, P.pos.z + 2), { gain: 0.7, lp: 900 })]);
-      ev.push([1, () => { if ((F.voicesN || 0) >= 2) return; F.voicesN = (F.voicesN || 0) + 1; const p = far(); p.y = 1.3; Sound.play('voices', p, { gain: 0.75, hrtf: true, ref: 1.6 }); }]);
-      ev.push([2, () => { const ds = Object.values(DOORS).filter((d) => d.name !== 'front' && d.exists && d.pos.distanceTo(camera.position) > 5 && !canSee(d.pos, 0.5)); const d = pick(ds); if (d) { if (d.isOpen && Math.random() < 0.5) d.slam(); else Sound.play('shut', d.pos, { gain: 0.8 }); } }]);
-      ev.push([2, () => { const p = back(-0.1); p.y = 2.9; for (let i = 0; i < 5; i++) after(i * 0.6, () => Sound.step('wood', V3(p.x + (i - 2) * 0.6, 2.9, p.z + 0.3), { gain: 0.7, lp: 600 })); }]);
-      ev.push([2, () => Sound.knock(V3(P.pos.x, -0.2, P.pos.z), 3, 0.35, 0.8)]);
+      // far and deniable: an old house at night
+      ev.push([2, () => Sound.play('creaks', far(), { gain: 0.5 + h * 0.2, rate: rand(0.8, 1.1) })]);
+      ev.push([1, () => Sound.play('groan', V3(P.pos.x + 1, -0.6, P.pos.z + 2), { gain: 0.45 + h * 0.3, lp: 900 })]);
+      ev.push([1, () => { if ((F.voicesN || 0) >= 2) return; F.voicesN = (F.voicesN || 0) + 1; const p = far(); p.y = 1.3; Sound.play('voices', p, { gain: 0.5 + h * 0.3, hrtf: true, ref: 1.6 }); }]);
+      ev.push([2, () => { const ds = Object.values(DOORS).filter((d) => d.name !== 'front' && d.exists && d.pos.distanceTo(camera.position) > 5 && !canSee(d.pos, 0.5)); const d = pick(ds); if (d) { if (d.isOpen && h >= HZ.near && Math.random() < 0.5) d.slam(); else Sound.play('shut', d.pos, { gain: 0.45 + h * 0.4 }); } }]);
+      if (h < HZ.near) {
+        ev.push([2, () => Sound.play('clank', V3(12, -0.4, 15.5), { gain: 0.5, lp: 900 })]);
+        // someone walking, but in another room, and it could be the house settling
+        ev.push([1, () => { const p = far(); for (let i = 0; i < 3; i++) after(i * 0.7, () => Sound.step('wood', V3(p.x + i * 0.5, 0.1, p.z), { gain: 0.35, lp: 1400 })); }]);
+      }
+      // upstairs, under the floor, at the window: it is in the house now
+      if (h >= 0.3) ev.push([2, () => { const p = back(-0.1); p.y = 2.9; for (let i = 0; i < 5; i++) after(i * 0.6, () => Sound.step('wood', V3(p.x + (i - 2) * 0.6, 2.9, p.z + 0.3), { gain: 0.45 + h * 0.3, lp: 600 })); }]);
+      if (h >= HZ.near) {
+        ev.push([2, () => Sound.knock(V3(P.pos.x, -0.2, P.pos.z), 3, 0.35, 0.5 + h * 0.3)]);
+        ev.push([1, () => { const wins = [V3(0, 1.5, 1.95), V3(5.2, 1.4, 11), V3(11.3, 1.5, 11), V3(11.8, 1.5, 0)]; const w = wins.sort((a, b) => a.distanceTo(P.pos) - b.distanceTo(P.pos))[0]; for (let i = 0; i < 3; i++) Sound.play('glass', w, { gain: 0.3, delay: i * 0.4, rate: 0.7 }); }]);
+        ev.push([2, () => { if (P.room === 'hall' || P.room === 'vestibule') this.echo = irand(4, 6) + Math.round(h * 4); else Sound.play('creaks', far(), { gain: 0.6 }); }]);
+        // behind you
+        ev.push([2 + h * 2, () => { const k = irand(3, 5); for (let i = 0; i < k; i++) after(i * 0.55, () => Sound.step('wood', back(4.6 - h * 0.6 - i * 0.45), { gain: 0.5 + h * 0.25, hrtf: true, noOcc: true })); }]);
+        ev.push([2, () => Sound.play('creaks', back(2.8 - h * 0.8), { gain: 0.5 + h * 0.2, hrtf: true, noOcc: true })]);
+      }
+      // at your ear
+      if (h >= HZ.close) ev.push([1 + h * 2, () => { const side = Math.random() < 0.5 ? 1 : -1; Sound.play('scratch', V3(P.pos.x + Math.cos(P.yaw) * side * 0.9, P.pos.y + 0.9, P.pos.z - Math.sin(P.yaw) * side * 0.9), { gain: 0.5, hrtf: true, noOcc: true }); }]);
       if (n >= SI('p3')) ev.push([3, () => { const p = far(); p.y = 1.1; Sound.lulPhrase(p, 0.85, irand(4, 7)); }]);
-      ev.push([2, () => { if (P.room === 'hall' || P.room === 'vestibule') this.echo = irand(6, 9); else Sound.play('creaks', far(), { gain: 0.6 }); }]);
-      ev.push([1, () => { const wins = [V3(0, 1.5, 1.95), V3(5.2, 1.4, 11), V3(11.3, 1.5, 11), V3(11.8, 1.5, 0)]; const w = wins.sort((a, b) => a.distanceTo(P.pos) - b.distanceTo(P.pos))[0]; for (let i = 0; i < 3; i++) Sound.play('glass', w, { gain: 0.3, delay: i * 0.4, rate: 0.7 }); }]);
     }
-    if (n >= SI('p2b') && n <= SI('descent')) {
+    if (h >= HZ.close && n <= SI('descent')) {
       ev.push([2, () => { const side = Math.random() < 0.5 ? 1 : -1; const e = V3(P.pos.x + Math.cos(P.yaw) * 0.5 * side, P.pos.y + 1.6, P.pos.z - Math.sin(P.yaw) * 0.5 * side); Sound.play(n >= SI('p3') && Math.random() < 0.5 ? 'rwhispers' : 'whispers', e, { gain: 0.36, ref: 0.5, hrtf: true, noOcc: true, pri: 2 }); }]);
     }
     if (n === SI('p3')) {
@@ -7178,7 +7221,8 @@ const Fear = {
   reset() { this.level = 0; this.imp = 0; this.pulse = 0; this.beatT = 0.5; this.breathT = 2; this.near = 0; },
   /* a fright: at least this much, for a while */
   kick(v) { this.imp = Math.max(this.imp, clamp(v, 0, 1)); },
-  base(s) { return { p1: 0.02, p2: 0.08, p2b: 0.12, s1: 0.13, s2: 0.12, s3: 0.1, p3: 0.18, descent: 0.28, final: 0.35 }[s] || 0; },
+  // how uneasy you are with nothing happening: hardly at first, and a floor that rises as the night goes on
+  base(s) { return { p1: 0.01, p2: 0.04, p2b: 0.07, s1: 0.1, s2: 0.12, s3: 0.08, p3: 0.22, descent: 0.32, final: 0.38 }[s] || 0; },
   update(dt) {
     const s = G.stage, live = ['p1', 'p2', 'p2b', 's1', 's2', 's3', 'p3', 'descent', 'final'].includes(s) && !G.paused;
     if (!live) {
@@ -7188,7 +7232,7 @@ const Fear = {
     }
     let t = this.base(s);
     // the dark, without a working light
-    if (SI(s) >= SI('p2') && lightLevel(camera.position) < 0.25 && SU.uFlashOn.value < 0.3) t += 0.1;
+    if (SI(s) >= SI('p2') && lightLevel(camera.position) < 0.25 && SU.uFlashOn.value < 0.3) t += 0.03 + 0.1 * horror();
     if (Flash.dead()) t += 0.22;
     // the entity: close counts even when you cannot see it (you feel it before you see it)
     this.near = 0;
@@ -7231,6 +7275,72 @@ const Fear = {
 };
 const _fv = new THREE.Vector3();
 
+
+/* ============================================================
+   Distort: the room not quite holding still
+   Early in the night the only thing wrong is that now and then the
+   picture seems to breathe, or swim a little, or a light buzzes, or a
+   sound comes out a hair too slow. You could blame your eyes. The
+   deeper you go, the more often, the stronger, and the more of them
+   at once. (uWob: x breathe, y swim, z colour fringe, w too tall)
+   ============================================================ */
+const Distort = {
+  k: null, next: 0,
+  // [min gap, max gap, strength] per stage
+  RATE: { intro: [45, 80, 0.3], p1: [35, 65, 0.38], p2: [28, 48, 0.48], p2b: [22, 38, 0.55], s1: [20, 36, 0.6], s2: [18, 32, 0.66], s3: [22, 38, 0.55], p3: [11, 21, 0.85], descent: [8, 15, 1] },
+  reset() { this.k = null; this.next = G.t + rand(18, 32); this.set(0, 0, 0, 0); },
+  set(a, b, c, d) { if (postMat && postMat.uniforms.uWob) postMat.uniforms.uWob.value.set(a, b, c, d); },
+  pulse(amt = 0.5, dur = 1.6, kind = null) {
+    const h = horror();
+    kind = kind || pick(h < 0.2 ? ['breathe', 'swim', 'breathe', 'light'] : h < 0.45 ? ['breathe', 'swim', 'slow', 'light', 'tall'] : ['breathe', 'swim', 'slow', 'tall', 'light', 'all', 'all']);
+    this.k = { t: 0, dur, amt, kind };
+    if (kind === 'slow' || kind === 'all') Sound.wrongSpike(0.1 + amt * 0.35, dur * 0.9);
+    if (kind === 'light' || kind === 'all') {
+      const l = nearestLight(camera.position);
+      if (l && l.lit && !l.keepFlicker && !l.flick) {
+        // early a light only buzzes; later it goes out for a blink or two
+        if (h < 0.45) { l.setFlicker('buzz'); after(0.4 + amt * 0.8, () => { if (!l.keepFlicker && l.flick && l.flick.mode === 'buzz') l.setFlicker(null); }); }
+        else { l.setFlicker('unstable'); l.flick.next = 0.05; after(0.9 + amt * 0.6, () => { if (!l.keepFlicker && l.flick && l.flick.mode === 'unstable') l.setFlicker(null); }); }
+      }
+    }
+  },
+  /* the look and sound of the night follow the same curve: the picture eases (over some seconds) toward
+     how grey, grainy, dark-edged and fringed this part of the night is, and the sound's wrongness is set
+     whenever a new part begins (the moments that bend it further set it themselves in between) */
+  stage: null,
+  follow(dt) {
+    const s = Story.stage, u = postMat.uniforms;
+    if (s !== this.stage) { this.stage = s; if (s in WRONG && s !== 'final') Sound.setWrong(WRONG[s]); }
+    if (!(s in HORROR)) return;
+    const h = HORROR[s], k = 1 - Math.exp(-dt / 5);
+    u.uDesat.value += (0.06 + 0.2 * h - u.uDesat.value) * k; u.uGrain.value += (0.05 + 0.03 * h - u.uGrain.value) * k;
+    u.uVig.value += (0.5 + 0.2 * h - u.uVig.value) * k; u.uChroma.value += (0.25 + 0.35 * h - u.uChroma.value) * k;
+  },
+  update(dt) {
+    if (!postMat || !postMat.uniforms.uWob) return;
+    this.follow(dt);
+    const s = Story.stage, r = this.RATE[s];
+    if (r && G.t > this.next && !this.k && !UI.overlay && !ClockUI.active && !Scare.busy && !Scare.strobeBusy && !Credits.on) {
+      this.next = G.t + rand(r[0], r[1]);
+      const a = r[2] * rand(0.75, 1.1);
+      this.pulse(a, rand(1.4, 2.4) + a * 1.2);
+    }
+    const k = this.k;
+    if (!k) return;
+    k.t += dt;
+    const u = k.t / k.dur;
+    if (u >= 1) { this.k = null; this.set(0, 0, 0, 0); return; }
+    const sw = Math.sin(Math.PI * u), e = sw * sw, a = k.amt;   // one slow swell in and out
+    switch (k.kind) {
+      case 'breathe': this.set(a * sw, 0, a * 0.25 * e, 0); break;
+      case 'swim': this.set(0, a * e, a * 0.2 * e, 0); break;
+      case 'tall': this.set(a * 0.3 * sw, 0, 0, a * e); break;
+      case 'slow': this.set(0, a * 0.5 * e, a * 0.6 * e, 0); break;
+      case 'light': this.set(a * 0.3 * sw, 0, 0, 0); break;
+      default: this.set(a * sw, a * e, a * 0.7 * e, a * 0.6 * e);
+    }
+  },
+};
 /* ---- 08c_lore.js ---- */
 /* ============================================================
    Lore: what the house remembers
@@ -7752,8 +7862,9 @@ const Jump = {
    for as long as it takes to beat on it and let itself in. */
 const Hunt = {
   next: 0, st: null,
-  level() { return { p2b: 0.65, s1: 0.5, s2: 0.6, p3: 1 }[Story.stage] || 0; },
-  reset(stage) { this.st = null; this.next = G.t + ({ p2b: 50, s1: 55, s2: 45, p3: 30 }[stage] ?? 40); },
+  // it does not hunt you until the house has turned; after that, sooner and faster each time
+  level() { return { s1: 0.45, s2: 0.6, p3: 1.1 }[Story.stage] || 0; },
+  reset(stage) { this.st = null; this.next = G.t + ({ s1: 70, s2: 45, p3: 28 }[stage] ?? 40); },
   update() {
     const lv = this.level(); if (!lv || this.st) return;
     if (Player.room === 'attic' || Player.hold || Player.pos.y > 1) return;   // never up the ladder or in the crawl space
@@ -7872,18 +7983,21 @@ const Scare = {
     Jump.update(dt);
     const s = Story.stage, P = Player;
     if (this.off || this.busy || G.stage === 'black') return;
-    if (s === 'p1') this.clockSteps(dt);
+    this.eyesBusy(dt);
     if (!['p2', 'p2b', 's1', 's2', 's3', 'p3', 'descent'].includes(s)) return;
     if (this.front) this.frontStep(dt);
     if (!P.enabled || ClockUI.active || UI.overlay || P.room === 'attic' || P.hold) return;
     Hunt.update();
-    const idle = !Ent.def && Ent.out <= 0 && !Hunt.st && !this.front && !this.strobeBusy;
-    // the lights go, and come back for a moment with it standing there (not on the endless stairs: that one has its own)
-    if (idle && s !== 'descent' && !F['strobe_' + s] && G.t > this.strobeNext && Story.st > 15 && G.t - Ent.lastEnd > 12) { this.strobeNext = G.t + 1.2; if (this.strobe()) F['strobe_' + s] = true; }
+    const idle = !Ent.def && Ent.out <= 0 && !Hunt.st && !this.front && !this.strobeBusy, h = horror();
+    // the lights go, and come back for a moment with it standing there (not on the endless stairs: that one has its own).
+    // Only once it is well under way; at the worst of it, more than once
+    const strobes = h >= 0.8 ? 2 : 1, sn = F['strobe_' + s] || 0;
+    if (idle && h >= HZ.strobe && s !== 'descent' && sn < strobes && G.t > this.strobeNext && Story.st > 15 && G.t - Ent.lastEnd > 12) { this.strobeNext = G.t + 1.2; if (this.strobe()) { F['strobe_' + s] = sn + 1; this.strobeNext = G.t + rand(70, 110); } }
     // breath on your neck: look round, nothing; look back, it is there
-    if (idle && s === 'p3' && !F['front_' + s] && G.t > this.dtNext && G.t - Ent.lastEnd > 18) { this.dtNext = G.t + 1.5; if (this.frontStart()) F['front_' + s] = true; }
-    // a face for a frame, when it is bad already
-    if ((s === 'p3' || s === 'descent') && Fear.level > 0.42 && G.t > this.subNext) { this.subNext = G.t + rand(22, 50); Jump.subliminal(rand(0.22, 0.38)); }
+    const fn = F['front_' + s] || 0;
+    if (idle && s === 'p3' && fn < 2 && G.t > this.dtNext && G.t - Ent.lastEnd > 18) { this.dtNext = G.t + 1.5; if (this.frontStart()) { F['front_' + s] = fn + 1; this.dtNext = G.t + rand(80, 120); } }
+    // a face for a frame, when it is bad already (and more often the further down you go)
+    if (h >= 0.8 && Fear.level > 0.36 && G.t > this.subNext) { this.subNext = G.t + (s === 'descent' ? rand(12, 26) : rand(16, 36)); Jump.subliminal(rand(0.24, 0.4)); }
   },
 
   /* ---- it has you ---- */
@@ -8007,7 +8121,7 @@ const Scare = {
   /* ---- you shut a door; something on the other side did not want you to ---- */
   onDoorClosed(d) {
     const s = Story.stage;
-    if (this.off || this.busy || !['p2b', 's1', 's2', 's3', 'p3'].includes(s) || G.t < this.doorNext || Ent.def || Hunt.st || d.name === 'front') return;
+    if (this.off || this.busy || horror() < HZ.close || SI(s) > SI('p3') || G.t < this.doorNext || Ent.def || Hunt.st || d.name === 'front') return;
     const n = F['pound_' + s] || 0; if (n >= 2 || Math.random() > (n ? 0.3 : 0.65)) return;
     F['pound_' + s] = n + 1; this.doorNext = G.t + 80;
     const cam = camera.position, c = d.pos.clone(), far = (d.axis === 'x' ? Math.sign(c.z - cam.z) : Math.sign(c.x - cam.x)) || 1;
@@ -8035,22 +8149,34 @@ const Scare = {
     });
   },
 
-  /* ---- p1: while your eyes are on the clock, someone walks up behind you ---- */
-  clockSteps(dt) {
+  /* ---- while your eyes are on something (a clock, a panel), something behind you moves ----
+     Early on it is only a board that gives, somewhere back there, and you can tell yourself it was the house.
+     Later it is steps, walking up to you, and a breath at your ear when you look up. Once a stage. */
+  eyesBusy(dt) {
+    const s = Story.stage, h = horror();
     if (this.clk) {
       this.clk.t += dt;
-      if (this.clk.armed && (!ClockUI.active || this.clk.t > 12)) {
+      const busy = ClockUI.active || UI.overlay === 'panel';
+      if (this.clk.armed && (!busy || this.clk.t > 12)) {
         const P = Player, cam = camera.position, ear = V3(cam.x + Math.sin(P.yaw) * 0.35, cam.y - 0.03, cam.z + Math.cos(P.yaw) * 0.35);
-        after(0.25, () => { Sound.play('exhale', ear, { gain: 0.55, ref: 0.45, hrtf: true, noOcc: true, pri: 2 }); Fear.kick(0.75); });
+        after(0.25, () => { Sound.play('exhale', ear, { gain: 0.55, ref: 0.45, hrtf: true, noOcc: true, pri: 2 }); Fear.kick(0.75); Distort.pulse(0.5, 1.2); });
         this.clk = null;
       }
       return;
     }
-    if (!ClockUI.active) { this.clkT = 0; return; }
-    if (F.clockSteps || !Object.values(CLOCKS).some((c) => c.isSet())) return;
-    this.clkT += dt; if (this.clkT < 2.4) return;
-    F.clockSteps = true;
+    const busy = ClockUI.active || (UI.overlay === 'panel' && Panel.cur);
+    if (!busy) { this.clkT = 0; return; }
+    const soft = s === 'p1', full = h >= 0.5 && SI(s) <= SI('p3');
+    if ((!soft && !full) || F['eyes_' + s]) return;
+    if (soft && !Object.values(CLOCKS).some((c) => c.isSet())) return;
+    this.clkT += dt; if (this.clkT < (soft ? 3.5 : 2.4)) return;
+    F['eyes_' + s] = true;
     const P = Player, cam = camera.position.clone(), fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw), surf = P.surface(), y = P.pos.y + 0.1;
+    if (soft) {
+      // one board, somewhere behind you, and nothing after it
+      Sound.play('creaks', V3(cam.x - fx * 4.2, y, cam.z - fz * 4.2), { gain: 0.3, rate: 0.9, hrtf: true, pri: 1 });
+      return;
+    }
     [3.4, 2.7, 2.0, 1.4, 0.95].forEach((dd, i) => after(i * 0.74, () => Sound.step(surf, V3(cam.x - fx * dd, y, cam.z - fz * dd), { gain: 0.28 + i * 0.07, rate: 0.85, hrtf: true, noOcc: true, pri: 2 })));
     this.clk = { t: 0, armed: false }; after(5 * 0.74, () => { if (this.clk) this.clk.armed = true; });
   },
@@ -8665,7 +8791,7 @@ const Attic = {
     after(1.3, () => Sound.lullaby(true, { c: 0, g: 0.12, trans: 0, pos: V3(CHEST.x, AF + 0.4, CHEST.z), from: 0 }));
     after(3.4, () => { this.drawerT = 1; W.cassette.visible = true; Sound.play('scrape', V3(CHEST.x + 0.3, AF + 0.1, CHEST.z), { gain: 0.35, rate: 1.4 }); Sound.play('switch', V3(CHEST.x + 0.3, AF + 0.1, CHEST.z), { gain: 0.3, rate: 0.7 }); });
     after(4.4, () => UI.thought(tr('t_drawer'), 3));
-    after(15, () => { Sound.lullaby(false, { tc: 1.8 }); Sound.setWrong(0.3); });
+    after(15, () => { Sound.lullaby(false, { tc: 1.8 }); Sound.setWrong(WRONG[Story.stage] ?? 0.2); });
   },
   takeTape() {
     if (!W.cassette.visible || F.tapeTaken) return;
@@ -9336,6 +9462,7 @@ function loop(now) {
     Story.update(dt);
     Lore.update(dt);
     Fear.update(dt);
+    Distort.update(dt);
     Candles.update(dt);
     updateLights(dt);
     Sound.update(dt);
