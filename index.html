@@ -192,6 +192,79 @@
   #calib .row { grid-template-columns: minmax(0, 8em) minmax(0, 1fr); }
   #calib p.lede { max-width: 52ch; font-size: clamp(16px, 1.8vw, 19px); }
 
+  /* ---------- the start screen ---------- */
+  #title { z-index: 0; align-items: stretch; background: linear-gradient(90deg, rgba(8, 9, 12, 0.95) 0%, rgba(8, 9, 12, 0.82) 34%, rgba(8, 9, 12, 0.3) 62%, rgba(8, 9, 12, 0.05) 100%); }
+  #title::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse 70% 80% at 72% 48%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.55) 100%); }
+  #title { padding-block: clamp(20px, 5.5vh, 80px); }
+  .tmain { max-width: 660px; gap: clamp(14px, 2.6vh, 32px); margin-block: auto; }
+  .tinfo { display: flex; flex-direction: column; gap: clamp(8px, 1.6vh, 18px); }
+  .tinfo #digits { width: clamp(110px, min(12vw, 17vh), 170px); height: auto; }
+  #title .lede { max-width: 44ch; font-size: clamp(17px, min(1.6vw, 2.7vh), 22px); }
+  .ttitle { font-size: clamp(46px, min(8vw, 11vh), 108px); }
+  .ttitle .flk { animation: flk 8s steps(1) infinite; }
+  @keyframes flk { 0%, 90%, 100% { opacity: 1; } 91% { opacity: 0.2; } 92% { opacity: 1; } 94% { opacity: 0.55; } 95% { opacity: 1; } }
+  .tdesc { margin: 0; max-width: 54ch; font-family: var(--display); font-size: clamp(15px, min(1.25vw, 2.25vh), 18px); line-height: 1.58; color: #b9b1a3; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
+  .tags li { padding: 5px 11px 4px; border: 1px solid rgba(230, 223, 210, 0.16); border-radius: 999px; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dust); background: rgba(10, 11, 15, 0.35); }
+  .tmenu { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .tbtn { position: relative; display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding: 7px 0 7px 0; border: 0; background: none; color: #cfc8ba; font-family: var(--display); font-size: clamp(24px, 2.3vw, 31px); line-height: 1.1; text-align: left; cursor: pointer; transition: padding-left 0.22s ease, color 0.2s ease; }
+  .tbtn::before { content: ''; position: absolute; left: 0; top: calc(50% - 1px); width: 0; height: 2px; background: var(--amber); transition: width 0.22s ease; }
+  .tbtn:hover:not(:disabled), .tbtn:focus-visible { padding-left: 26px; color: #fff; outline: none; }
+  .tbtn:hover:not(:disabled)::before, .tbtn:focus-visible::before { width: 14px; }
+  .tbtn.primary { color: var(--bone); font-size: clamp(30px, min(3.2vw, 5vh), 44px); }
+  .tbtn small { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); }
+  .tbtn:disabled { opacity: 0.35; cursor: wait; }
+  .tsub { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 12px; padding-top: 14px; border-top: 1px solid rgba(230, 223, 210, 0.14); }
+  .tlink { display: inline-flex; gap: 8px; align-items: center; padding: 7px 0 5px; border: 0; border-bottom: 1px solid transparent; background: none; color: var(--dust); font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+  .tlink:hover:not(:disabled), .tlink:focus-visible { color: var(--bone); border-bottom-color: var(--amber); outline: none; }
+  .tlink svg { width: 15px; height: 15px; }
+  .tlink.danger:hover:not(:disabled), .tlink.danger:focus-visible { color: #ff9a80; border-bottom-color: #ff9a80; }
+  .tlink:disabled { opacity: 0.6; cursor: default; }
+  .tmenu #loading { max-width: 36ch; margin-top: 10px; line-height: 1.5; }
+  body.sheetOpen #title .tmain { opacity: 0.35; transition: opacity 0.25s; }
+  /* the side sheet: settings, controls, about */
+  #tsheet { position: absolute; inset: 0; z-index: 7; display: flex; justify-content: flex-end; background: rgba(4, 5, 8, 0.45); }
+  #tsheet[hidden] { display: none; }
+  .sheetBox { display: flex; flex-direction: column; gap: 24px; width: min(560px, 100%); height: 100%; overflow-y: auto; padding: clamp(18px, 4.5vh, 40px) clamp(18px, 3.4vw, 40px) 44px; border-left: 1px solid rgba(230, 223, 210, 0.12); background: rgba(12, 13, 18, 0.97); box-shadow: -30px 0 70px rgba(0, 0, 0, 0.55); animation: sheetIn 0.28s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  @keyframes sheetIn { from { transform: translateX(36px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .sheetHead { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .sheetHead h2 { font-size: clamp(26px, 3vw, 36px); }
+  #tsheetClose { flex: none; width: 42px; height: 42px; border: 1px solid rgba(230, 223, 210, 0.3); border-radius: 50%; background: none; color: var(--bone); font-size: 15px; cursor: pointer; }
+  #tsheetClose:hover, #tsheetClose:focus-visible { border-color: var(--amber); color: var(--amber); outline: none; }
+  .sheetBody { display: flex; flex-direction: column; gap: 26px; }
+  .sheetBody[hidden] { display: none; }
+  .settings { display: flex; flex-direction: column; gap: 20px; }
+  .setActions { display: flex; flex-wrap: wrap; gap: 6px 26px; padding-top: 18px; border-top: 1px solid rgba(230, 223, 210, 0.12); }
+  .ctl h3, .awarn h3, .acred h3 { margin: 0 0 12px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dust); }
+  .ctl dl { display: grid; grid-template-columns: 11.5em 1fr; gap: 10px 18px; align-items: baseline; margin: 0; }
+  .ctl dt { display: flex; flex-wrap: wrap; gap: 4px; }
+  .ctl dd { margin: 0; font-family: var(--display); font-size: 17px; line-height: 1.35; color: #d8d1c3; }
+  .ctl.tips ul { display: grid; gap: 9px; margin: 0; padding-left: 18px; font-family: var(--display); font-size: 16.5px; line-height: 1.45; color: #d8d1c3; }
+  .ctl.tips li::marker { color: var(--amber); }
+  .ap { margin: 0; font-family: var(--display); font-size: 17.5px; line-height: 1.55; color: #d2cabb; }
+  .ap:first-child { font-size: 22px; font-style: italic; color: var(--bone); }
+  .awarn { padding: 14px 16px 16px; border: 1px solid rgba(255, 58, 34, 0.35); border-radius: 4px; background: rgba(255, 58, 34, 0.06); }
+  .awarn h3 { color: #ff8f78; margin-bottom: 6px; }
+  .awarn p, .acred p { margin: 0; font-family: var(--display); font-size: 16.5px; line-height: 1.45; color: #d2cabb; }
+  .acred { display: flex; flex-direction: column; gap: 4px; }
+  .acred h3 { margin: 12px 0 4px; }
+  .acred .aby { font-size: 24px; color: var(--bone); }
+  .acred .aver { margin-top: 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dust-2); }
+  /* short screens (phones on their side): what it is on the left, the menu on the right */
+  @media (max-height: 640px) and (min-width: 620px) and (max-width: 1000px) {
+    .tmain { display: grid; grid-template-columns: minmax(0, 1fr) fit-content(320px); align-items: end; column-gap: clamp(22px, 4vw, 56px); width: 100%; max-width: none; }
+    .tinfo { max-width: 470px; }
+    .tmenu { justify-self: end; min-width: 190px; }
+    .tinfo #digits { width: 110px; }
+    .ttitle { font-size: clamp(40px, 7vw, 66px); }
+    .tinfo .lede { font-size: 16px; }
+    .tdesc { font-size: 14px; line-height: 1.5; }
+    .tbtn.primary { font-size: 30px; } .tbtn { font-size: 22px; }
+    .tsub { flex-direction: column; gap: 0; }
+  }
+  @media (max-width: 520px) { #title { background: linear-gradient(0deg, rgba(8, 9, 12, 0.96) 0%, rgba(8, 9, 12, 0.86) 60%, rgba(8, 9, 12, 0.5) 100%); } }
+  @media (prefers-reduced-motion: reduce) { .ttitle .flk { animation: none; } .sheetBox { animation: none; } }
+
   /* ---------- what you carry ---------- */
   #handItem { position: absolute; right: max(16px, 3vw); bottom: max(16px, calc(3vh + env(safe-area-inset-bottom, 0px))); display: flex; gap: 6px; align-items: baseline; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(230, 223, 210, 0.66); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); }
   #handItem b { font-family: var(--display); font-style: italic; font-weight: 400; font-size: 17px; letter-spacing: 0; text-transform: none; color: var(--bone); }
@@ -351,26 +424,34 @@
   <div id="panel" class="overlay" hidden><div id="panelBody" class="pnl"></div></div>
 
   <section id="title" class="screen">
-    <div class="wrap">
-      <div class="lang" role="group" aria-label="Taal / Language"><button type="button" data-lang="nl" aria-pressed="true">NL</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
-      <canvas id="digits" width="340" height="120" role="img" aria-label="03:33"></canvas>
-      <h1>Awakent</h1>
-      <p class="lede" data-i18n="lede">Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.</p>
-      <div class="actions">
-        <button id="startBtn" type="button" disabled data-i18n="btn_begin">Begin</button>
-        <button id="contBtn" type="button" hidden data-i18n="btn_continue">Verder vanaf laatste punt</button>
+    <div class="wrap tmain">
+      <div class="tinfo">
+        <div class="lang" role="group" aria-label="Taal / Language"><button type="button" data-lang="nl" aria-pressed="true">NL</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+        <canvas id="digits" width="340" height="120" role="img" aria-label="03:33"></canvas>
+        <h1 class="ttitle">Awa<span class="flk">k</span>ent</h1>
+        <p class="lede" data-i18n="lede">Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.</p>
+        <p class="tdesc" id="tdesc" data-i18n="t_desc"></p>
+        <ul class="tags" id="tags"></ul>
       </div>
-      <ul class="keys">
-        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <span data-i18n="k_walk">lopen</span></li>
-        <li><kbd data-i18n="k_mouse">Muis</kbd> <span data-i18n="k_look">kijken</span></li>
-        <li><kbd>E</kbd> <span data-i18n="k_use">gebruiken</span></li>
-        <li><kbd>F</kbd> <span data-i18n="k_flash">zaklamp</span></li>
-        <li><kbd>Shift</kbd> <span data-i18n="k_run">sneller</span></li>
-        <li><kbd>P</kbd> <span data-i18n="k_perf">prestaties</span></li>
-        <li><kbd>Esc</kbd> <span data-i18n="k_menu">menu</span></li>
-      </ul>
-      <p class="meta" data-i18n="meta">Koptelefoon aanbevolen · ongeveer 40 minuten · toetsenbord en muis · bevat harde schrikmomenten</p>
-      <p id="loading" data-i18n="loading">Het huis wordt opgebouwd…</p>
+      <nav class="tmenu" aria-label="Menu">
+        <button id="contBtn" type="button" class="tbtn" hidden><span data-i18n="btn_resume2">Verder spelen</span><small id="contWhere"></small></button>
+        <button id="startBtn" type="button" class="tbtn primary" disabled><span>Begin</span></button>
+        <div class="tsub">
+          <button type="button" class="tlink" data-sheet="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Zm8.1 4.8.1-1.4-.1-1.4 2-1.6-2-3.4-2.4 1a8 8 0 0 0-2.4-1.4L15 2.5h-4l-.4 2.7a8 8 0 0 0-2.4 1.4l-2.4-1-2 3.4 2 1.6-.1 1.4.1 1.4-2 1.6 2 3.4 2.4-1a8 8 0 0 0 2.4 1.4l.4 2.7h4l.4-2.7a8 8 0 0 0 2.4-1.4l2.4 1 2-3.4Z"/></svg><span data-i18n="btn_settings">Instellingen</span></button>
+          <button type="button" class="tlink" data-sheet="controls"><span data-i18n="btn_controls">Besturing</span></button>
+          <button type="button" class="tlink" data-sheet="about"><span data-i18n="btn_about">Over het spel</span></button>
+        </div>
+        <p id="loading" data-i18n="loading">Het huis wordt opgebouwd…</p>
+      </nav>
+    </div>
+  </section>
+
+  <section id="tsheet" hidden role="dialog" aria-modal="true" aria-labelledby="tsheetTitle">
+    <div class="sheetBox">
+      <header class="sheetHead"><h2 id="tsheetTitle"></h2><button id="tsheetClose" type="button" aria-label="Sluiten" data-i18n-aria="close">&#x2715;</button></header>
+      <div class="sheetBody" data-for="settings"><div id="setSlot"></div><div class="setActions"><button id="calibBtn" type="button" class="tlink" data-i18n="set_cal">Helderheid afstellen</button><button id="wipeBtn" type="button" class="tlink danger">Voortgang wissen</button></div></div>
+      <div class="sheetBody" data-for="controls" id="ctlBody"></div>
+      <div class="sheetBody" data-for="about" id="aboutBody"></div>
     </div>
   </section>
 
@@ -379,6 +460,7 @@
       <p class="eyebrow" data-i18n="paused">Gepauzeerd</p>
       <h2 id="objText"></h2>
       <details id="stuck"><summary data-i18n="stuck">Ik zit vast</summary><p id="hintText"></p></details>
+      <div id="pauseSlot"><div id="settingsRows" class="settings">
       <div class="row"><label for="sens" data-i18n="sens">Muisgevoeligheid</label><input id="sens" type="range" min="0.3" max="2.5" step="0.05" value="1"></div>
       <div class="row"><label for="vol" data-i18n="volume">Volume</label><input id="vol" type="range" min="0" max="1" step="0.01" value="0.9"></div>
       <div class="row"><label for="bright" data-i18n="brightness">Helderheid</label><input id="bright" type="range" min="0.6" max="1.9" step="0.02" value="1"></div>
@@ -387,6 +469,7 @@
       <div class="row touchOnly"><label for="gyroSel" data-i18n="gyro">Kijken door te kantelen</label><label class="switch"><input id="gyroSel" type="checkbox" role="switch"><span class="knob" aria-hidden="true"></span><span class="st" data-on="Aan" data-off="Uit"></span></label></div>
       <div class="row touchOnly"><label for="gyroSens" data-i18n="gyro_sens">Kantelgevoeligheid</label><input id="gyroSens" type="range" min="0.15" max="1.2" step="0.05" value="0.4"></div>
       <div class="row"><label for="langSel" data-i18n="language">Taal</label><select id="langSel"><option value="nl">Nederlands</option><option value="en">English</option></select></div>
+      </div></div>
       <div class="actions">
         <button id="resumeBtn" type="button" data-i18n="resume">Verder spelen</button>
         <button id="restartBtn" type="button" class="ghost" data-i18n="restart">Opnieuw beginnen</button>
@@ -849,6 +932,35 @@ Object.assign(STR.en, {
   cr_note: "Sleep paralysis is real. Your body is still asleep, your mind already isn't, and sometimes someone is standing in the room who isn't there. It isn't dangerous, and it passes. But if your nights feel like this: talk about it. With someone you trust, or with your doctor.",
   cr_last: 'Call someone back.', cr_skip: 'Skip', cr_thanks: 'Thank you for playing.',
 });
+/* ---------- the start screen ---------- */
+Object.assign(STR.nl, {
+  t_desc: 'Een korte verhalende horrorgame over één lange nacht in het huis van je moeder. Zoek uit waarom de klokken stilstaan, luister naar wat het huis je vertelt en los de puzzels op die je dichter bij het ochtendlicht brengen. En als er iemand in de kamer staat: kijk hem aan.',
+  tags: ['± 40 minuten', 'koptelefoon aanbevolen', 'muis en toetsenbord of touch', 'bevat schrikmomenten'],
+  btn_new: 'Nieuw spel', btn_resume2: 'Verder spelen', cont_from: 'vanaf', btn_settings: 'Instellingen', btn_controls: 'Besturing', btn_about: 'Over het spel', close: 'Sluiten',
+  ch_p2: 'De stilte', ch_p2b: 'De kamer die zich herhaalt', ch_s1: 'Stroomuitval', ch_s2: 'De radio', ch_s3: 'Het slaapliedje', ch_p3: 'Word wakker', ch_descent: 'De trap',
+  set_cal: 'Helderheid afstellen', set_wipe: 'Voortgang wissen', set_wipe_confirm: 'Zeker weten? Klik nog eens', set_wiped: 'Gewist',
+  ctl_kb_h: 'Toetsenbord en muis', ctl_touch_h: 'Telefoon of tablet', ctl_tips_h: 'Goed om te weten',
+  ctl_kb: [['W|A|S|D', 'lopen'], ['Muis', 'rondkijken'], ['E', 'gebruiken, oppakken, lezen'], ['F', 'zaklamp aan of uit'], ['Shift', 'sneller lopen'], ['Esc', 'pauze, instellingen en hints'], ['P', 'prestatiemeter']],
+  ctl_touch: [['rondje linksonder', 'lopen (ver duwen is rennen)'], ['slepen', 'rondkijken'], ['E', 'gebruiken'], ['F', 'zaklamp'], ['II', 'pauze en hints'], ['kantelen', 'rondkijken met je telefoon (aan of uit in de instellingen)']],
+  ctl_tips: ['Richt het puntje in het midden van je beeld op iets. Verschijnt er een woord, dan kun je het gebruiken.', 'Sommige dingen openen een paneel, zoals een meterkast of een radio. Gebruik daar de muis, je vinger of de cijfertoetsen; E sluit het weer.', 'Luister goed. Met een koptelefoon hoor je waar een geluid vandaan komt.', 'Vast? Druk op Esc en open „Ik zit vast” voor een hint bij wat je nu moet doen.', 'Je voortgang wordt bewaard bij elk nieuw hoofdstuk.'],
+  about_p: ['Een nacht die niet wil ophouden, in een huis dat je kent.', 'Awakent is een korte verhalende horrorgame over slapen, wakker worden en wat je nog tegen iemand had willen zeggen. Je verkent het huis, vindt wat het je wil vertellen en lost puzzels op met wat er ligt.', 'Het spel draait helemaal in je browser. Alles wat je ziet en hoort wordt ter plekke gemaakt: geen video, geen opgenomen geluid.'],
+  about_warn_h: 'Let op', about_warn: 'Bevat harde schrikmomenten, flikkerend licht, donkere scènes en thema’s als rouw en slaapverlamming.',
+  about_tech_h: 'Gemaakt met', about_tech: 'three.js (MIT-licentie) · lettertypen IM Fell English, IBM Plex Mono en Reenie Beanie (SIL Open Font License)', about_ver: 'Versie 2',
+});
+Object.assign(STR.en, {
+  t_desc: "A short narrative horror game about one long night in your mother's house. Find out why the clocks have stopped, listen to what the house is telling you and solve the puzzles that bring you closer to morning. And if someone is standing in the room: look at him.",
+  tags: ['about 40 minutes', 'headphones recommended', 'mouse and keyboard or touch', 'contains jump scares'],
+  btn_new: 'New game', btn_resume2: 'Continue', cont_from: 'from', btn_settings: 'Settings', btn_controls: 'Controls', btn_about: 'About', close: 'Close',
+  ch_p2: 'The silence', ch_p2b: 'The room that repeats', ch_s1: 'Power cut', ch_s2: 'The radio', ch_s3: 'The lullaby', ch_p3: 'Wake up', ch_descent: 'The stairs',
+  set_cal: 'Adjust brightness', set_wipe: 'Clear progress', set_wipe_confirm: 'Are you sure? Click again', set_wiped: 'Cleared',
+  ctl_kb_h: 'Keyboard and mouse', ctl_touch_h: 'Phone or tablet', ctl_tips_h: 'Good to know',
+  ctl_kb: [['W|A|S|D', 'walk'], ['Mouse', 'look around'], ['E', 'use, pick up, read'], ['F', 'flashlight on or off'], ['Shift', 'walk faster'], ['Esc', 'pause, settings and hints'], ['P', 'performance meter']],
+  ctl_touch: [['circle bottom left', 'walk (push far to run)'], ['drag', 'look around'], ['E', 'use'], ['F', 'flashlight'], ['II', 'pause and hints'], ['tilt', 'look around with your phone (on or off in the settings)']],
+  ctl_tips: ['Point the dot in the middle of the screen at something. If a word appears, you can use it.', 'Some things open a panel, like a fuse box or a radio. Use the mouse, your finger or the number keys there; E closes it again.', 'Listen. With headphones you can hear where a sound comes from.', 'Stuck? Press Esc and open "I\'m stuck" for a hint about what to do now.', 'Your progress is saved at the start of every chapter.'],
+  about_p: ["A night that won't end, in a house you know.", "Awakent is a short narrative horror game about sleeping, waking up and what you still wanted to say to someone. You explore the house, find what it wants to tell you and solve puzzles with whatever is lying around.", 'It runs entirely in your browser. Everything you see and hear is made on the spot: no video, no recorded sound.'],
+  about_warn_h: 'Please note', about_warn: 'Contains loud jump scares, flickering light, dark scenes and themes such as grief and sleep paralysis.',
+  about_tech_h: 'Made with', about_tech: 'three.js (MIT licence) · typefaces IM Fell English, IBM Plex Mono and Reenie Beanie (SIL Open Font License)', about_ver: 'Version 2',
+});
 let LANG = (() => { const s = Store.get('lang'); if (s === 'nl' || s === 'en') return s; return ((navigator.language || '') + '').toLowerCase().startsWith('nl') ? 'nl' : 'en'; })();
 function tr(k) { const d = STR[LANG]; if (d && k in d) return d[k]; if (k in STR.nl) return STR.nl[k]; return k; }
 function applyLangDOM() {
@@ -866,6 +978,7 @@ function setLang(l) {
   if (typeof Lore !== 'undefined' && Lore.ready) Lore.langTextures();
   if (typeof Decor !== 'undefined') Decor.langTextures();
   if (typeof UI !== 'undefined' && UI.gyroLabels) UI.gyroLabels();
+  if (typeof Title !== 'undefined' && Title.ready) Title.fill();
   if (typeof UI !== 'undefined' && UI.el && UI.el.objText) UI.objective(G.stage === 'title' ? 'intro' : G.stage);
   if (typeof Interact !== 'undefined') Interact.cur = undefined;
 }
@@ -8671,7 +8784,11 @@ const UI = {
     // brightness
     const br = parseFloat(Store.get('bright')); this.setBright(br > 0 ? br : 1, false);
     for (const k of ['bright', 'calBright']) this.el[k].addEventListener('input', () => this.setBright(parseFloat(this.el[k].value), true));
-    this.el.calDone.addEventListener('click', () => { this.setBright(this.bright, true); this.el.calib.hidden = true; const s = this.calNext; this.calNext = null; App.start(s || 'intro'); });
+    this.el.calDone.addEventListener('click', () => {
+      this.setBright(this.bright, true); this.el.calib.hidden = true; const s = this.calNext; this.calNext = null;
+      if (s === 'title') { this.el.title.hidden = false; Title.open('settings'); return; }   // came from the settings: go back there
+      App.start(s || 'intro');
+    });
     // language
     for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => setLang(b.dataset.lang));
     this.el.langSel.addEventListener('change', () => setLang(this.el.langSel.value));
@@ -8685,6 +8802,12 @@ const UI = {
       setTimeout(() => { this.el.restartBtn.textContent = tr('restart'); this.restartArm = 0; }, 4000);
     });
     this.initTouch();
+    Title.init();
+  },
+  /* the brightness test on its own, from the settings */
+  calibrate(back) {
+    this.calNext = back; this.el.title.hidden = true; this.el.calib.hidden = false; this.drawCal();
+    setTimeout(() => this.el.calBright.focus({ preventScroll: true }), 30);
   },
   /* the first time: set the brightness before the house appears */
   beforeStart(stage) {
@@ -8918,6 +9041,148 @@ const Perf = {
   },
 };
 
+/* ---- 09c_title.js ---- */
+/* ============================================================
+   The start screen: the bedroom at 3:33, the door open onto the lit
+   hallway, and a menu. Now and then someone stands in that doorway.
+   Settings, controls and a word about the game open in a side sheet.
+   ============================================================ */
+const CHAPTERS = { p2: 'ch_p2', p2b: 'ch_p2b', s1: 'ch_s1', s2: 'ch_s2', s3: 'ch_s3', p3: 'ch_p3', descent: 'ch_descent' };
+const Title = {
+  ready: false, t: 0, sheet: null, opener: null, wipeArm: 0,
+  cam: { x: 3.2, z: 1.3, yaw: -2.3, pitch: -0.01 },
+  tease: null, teaseNext: 9,
+  init() {
+    this.el = {};
+    for (const id of ['title', 'tsheet', 'tsheetTitle', 'tsheetClose', 'setSlot', 'pauseSlot', 'settingsRows', 'calibBtn', 'wipeBtn', 'contWhere', 'startBtn', 'contBtn', 'ctlBody', 'aboutBody', 'tags', 'tdesc']) this.el[id] = $(id);
+    for (const b of document.querySelectorAll('[data-sheet]')) b.addEventListener('click', () => this.open(b.dataset.sheet, b));
+    this.el.tsheetClose.addEventListener('click', () => this.close());
+    this.el.tsheet.addEventListener('pointerdown', (e) => { if (e.target === this.el.tsheet) this.close(); });
+    this.el.calibBtn.addEventListener('click', () => { this.close(); UI.calibrate('title'); });
+    this.el.wipeBtn.addEventListener('click', () => this.wipe());
+    addEventListener('keydown', (e) => this.key(e));
+    this.fill();
+    this.ready = true;
+  },
+  /* the words that are built from lists (language changes rebuild them) */
+  fill() {
+    const tags = this.el.tags; tags.textContent = '';
+    for (const t of tr('tags')) mk('li', null, tags, t);
+    // controls: the list for this device first
+    const cb = this.el.ctlBody; cb.textContent = '';
+    const list = (head, rows) => {
+      const s = mk('section', 'ctl', cb); mk('h3', null, s, head);
+      const dl = mk('dl', null, s);
+      for (const [k, v] of rows) {
+        const dt = mk('dt', null, dl);
+        for (const part of k.split('|')) mk('kbd', null, dt, part);
+        mk('dd', null, dl, v);
+      }
+    };
+    const kb = () => list(tr('ctl_kb_h'), tr('ctl_kb')), tc = () => list(tr('ctl_touch_h'), tr('ctl_touch'));
+    if (isTouch) { tc(); kb(); } else { kb(); tc(); }
+    { const s = mk('section', 'ctl tips', cb); mk('h3', null, s, tr('ctl_tips_h')); const ul = mk('ul', null, s); for (const t of tr('ctl_tips')) mk('li', null, ul, t); }
+    // about
+    const ab = this.el.aboutBody; ab.textContent = '';
+    for (const p of tr('about_p')) mk('p', 'ap', ab, p);
+    { const w = mk('div', 'awarn', ab); mk('h3', null, w, tr('about_warn_h')); mk('p', null, w, tr('about_warn')); }
+    { const s = mk('div', 'acred', ab);
+      if (CREDITS.by && String(CREDITS.by).trim()) { mk('h3', null, s, tr('cr_by')); mk('p', 'aby', s, String(CREDITS.by).trim()); }
+      mk('h3', null, s, tr('about_tech_h')); mk('p', null, s, tr('about_tech'));
+      mk('p', 'aver', s, tr('about_ver')); }
+    this.refresh();
+  },
+  /* which button leads: carry on where you were, or begin */
+  refresh() {
+    const ck = App.ckpt, c = this.el.contBtn, s = this.el.startBtn;
+    c.hidden = !ck;
+    if (ck) this.el.contWhere.textContent = `${tr('cont_from')} ${tr(CHAPTERS[ck] || 'ch_p2')}`;
+    s.querySelector('span').textContent = tr(ck ? 'btn_new' : 'btn_begin');
+    s.classList.toggle('primary', !ck); c.classList.toggle('primary', !!ck);
+    this.el.wipeBtn.hidden = !ck && !Store.get('run');
+    this.el.wipeBtn.textContent = tr('set_wipe'); this.wipeArm = 0;
+  },
+  menu() { return [...document.querySelectorAll('#title .tmenu button')].filter((b) => !b.hidden && !b.disabled && b.offsetParent !== null); },
+  key(e) {
+    if (G.running || this.el.title.hidden) return;
+    if (this.sheet) { if (e.code === 'Escape') { e.preventDefault(); this.close(); } return; }
+    if (e.code !== 'ArrowDown' && e.code !== 'ArrowUp') return;
+    const m = this.menu(); if (!m.length) return;
+    e.preventDefault();
+    const i = m.indexOf(document.activeElement), d = e.code === 'ArrowDown' ? 1 : -1;
+    m[i < 0 ? (d > 0 ? 0 : m.length - 1) : (i + d + m.length) % m.length].focus();
+  },
+  open(kind, from) {
+    if (this.sheet) this.close(true);
+    this.sheet = kind; this.opener = from || null;
+    const sh = this.el.tsheet;
+    for (const b of sh.querySelectorAll('.sheetBody')) b.hidden = b.dataset.for !== kind;
+    this.el.tsheetTitle.textContent = tr({ settings: 'btn_settings', controls: 'btn_controls', about: 'btn_about' }[kind]);
+    if (kind === 'settings') { this.el.setSlot.appendChild(this.el.settingsRows); this.refresh(); }
+    sh.hidden = false; sh.querySelector('.sheetBox').scrollTop = 0;
+    document.body.classList.add('sheetOpen');
+    setTimeout(() => this.el.tsheetClose.focus({ preventScroll: true }), 30);
+  },
+  close(quiet) {
+    if (!this.sheet) return;
+    this.el.pauseSlot.appendChild(this.el.settingsRows);   // the settings live in the pause menu the rest of the time
+    this.el.tsheet.hidden = true; this.sheet = null;
+    document.body.classList.remove('sheetOpen');
+    if (!quiet && this.opener && !this.el.title.hidden) this.opener.focus({ preventScroll: true });
+    this.opener = null;
+  },
+  /* forget where you were (a second click confirms) */
+  wipe() {
+    const b = this.el.wipeBtn;
+    if (!this.wipeArm) { this.wipeArm = 1; b.textContent = tr('set_wipe_confirm'); setTimeout(() => { if (this.wipeArm === 1) { this.wipeArm = 0; b.textContent = tr('set_wipe'); } }, 4000); return; }
+    this.wipeArm = 2; Store.del('ckpt'); Store.del('run'); App.ckpt = null;
+    b.textContent = tr('set_wiped'); b.disabled = true;
+    setTimeout(() => { b.disabled = false; this.refresh(); }, 1400);
+  },
+
+  /* ---------- the room behind the menu ---------- */
+  /* the bedroom dark, the hallway lit beyond the open door (the game sets its own lights when it starts) */
+  place() { const c = this.cam; Player.reset(c.x, 0, c.z, c.yaw, c.pitch, false); LN.bedroom.on = 0; },
+  update(dt) {
+    this.t += dt;
+    const c = this.cam, t = this.t;
+    // a slow, uneasy drift, the way you look round a dark room when you have just woken
+    Player.yaw = c.yaw + Math.sin(t * 0.11) * 0.06 + Math.sin(t * 0.047) * 0.03;
+    Player.pitch = c.pitch + Math.sin(t * 0.07) * 0.025;
+    Player.pos.set(c.x + Math.sin(t * 0.05) * 0.04, 0, c.z + Math.cos(t * 0.063) * 0.03);
+    Player.applyCamera(0);
+    for (const d of Object.values(DOORS)) d.update(dt);   // the bedroom door stands open
+    SU.uTime.value = t;
+    this.teaseStep(dt);
+  },
+  /* someone in the doorway: it is there for a few seconds, then it is not */
+  teaseStep(dt) {
+    const H = Actors.ent, S = H.smoke;
+    if (!this.tease) {
+      if (this.t > this.teaseNext && !this.sheet && !document.hidden) {
+        this.tease = { t: 0 };
+        H.root.visible = true; setLayer(H.root, 0);
+        H.root.position.set(4.72, 0, 5.12); H.root.rotation.y = faceYaw(H.root.position, camera.position) + 0.25;
+        const u = shadeMat().uniforms; u.uTint.value.set(0.0022, 0.0021, 0.0024); u.uBase.value = 0; u.uJit.value = 0;
+        S.pts.material.uniforms.uAlbedo.value = 0.016; S.dis = null;
+      }
+      return;
+    }
+    const T = this.tease; T.t += dt;
+    const k = T.t < 3.2 ? 0.85 * sstep(0, 3.2, T.t) : 0.85 * (1 - sstep(6.2, 7.4, T.t));
+    shadeMat().uniforms.uFade.value = k; S.pts.material.uniforms.uSFade.value = k; S.gather = k;
+    poseHuman(H, { pitch: 0.06, roll: 0.42 + Math.sin(T.t * 0.8) * 0.03, hunch: 0.22, armsOut: true, lean: -0.05, headYaw: T.t > 4.4 ? 0.35 : 0 });
+    H.root.updateMatrixWorld(true);
+    S.pts.visible = true; S.pts.layers.mask = H.root.layers.mask; S.update(this.t);
+    Ent.faceLight(dt);
+    if (T.t > 7.4) this.stopTease();
+  },
+  stopTease() {
+    const H = Actors.ent;
+    if (this.tease) { H.root.visible = false; H.smoke.pts.visible = false; shadeMat().uniforms.uFade.value = 1; }
+    this.tease = null; this.teaseNext = this.t + rand(24, 40);
+  },
+};
 /* ---- 10_main.js ---- */
 /* ============================================================
    Boot, main loop, pointer lock, pause
@@ -8947,10 +9212,11 @@ const App = {
       return;
     }
     Story.applyState('intro');
-    Player.reset(3.3, 0, 1.35, -0.36, -0.22, true);
+    Title.place();
     postMat.uniforms.uFade.value = 1;
     const ck = (data && data.ckpt) || Store.get('ckpt');
-    if (ck && STAGES.includes(ck) && SI(ck) >= SI('p2') && SI(ck) <= SI('descent')) { this.ckpt = ck; UI.el.contBtn.hidden = false; }
+    if (ck && STAGES.includes(ck) && SI(ck) >= SI('p2') && SI(ck) <= SI('descent')) this.ckpt = ck;
+    Title.refresh();
     UI.el.loading.hidden = false; UI.el.loading.textContent = tr('loading_sound');
     await new Promise((r) => setTimeout(r, 30));
     Sound.prebuild();
@@ -8964,6 +9230,7 @@ const App = {
   start(stage) {
     Sound.init(); Sound.resume();
     if (Sound.ok && !this.ambStarted) { Sound.startAmbience(); this.ambStarted = true; }
+    Title.close(true); Title.stopTease();
     UI.el.title.hidden = true; UI.el.end.hidden = true; UI.el.pause.hidden = true; UI.el.hud.hidden = false;
     Credits.on = false; UI.el.credits.hidden = true;
     UI.clearThoughts(); UI.prompt(null); UI.closeOverlay();
@@ -9078,9 +9345,8 @@ function loop(now) {
     if (UI.el.dragNote.hidden === needLock) UI.el.dragNote.hidden = !needLock;
   } else if (!G.running) {
     App.titleT += dt;
-    Player.yaw = -0.36 + Math.sin(App.titleT * 0.11) * 0.07; Player.pitch = -0.2 + Math.sin(App.titleT * 0.07) * 0.03;
-    Player.applyCamera(0);
-    postMat.uniforms.uFade.value = damp(postMat.uniforms.uFade.value, 0.5, 0.6, dt);
+    Title.update(dt);
+    postMat.uniforms.uFade.value = damp(postMat.uniforms.uFade.value, 0.28, 0.6, dt);
     for (const c of Object.values(CLOCKS)) c.update(dt);
     for (const d of DIGITALS) d.mesh.material.uniforms.uEmissive.value.setScalar(!d.blink || (App.titleT % 1.2) < 0.75 ? 1.6 : 0.05);
     updateLights(dt);
