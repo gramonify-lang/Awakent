@@ -143,6 +143,9 @@
   body.touch #clockInfo { z-index: 5; }
   #clockDoneT { display: none; margin-top: 4px; padding: 10px 22px; border: 1px solid rgba(230, 223, 210, 0.35); border-radius: 22px; background: rgba(10, 11, 15, 0.55); color: var(--bone); font-family: var(--mono); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; pointer-events: auto; }
   body.touch #clockDoneT { display: inline-block; }
+  .row .rowNote { grid-column: 1 / -1; margin: -8px 0 0; font-size: 11.5px; line-height: 1.45; letter-spacing: 0.01em; color: var(--dust); opacity: 0.85; }
+  body.comfort #reticle { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: rgba(236, 230, 218, 0.72); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55); }
+  body.comfort #hud.aiming #reticle { width: 16px; height: 16px; margin: -8px 0 0 -8px; background: transparent; box-shadow: none; }
   .touchOnly { display: none !important; }
   body.touch .touchOnly, body.gyro .touchOnly { display: grid !important; }
   .switch { position: relative; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; justify-self: start; min-height: 44px; -webkit-tap-highlight-color: transparent; }
@@ -464,6 +467,7 @@
       <div class="row"><label for="sens" data-i18n="sens">Muisgevoeligheid</label><input id="sens" type="range" min="0.3" max="2.5" step="0.05" value="1"></div>
       <div class="row"><label for="vol" data-i18n="volume">Volume</label><input id="vol" type="range" min="0" max="1" step="0.01" value="0.9"></div>
       <div class="row"><label for="bright" data-i18n="brightness">Helderheid</label><input id="bright" type="range" min="0.6" max="1.9" step="0.02" value="1"></div>
+      <div class="row"><label for="comfortSel" data-i18n="comfort">Minder beweging</label><label class="switch"><input id="comfortSel" type="checkbox" role="switch" aria-describedby="comfortNote"><span class="knob" aria-hidden="true"></span><span class="st" data-on="Aan" data-off="Uit"></span></label><p class="rowNote" id="comfortNote" data-i18n="comfort_note">Tegen bewegingsziekte: geen schommelend, schuddend of zoomend beeld, geen vervorming, een breder beeld en een vast puntje in het midden.</p></div>
       <div class="row"><label for="quality" data-i18n="quality">Beeldkwaliteit</label><select id="quality"><option value="auto" data-i18n="q_auto">Automatisch</option><option value="laag" data-i18n="q_low">Laag (snelst)</option><option value="middel" data-i18n="q_mid">Middel</option><option value="hoog" data-i18n="q_high">Hoog</option></select></div>
       <div class="row"><label for="perfSel" data-i18n="perfmeter">Prestatiemeter</label><select id="perfSel"><option value="0" data-i18n="perf_off">Uit</option><option value="1" data-i18n="perf_on">Aan (toets P)</option></select></div>
       <div class="row touchOnly"><label for="gyroSel" data-i18n="gyro">Kijken door te kantelen</label><label class="switch"><input id="gyroSel" type="checkbox" role="switch"><span class="knob" aria-hidden="true"></span><span class="st" data-on="Aan" data-off="Uit"></span></label></div>
@@ -736,7 +740,7 @@ const STR = {
     t_diary: 'Elke nacht dezelfde tijd.', t_letter: 'Half wakker.', t_card1: '3:33.', t_card2: 'Daarom.',
     t_mom: 'Mama.', t_vm1: 'Ik had haar terug moeten bellen.', t_vm2: 'Dat is nu.', t_vm3: 'Ik bel haar terug.',
     cal_month: 'MAART', box_mama: 'MAMA', box_xmas: 'KERST',
-    t_cantLook: 'Ik kan mezelf niet aankijken.', k_tapskip: 'Tik om over te slaan', k_twalk: 'rondje linksonder: lopen (ver duwen = rennen)', k_tlook: 'overal anders slepen: kijken', k_tilt: 'of kantel je telefoon', gyro: 'Kijken door te kantelen', gyro_sens: 'Kantelgevoeligheid', perf_on_plain: 'Aan', rotate: 'Draai je telefoon voor het beste beeld',
+    t_cantLook: 'Ik kan mezelf niet aankijken.', k_tapskip: 'Tik om over te slaan', k_twalk: 'rondje linksonder: lopen (ver duwen = rennen)', k_tlook: 'overal anders slepen: kijken', k_tilt: 'of kantel je telefoon', gyro: 'Kijken door te kantelen', gyro_sens: 'Kantelgevoeligheid', comfort: 'Minder beweging', comfort_note: 'Tegen bewegingsziekte: geen schommelend, schuddend of zoomend beeld, geen vervorming, een breder beeld en een vast puntje in het midden.', perf_on_plain: 'Aan', rotate: 'Draai je telefoon voor het beste beeld',
     intro_date: '27 maart', k_space: 'Spatie', k_skip: 'overslaan', t_again2: 'Weer.', t_knock1: 'Er klopt iemand.', t_knock2: 'Om 3:33?', t_hello: 'Hallo?',
     gl_lost: 'Het beeld wordt hersteld…',
     t_caught1: 'Weer in bed. Het had me.', t_caught2: 'Niet weer…', t_caught3: 'Ik word steeds hier wakker.',
@@ -822,7 +826,7 @@ const STR = {
     t_diary: 'Every night, the same time.', t_letter: 'Half awake.', t_card1: '3:33.', t_card2: "That's why.",
     t_mom: 'Mom.', t_vm1: 'I should have called her back.', t_vm2: "That's now.", t_vm3: "I'll call her back.",
     cal_month: 'MARCH', box_mama: 'MOM', box_xmas: 'CHRISTMAS',
-    t_cantLook: "I can't look myself in the eye.", k_tapskip: 'Tap to skip', k_twalk: 'circle bottom left: walk (push far to run)', k_tlook: 'drag anywhere else: look', k_tilt: 'or tilt your phone', gyro: 'Look by tilting', gyro_sens: 'Tilt sensitivity', perf_on_plain: 'On', rotate: 'Turn your phone sideways for the best view',
+    t_cantLook: "I can't look myself in the eye.", k_tapskip: 'Tap to skip', k_twalk: 'circle bottom left: walk (push far to run)', k_tlook: 'drag anywhere else: look', k_tilt: 'or tilt your phone', gyro: 'Look by tilting', gyro_sens: 'Tilt sensitivity', comfort: 'Reduced motion', comfort_note: 'For motion sickness: no bobbing, shaking or zooming view, no warping, a wider view and a steady dot in the middle.', perf_on_plain: 'On', rotate: 'Turn your phone sideways for the best view',
     intro_date: '27 March', k_space: 'Space', k_skip: 'skip', t_again2: 'Again.', t_knock1: "Someone's knocking.", t_knock2: 'At 3:33?', t_hello: 'Hello?',
     gl_lost: 'Restoring the picture…',
     t_caught1: 'Back in bed. It had me.', t_caught2: 'Not again…', t_caught3: 'I keep waking up here.',
@@ -942,7 +946,7 @@ Object.assign(STR.nl, {
   ctl_kb_h: 'Toetsenbord en muis', ctl_touch_h: 'Telefoon of tablet', ctl_tips_h: 'Goed om te weten',
   ctl_kb: [['W|A|S|D', 'lopen'], ['Muis', 'rondkijken'], ['E', 'gebruiken, oppakken, lezen'], ['F', 'zaklamp aan of uit'], ['Shift', 'sneller lopen'], ['Esc', 'pauze, instellingen en hints'], ['P', 'prestatiemeter']],
   ctl_touch: [['rondje linksonder', 'lopen (ver duwen is rennen)'], ['slepen', 'rondkijken'], ['E', 'gebruiken'], ['F', 'zaklamp'], ['II', 'pauze en hints'], ['kantelen', 'rondkijken met je telefoon (aan of uit in de instellingen)']],
-  ctl_tips: ['Richt het puntje in het midden van je beeld op iets. Verschijnt er een woord, dan kun je het gebruiken.', 'Sommige dingen openen een paneel, zoals een meterkast of een radio. Gebruik daar de muis, je vinger of de cijfertoetsen; E sluit het weer.', 'Luister goed. Met een koptelefoon hoor je waar een geluid vandaan komt.', 'Vast? Druk op Esc en open „Ik zit vast” voor een hint bij wat je nu moet doen.', 'Je voortgang wordt bewaard bij elk nieuw hoofdstuk.'],
+  ctl_tips: ['Richt het puntje in het midden van je beeld op iets. Verschijnt er een woord, dan kun je het gebruiken.', 'Sommige dingen openen een paneel, zoals een meterkast of een radio. Gebruik daar de muis, je vinger of de cijfertoetsen; E sluit het weer.', 'Luister goed. Met een koptelefoon hoor je waar een geluid vandaan komt.', 'Vast? Druk op Esc en open „Ik zit vast” voor een hint bij wat je nu moet doen.', 'Je voortgang wordt bewaard bij elk nieuw hoofdstuk.', 'Word je snel misselijk van bewegend beeld? Zet „Minder beweging” aan bij Instellingen.'],
   about_p: ['Een nacht die niet wil ophouden, in een huis dat je kent.', 'Awakent is een korte verhalende horrorgame over slapen, wakker worden en wat je nog tegen iemand had willen zeggen. Je verkent het huis, vindt wat het je wil vertellen en lost puzzels op met wat er ligt.', 'Het spel draait helemaal in je browser. Alles wat je ziet en hoort wordt ter plekke gemaakt: geen video, geen opgenomen geluid.'],
   about_warn_h: 'Let op', about_warn: 'Bevat harde schrikmomenten, flikkerend licht, donkere scènes en thema’s als rouw en slaapverlamming.',
   about_tech_h: 'Gemaakt met', about_tech: 'three.js (MIT-licentie) · lettertypen IM Fell English, IBM Plex Mono en Reenie Beanie (SIL Open Font License)', about_ver: 'Versie 2',
@@ -956,7 +960,7 @@ Object.assign(STR.en, {
   ctl_kb_h: 'Keyboard and mouse', ctl_touch_h: 'Phone or tablet', ctl_tips_h: 'Good to know',
   ctl_kb: [['W|A|S|D', 'walk'], ['Mouse', 'look around'], ['E', 'use, pick up, read'], ['F', 'flashlight on or off'], ['Shift', 'walk faster'], ['Esc', 'pause, settings and hints'], ['P', 'performance meter']],
   ctl_touch: [['circle bottom left', 'walk (push far to run)'], ['drag', 'look around'], ['E', 'use'], ['F', 'flashlight'], ['II', 'pause and hints'], ['tilt', 'look around with your phone (on or off in the settings)']],
-  ctl_tips: ['Point the dot in the middle of the screen at something. If a word appears, you can use it.', 'Some things open a panel, like a fuse box or a radio. Use the mouse, your finger or the number keys there; E closes it again.', 'Listen. With headphones you can hear where a sound comes from.', 'Stuck? Press Esc and open "I\'m stuck" for a hint about what to do now.', 'Your progress is saved at the start of every chapter.'],
+  ctl_tips: ['Point the dot in the middle of the screen at something. If a word appears, you can use it.', 'Some things open a panel, like a fuse box or a radio. Use the mouse, your finger or the number keys there; E closes it again.', 'Listen. With headphones you can hear where a sound comes from.', 'Stuck? Press Esc and open "I\'m stuck" for a hint about what to do now.', 'Your progress is saved at the start of every chapter.', 'Motion sick easily? Turn on "Reduced motion" in Settings.'],
   about_p: ["A night that won't end, in a house you know.", "Awakent is a short narrative horror game about sleeping, waking up and what you still wanted to say to someone. You explore the house, find what it wants to tell you and solve puzzles with whatever is lying around.", 'It runs entirely in your browser. Everything you see and hear is made on the spot: no video, no recorded sound.'],
   about_warn_h: 'Please note', about_warn: 'Contains loud jump scares, flickering light, dark scenes and themes such as grief and sleep paralysis.',
   about_tech_h: 'Made with', about_tech: 'three.js (MIT licence) · typefaces IM Fell English, IBM Plex Mono and Reenie Beanie (SIL Open Font License)', about_ver: 'Version 2',
@@ -1968,13 +1972,15 @@ function canSee(p, r = 0.35) { return inFrustum(p, r) && losClear(camera.positio
 
 /* ---------- post ---------- */
 const POST_FS = `
-uniform sampler2D tScene, tScare; uniform vec2 uRes, uScareOff; uniform float uTime, uGrain, uVig, uFade, uWarp, uChroma, uDesat, uWhite, uGamma, uPulse, uFear, uScare, uScareZ, uScareDim; uniform vec4 uWob;
+uniform sampler2D tScene, tScare; uniform vec2 uRes, uScareOff; uniform float uTime, uGrain, uVig, uFade, uWarp0, uChroma, uDesat, uWhite, uGamma, uPulse0, uFear, uScare, uScareZ, uScareDim, uCalm; uniform vec4 uWob0;
 varying vec2 vUv;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y)*p3.z); }
 void main(){
+  // comfort: no warping, swimming or throbbing picture (a little of the warp is left, and none of the motion)
+  float uWarp = uWarp0 * (1.0 - 0.85 * uCalm), uPulse = uPulse0 * (1.0 - uCalm); vec4 uWob = uWob0 * (1.0 - uCalm);
   vec2 uv = vUv;
   if(uWarp > 0.0){
-    uv += uWarp*vec2(sin(uv.y*9.0 + uTime*0.9)*0.007, cos(uv.x*7.0 + uTime*0.7)*0.006);
+    uv += uWarp*vec2(sin(uv.y*9.0 + uTime*0.9)*0.007, cos(uv.x*7.0 + uTime*0.7)*0.006) * (1.0 - uCalm);
     vec2 d0 = uv - 0.5; uv = 0.5 + d0*(1.0 - uWarp*0.05*dot(d0,d0));
   }
   // the room not quite holding still: it breathes, it swims, it stands a little too tall
@@ -2080,10 +2086,11 @@ function initRenderer() {
   nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.magFilter = THREE.LinearFilter; nt.minFilter = THREE.LinearMipmapLinearFilter; nt.generateMipmaps = true; nt.needsUpdate = true;
   SU.uNoiseTex.value = nt;
   postMat = new THREE.ShaderMaterial({
-    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 }, tScare: { value: null }, uScare: { value: 0 }, uScareZ: { value: 1 }, uScareDim: { value: 0.9 }, uScareOff: { value: new THREE.Vector2() }, uWob: { value: new THREE.Vector4() } },
+    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 }, tScare: { value: null }, uScare: { value: 0 }, uScareZ: { value: 1 }, uScareDim: { value: 0.9 }, uScareOff: { value: new THREE.Vector2() }, uWob: { value: new THREE.Vector4() }, uCalm: { value: 0 } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: POST_FS, depthTest: false, depthWrite: false,
   });
+  { const U = postMat.uniforms; U.uWarp0 = U.uWarp; U.uPulse0 = U.uPulse; U.uWob0 = U.uWob; }   // the shader reads these through the comfort setting
   postScene = new THREE.Scene(); postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const q = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMat); q.frustumCulled = false; postScene.add(q);
   Quality.init();
@@ -2320,7 +2327,7 @@ class Door {
   get isOpen() { return Math.abs(this.ang) > 0.25 || this.target !== 0; }
   use() {
     if (this.onUse && this.onUse() === true) return;
-    if (this.locked) { Sound.play('rattle', this.pos, { gain: 0.9 }); this.shake = 0.35; return; }
+    if (this.locked) { Sound.play('rattle', this.pos, { gain: 0.7 }); this.shake = 0.35; return; }
     if (this.target) { this.close(); if (typeof Scare !== 'undefined') Scare.onDoorClosed(this); } else this.open();
   }
   open(speed = 2.2, sound = 'open') {
@@ -2338,7 +2345,7 @@ class Door {
       const step = this.speed * dt;
       if (Math.abs(d) <= step) {
         this.ang = this.target;
-        if (this.target === 0 && this.pending) { const s = this.pending; this.pending = null; if (s === 'slam') Sound.play('slam', this.pos, { gain: 1.0 }); else if (s === 'shut' || s === 'slow') Sound.play('shut', this.pos, { gain: s === 'slow' ? 0.7 : 0.8 }); }
+        if (this.target === 0 && this.pending) { const s = this.pending; this.pending = null; if (s === 'slam') Sound.play('slam', this.pos, { gain: 0.75 }); else if (s === 'shut' || s === 'slow') Sound.play('shut', this.pos, { gain: s === 'slow' ? 0.7 : 0.8 }); }
       } else this.ang += Math.sign(d) * step;
     }
     let a = this.ang;
@@ -4777,7 +4784,7 @@ const Actors = {
    Signal path:
      sources -> emitter (gain, occlusion lowpass, panner) -> bus
      bus -> dry ----------------------\
-     bus -> 2 modulated delays -------+-> fx -> pressure lowpass -> duck -> master -> compressor -> out
+     bus -> 2 modulated delays -------+-> fx -> pressure lowpass -> duck -> master -> leveller -> limiter -> volume -> out
      bus -> tape delay (tape stop) ---/
      tinnitus -> master (survives silence and muffling)
    "wrong" (0..1) crossfades the dry signal into the warbling, detuned delays,
@@ -4808,9 +4815,17 @@ const Sound = {
     if (!AC) return;
     try { this.ctx = new AC({ latencyHint: 'interactive' }); } catch (e) { try { this.ctx = new AC(); } catch (e2) { return; } }
     const c = this.ctx, G_ = (v = 1) => { const g = c.createGain(); g.gain.value = v; return g; };
-    this.master = G_(this.vol);
-    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3.5; comp.attack.value = 0.008; comp.release.value = 0.3;
-    this.master.connect(comp); comp.connect(c.destination);
+    // everything meets in `master`. Then the loudness is evened out: a leveller that pulls the loud moments
+    // (a door slamming, a scream) down towards the rest, a limiter that stops any peak getting through, and a
+    // trim (the compressors add their own make-up gain; measured: the quiet house ends up a few dB louder than
+    // before, the loudest moments at most ~8 dB above it instead of ~20, and peaks stay under -10 dBFS).
+    // The volume slider comes last, so it does not change how hard the dynamics work.
+    this.master = G_(1);
+    const lev = c.createDynamicsCompressor(); lev.threshold.value = -26; lev.knee.value = 12; lev.ratio.value = 4; lev.attack.value = 0.002; lev.release.value = 0.3;
+    const lim = c.createDynamicsCompressor(); lim.threshold.value = -9; lim.knee.value = 1; lim.ratio.value = 20; lim.attack.value = 0.001; lim.release.value = 0.12;
+    const makeup = G_(0.55);
+    this.out = G_(this.vol);
+    this.master.connect(lev); lev.connect(lim); lim.connect(makeup); makeup.connect(this.out); this.out.connect(c.destination);
     this.duck = G_(1); this.duck.connect(this.master);
     this.press = c.createBiquadFilter(); this.press.type = 'lowpass'; this.press.frequency.value = 20000; this.press.Q.value = 0.4; this.press.connect(this.duck);
     this.fx = G_(1); this.fx.connect(this.press);
@@ -4846,7 +4861,7 @@ const Sound = {
   },
   resume() { if (this.ctx && this.ctx.state !== 'running') this.ctx.resume().catch(() => {}); },
   suspend() { if (this.ctx && this.ctx.state === 'running') this.ctx.suspend().catch(() => {}); },
-  setVolume(v) { this.vol = v; if (this.master) this.master.gain.value = v; },
+  setVolume(v) { this.vol = v; if (this.out) this.out.gain.setTargetAtTime(v, this.ctx.currentTime, 0.02); },
   makeIR(dur) {
     const c = this.ctx, sr = c.sampleRate, n = Math.floor(dur * sr), b = c.createBuffer(2, n, sr);
     for (let ch = 0; ch < 2; ch++) {
@@ -5117,7 +5132,7 @@ const Sound = {
         let src = 0;
         if (t >= next) { amp = 0.6 + r() * 0.6; src = amp * (r() < 0.5 ? 1 : -1); const rate = rate0 * (0.7 + 0.6 * Math.sin(Math.PI * u) + (r() - 0.5) * 0.5); next = t + 1 / Math.max(6, rate); }
         if (i % 64 === 0) { const m = 1 + 0.18 * Math.sin(TAU * 1.7 * t + seed); f1.set(380 * m, 5); f2.set(1150 / m, 6); }
-        d[i] = ((f1.p(src) * 1.2 + f2.p(src) * 0.8 + f3.p(src) * 0.35) * 3 + air.p(wn()) * 0.05) * env;
+        d[i] = Math.tanh(((f1.p(src) * 1.2 + f2.p(src) * 0.8 + f3.p(src) * 0.35) * 3 + air.p(wn()) * 0.05) * env * 6);   // squeezed, so the rattle carries
       }
     });
     B.click = [clickT(1.1, 71, 24), clickT(0.8, 72, 34), clickT(1.5, 73, 18)];
@@ -5149,7 +5164,7 @@ const Sound = {
     B.skitter = this.buf(0.9, (d, sr, n) => {
       const r = seeded(97), hits = []; let t0 = 0.01; while (t0 < 0.8) { hits.push([t0, 0.4 + r() * 0.6]); t0 += 0.03 + r() * 0.06; }
       const bp = new BQ('bp', 3600, 2.5, sr), lp = new BQ('lp', 500, 0.8, sr);
-      for (let i = 0; i < n; i++) { const t = i / sr; let e = 0; for (const [a, g] of hits) if (t >= a && t < a + 0.03) e += g * Math.exp(-(t - a) * 260); const nz = wn(); d[i] = bp.p(nz) * e + lp.p(nz) * e * 0.5; }
+      for (let i = 0; i < n; i++) { const t = i / sr; let e = 0; for (const [a, g] of hits) if (t >= a && t < a + 0.03) e += g * Math.exp(-(t - a) * 260); const nz = wn(); d[i] = Math.tanh((bp.p(nz) * e + lp.p(nz) * e * 0.5) * 5); }
     });
     B.scrape = this.buf(1.2, (d, sr, n) => { const bp = new BQ('bp', 900, 3, sr); for (let i = 0; i < n; i++) { const t = i / sr; if (i % 200 === 0) bp.set(700 + Math.random() * 600, 3); d[i] = bp.p(wn()) * Math.sin(Math.PI * t / 1.2) * (0.6 + 0.4 * Math.random()); } });
   },
@@ -5192,6 +5207,19 @@ const Sound = {
     if (!b) return null;
     return this.playBuf(b, pos, o);
   },
+  /* how loud a buffer gets at its loudest moment (30 ms windows), worked out once. Sounds that are far
+     louder than the rest are brought part of the way down, so nothing jumps out of the mix */
+  loudK(b) {
+    const m = this._lk || (this._lk = new WeakMap());
+    let k = m.get(b);
+    if (k === undefined) {
+      const d = b.getChannelData(0), w = Math.max(1, Math.floor(b.sampleRate * 0.03)); let mx = 0;
+      for (let i = 0; i + w <= d.length; i += w >> 1) { let s = 0; for (let j = i; j < i + w; j++) s += d[j] * d[j]; mx = Math.max(mx, Math.sqrt(s / w)); }
+      k = mx > 0.36 ? Math.pow(0.36 / mx, 0.75) : 1;
+      m.set(b, k);
+    }
+    return k;
+  },
   playBuf(b, pos, o = {}) {
     if (!this.ok) return null;
     const pri = o.pri ?? 1;
@@ -5203,7 +5231,7 @@ const Sound = {
     const t = c.currentTime + (o.delay || 0);
     this.active++;
     let e = null;
-    const g = c.createGain(); g.gain.value = o.gain ?? 1; src.connect(g);
+    const g = c.createGain(); g.gain.value = (o.gain ?? 1) * this.loudK(b); src.connect(g);
     if (pos) {
       if (camera && pos.distanceTo(camera.position) > (o.maxDist || 30)) { this.active--; return null; }
       e = this.emitter(pos, o);
@@ -5246,7 +5274,7 @@ const Sound = {
   },
   step(surface, pos, o = {}) { const arr = this.B.steps && this.B.steps[surface]; if (!arr) return; this.playBuf(pick(arr), pos, Object.assign({ gain: 0.34, vary: 0.06, pri: pos ? 1 : 0 }, o)); },
   flickerTick(light) { if (!camera || light.pos.distanceTo(camera.position) > 7) return; this.play('flick', light.pos, { gain: 0.25, vary: 0.1, pri: 0 }); },
-  knock(pos, n = 3, gap = 0.32, gain = 0.8) { for (let i = 0; i < n; i++) this.play('knock', pos, { gain, delay: i * gap * rand(0.9, 1.1), vary: 0.04, hrtf: true }); },
+  knock(pos, n = 3, gap = 0.32, gain = 0.6) { for (let i = 0; i < n; i++) this.play('knock', pos, { gain, delay: i * gap * rand(0.9, 1.1), vary: 0.04, hrtf: true }); },
 
   /* ---------- the "nothing is right" controls ---------- */
   setWrong(v) { this.wrong = clamp(v, 0, 1); },
@@ -5518,6 +5546,17 @@ const _sv1 = new THREE.Vector3(), _sv2 = new THREE.Vector3();
 /* ============================================================
    Player, interaction, clock-setting
    ============================================================ */
+/* ---------- comfort: for anyone who gets motion sick ----------
+   The view no longer bobs, rolls, shakes, zooms or warps; forced turns of the view are quick instead of
+   drawn out; the field of view is wider; and there is a steady dot in the middle to rest your eyes on.
+   The scares and the sound stay as they are. */
+const Comfort = {
+  on: false,
+  init() { this.set(Store.get('comfort') === '1', false); },
+  set(v, save = true) { this.on = !!v; if (save) Store.set('comfort', this.on ? '1' : '0'); document.body.classList.toggle('comfort', this.on); },
+  // the field of view: wider, and it no longer narrows in a fright (reading a clock close up still zooms in)
+  fov(t) { return this.on && t >= 50 ? 80 : t; },
+};
 const Player = {
   pos: V3(3.3, 0, 1.35), vel: V3(), yaw: -0.36, pitch: -0.2, roll: 0,
   seated: true, standT: 0, phase: 0, amp: 0, stepDist: 0, still: 0,
@@ -5578,7 +5617,8 @@ const Player = {
     if (this.autoLook) {
       const a = this.autoLook; const d = _tv1.subVectors(a.target, camera.position);
       const ty = Math.atan2(-d.x, -d.z), tp = Math.atan2(d.y, Math.hypot(d.x, d.z));
-      this.yaw += angNorm(ty - this.yaw) * (1 - Math.exp(-dt * a.k)); this.pitch = damp(this.pitch, tp, a.k, dt);
+      const ak = a.k * (Comfort.on ? 3 : 1);   // a turn you do not make yourself: over quickly
+      this.yaw += angNorm(ty - this.yaw) * (1 - Math.exp(-dt * ak)); this.pitch = damp(this.pitch, tp, ak, dt);
       if (a.until && G.t > a.until) this.autoLook = null;
     }
     this.pitch = clamp(this.pitch, -1.35, 1.35);
@@ -5641,14 +5681,15 @@ const Player = {
   applyCamera(dt) {
     const eye = this.eyeOverride ?? (this.seated ? lerp(1.12, 1.63, sstep(0.15, 1.15, this.standT)) : lerp(1.63, 1.08, this.crouch));
     const a = Math.min(1, this.amp);
-    const bob = (Math.abs(Math.sin(this.phase)) - 0.5) * 0.034 * a;
-    this.roll = this.rollOverride ?? (Math.sin(this.phase) * 0.005 * a + (this.look && Gyro.active() ? Gyro.roll * Gyro.rollK : 0));
+    const calm = Comfort.on;
+    const bob = calm ? 0 : (Math.abs(Math.sin(this.phase)) - 0.5) * 0.034 * a;
+    this.roll = this.rollOverride ?? ((calm ? 0 : Math.sin(this.phase) * 0.005 * a) + (this.look && Gyro.active() ? Gyro.roll * Gyro.rollK : 0));
     camera.position.set(this.pos.x, this.pos.y + eye + bob, this.pos.z);
     camera.rotation.set(this.pitch, this.yaw, this.roll);
     // a knock on the flashlight, and your pulse in your eyes when it is bad
-    const sh = this.shake * 0.05 + (typeof Fear !== 'undefined' ? Fear.pulse * Fear.level * 0.004 : 0);
+    const sh = calm ? 0 : this.shake * 0.05 + (typeof Fear !== 'undefined' ? Fear.pulse * Fear.level * 0.004 : 0);
     if (sh > 0) { camera.rotation.x += (Math.random() - 0.5) * sh; camera.rotation.y += (Math.random() - 0.5) * sh; }
-    if (dt > 0) { camera.fov = damp(camera.fov, this.fovT, 5, dt); camera.updateProjectionMatrix(); }
+    if (dt > 0) { const ft = Comfort.fov(this.fovT); if (Math.abs(camera.fov - ft) > 0.01) { camera.fov = damp(camera.fov, ft, calm ? 14 : 5, dt); camera.updateProjectionMatrix(); } }
     camera.updateMatrixWorld();
     // flashlight follows the view with a little lag
     const f = _tv1.set(0, 0, -1).applyQuaternion(camera.quaternion);
@@ -5953,7 +5994,7 @@ const Ent = {
     this.eyeOn = true; this.eyeT = 1;
     this.headSound('crack', 0.5);
     if (d.stinger) {
-      Sound.play('stinger', null, { gain: 0.75, pure: true, pri: 2 });
+      Sound.play('stinger', null, { gain: 0.55, pure: true, pri: 2 });
       Sound.tinnitus(0.5, 0.05); after(1.2, () => Sound.tinnitus(0, 0.8));
       const l = nearestLight(r); if (l && l.lit && !l.flick) { l.setFlicker('unstable'); after(1.2, () => { if (l.flick && l.flick.mode === 'unstable' && !l.keepFlicker) l.setFlicker(null); }); }
       Flash.stutter(0.5, 0.85); Fear.kick(1);
@@ -6231,7 +6272,7 @@ const Dir = {
           if (!revealed) {
             revealed = true;
             const r = E.H.root.position;
-            if (flashHits(V3(r.x, r.y + 1.25, r.z), 11, 26 * DEG) && horror() >= HZ.stinger) { Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Fear.kick(1); }
+            if (flashHits(V3(r.x, r.y + 1.25, r.z), 11, 26 * DEG) && horror() >= HZ.stinger) { Sound.play('stinger', null, { gain: 0.45, pure: true, pri: 2 }); Fear.kick(1); }
           }
         } });
       return true;
@@ -6647,7 +6688,7 @@ const Story = {
       return;
     }
     // walking to the door: it knocks once more, closer; then nothing
-    if (!F.knock2 && ((P.room === 'hall' && P.pos.x < 5) || P.room === 'vestibule')) { F.knock2 = true; Sound.knock(V3(-0.25, 1.3, 7.375), 2, 0.5, 1.0); }
+    if (!F.knock2 && ((P.room === 'hall' && P.pos.x < 5) || P.room === 'vestibule')) { F.knock2 = true; Sound.knock(V3(-0.25, 1.3, 7.375), 2, 0.5, 0.75); }
     if (F.knock2 && !F.hello && P.room === 'vestibule' && P.pos.x < 1.5 && P.pos.z > 6.4) { F.hello = true; UI.thought(tr('t_hello'), 2.2); }
     if (this.st > 130 && !F.nudge) { F.nudge = true; UI.thought(tr('t_nudgeDoor'), 3.5); }
   },
@@ -6659,12 +6700,13 @@ const Story = {
     const k1 = sstep(8.2, 9.8, T), k2 = sstep(14, 16.2, T);
     const mix = (a, b, k) => { const o = {}; for (const key in a) o[key] = lerp(a[key], b[key], k); return o; };
     const q = k2 > 0 ? mix(clock, sit, k2) : mix(lie, clock, k1);
-    const drift = (1 - k1) * Math.sin(T * 0.4) * 0.03;
-    P.pos.set(q.x, 0, q.z); P.yaw = q.yaw + drift; P.pitch = q.pitch; P.eyeOverride = q.eye; P.rollOverride = q.roll;
+    const cm = Comfort.on ? 0.25 : 1;   // with reduced motion: the head hardly tilts and does not drift
+    const drift = (1 - k1) * Math.sin(T * 0.4) * 0.03 * cm;
+    P.pos.set(q.x, 0, q.z); P.yaw = q.yaw + drift; P.pitch = q.pitch; P.eyeOverride = q.eye; P.rollOverride = q.roll * cm;
   },
   introKnock() {
     F.knock1 = true;
-    Sound.knock(V3(-0.25, 1.3, 7.375), 3, 0.42, 0.9);
+    Sound.knock(V3(-0.25, 1.3, 7.375), 3, 0.42, 0.7);
     after(1.8, () => UI.thought(tr('t_knock1'), 2.6));
     after(4.8, () => UI.thought(tr('t_knock2'), 2.4));
   },
@@ -6686,7 +6728,7 @@ const Story = {
   frontDoor() {
     const d = DOORS.front, s = this.stage;
     if (s === 'intro') {
-      Sound.play('rattle', d.pos, { gain: 1 }); d.shake = 0.45;
+      Sound.play('rattle', d.pos, { gain: 0.7 }); d.shake = 0.45;
       after(0.45, () => {
         for (const g of W.frontGlass) g.material.uniforms.uEmissive.value.setScalar(0); W.skyMat.uniforms.uEmissive.value.setScalar(0);
         Sound.play('flick', d.pos, { gain: 0.5 });
@@ -6706,7 +6748,7 @@ const Story = {
       return;
     }
     if (s === 'morning') { if (!d.isOpen) this.endingOpen(); return; }
-    Sound.play('rattle', d.pos, { gain: 1 }); d.shake = 0.35;
+    Sound.play('rattle', d.pos, { gain: 0.7 }); d.shake = 0.35;
     if (!F['fd_' + s]) { F['fd_' + s] = true; after(0.6, () => UI.thought(s === 'p3' || s === 'descent' ? tr('t_notFront') : pick([tr('t_stuck1'), tr('t_stuck2')]), 3)); }
   },
   stepsIn(pts, gap, done) {
@@ -6720,7 +6762,7 @@ const Story = {
     const P = Player;
     this.baseMirrorHints(dt);
     if (!F.stairPop && P.room === 'stairs' && P.pos.z > 10.9 && LN.stairs.lit) {
-      F.stairPop = true; Sound.play('pop', LN.stairs.pos, { gain: 0.9 }); LN.stairs.on = 0;
+      F.stairPop = true; Sound.play('pop', LN.stairs.pos, { gain: 0.6 }); LN.stairs.on = 0;
     }
     this.darkHint();
     if (P.room === 'basement') {
@@ -6911,7 +6953,7 @@ const Story = {
     F.loopDone = true; F.loopActive = false;
     mirrorOnly(W.wekker, false);   // taken out of the mirror: now it is really there
     const wp = W.wekker.getWorldPosition(new THREE.Vector3());
-    Sound.play('alarm', wp, { gain: 1.3, ref: 2 });
+    Sound.play('alarm', wp, { gain: 0.75, ref: 2 });
     LN.study.setFlicker('buzz'); LN.special.setFlicker('buzz');
     postMat.uniforms.uWarp.value = 0.6;
     after(1.5, () => Sound.tapeStop(1.35, 0, null, () => Sound.musicBox(false)));
@@ -7098,7 +7140,7 @@ const Story = {
         const r = E.H.root.position, chest = _ev.set(r.x, r.y + 1.25, r.z);
         const seen = canSee(chest, 0.4) && viewAngleTo(chest) < 0.65;
         // the first time you see it on the stairs behind you, its face comes at you
-        if (seen && !F.dlSeen) { F.dlSeen = true; Fear.kick(1); Sound.play('stinger', null, { gain: 0.6, pure: true, pri: 2 }); Jump.pin(E.H.head, 0.3, 0.6); Player.shake = 0.2; Distort.pulse(0.9, 1.4, 'all'); }
+        if (seen && !F.dlSeen) { F.dlSeen = true; Fear.kick(1); Sound.play('stinger', null, { gain: 0.45, pure: true, pri: 2 }); Jump.pin(E.H.head, 0.3, 0.6); Player.shake = 0.2; Distort.pulse(0.9, 1.4, 'all'); }
         if (F.descentOpen) {
           E.pose.amp = 0; Sound.presence(0.15);
           if (P.pos.x > 29.5 && !seen) { E.hide('done'); F.follower = false; }
@@ -7404,7 +7446,7 @@ const Story = {
     if (!F.chain) {
       F.chain = true; const L = LN.basement; L.on = 1; L.setFlicker('dying');
       Sound.play('switch', W.pullChain.getWorldPosition(_ev), { gain: 0.6 });
-      after(1.3, () => { L.setFlicker(null); L.on = 0; Sound.play('pop', L.pos, { gain: 0.8 }); });
+      after(1.3, () => { L.setFlicker(null); L.on = 0; Sound.play('pop', L.pos, { gain: 0.55 }); });
     } else Sound.play('switch', W.pullChain.getWorldPosition(_ev), { gain: 0.5 });
   },
   brickDoor() {
@@ -8132,7 +8174,7 @@ const Hunt = {
       const d = st.door; st.doorT += dt;
       if (d.isOpen) { st.door = null; return; }
       if (st.bangs < 4 && st.doorT > 0.25 + st.bangs * 0.5) {
-        st.bangs++; Sound.play('bang', V3(r.x, r.y + 1.2, r.z), { gain: 0.9 + st.bangs * 0.07, hrtf: true, pri: 2 }); d.shake = 0.3;
+        st.bangs++; Sound.play('bang', V3(r.x, r.y + 1.2, r.z), { gain: 0.62 + st.bangs * 0.05, hrtf: true, pri: 2 }); d.shake = 0.3;
         if (st.bangs === 1) { Fear.kick(0.85); Flash.stutter(0.4, 0.7); if (!F.huntDoor) { F.huntDoor = true; after(1.6, () => UI.thought(tr('t_dontOpen'), 2.6)); } }
       }
       if (st.doorT > 3.4 && !st.rattled) { st.rattled = true; Sound.play('rattle', d.pos, { gain: 0.6 }); d.shake = 0.45; }
@@ -8231,9 +8273,9 @@ const Scare = {
     E.fade = 1; shadeMat().uniforms.uFade.value = 1; E.eyeOn = true;
     Jump.face(1.05, 0.92, 1.6, 1);
     Sound.duckTo(0.2, 0.02); Sound.muffle(0, 0.01);
-    Sound.play('shriek', null, { gain: 0.6, pure: true, direct: true, pri: 2 });
-    Sound.play('stinger', null, { gain: 0.32, pure: true, direct: true, pri: 2 });
-    Sound.play('thud', null, { gain: 0.7, pure: true, direct: true, pri: 2 });
+    Sound.play('shriek', null, { gain: 0.45, pure: true, direct: true, pri: 2 });
+    Sound.play('stinger', null, { gain: 0.25, pure: true, direct: true, pri: 2 });
+    Sound.play('thud', null, { gain: 0.45, pure: true, direct: true, pri: 2 });
     P.shake = 1.1; P.fovT = 56; Fear.kick(1); Flash.stutter(1.1, 0.9);
     Candles.gust(r, 5, 4);
     after(1.05, () => {
@@ -8286,7 +8328,7 @@ const Scare = {
     after(0.85, () => {
       kill(1);
       Ent.spawn({ id: 'strobe', pos: spot, yaw: faceYaw(spot, Player.pos), pose: { hunch: 0.2, roll: 0.52, pitch: -0.08 }, persistent: true, flashKill: false, noFalter: true, eyesOn: true });
-      Sound.play('stinger', null, { gain: 0.7, pure: true, pri: 2 }); Fear.kick(1); Player.shake = 0.22;
+      Sound.play('stinger', null, { gain: 0.5, pure: true, pri: 2 }); Fear.kick(1); Player.shake = 0.22;
       Jump.pin(Ent.H.head, 0.2, 0.6);
     });
     after(1.02, () => { kill(0); Ent.hide('strobe'); Jump.stop(); });
@@ -8344,7 +8386,7 @@ const Scare = {
     after(t0 - 0.3, () => Sound.duckTo(0.45, 0.15));
     [0, 0.36, 0.66, 0.9, 1.1, 1.26].forEach((dt, i) => after(t0 + dt, () => {
       if (d.isOpen) return;
-      Sound.play('bang', bp, { gain: 0.85 + i * 0.07, hrtf: true, pri: 2 }); d.shake = 0.28; Player.shake = Math.max(Player.shake, 0.04);
+      Sound.play('bang', bp, { gain: 0.6 + i * 0.05, hrtf: true, pri: 2 }); d.shake = 0.28; Player.shake = Math.max(Player.shake, 0.04);
       if (i === 0) Fear.kick(0.9);
       if (i === 3) { const l = nearestLight(cam); if (l && l.lit && !l.keepFlicker && (!l.flick || l.flick.mode !== 'candle')) { l.setFlicker('unstable'); after(1.6, () => { if (!l.keepFlicker) l.setFlicker(null); }); } }
     }));
@@ -8591,7 +8633,7 @@ const Reveal = {
     if (S.st === 0) { u.uK.value = 1; if (seen) { S.look += dt; if (S.look > 1.2) { S.st = 1; S.t1 = 0; Fear.kick(0.6); } } if (S.t > 25) { S.st = 3; S.out = 0; } }
     if (S.st === 1) {   // it bends its head to look in at you; then it knocks
       S.t1 += dt; u.uTilt.value = sstep(0, 2.2, S.t1) * 0.55;
-      if (S.t1 > 2.4 && S.knocks < 3 && S.t1 > 2.4 + S.knocks * 0.9) { S.knocks++; Sound.play('knock', d.pos, { gain: 0.75, rate: 0.85, hrtf: true, pri: 2 }); d.shake = 0.18; if (S.knocks === 1) Fear.kick(0.8); }
+      if (S.t1 > 2.4 && S.knocks < 3 && S.t1 > 2.4 + S.knocks * 0.9) { S.knocks++; Sound.play('knock', d.pos, { gain: 0.6, rate: 0.85, hrtf: true, pri: 2 }); d.shake = 0.18; if (S.knocks === 1) Fear.kick(0.8); }
       if (S.knocks >= 3 && S.t1 > 5.6) { S.st = 2; S.t2 = 0; Sound.play('rattle', d.pos, { gain: 0.55 }); d.shake = 0.4; }
     }
     if (S.st === 2) { S.t2 += dt; if (S.t2 > 0.7) { u.uK.value = 0; S.st = 3; S.out = 0; } }   // and it is not there any more
@@ -8744,7 +8786,7 @@ const Power = {
   },
   trip() {
     this.main = false; this.trips++;
-    Sound.play('bang', W.fusePos, { gain: 0.75, rate: 1.3 }); Sound.play('pop', V3(7.3, 1.0, 0.35), { gain: 0.9 });
+    Sound.play('bang', W.fusePos, { gain: 0.55, rate: 1.3 }); Sound.play('pop', V3(7.3, 1.0, 0.35), { gain: 0.9 });
     Sound.play('flick', V3(7.3, 1.0, 0.35), { gain: 0.6, rate: 0.7 });
     // a blue-white flash in the bathroom, the spark of it
     const L = LN.special; L.pos.set(7.3, 1.05, 0.4); L.color = lin('#cfe0ff'); L.intensity = 16; L.radius = 4.5; L.box = LN.bathroom.box.slice(); L.box2 = null; L.dim = 1;
@@ -9153,7 +9195,7 @@ const Attic = {
   shut() {
     this.target = 0;
     Sound.play('creakLong', V3(12, 2.2, 5.4), { gain: 0.75, rate: 1.1 });
-    after(0.5, () => { Sound.play('slam', V3(12, 2.5, 5.4), { gain: 1.0 }); Player.shake = 0.3; Fear.kick(0.6); });
+    after(0.5, () => { Sound.play('slam', V3(12, 2.5, 5.4), { gain: 0.75 }); Player.shake = 0.3; Fear.kick(0.6); });
     after(1.8, () => { UI.thought(tr('t_tapeWhere'), 3); Story.setObj('s3b'); });
   },
   takePole() {
@@ -9349,7 +9391,7 @@ const Credits = {
 const UI = {
   overlay: null, onClose: null, q: [], cur: null, tt: 0, gap: 0, el: {}, hintTO: 0, restartArm: 0,
   init() {
-    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard', 'stickzone', 'clockpad', 'clockDoneT', 'gyroSel', 'gyroSens', 'handItem', 'panel', 'panelBody', 'credits', 'credRoll', 'credSkip', 'endStats', 'endDigits']) this.el[id] = $(id);
+    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard', 'stickzone', 'clockpad', 'clockDoneT', 'gyroSel', 'gyroSens', 'comfortSel', 'handItem', 'panel', 'panelBody', 'credits', 'credRoll', 'credSkip', 'endStats', 'endDigits']) this.el[id] = $(id);
     this.el.credits.addEventListener('pointerdown', (e) => { if (e.target !== this.el.credSkip) Credits.skip(); });
     this.el.credSkip.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); Credits.skip(); });
     this.el.credSkip.addEventListener('pointerdown', (e) => e.stopPropagation());
@@ -9372,6 +9414,9 @@ const UI = {
     Gyro.onChange = () => document.body.classList.add('gyro');   // the sensor works here: show the setting
     this.gyroLabels();
     this.el.gyroSens.addEventListener('input', () => Gyro.setSens(parseFloat(this.el.gyroSens.value)));
+    // reduced motion (motion sickness)
+    Comfort.init(); this.el.comfortSel.checked = Comfort.on;
+    this.el.comfortSel.addEventListener('change', () => Comfort.set(this.el.comfortSel.checked));
     // brightness
     const br = parseFloat(Store.get('bright')); this.setBright(br > 0 ? br : 1, false);
     for (const k of ['bright', 'calBright']) this.el[k].addEventListener('input', () => this.setBright(parseFloat(this.el[k].value), true));
@@ -9479,7 +9524,7 @@ const UI = {
     if (was === 'panel') Panel.closed();
     const f = this.onClose; this.onClose = null; if (f) f();
   },
-  gyroLabels() { const st = document.querySelector('.switch .st'); if (st) { st.dataset.on = tr('perf_on_plain'); st.dataset.off = tr('perf_off'); } },
+  gyroLabels() { for (const st of document.querySelectorAll('.switch .st')) { st.dataset.on = tr('perf_on_plain'); st.dataset.off = tr('perf_off'); } },
   /* with a paper in your hands the touch controls step aside, so a tap reaches it (and it can scroll) */
   touchOverlay(on) { if (isTouch && this.el.touch) { this.el.touch.classList.toggle('ovl', on); if (on) { Input.tmx = Input.tmz = 0; Input.trun = false; } } },
   clockPanel(on) {
@@ -9738,9 +9783,10 @@ const Title = {
     this.t += dt;
     const c = this.cam, t = this.t;
     // a slow, uneasy drift, the way you look round a dark room when you have just woken
-    Player.yaw = c.yaw + Math.sin(t * 0.11) * 0.06 + Math.sin(t * 0.047) * 0.03;
-    Player.pitch = c.pitch + Math.sin(t * 0.07) * 0.025;
-    Player.pos.set(c.x + Math.sin(t * 0.05) * 0.04, 0, c.z + Math.cos(t * 0.063) * 0.03);
+    const k = Comfort.on ? 0.15 : 1;   // (hardly at all with reduced motion)
+    Player.yaw = c.yaw + (Math.sin(t * 0.11) * 0.06 + Math.sin(t * 0.047) * 0.03) * k;
+    Player.pitch = c.pitch + Math.sin(t * 0.07) * 0.025 * k;
+    Player.pos.set(c.x + Math.sin(t * 0.05) * 0.04 * k, 0, c.z + Math.cos(t * 0.063) * 0.03 * k);
     Player.applyCamera(0);
     for (const d of Object.values(DOORS)) d.update(dt);   // the bedroom door stands open
     SU.uTime.value = t;
@@ -9912,7 +9958,7 @@ function loop(now) {
   const dt = Math.min(0.05, Math.max(0.001, raw / 1000 || 0.016)); App.last = now;
   if (!App.ready) return;
   if (keyPressed('KeyP')) Perf.toggle();
-  postMat.uniforms.uTime.value = now / 1000;
+  postMat.uniforms.uTime.value = now / 1000; postMat.uniforms.uCalm.value = Comfort.on ? 1 : 0;
   if (G.running && !G.paused) {
     G.dt = dt; G.t += dt; G.frame++;
     Quality.sample(dt);
