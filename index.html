@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Awakent</title>
+<title>Awaken’t</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
@@ -205,6 +205,11 @@
   #title .lede { max-width: 44ch; font-size: clamp(17px, min(1.6vw, 2.7vh), 22px); }
   .ttitle { font-size: clamp(46px, min(8vw, 11vh), 108px); }
   .ttitle .flk { animation: flk 8s steps(1) infinite; }
+  /* the ’t: not awake. In the red of the clock, and now and then it is not there at all */
+  .apo { color: #b8392b; }
+  .ttitle .apo { animation: apo 11s steps(1) infinite; }
+  @keyframes apo { 0%, 62%, 100% { opacity: 1; } 63% { opacity: 0; } 64% { opacity: 0.6; } 65% { opacity: 0; } 67% { opacity: 1; } }
+  body.comfort .ttitle .flk, body.comfort .ttitle .apo { animation: none; }
   @keyframes flk { 0%, 90%, 100% { opacity: 1; } 91% { opacity: 0.2; } 92% { opacity: 1; } 94% { opacity: 0.55; } 95% { opacity: 1; } }
   .tdesc { margin: 0; max-width: 54ch; font-family: var(--display); font-size: clamp(15px, min(1.25vw, 2.25vh), 18px); line-height: 1.58; color: #b9b1a3; }
   .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
@@ -266,7 +271,7 @@
     .tsub { flex-direction: column; gap: 0; }
   }
   @media (max-width: 520px) { #title { background: linear-gradient(0deg, rgba(8, 9, 12, 0.96) 0%, rgba(8, 9, 12, 0.86) 60%, rgba(8, 9, 12, 0.5) 100%); } }
-  @media (prefers-reduced-motion: reduce) { .ttitle .flk { animation: none; } .sheetBox { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .ttitle .flk, .ttitle .apo { animation: none; } .sheetBox { animation: none; } }
 
   /* ---------- what you carry ---------- */
   #handItem { position: absolute; right: max(16px, 3vw); bottom: max(16px, calc(3vh + env(safe-area-inset-bottom, 0px))); display: flex; gap: 6px; align-items: baseline; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(230, 223, 210, 0.66); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); }
@@ -431,7 +436,7 @@
       <div class="tinfo">
         <div class="lang" role="group" aria-label="Taal / Language"><button type="button" data-lang="nl" aria-pressed="true">NL</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
         <canvas id="digits" width="340" height="120" role="img" aria-label="03:33"></canvas>
-        <h1 class="ttitle">Awa<span class="flk">k</span>ent</h1>
+        <h1 class="ttitle" aria-label="Awaken’t">Awa<span class="flk">k</span>en<span class="apo">’t</span></h1>
         <p class="lede" data-i18n="lede">Je wordt wakker in je eigen huis. Het is 3:33. Alles staat waar het hoort. Bijna alles.</p>
         <p class="tdesc" id="tdesc" data-i18n="t_desc"></p>
         <ul class="tags" id="tags"></ul>
@@ -492,7 +497,7 @@
     <div class="wrap">
       <canvas id="endDigits" width="340" height="120" aria-hidden="true"></canvas>
       <p class="eyebrow" data-i18n="the_end">Einde</p>
-      <h2>Awakent</h2>
+      <h2>Awaken<span class="apo">’t</span></h2>
       <ul id="endStats"></ul>
       <div class="actions"><button id="againBtn" type="button" data-i18n="play_again">Opnieuw spelen</button></div>
     </div>
@@ -947,7 +952,7 @@ Object.assign(STR.nl, {
   ctl_kb: [['W|A|S|D', 'lopen'], ['Muis', 'rondkijken'], ['E', 'gebruiken, oppakken, lezen'], ['F', 'zaklamp aan of uit'], ['Shift', 'sneller lopen'], ['Esc', 'pauze, instellingen en hints'], ['P', 'prestatiemeter']],
   ctl_touch: [['rondje linksonder', 'lopen (ver duwen is rennen)'], ['slepen', 'rondkijken'], ['E', 'gebruiken'], ['F', 'zaklamp'], ['II', 'pauze en hints'], ['kantelen', 'rondkijken met je telefoon (aan of uit in de instellingen)']],
   ctl_tips: ['Richt het puntje in het midden van je beeld op iets. Verschijnt er een woord, dan kun je het gebruiken.', 'Sommige dingen openen een paneel, zoals een meterkast of een radio. Gebruik daar de muis, je vinger of de cijfertoetsen; E sluit het weer.', 'Luister goed. Met een koptelefoon hoor je waar een geluid vandaan komt.', 'Vast? Druk op Esc en open „Ik zit vast” voor een hint bij wat je nu moet doen.', 'Je voortgang wordt bewaard bij elk nieuw hoofdstuk.', 'Word je snel misselijk van bewegend beeld? Zet „Minder beweging” aan bij Instellingen.'],
-  about_p: ['Een nacht die niet wil ophouden, in een huis dat je kent.', 'Awakent is een korte verhalende horrorgame over slapen, wakker worden en wat je nog tegen iemand had willen zeggen. Je verkent het huis, vindt wat het je wil vertellen en lost puzzels op met wat er ligt.', 'Het spel draait helemaal in je browser. Alles wat je ziet en hoort wordt ter plekke gemaakt: geen video, geen opgenomen geluid.'],
+  about_p: ['Een nacht die niet wil ophouden, in een huis dat je kent.', 'Awaken’t is een korte verhalende horrorgame over slapen, wakker worden en wat je nog tegen iemand had willen zeggen. Je verkent het huis, vindt wat het je wil vertellen en lost puzzels op met wat er ligt.', 'Het spel draait helemaal in je browser. Alles wat je ziet en hoort wordt ter plekke gemaakt: geen video, geen opgenomen geluid.'],
   about_warn_h: 'Let op', about_warn: 'Bevat harde schrikmomenten, flikkerend licht, donkere scènes en thema’s als rouw en slaapverlamming.',
   about_tech_h: 'Gemaakt met', about_tech: 'three.js (MIT-licentie) · lettertypen IM Fell English, IBM Plex Mono en Reenie Beanie (SIL Open Font License)', about_ver: 'Versie 2',
 });
@@ -961,7 +966,7 @@ Object.assign(STR.en, {
   ctl_kb: [['W|A|S|D', 'walk'], ['Mouse', 'look around'], ['E', 'use, pick up, read'], ['F', 'flashlight on or off'], ['Shift', 'walk faster'], ['Esc', 'pause, settings and hints'], ['P', 'performance meter']],
   ctl_touch: [['circle bottom left', 'walk (push far to run)'], ['drag', 'look around'], ['E', 'use'], ['F', 'flashlight'], ['II', 'pause and hints'], ['tilt', 'look around with your phone (on or off in the settings)']],
   ctl_tips: ['Point the dot in the middle of the screen at something. If a word appears, you can use it.', 'Some things open a panel, like a fuse box or a radio. Use the mouse, your finger or the number keys there; E closes it again.', 'Listen. With headphones you can hear where a sound comes from.', 'Stuck? Press Esc and open "I\'m stuck" for a hint about what to do now.', 'Your progress is saved at the start of every chapter.', 'Motion sick easily? Turn on "Reduced motion" in Settings.'],
-  about_p: ["A night that won't end, in a house you know.", "Awakent is a short narrative horror game about sleeping, waking up and what you still wanted to say to someone. You explore the house, find what it wants to tell you and solve puzzles with whatever is lying around.", 'It runs entirely in your browser. Everything you see and hear is made on the spot: no video, no recorded sound.'],
+  about_p: ["A night that won't end, in a house you know.", "Awaken’t is a short narrative horror game about sleeping, waking up and what you still wanted to say to someone. You explore the house, find what it wants to tell you and solve puzzles with whatever is lying around.", 'It runs entirely in your browser. Everything you see and hear is made on the spot: no video, no recorded sound.'],
   about_warn_h: 'Please note', about_warn: 'Contains loud jump scares, flickering light, dark scenes and themes such as grief and sleep paralysis.',
   about_tech_h: 'Made with', about_tech: 'three.js (MIT licence) · typefaces IM Fell English, IBM Plex Mono and Reenie Beanie (SIL Open Font License)', about_ver: 'Version 2',
 });
@@ -9076,10 +9081,10 @@ const Radio = {
 /* ---------- the attic ---------- */
 const _av = new THREE.Vector3(), _av2 = new THREE.Vector3();
 const Attic = {
-  ang: 0, target: 0, climb: null, lid: 0, lidT: 0, drawer: 0, drawerT: 0, horseT: 0, dragNext: 0, code: null,
+  ang: 0, target: 0, climb: null, lid: 0, lidT: 0, drawer: 0, drawerT: 0, horseT: 0, dragNext: 0, code: null, armed: true, shutPending: false, shutAt: 0,
   applyState(s) {
     const n = SI(s);
-    this.climb = null; Player.hold = null;
+    this.climb = null; Player.hold = null; this.armed = true; this.shutPending = false;
     this.target = this.ang = s === 's3' ? 1 : 0;
     this.lidT = this.lid = n >= SI('s3') && n <= SI('descent') ? 1 : 0;
     this.drawerT = this.drawer = n > SI('s3') && n <= SI('descent') ? 1 : 0;
@@ -9105,11 +9110,20 @@ const Attic = {
     this.sync();
     const P = Player;
     if (!P.hold) P.crouchT = P.room === 'attic' ? 1 : 0;
-    // walk into the ladder and you climb it; walk into the hole from above and you go down
-    if (!this.climb && this.ang > 0.95 && P.enabled && !UI.overlay && !ClockUI.active) {
-      if (P.room !== 'attic' && P.pos.y < 0.2 && P.pos.x > 12.55 && P.pos.x < 13.3 && Math.abs(P.pos.z - 5.4) < 0.36 && P.vel.x < -0.35 && -Math.sin(P.yaw) < -0.4) this.startClimb('up');
-      else if (P.room === 'attic' && P.pos.x > 10.9 && P.vel.x > 0.25) this.startClimb('down');
+    // walk into the ladder and you climb it; walk into the hole from above and you go down.
+    // After a climb you have to step away from the ladder (or the hole) before walking into it takes you
+    // again: you arrive right where the other way starts, and the first step would carry you straight back.
+    const atFoot = P.room !== 'attic' && P.pos.y < 0.2 && P.pos.x > 12.4 && P.pos.x < 13.45 && Math.abs(P.pos.z - 5.4) < 0.5;
+    const atHole = P.room === 'attic' && P.pos.x > 10.6;
+    if (!this.climb && !P.hold && !atFoot && !atHole) this.armed = true;
+    if (!this.climb && this.armed && this.ang > 0.95 && P.enabled && !UI.overlay && !ClockUI.active) {
+      if (atFoot && P.pos.x > 12.55 && P.pos.x < 13.3 && Math.abs(P.pos.z - 5.4) < 0.36 && P.vel.x < -0.35 && -Math.sin(P.yaw) < -0.4) this.startClimb('up');
+      else if (atHole && P.pos.x > 10.9 && P.vel.x > 0.25) this.startClimb('down');
     }
+    // down with the tape: the ladder goes up behind you, but only once you are off it and clear of the hole
+    if (this.shutPending && !P.hold && !this.climb && P.room !== 'attic' && P.pos.y < 0.2 && (!atFoot || G.t > this.shutAt)) { this.shutPending = false; this.shut(); }
+    // never shut in: whoever is up there, the hatch stays open (it can always be pushed open from above)
+    if (P.room === 'attic' && !this.climb && this.target < 1 && this.ang < 0.95 && SI(Story.stage) <= SI('s3')) this.target = 1;
     // something drags across the boards above the hallway, until you go and look
     if (Story.stage === 's2' && F.radioCode && !F.atticIn && G.t > this.dragNext && P.room !== 'attic') { this.dragNext = G.t + rand(16, 24); this.dragging(); }
     if (P.room === 'attic' && !P.hold) this.events(dt);
@@ -9165,10 +9179,11 @@ const Attic = {
     after(1.45, () => Sound.play('thud', V3(12.56, 0.1, 5.4), { gain: 0.45 }));
     after(2.4, () => UI.thought(tr('t_attic'), 2.6));
   },
-  useLadder() { if (this.ang < 0.9) return; this.startClimb(Player.room === 'attic' ? 'down' : 'up'); },
+  useLadder() { if (this.ang < 0.9) { if (Player.room === 'attic') this.target = 1; return; } this.startClimb(Player.room === 'attic' ? 'down' : 'up'); },
   /* up or down the ladder: carried along a path, crouching as your head clears the hole */
   startClimb(dir) {
     if (this.climb || this.ang < 0.95) return;
+    if (dir === 'up' && (this.shutPending || F.hatchShut)) return;   // with the tape down here, there is no going back up
     const P = Player, up = dir === 'up';
     const keys = up
       ? [[P.pos.x, 0, P.pos.z, 0, 0], [12.88, 0, 5.4, 0, 0.15], [12.32, 1.1, 5.4, 0.05, 0.46], [11.86, 2.05, 5.4, 0.55, 0.74], [10.85, AF, 5.4, 1, 1]]
@@ -9183,16 +9198,17 @@ const Attic = {
       P.crouchT = P.crouch = lerp(a[3], b[3], u);
       const r = Math.floor(P.pos.y / 0.3);
       if (r !== rung && P.pos.y > 0.05 && P.pos.y < AF - 0.08) { rung = r; Sound.step('stairs', V3(P.pos.x, P.pos.y, 5.4), { gain: 0.24, rate: 1.1 }); if (Math.random() < 0.5) Sound.play('creaks', V3(P.pos.x, P.pos.y, 5.4), { gain: 0.18, rate: rand(1.2, 1.5), pri: 0 }); }
-      if (k >= 1) { P.hold = null; this.climb = null; this.climbed(dir); }
+      if (k >= 1) { P.hold = null; this.climb = null; this.armed = false; this.climbed(dir); }
     };
   },
   climbed(dir) {
     if (dir === 'up') {
       if (!F.atticIn) { F.atticIn = true; after(0.9, () => UI.thought(tr('t_atticIn'), 3)); if (Story.stage === 's2') Story.setObj('s2c'); }
-    } else if (F.tapeTaken && !F.hatchShut) { F.hatchShut = true; after(0.6, () => this.shut()); }
+    } else if (F.tapeTaken && !F.hatchShut) { F.hatchShut = true; this.shutPending = true; this.shutAt = G.t + 1.2; }
   },
   /* you are down with the tape: the ladder goes up behind you and the hatch slams */
   shut() {
+    if (Player.room === 'attic' || Player.hold) { this.shutPending = true; return; }
     this.target = 0;
     Sound.play('creakLong', V3(12, 2.2, 5.4), { gain: 0.75, rate: 1.1 });
     after(0.5, () => { Sound.play('slam', V3(12, 2.5, 5.4), { gain: 0.75 }); Player.shake = 0.3; Fear.kick(0.6); });
@@ -9342,7 +9358,7 @@ const Credits = {
     const el = UI.el.credits, roll = UI.el.credRoll;
     roll.textContent = '';
     const sec = (cls) => mk('div', 'cs ' + (cls || ''), roll);
-    { const s = sec('top'); mk('p', 'ct', s, 'Awakent'); mk('p', 'csub', s, tr('cr_sub')); }
+    { const s = sec('top'); { const tt = mk('p', 'ct', s, 'Awaken'); mk('span', 'apo', tt, '’t'); } mk('p', 'csub', s, tr('cr_sub')); }
     { const s = sec(); mk('p', 'ch', s, tr('cr_cast')); for (const [a, b] of tr('cast')) { const r = mk('p', 'crow', s); mk('span', 'cn', r, a); if (b) mk('span', 'cr', r, b); } }
     if (CREDITS.by && String(CREDITS.by).trim()) { const s = sec(); mk('p', 'ch', s, tr('cr_by')); mk('p', 'cbig', s, String(CREDITS.by).trim()); }
     { const s = sec(); mk('p', 'ch', s, tr('cr_sound')); mk('p', 'ctx', s, tr('cr_soundTxt')); }
