@@ -836,7 +836,7 @@ const STR = {
     t_mom: 'Mama.', t_vm1: 'Ik had haar terug moeten bellen.', t_vm2: 'Dat is nu.', t_vm3: 'Ik bel haar terug.',
     cal_month: 'MAART', box_mama: 'MAMA', box_xmas: 'KERST',
     t_cantLook: 'Ik kan mezelf niet aankijken.', k_tapskip: 'Tik om over te slaan', k_twalk: 'rondje linksonder: lopen (ver duwen = rennen)', k_tlook: 'overal anders slepen: kijken', k_tilt: 'of kantel je telefoon', gyro: 'Kijken door te kantelen', gyro_sens: 'Kantelgevoeligheid', comfort: 'Minder beweging', comfort_note: 'Tegen bewegingsziekte: geen schommelend, schuddend of zoomend beeld, geen vervorming, een breder beeld en een vast puntje in het midden.', perf_on_plain: 'Aan', rotate: 'Draai je telefoon voor het beste beeld',
-    intro_date: '27 maart', k_space: 'Spatie', k_skip: 'overslaan', t_again2: 'Weer.', t_knock1: 'Er klopt iemand.', t_knock2: 'Om 3:33?', t_hello: 'Hallo?',
+    intro_date: '27 maart', k_space: 'Spatie', k_skip: 'overslaan', t_again2: 'Weer.', t_knock1: 'Er wordt op de voordeur geklopt.', t_knock2: 'Om 3:33?', t_hello: 'Hallo?',
     gl_lost: 'Het beeld wordt hersteld…',
     t_caught1: 'Weer in bed. Het had me.', t_caught2: 'Niet weer…', t_caught3: 'Ik word steeds hier wakker.',
     t_lookAtIt: 'Als ik het aankijk, valt het uit elkaar.', t_behindMe: 'Er loopt iemand achter me.', t_rightBehind: 'Vlak achter me…', t_dontOpen: 'Niet opendoen.',
@@ -922,7 +922,7 @@ const STR = {
     t_mom: 'Mom.', t_vm1: 'I should have called her back.', t_vm2: "That's now.", t_vm3: "I'll call her back.",
     cal_month: 'MARCH', box_mama: 'MOM', box_xmas: 'CHRISTMAS',
     t_cantLook: "I can't look myself in the eye.", k_tapskip: 'Tap to skip', k_twalk: 'circle bottom left: walk (push far to run)', k_tlook: 'drag anywhere else: look', k_tilt: 'or tilt your phone', gyro: 'Look by tilting', gyro_sens: 'Tilt sensitivity', comfort: 'Reduced motion', comfort_note: 'For motion sickness: no bobbing, shaking or zooming view, no warping, a wider view and a steady dot in the middle.', perf_on_plain: 'On', rotate: 'Turn your phone sideways for the best view',
-    intro_date: '27 March', k_space: 'Space', k_skip: 'skip', t_again2: 'Again.', t_knock1: "Someone's knocking.", t_knock2: 'At 3:33?', t_hello: 'Hello?',
+    intro_date: '27 March', k_space: 'Space', k_skip: 'skip', t_again2: 'Again.', t_knock1: "Someone's knocking at the front door.", t_knock2: 'At 3:33?', t_hello: 'Hello?',
     gl_lost: 'Restoring the picture…',
     t_caught1: 'Back in bed. It had me.', t_caught2: 'Not again…', t_caught3: 'I keep waking up here.',
     t_lookAtIt: 'If I look at it, it comes apart.', t_behindMe: 'Someone is walking behind me.', t_rightBehind: 'Right behind me…', t_dontOpen: "Don't open it.",
@@ -1684,6 +1684,7 @@ const SU = {
   uFogDensity: { value: 0.025 },
   uCamPos: { value: new THREE.Vector3() },
   uExposure: { value: 1.25 },
+  uLFall: { value: 0.5 },   // how fast lamplight dies away with distance (more at night: pools of light)
   uTime: { value: 0 },
   // soft shading where surfaces meet (corners, floor edges): per room, a containment box and its six planes
   uAOC: { value: Array.from({ length: NAO }, () => new THREE.Vector4(1, 1, 0, 0)) },
@@ -1720,7 +1721,7 @@ uniform vec3 uLPos[NL]; uniform vec3 uLCol[NL]; uniform vec4 uLMin[NL]; uniform 
 uniform vec3 uLMin2[NL]; uniform vec3 uLMax2[NL]; uniform int uNumLights;
 uniform sampler2D uNoiseTex;
 uniform vec3 uAmbient; uniform vec3 uFlashPos; uniform vec3 uFlashDir; uniform float uFlashOn; uniform vec3 uFlashCol;
-uniform vec3 uFogColor; uniform float uFogDensity; uniform vec3 uCamPos; uniform float uExposure;
+uniform vec3 uFogColor; uniform float uFogDensity; uniform vec3 uCamPos; uniform float uExposure; uniform float uLFall;
 #define NAO ${NAO}
 uniform vec4 uAOC[NAO]; uniform vec4 uAOP[NAO]; uniform vec4 uAOY[NAO]; uniform float uAOK;
 varying vec3 vW; varying vec3 vN; varying vec2 vUv;
@@ -1792,7 +1793,7 @@ void main(){
     if(!(inBox(vW, mn.xyz, uLMax[i]) || inBox(vW, uLMin2[i], uLMax2[i]))) continue;
     vec3 L = uLPos[i] - vW; float d2 = dot(L, L); float d = sqrt(d2); L /= max(d, 1e-4);
     float q = clamp(1.0 - d2 / (mn.w * mn.w), 0.0, 1.0);
-    float att = q * q / (1.0 + 0.5 * d2);
+    float att = q * q / (1.0 + uLFall * d2);
     lit += uLCol[i] * ((max(dot(n, L), 0.0) * 0.93 + 0.05) * att);
   }
   lit *= ao;
@@ -1889,7 +1890,7 @@ function boxDist(b, p) {
 }
 const _cand = [];
 /* only the lights of rooms that can be seen go to the GPU, nearest first */
-const LIGHT_GAIN = 1.3;
+let LIGHT_GAIN = 1.3;   // how strongly the lamps light the rooms: full by day, far less at night (set per stage)
 let lightMask = -1;
 function updateLights(dt) {
   for (const l of LIGHTS) l.update(dt);
@@ -5346,7 +5347,26 @@ const Sound = {
     B.keyPick = this.buf(0.5, (d, sr, n) => {
       for (const [a, f, g] of [[0, 3900, 0.6], [0.045, 5200, 0.45], [0.11, 4400, 0.3]]) { burst(d, sr, n, a, 0.0015, g, 14000, 2500); strike(d, sr, n, a, [[f, 0.05, 0.5], [f * 1.48, 0.035, 0.35], [f * 2.3, 0.02, 0.2]], g); }
     });
-    B.knock = this.buf(0.25, (d, sr, n) => { const lp = new BQ('lp', 260, 1, sr), bp = new BQ('bp', 950, 2, sr); for (let i = 0; i < n; i++) { const t = i / sr; d[i] = lp.p(wn()) * Math.exp(-t * 32) * 1.2 + Math.sin(TAU * 115 * t) * Math.exp(-t * 28) * 0.7 + bp.p(wn()) * Math.exp(-t * 90) * 0.3; } });
+    /* knuckles on a wooden door, built the way it happens: the knuckle is soft, so the blow is a short
+       rounded push (a few milliseconds), not a click; it sets the panel ringing in a handful of low modes,
+       and wood kills the high ones almost at once. That fast-dying top and the low, hollow body are what
+       make it a knock on wood. A little of the contact on top, and the door moving in its frame. */
+    const reson = (d, sr, n, x, f, tau, g) => {   // a two-pole resonator driven by the pulse
+      const r = Math.exp(-1 / (tau * sr)), c1 = 2 * r * Math.cos(TAU * f / sr), c2 = -r * r; let y1 = 0, y2 = 0;
+      const end = Math.min(n, Math.floor(tau * 8 * sr) + x.length);
+      const k = g * Math.sin(TAU * f / sr) * 2 / x.length;   // every mode starts at about its own g
+      for (let i = 0; i < end; i++) { const y = (i < x.length ? x[i] : 0) + c1 * y1 + c2 * y2; y2 = y1; y1 = y; d[i] += y * k; }
+    };
+    B.knock = [0, 1, 2].map((k) => this.buf(0.3, (d, sr, n) => {
+      const r = seeded(500 + k), w = Math.floor((0.0011 + r() * 0.0004) * sr), x = new Float32Array(w);
+      for (let i = 0; i < w; i++) x[i] = Math.sin(Math.PI * i / w) ** 2;                    // the knuckle: a soft push
+      const det = 0.95 + r() * 0.1;
+      for (const [f, tau, g] of [[150, 0.022, 0.4], [232, 0.019, 0.8], [352, 0.017, 1.0], [498, 0.016, 1.25], [690, 0.012, 1.05], [940, 0.008, 0.7], [1320, 0.0048, 0.42], [1900, 0.0028, 0.22]])
+        reson(d, sr, n, x, f * det, tau, g * (0.85 + r() * 0.3));
+      burst(d, sr, n, 0.0003, 0.0018, 0.12, 3500, 800);                                      // skin on wood
+      thump(d, sr, n, 0.001, 95 + k * 6, 0.022, 0.18);                                      // the door in its frame
+      const lp = new BQ('lp', 3200, 0.7, sr); for (let i = 0; i < n; i++) d[i] = lp.p(d[i]);
+    }));
     const breath = (dur, fa, fb, q = 1.3) => this.buf(dur, (d, sr, n) => { const bp = new BQ('bp', fa, q, sr), lp = new BQ('lp', 220, 0.7, sr); for (let i = 0; i < n; i++) { const t = i / sr, u = t / dur; if (i % 128 === 0) bp.set(lerp(fa, fb, u), q); const env = Math.pow(Math.sin(Math.PI * u), 1.6); d[i] = (bp.p(wn()) * 0.8 + lp.p(wn()) * 0.25) * env; } });
     B.breathIn = breath(1.3, 700, 1350); B.breathOut = breath(1.7, 1150, 620);
     // a slow exhale right against your ear: low, wet, with a hint of voice
@@ -5693,7 +5713,7 @@ const Sound = {
   },
   step(surface, pos, o = {}) { const arr = this.B.steps && this.B.steps[surface]; if (!arr) return; this.playBuf(pick(arr), pos, Object.assign({ gain: 0.34, vary: 0.06, pri: pos ? 1 : 0 }, o)); },
   flickerTick(light) { if (!camera || light.pos.distanceTo(camera.position) > 7) return; this.play('flick', light.pos, { gain: 0.25, vary: 0.1, pri: 0 }); },
-  knock(pos, n = 3, gap = 0.32, gain = 0.6) { for (let i = 0; i < n; i++) this.play('knock', pos, { gain, delay: i * gap * rand(0.9, 1.1), vary: 0.04, hrtf: true }); },
+  knock(pos, n = 3, gap = 0.32, gain = 0.6, o = {}) { for (let i = 0; i < n; i++) this.play('knock', pos, Object.assign({ gain: gain * (i === n - 1 ? 1.08 : 1), delay: (o.at || 0) + i * gap * rand(0.93, 1.07), vary: 0.035, hrtf: true, pri: 2 }, o)); },
 
   /* ---------- the "nothing is right" controls ---------- */
   setWrong(v) { this.wrong = clamp(v, 0, 1); },
@@ -6941,7 +6961,7 @@ const Story = {
     L.bedroom.color = lin('#ffc98e'); L.bedroom.intensity = 5.2;
     for (const k of ['study', 'hallA', 'hallB', 'vest', 'living', 'kitchen']) { L[k].color = lin(k === 'kitchen' ? '#fff0d8' : '#ffd29a'); L[k].intensity = { study: 4.2, hallA: 3.4, hallB: 3.4, vest: 3.2, living: 4.4, kitchen: 4.6 }[k]; }
     // the moon through the bedroom curtains, all night
-    base.sun = 1; L.sun.color = lin('#9cb2e4'); L.sun.intensity = 2.3;
+    base.sun = 1; L.sun.color = lin('#9cb2e4'); L.sun.intensity = 2.9;
     if (at('p1')) { base.floorlamp = F.lampOff ? 0 : 1; if (F.stairPop) base.stairs = 0; }
     if (at('p2')) { base.vest = 0; base.living = 0; base.study = 0; base.bathroom = 1; L.bathroom.sw = 1; L.hallA.setFlicker('unstable'); L.hallA.keepFlicker = true; L.hallA.dim = 0.7; }
     if (at('p2b')) { base.study = 1; L.study.sw = 1; base.bathroom = 0; }
@@ -6968,7 +6988,10 @@ const Story = {
     for (const k in base) L[k].on = base[k];
     // environment
     const env = morning ? [0.075, 0.075, 0.085, 0.012, 1.3] : at('final') ? [0.004, 0.004, 0.006, 0.075, 1.25] : at('descent') ? [0.0016, 0.0016, 0.002, 0.2, 1.3] : at('p3') ? [0.0022, 0.0024, 0.0034, 0.06, 1.2] : s === 's1' ? [0.003, 0.0034, 0.005, 0.045, 1.25] : at('p2') ? [0.004, 0.0045, 0.0065, 0.04, 1.25] : [0.0055, 0.0062, 0.0095, 0.03, 1.25];
-    SU.uAmbient.value.set(env[0], env[1], env[2]); SU.uFogDensity.value = env[3]; SU.uExposure.value = env[4];
+    // at night the lamps only make pools of light: corners, far ends and anything past a doorway go dark
+    const nk = morning ? 1 : 0.7;
+    LIGHT_GAIN = morning ? 1.3 : 0.74; SU.uLFall.value = morning ? 0.5 : 0.9;
+    SU.uAmbient.value.set(env[0] * nk, env[1] * nk, env[2] * nk); SU.uFogDensity.value = env[3]; SU.uExposure.value = env[4];
     // the picture itself: a little greyer, grainier, darker at the edges and more fringed the deeper you go
     { const h = HORROR[s] ?? 0, u = postMat.uniforms;
       u.uDesat.value = morning ? 0.04 : 0.06 + 0.2 * h; u.uGrain.value = 0.05 + 0.03 * h;
@@ -7200,7 +7223,7 @@ const Story = {
     if (F.triedDoor && !F.hasKey && !F.boxHint && G.t - F.keyT > 35) { F.boxHint = true; UI.thought(tr('t_boxHint'), 3.4); }
     if (!F.knock1) return;
     // walking to the door: it knocks once more, closer; then nothing
-    if (!F.knock2 && ((P.room === 'hall' && P.pos.x < 5) || P.room === 'vestibule')) { F.knock2 = true; Sound.knock(V3(-0.25, 1.3, 7.375), 2, 0.5, 0.75); }
+    if (!F.knock2 && ((P.room === 'hall' && P.pos.x < 5) || P.room === 'vestibule')) { F.knock2 = true; Sound.knock(V3(-0.25, 1.3, 7.375), 3, 0.45, 1.0, { ref: 2.5, noOcc: true, lp: 5000 }); }
     if (F.knock2 && !F.hello && P.room === 'vestibule' && P.pos.x < 1.5 && P.pos.z > 6.4) { F.hello = true; UI.thought(tr('t_hello'), 2.2); }
     if (G.t - F.knockT > 110 && !F.nudge) { F.nudge = true; UI.thought(tr('t_nudgeDoor'), 3.5); }
   },
@@ -7217,11 +7240,16 @@ const Story = {
     const drift = (1 - k1) * Math.sin(T * 0.4) * 0.03 * cm;
     P.pos.set(q.x, 0, q.z); P.yaw = q.yaw + drift; P.pitch = q.pitch; P.eyeOverride = q.eye; P.rollOverride = q.roll * cm;
   },
+  /* someone at the front door: three knocks, a wait, three more, harder. Loud enough to carry through
+     the house (as knocking on a front door does); you turn your head to it, and say what it is */
   introKnock() {
     F.knock1 = true; F.knockT = G.t;
-    Sound.knock(V3(-0.25, 1.3, 7.375), 3, 0.42, 0.7);
-    after(1.8, () => UI.thought(tr('t_knock1'), 2.6));
-    after(4.8, () => UI.thought(tr('t_knock2'), 2.4));
+    const fd = V3(-0.25, 1.3, 7.375), o = { ref: 3.2, noOcc: true, lp: 4200, rev: 0.5 };
+    Sound.knock(fd, 3, 0.36, 0.95, o);
+    Sound.knock(fd, 3, 0.32, 1.1, Object.assign({ at: 2.2 }, o));
+    after(0.5, () => { const P = Player; if (P.enabled) P.autoLook = { target: P.room === 'bedroom' ? V3(4.675, 1.45, 5.0) : V3(0.3, 1.4, 7.2), k: 2.2, until: G.t + 1.3 }; });
+    after(1.0, () => UI.thought(tr('t_knock1'), 2.4));
+    after(3.4, () => UI.thought(tr('t_knock2'), 2.4));
   },
   skipIntro() {
     if (this.stage !== 'intro' || F.introDone) return;
