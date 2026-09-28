@@ -6427,7 +6427,7 @@ const F = G.flags;
    Every scare asks this first. The start is a house that is only a little off: things moved, a
    picture that wobbles, a sound that sags. What is really there comes later, and closer. */
 const HORROR = { intro: 0, p1: 0.1, p2: 0.25, p2b: 0.35, s1: 0.45, s2: 0.55, s3: 0.48, p3: 0.8, descent: 0.9, final: 1 };
-const HZ = { snap: 0.3, stinger: 0.4, near: 0.35, close: 0.45, hunt: 0.45, strobe: 0.5 };   // from where on each kind of scare may happen
+const HZ = { snap: 0.3, stinger: 0.4, peek: 0.25, near: 0.35, close: 0.45, hunt: 0.45, strobe: 0.5 };   // from where on each kind of scare may happen
 function horror() { return HORROR[Story.stage] ?? 0; }
 /* how far into the night you are (it only ever goes one way; the morning gives you your sight back) */
 const PROG = { intro: 0, p1: 0.08, p2: 0.2, p2b: 0.3, s1: 0.42, s2: 0.54, s3: 0.64, p3: 0.8, descent: 0.92, final: 1 };
@@ -6693,13 +6693,13 @@ const Dir = {
     if (Player.room === 'attic' || Player.hold || F.follower) return 0;
     return { p1: 0.15, p2: 0.3, p2b: 0.45, s1: 0.55, s2: 0.65, s3: 0.4, p3: 1, descent: 0.8 }[Story.stage] || 0;
   },
-  reset() { this.trail.length = 0; this.cueNext = G.t + 30; this.sightNext = G.t + 70; this.pollNext = 0; this.lastYaw = Player.yaw; this.wasMoving = false; this.n = 0; },
+  reset() { this.trail.length = 0; this.cueNext = G.t + 30; this.sightNext = G.t + 70; this.pollNext = 0; this.lastYaw = Player.yaw; this.wasMoving = false; this.n = 0; this.dueSince = 0; },
   behind(dist) {
     let acc = 0, px = Player.pos.x, pz = Player.pos.z;
     for (let i = this.trail.length - 1; i >= 0; i--) { const p = this.trail[i]; acc += Math.hypot(p.x - px, p.z - pz); px = p.x; pz = p.z; if (acc >= dist) return p; }
     return null;
   },
-  schedule(lv) { this.sightNext = G.t + rand(85, 140) / Math.max(0.5, lv); this.n++; },
+  schedule(lv, k = 1) { this.sightNext = G.t + k * rand(85, 140) / Math.max(0.5, lv); this.n++; this.dueSince = 0; },
   update(dt) {
     const P = Player, lv = this.level();
     if (G.t > this.tNext) {
@@ -6730,9 +6730,15 @@ const Dir = {
     if (h >= 0.55 && Math.abs(yv) > 4.2 && !F['turn_' + Story.stage] && this.turnaround(yv)) { F['turn_' + Story.stage] = true; this.schedule(lv); return; }
     if (G.t > this.pollNext) {
       this.pollNext = G.t + 0.6;
+      if (!this.dueSince) this.dueSince = G.t;
       const edge = h >= 0.35;
-      // half-seen things (a head round a door frame, fingers on a jamb, the front door, the ceiling) take their turn with the rest
-      const ok = (h >= 0.45 && !F['bo_' + Story.stage] && Math.random() < 0.5 && this.blackout()) || (h >= HZ.near && Math.random() < 0.45 && Reveal.tryAny(h)) || (edge && Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || (edge && this.peripheral()));
+      // most often it is only a head, leaning out round a door frame: it waits for a doorway to come into
+      // view for that, and only after a while (or now and then) shows itself whole instead
+      if (h >= HZ.peek && Math.random() < 0.8 && Reveal.tryPeek(h)) { this.schedule(lv, 0.7); return; }
+      const whole = G.t - this.dueSince > 14 || Math.random() < 0.12;
+      // half-seen things (fingers on a jamb, the front door, the ceiling) take their turn with the rest
+      const ok = (h >= 0.45 && !F['bo_' + Story.stage] && Math.random() < 0.5 && this.blackout()) || (h >= HZ.near && Math.random() < 0.45 && Reveal.tryAny(h))
+        || (whole && (edge && Math.random() < 0.65 ? this.peripheral() || this.crossing() : this.crossing() || (edge && this.peripheral())));
       if (ok) this.schedule(lv);
     }
   },
@@ -6876,12 +6882,12 @@ function faceYaw(from, to) { return Math.atan2(to.x - from.x, to.z - from.z); }
 const SPAWNS = [
   { id: 'hallEnd', stages: ['p2', 'p2b'], pos: V3(1.25, 0, 5.4), yaw: Math.PI / 2, minDist: 5, snap: true, cond: () => ['kitchen', 'study', 'bathroom'].includes(Player.room) || (Player.room === 'hall' && Player.pos.x > 9.5 && viewAngleTo(V3(14, 1.5, 5.4)) < 0.9) },
   { id: 'kitchenWindow', stages: ['p2b'], pos: V3(11.3, 0, 12.9), yaw: Math.PI, minDist: 1.5, snap: true, stinger: true, cond: () => Player.room === 'kitchen' && Player.pos.z < 9.5 },
-  { id: 'bedroomPeek', stages: ['p2b'], pos: V3(4.5, 0, 4.25), yaw: Math.PI / 2, pose: { lean: -0.12, roll: 0.45 }, minDist: 4, snap: true, cond: () => Player.room === 'hall' && Player.pos.x > 8.2 && DOORS.bedroom.isOpen },
+  { id: 'bedroomPeek', stages: ['p2b'], peek: 'bedroom', cond: () => Player.room === 'hall' && DOORS.bedroom.isOpen && Math.abs(Player.pos.x - 4.675) < 3.4 },
   { id: 'armchair', stages: ['p3'], pos: V3(0.98, 0, 10.14), yaw: 2.4, pose: { sit: true, roll: 0.4 }, minDist: 3, snap: true, cond: () => ['hall', 'kitchen', 'bathroom', 'bedroom'].includes(Player.room) },
   { id: 'darkStudy', stages: ['p3'], pos: V3(13.1, 0, 0.95), yaw: faceYaw(V3(13.1, 0, 0.95), V3(9.9, 0, 4.4)), minDist: 3, snap: true, stinger: true, cond: () => Player.room === 'hall' && DOORS.study.isOpen },
   { id: 'longBehind', stages: ['p3'], dyn: true, minDist: 4, snap: true, stinger: true, cond: () => VEST.D > 9 && Player.room === 'hall' && Player.vel.x < -0.2 },
   { id: 'bathDark', stages: ['s1'], pos: V3(6.25, 0, 3.1), yaw: 0.4, pose: { hunch: 0.3, roll: 0.5 }, minDist: 2.2, snap: true, stinger: true, cond: () => Player.room === 'bathroom' && Player.pos.z < 1.6 && !Power.dryer },
-  { id: 'studyDoorway', stages: ['s2'], pos: V3(9.9, 0, 3.3), yaw: 0, pose: { hunch: 0.25, roll: 0.45 }, minDist: 3, snap: true, cond: () => Player.room === 'hall' && Player.pos.x > 11.5 && DOORS.study.isOpen && F.radioCode },
+  { id: 'studyDoorway', stages: ['s2'], peek: 'study', cond: () => Player.room === 'hall' && DOORS.study.isOpen && F.radioCode && Math.abs(Player.pos.x - 9.875) < 3.4 },
 ];
 
 /* ---------------- unseen changes ---------------- */
@@ -7920,11 +7926,11 @@ const Story = {
     if (G.t - Ent.lastEnd < cool) return;
     for (const s of SPAWNS) {
       if (Ent.used[s.id] || !s.stages.includes(this.stage) || !s.cond()) continue;
+      if (s.peek) { if (!Reveal.busy && Reveal.doorPeek(horror(), s.peek)) { Ent.used[s.id] = true; return; } continue; }
       let def = s;
       if (s.dyn) def = Object.assign({}, s, { pos: V3(Player.pos.x + 10, 0, 5.4), yaw: -Math.PI / 2 });
       const chest = V3(def.pos.x, def.pos.y + 1.25, def.pos.z);
       if (canSee(chest, 0.6) || chest.distanceTo(camera.position) < (def.minDist ?? 3.4) + 1) continue;
-      if (s.id === 'bedroomPeek') DOORS.bedroom.set(true);
       Ent.spawn(def);
       if (s.id === 'longBehind') { this.echo = 8; }
       return;
@@ -9058,6 +9064,11 @@ const Reveal = {
     for (const f of shuffled(opts)) if (f()) return true;
     return false;
   },
+  /* the one it does most: a head round a door frame (now and then with the fingers on the jamb alone) */
+  tryPeek(h) {
+    if (this.busy || Player.room === 'attic' || Player.hold || Player.pos.y < -0.5 || Player.pos.y > 0.5) return false;
+    return this.doorPeek(h) || (h >= HZ.near && Math.random() < 0.3 && this.fingers());
+  },
 
   /* ---------- doorways you can see into from here ---------- */
   /* frontal: only doorways you are looking more or less straight into (at a slant the wall hides nothing) */
@@ -9089,52 +9100,64 @@ const Reveal = {
     return D.wx ? V3(u, p.y0 + y, n) : V3(n, p.y0 + y, u);
   },
 
-  /* ---------- a head round the frame ---------- */
-  doorPeek(h) {
-    const P = Player;
-    for (const D of this.doorways(3.0, 8, 0.5, 0.8)) {
+  /* ---------- a head round the frame ----------
+     Seen straight on, from across a room: the head leans into the opening from behind one side of it.
+     Seen along a corridor, at a slant: it comes out past the near side of the frame, bent forward
+     round it, and the body stays behind the wall. */
+  doorPeek(h, only = null) {
+    const cam = camera.position;
+    const tries = [];
+    for (const D of this.doorways(2.6, 9, 0.62, 1.3)) for (const edge of this.edges(D)) tries.push([D, edge, 'front']);
+    for (const D of this.doorways(2.6, 9.5, 0.75, 99)) {
+      const u = D.wx ? cam.x : cam.z, near = Math.abs(u - D.p.lo) < Math.abs(u - D.p.hi) ? D.p.lo : D.p.hi;
+      const dn = Math.abs(D.wx ? cam.z - D.c : cam.x - D.c), du = Math.abs(u - near);
+      if (du > dn * 1.1 && this.edges(D).includes(near)) tries.push([D, near, 'slant']);
+    }
+    for (const [D, edge, kind] of tries) {
       const p = D.p;
-      for (const edge of this.edges(D)) {
-        const pos = this.at(D, edge, 0.3, -0.34, 0), sg = edge === p.lo ? -1 : 1;
-        if (roomOf(pos.x, p.y0 + 1, pos.z) !== D.far || !Dir.free(pos, 0.1)) continue;
-        if (canSee(V3(pos.x, p.y0 + 1.1, pos.z), 0.12) || canSee(V3(pos.x, p.y0 + 0.4, pos.z), 0.12)) continue;   // the body stays behind the wall
-        const head = this.at(D, edge, -0.2, -0.34, 1.72);
-        if (!losClear(camera.position, head) || lightLevel(head) > 2.4) continue;
-        // a black head is only a head against something lighter: the room behind it lit, or your torch on it
-        const behind = this.at(D, edge, -0.3, -1.6, 1.6);
-        if (lightLevel(behind) < 0.3 && !(Player.flashOn && viewAngleTo(head) < 0.3)) continue;
-        const face = D.wx ? V3(pos.x, 0, pos.z + D.side) : V3(pos.x + D.side, 0, pos.z), yaw = faceYaw(pos, face);
-        // lean towards the opening: which way that is in its own frame
-        const toward = D.wx ? V3(-sg, 0, 0) : V3(0, 0, -sg), dot = Math.cos(yaw) * toward.x - Math.sin(yaw) * toward.z;
-        const lean = -Math.sign(dot || 1) * 0.55;
-        const withHand = Math.random() < 0.65;
-        let lookT = 0, back = 0, k = 0;
-        Ent.spawn({ id: 'doorPeek', pos, yaw, pose: { side: 0, roll: 0, hunch: 0.05, pitch: 0.02, armsOut: false }, eyesOn: true, fadeIn: 0.2, persistent: true, lunge: false, flashKill: false,
-          update: (dt, E) => {
-            const hp = E.H.head.getWorldPosition(_rv1), cam = camera.position;
-            if (back > 0) {   // gone back behind the wall in one frame
-              back -= dt; if (back <= 0) { E.hide('unseen'); return false; }
-              E.pose.side = 0; E.pose.roll = 0; return;
-            }
-            // it leans out slowly, the head tipped right over onto its shoulder
-            k = Math.min(1, k + dt / 1.6);
-            E.pose.side = lean * sstep(0, 1, k); E.pose.roll = Math.sign(lean) * 1.0 * sstep(0.3, 1, k);
-            const seen = canSee(hp, 0.1), direct = seen && viewAngleTo(hp) < Math.max(0.1, Math.atan2(0.3, hp.distanceTo(cam)));
-            lookT = direct ? lookT + dt : Math.max(0, lookT - dt * 0.5);
-            const lit = flashHits(hp, 12, 24 * DEG), close = Math.hypot(pos.x - P.pos.x, pos.z - P.pos.z) < 2.4;
-            if (seen && !F.peekSeen) { F.peekSeen = true; Fear.kick(0.6); }
-            if (lookT > (h >= 0.55 ? 0.9 : 1.4) || (lit && k > 0.6) || close || E.t > 14) {
-              back = 0.25; E.smT = 0; E.pose.side = 0; E.pose.roll = 0;
-              if (seen) { E.headSound('crack', 0.55); Fear.kick(0.7); }
-              this.handWithdraw();
-            }
-          },
-          onHide: () => this.handOff() });
-        if (withHand) { const hy = rand(1.18, 1.42); this.handAt(D, edge, hy, false); }
-        return true;
-      }
+      if (only && p.door !== only) continue;
+      const slant = kind === 'slant', C = slant ? { along: 0.3, off: -0.17, hunch: 0.5, probe: [-0.1, 0.1, 1.55] } : { along: 0.3, off: -0.34, hunch: 0.05, probe: [-0.2, -0.34, 1.72] };
+      const pos = this.at(D, edge, C.along, C.off, 0), sg = edge === p.lo ? -1 : 1;
+      if (roomOf(pos.x, p.y0 + 1, pos.z) !== D.far || !Dir.free(pos, 0.1)) continue;
+      if (canSee(V3(pos.x, p.y0 + 1.1, pos.z), 0.12) || canSee(V3(pos.x, p.y0 + 0.4, pos.z), 0.12)) continue;   // the body stays behind the wall
+      const head = this.at(D, edge, ...C.probe);
+      if (!losClear(cam, head) || (slant && !inFrustum(head, 0.1)) || lightLevel(head) > 2.4) continue;
+      // (a black head reads against something lighter, the room lit or your torch on it; in the dark there are only its eyes, which is enough)
+      this.spawnPeek(D, edge, pos, sg, C.hunch, h);
+      return true;
     }
     return false;
+  },
+  spawnPeek(D, edge, pos, sg, hunch, h) {
+    const P = Player;
+    const face = D.wx ? V3(pos.x, 0, pos.z + D.side) : V3(pos.x + D.side, 0, pos.z), yaw = faceYaw(pos, face);
+    // lean towards the opening: which way that is in its own frame
+    const toward = D.wx ? V3(-sg, 0, 0) : V3(0, 0, -sg), dot = Math.cos(yaw) * toward.x - Math.sin(yaw) * toward.z;
+    const lean = -Math.sign(dot || 1) * 0.55;
+    const withHand = Math.random() < 0.65;
+    let lookT = 0, back = 0, k = 0;
+    Ent.spawn({ id: 'doorPeek', pos, yaw, pose: { side: 0, roll: 0, hunch: 0, pitch: 0.02, armsOut: false }, eyesOn: true, fadeIn: 0.2, persistent: true, lunge: false, flashKill: false,
+      update: (dt, E) => {
+        const hp = E.H.head.getWorldPosition(_rv1), cam = camera.position;
+        if (back > 0) {   // gone back behind the wall in one frame
+          back -= dt; if (back <= 0) { E.hide('unseen'); return false; }
+          E.pose.side = 0; E.pose.roll = 0; E.pose.hunch = 0; return;
+        }
+        // it leans out slowly, the head tipped right over onto its shoulder
+        k = Math.min(1, k + dt / 1.6);
+        E.pose.side = lean * sstep(0, 1, k); E.pose.roll = Math.sign(lean) * 1.0 * sstep(0.3, 1, k); E.pose.hunch = hunch * sstep(0, 0.8, k);
+        const seen = canSee(hp, 0.1), direct = seen && viewAngleTo(hp) < Math.max(0.1, Math.atan2(0.3, hp.distanceTo(cam)));
+        lookT = direct ? lookT + dt : Math.max(0, lookT - dt * 0.5);
+        const lit = flashHits(hp, 12, 24 * DEG), close = Math.hypot(pos.x - P.pos.x, pos.z - P.pos.z) < 2.4;
+        if (seen && !F.peekSeen) { F.peekSeen = true; Fear.kick(0.6); }
+        if (lookT > (h >= 0.55 ? 0.9 : 1.4) || (lit && k > 0.6) || close || E.t > 14) {
+          back = 0.25; E.smT = 0; E.pose.side = 0; E.pose.roll = 0; E.pose.hunch = 0;
+          if (seen) { E.headSound('crack', 0.55); Fear.kick(0.7); }
+          this.handWithdraw();
+        }
+      },
+      onHide: () => this.handOff() });
+    if (withHand) { const hy = rand(1.18, 1.42); this.handAt(D, edge, hy, false); }
   },
 
   /* ---------- fingers over the edge of a door frame ---------- */
