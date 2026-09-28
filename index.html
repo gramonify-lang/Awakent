@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Awaken’t</title>
+<meta name="theme-color" content="#0a0b0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Awaken’t">
+<meta name="description" content="Een korte verhalende horrorgame over één lange nacht in het huis van je moeder.">
+<!--PWA-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
@@ -295,6 +302,11 @@
     .settings .row, .ctl .lead li { grid-template-columns: 1fr; gap: 2px; }
     .ctl .lead li { margin-bottom: 4px; }
   }
+  /* installing it on a phone */
+  #installBody ol { display: grid; gap: 12px; margin: 0; padding: 0 0 0 26px; font-family: var(--display); font-size: 17px; line-height: 1.5; color: #cfc8ba; }
+  #installBody ol li::marker { font-style: italic; color: #8e877a; }
+  #installBody .ap { max-width: 44ch; }
+  #installBody .shareIco { display: inline-block; width: 16px; height: 18px; margin: 0 3px -3px; }
   /* short screens (phones on their side): what it is on the left, the menu on the right */
   @media (max-height: 640px) and (min-width: 620px) and (max-width: 1000px) {
     .tmain { display: grid; grid-template-columns: minmax(0, 1fr) fit-content(320px); align-items: end; column-gap: clamp(22px, 4vw, 56px); width: 100%; max-width: none; }
@@ -313,6 +325,32 @@
   /* ---------- what you carry ---------- */
   #handItem { position: absolute; right: max(16px, 3vw); bottom: max(16px, calc(3vh + env(safe-area-inset-bottom, 0px))); display: flex; gap: 6px; align-items: baseline; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(230, 223, 210, 0.66); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); }
   #handItem b { font-family: var(--display); font-style: italic; font-weight: 400; font-size: 17px; letter-spacing: 0; text-transform: none; color: var(--bone); }
+  /* found something: a short line at the top, over whatever is open */
+  #toast { position: absolute; left: 50%; top: calc(max(16px, 4.5vh) + env(safe-area-inset-top, 0px)); z-index: 8; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 12px 40px 14px; transform: translate(-50%, -6px); font-family: var(--display); text-align: center; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; background: radial-gradient(ellipse at center, rgba(8, 9, 12, 0.82) 0%, rgba(8, 9, 12, 0.5) 45%, rgba(8, 9, 12, 0) 72%); text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95); }
+  #toast.on { opacity: 1; transform: translate(-50%, 0); }
+  #toastK { font-style: italic; font-size: clamp(16px, 1.6vw, 19px); color: var(--bone); }
+  #toastN { font-size: 14px; letter-spacing: 0.03em; color: #a9a193; }
+  #toastN::before, #toastN::after { content: ''; display: inline-block; width: 22px; height: 1px; margin: 0 10px; vertical-align: middle; background: rgba(230, 223, 210, 0.3); }
+  body.comfort #toast { transform: translate(-50%, 0); }
+  #pause .found { margin: -8px 0 0; font-family: var(--display); font-style: italic; font-size: 16px; color: #a9a193; }
+  /* the flashlight's battery: a word and a thin line, in the corner */
+  #batt { position: absolute; right: max(16px, 3vw); bottom: calc(max(16px, calc(3vh + env(safe-area-inset-bottom, 0px))) + 28px); display: flex; align-items: center; gap: 10px; font-family: var(--display); font-style: italic; font-size: 14px; color: rgba(230, 223, 210, 0.62); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9); opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
+  #batt.on { opacity: 1; }
+  /* the gauge is the flashlight itself: the body fills like a battery, the beam in front is the real beam */
+  #batt .fl { width: 104px; height: 30px; overflow: visible; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.8)); }
+  #batt .fl-o { fill: rgba(8, 9, 12, 0.35); stroke: rgba(230, 223, 210, 0.62); stroke-width: 1.2; stroke-linejoin: round; }
+  #batt .fl-lens { stroke: rgba(242, 234, 216, 0.8); stroke-width: 1.6; }
+  #batt .fl-sw { fill: rgba(230, 223, 210, 0.25); }
+  #batt .fl-f { fill: rgba(240, 233, 218, 0.92); transition: fill 0.4s; }
+  #batt .fl-b { fill: url(#battGrad); opacity: 0; }
+  #batt.charging .fl-f { fill: rgba(236, 229, 214, 0.38); }
+  #batt.low .fl-f, #batt.locked .fl-f { fill: #cf5a48; }
+  #batt.low .fl-o, #batt.locked .fl-o { stroke: rgba(207, 90, 72, 0.75); }
+  #batt.low #battLabel, #batt.locked #battLabel { color: #cf5a48; }
+  #batt.locked .fl-f { animation: battBlink 1.4s steps(1) infinite; }
+  @keyframes battBlink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0.3; } }
+  body.comfort #batt.locked .fl-f { animation: none; }
+  body.touch #batt { right: auto; bottom: auto; left: calc(18px + env(safe-area-inset-left, 0px)); top: calc(26px + env(safe-area-inset-top, 0px)); }
   body.touch #handItem { bottom: auto; top: calc(28px + env(safe-area-inset-top, 0px)); right: calc(80px + env(safe-area-inset-right, 0px)); }
 
   /* ---------- puzzle panels ---------- */
@@ -442,6 +480,18 @@
     <p id="thought" aria-live="polite"></p>
     <div id="hint"></div>
     <p id="handItem" hidden></p>
+    <div id="batt" hidden aria-hidden="true"><span id="battLabel"></span><svg viewBox="0 0 104 30" class="fl">
+      <defs><linearGradient id="battGrad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#f2ead8" stop-opacity="0.55"/><stop offset="1" stop-color="#f2ead8" stop-opacity="0"/></linearGradient>
+        <clipPath id="battClip"><rect x="10" y="11" width="47" height="8" rx="1"/></clipPath></defs>
+      <path id="battBeam" class="fl-b" d="M79 6.5 L104 0 L104 30 L79 23.5 Z"/>
+      <rect class="fl-f" id="battFill" x="10" y="11" width="47" height="8" clip-path="url(#battClip)"/>
+      <path class="fl-o" d="M2.5 11.5 h5.5 v7 h-5.5 a1.5 1.5 0 0 1 -1.5 -1.5 v-4 a1.5 1.5 0 0 1 1.5 -1.5 Z"/>
+      <rect class="fl-o" x="8" y="9" width="51" height="12" rx="2"/>
+      <rect class="fl-o fl-sw" x="38" y="6" width="9" height="3" rx="1"/>
+      <path class="fl-o" d="M59 9 L71 4.5 L71 25.5 L59 21 Z"/>
+      <rect class="fl-o" x="71" y="3" width="7" height="24" rx="1.5"/>
+      <line class="fl-o fl-lens" x1="79" y1="5" x2="79" y2="25"/>
+    </svg></div>
     <div id="clockPanel" hidden>
       <div id="clockRing"><div id="clockDot"></div></div>
       <div id="clockInfo">
@@ -467,6 +517,7 @@
     <p class="close" data-i18n="img_close">E of klik om terug te gaan</p>
   </div>
   <div id="panel" class="overlay" hidden><div id="panelBody" class="pnl"></div></div>
+  <div id="toast" hidden aria-live="polite"><span id="toastK"></span><span id="toastN"></span></div>
 
   <section id="title" class="screen">
     <div class="wrap tmain">
@@ -484,6 +535,7 @@
           <button type="button" class="tlink" data-sheet="settings"><span data-i18n="btn_settings">Instellingen</span></button>
           <button type="button" class="tlink" data-sheet="controls"><span data-i18n="btn_controls">Besturing</span></button>
           <button type="button" class="tlink" data-sheet="about"><span data-i18n="btn_about">Over het spel</span></button>
+          <button type="button" class="tlink" id="installBtn" hidden><span data-i18n="btn_install">Op je telefoon zetten</span></button>
         </div>
         <p id="loading" data-i18n="loading">Het huis wordt opgebouwd…</p>
       </nav>
@@ -496,6 +548,7 @@
       <div class="sheetBody" data-for="settings"><div id="setSlot"></div><div class="setActions"><button id="calibBtn" type="button" class="tlink" data-i18n="set_cal">Helderheid afstellen</button><button id="wipeBtn" type="button" class="tlink danger">Voortgang wissen</button></div></div>
       <div class="sheetBody" data-for="controls" id="ctlBody"></div>
       <div class="sheetBody" data-for="about" id="aboutBody"></div>
+      <div class="sheetBody" data-for="install" id="installBody"></div>
     </div>
   </section>
 
@@ -503,6 +556,7 @@
     <div class="wrap">
       <p class="eyebrow" data-i18n="paused">Gepauzeerd</p>
       <h2 id="objText"></h2>
+      <p id="foundText" class="found"></p>
       <details id="stuck"><summary data-i18n="stuck">Ik zit vast</summary><p id="hintText"></p></details>
       <div id="pauseSlot"><div id="settingsRows" class="settings">
       <div class="row"><label for="sens" data-i18n="sens">Muisgevoeligheid</label><input id="sens" type="range" min="0.3" max="2.5" step="0.05" value="1"></div>
@@ -741,7 +795,7 @@ const STR = {
     t_handwriting: 'Dat is mijn handschrift.', t_dontRemember: 'Ik weet niet meer dat ik dat geschreven heb.', t_again: 'Weer mijn handschrift.',
     t_basement: 'Beneden. De kelder.', t_brick: 'Er zit niets achter. Alleen muur.', t_paintingBelongs: 'Het schilderij hoort hier wel.',
     t_someone: 'Is daar iemand?', t_notAlone: 'Ik ben niet alleen.',
-    t_baseMirrorNew: 'Die spiegel hing hier nooit.', t_baseDisbelief: 'Hij loopt gewoon door.', t_mirrorClock: 'In de spiegel wijst hij iets anders aan.', t_mirrorRight: 'In de spiegel is het 3:33.',
+    t_baseMirrorNew: 'Die spiegel hing hier nooit.', t_mirrorBroke: 'Ik heb hem niet eens aangeraakt.', t_baseDisbelief: 'Hij loopt gewoon door.', t_mirrorClock: 'In de spiegel wijst hij iets anders aan.', t_mirrorRight: 'In de spiegel is het 3:33.',
     t_loopMirror: 'In de spiegel staat er iets op het bureau.', t_onlyMirror: 'Daar staat niets. Alleen in de spiegel.',
     cap_photo0: 'Zandvoort. Dat was een goede zomer.', cap_photo1: 'Wie staat daar, achteraan?', cap_photo2: 'Waar zijn wij?',
     cap_hall0: 'Dat schilderij hangt hier al jaren.', cap_hall1: 'Stond daar altijd al iemand in het veld?',
@@ -786,7 +840,7 @@ const STR = {
     gl_lost: 'Het beeld wordt hersteld…',
     t_caught1: 'Weer in bed. Het had me.', t_caught2: 'Niet weer…', t_caught3: 'Ik word steeds hier wakker.',
     t_lookAtIt: 'Als ik het aankijk, valt het uit elkaar.', t_behindMe: 'Er loopt iemand achter me.', t_rightBehind: 'Vlak achter me…', t_dontOpen: 'Niet opendoen.',
-    t_sleepNow: '„Slaap maar, lieverd.”', t_flashDead: 'Kom op…',
+    t_sleepNow: '„Slaap maar, lieverd.”', t_flashDead: 'Kom op…', batt: 'zaklamp', batt_charge: 'laadt op', t_battEmpty: 'Leeg. Hij moet even opladen.', t_battNotYet: 'Nog niet.',
     wall_tally: 'IIII IIII IIII IIII IIII II',
     wall_l0: ['3:33', 'nacht 41', 'niet omkijken'], wall_l1: ['hij let op', 'kijk hem aan', 'dan gaat hij weg'], wall_l2: ['hij gaat niet meer weg', 'hij is niet eng', 'hij let alleen op'],
     wall_end: ['loop naar hem toe', 'ik ben het.'],
@@ -829,7 +883,7 @@ const STR = {
     t_handwriting: "That's my handwriting.", t_dontRemember: "I don't remember writing that.", t_again: 'My handwriting again.',
     t_basement: 'Downstairs. The basement.', t_brick: "There's nothing behind it. Just wall.", t_paintingBelongs: 'The painting belongs here.',
     t_someone: 'Is someone there?', t_notAlone: "I'm not alone.",
-    t_baseMirrorNew: 'That mirror was never here.', t_baseDisbelief: 'It just keeps going.', t_mirrorClock: 'In the mirror it shows a different time.', t_mirrorRight: "In the mirror it's 3:33.",
+    t_baseMirrorNew: 'That mirror was never here.', t_mirrorBroke: "I didn't even touch it.", t_baseDisbelief: 'It just keeps going.', t_mirrorClock: 'In the mirror it shows a different time.', t_mirrorRight: "In the mirror it's 3:33.",
     t_loopMirror: "In the mirror, there's something on the desk.", t_onlyMirror: "There's nothing there. Only in the mirror.",
     cap_photo0: 'Zandvoort. That was a good summer.', cap_photo1: 'Who is that, in the back?', cap_photo2: 'Where are we?',
     cap_hall0: "That painting has hung here for years.", cap_hall1: 'Was someone always standing in that field?',
@@ -872,7 +926,7 @@ const STR = {
     gl_lost: 'Restoring the picture…',
     t_caught1: 'Back in bed. It had me.', t_caught2: 'Not again…', t_caught3: 'I keep waking up here.',
     t_lookAtIt: 'If I look at it, it comes apart.', t_behindMe: 'Someone is walking behind me.', t_rightBehind: 'Right behind me…', t_dontOpen: "Don't open it.",
-    t_sleepNow: '"Go to sleep, sweetheart."', t_flashDead: 'Come on…',
+    t_sleepNow: '"Go to sleep, sweetheart."', t_flashDead: 'Come on…', batt: 'flashlight', batt_charge: 'charging', t_battEmpty: 'Flat. It needs a moment to charge.', t_battNotYet: 'Not yet.',
     wall_tally: 'IIII IIII IIII IIII IIII II',
     wall_l0: ['3:33', 'night 41', "don't look back"], wall_l1: ['he watches', 'look at him', 'then he goes away'], wall_l2: ["he doesn't go away anymore", "he isn't scary", "he's only keeping watch"],
     wall_end: ['walk up to him', "it's me."],
@@ -924,7 +978,10 @@ Object.assign(STR.nl, {
   cr_by: 'Gemaakt door', cr_sound: 'Geluid & muziek', cr_soundTxt: 'Elk geluid wordt ter plekke in je browser gemaakt. Het slaapliedje: een speeldoos in a-klein, in driekwartsmaat.',
   cr_tech: 'Beeld', cr_techTxt: 'three.js r128 · MIT-licentie',
   cr_fonts: 'Letters', cr_fontsTxt: 'IM Fell English (Igino Marini) · IBM Plex Mono (IBM) · Reenie Beanie (James Grieshaber) · SIL Open Font License',
-  cr_night: 'Jouw nacht', st_time: 'speeltijd', st_caught: 'keer gepakt', st_read: 'papieren gelezen', st_msgs: 'berichten beluisterd', st_of: 'van', st_min: 'min',
+  cr_night: 'Jouw nacht', st_time: 'speeltijd', st_caught: 'keer gepakt', st_read: 'documenten gevonden', btn_install: 'Op je telefoon zetten', inst_lede: 'Zet Awaken’t op het beginscherm van je telefoon. Dan opent het als een app: het hele scherm, zonder adresbalk, en het werkt ook zonder internet.',
+  inst_ios_h: 'iPhone of iPad (Safari)', inst_ios: ['Tik onderin op Delen: het vierkantje met het pijltje omhoog.', 'Scroll omlaag en kies ‘Zet op beginscherm’.', 'Tik op ‘Voeg toe’.'],
+  inst_and_h: 'Android (Chrome)', inst_and: ['Tik rechtsboven op de drie puntjes.', 'Kies ‘App installeren’ of ‘Toevoegen aan startscherm’.', 'Bevestig met ‘Installeren’.'],
+  inst_after: 'Open het spel daarna vanaf je beginscherm, draai je telefoon op zijn kant en zet je koptelefoon op.', fnd_doc: 'Document gevonden', fnd_docAll: 'Alle documenten gevonden', fnd_msg: 'Bericht beluisterd', fnd_msgAll: 'Alle berichten beluisterd', fnd_of: 'van de', fnd_h: 'Gevonden', fnd_docs: 'documenten', fnd_msgs: 'berichten', st_msgs: 'berichten beluisterd', st_of: 'van', st_min: 'min',
   cr_note: 'Slaapverlamming bestaat echt. Je lichaam slaapt nog, je hoofd al niet meer, en soms staat er iemand in de kamer die er niet is. Het is niet gevaarlijk en het gaat voorbij. Maar als je nachten zo voelen: praat erover. Met iemand die je vertrouwt, of met je huisarts.',
   cr_last: 'Bel iemand terug.', cr_skip: 'Overslaan', cr_thanks: 'Bedankt voor het spelen.',
 });
@@ -973,7 +1030,10 @@ Object.assign(STR.en, {
   cr_by: 'Made by', cr_sound: 'Sound & music', cr_soundTxt: 'Every sound is made on the spot in your browser. The lullaby: a music box in A minor, in three-four time.',
   cr_tech: 'Graphics', cr_techTxt: 'three.js r128 · MIT licence',
   cr_fonts: 'Type', cr_fontsTxt: 'IM Fell English (Igino Marini) · IBM Plex Mono (IBM) · Reenie Beanie (James Grieshaber) · SIL Open Font License',
-  cr_night: 'Your night', st_time: 'play time', st_caught: 'times caught', st_read: 'papers read', st_msgs: 'messages heard', st_of: 'of', st_min: 'min',
+  cr_night: 'Your night', st_time: 'play time', st_caught: 'times caught', st_read: 'documents found', btn_install: 'Put it on your phone', inst_lede: 'Put Awaken’t on your phone’s home screen. It then opens like an app: the whole screen, no address bar, and it works without the internet too.',
+  inst_ios_h: 'iPhone or iPad (Safari)', inst_ios: ['Tap Share at the bottom: the square with the arrow pointing up.', 'Scroll down and choose ‘Add to Home Screen’.', 'Tap ‘Add’.'],
+  inst_and_h: 'Android (Chrome)', inst_and: ['Tap the three dots at the top right.', 'Choose ‘Install app’ or ‘Add to Home screen’.', 'Confirm with ‘Install’.'],
+  inst_after: 'Then open the game from your home screen, turn your phone on its side and put your headphones on.', fnd_doc: 'Document found', fnd_docAll: 'All documents found', fnd_msg: 'Message heard', fnd_msgAll: 'All messages heard', fnd_of: 'of', fnd_h: 'Found', fnd_docs: 'documents', fnd_msgs: 'messages', st_msgs: 'messages heard', st_of: 'of', st_min: 'min',
   cr_note: "Sleep paralysis is real. Your body is still asleep, your mind already isn't, and sometimes someone is standing in the room who isn't there. It isn't dangerous, and it passes. But if your nights feel like this: talk about it. With someone you trust, or with your doctor.",
   cr_last: 'Call someone back.', cr_skip: 'Skip', cr_thanks: 'Thank you for playing.',
 });
@@ -987,7 +1047,7 @@ Object.assign(STR.nl, {
   ctl_kb_h: 'Toetsenbord en muis', ctl_touch_h: 'Telefoon of tablet', ctl_tips_h: 'Goed om te weten',
   ctl_kb: [['W|A|S|D', 'lopen'], ['Muis', 'rondkijken'], ['E', 'gebruiken, oppakken, lezen'], ['F', 'zaklamp aan of uit'], ['Shift', 'sneller lopen'], ['Esc', 'pauze, instellingen en hints'], ['P', 'prestatiemeter']],
   ctl_touch: [['rondje linksonder', 'lopen (ver duwen is rennen)'], ['slepen', 'rondkijken'], ['E', 'gebruiken'], ['F', 'zaklamp'], ['II', 'pauze en hints'], ['kantelen', 'rondkijken met je telefoon (aan of uit in de instellingen)']],
-  ctl_tips: ['Richt het puntje in het midden van je beeld op iets. Verschijnt er een woord, dan kun je het gebruiken.', 'Sommige dingen openen een paneel, zoals een meterkast of een radio. Gebruik daar de muis, je vinger of de cijfertoetsen; E sluit het weer.', 'Luister goed. Met een koptelefoon hoor je waar een geluid vandaan komt.', 'Vast? Druk op Esc en open „Ik zit vast” voor een hint bij wat je nu moet doen.', 'Je voortgang wordt bewaard bij elk nieuw hoofdstuk.', 'Word je snel misselijk van bewegend beeld? Zet „Minder beweging” aan bij Instellingen.'],
+  ctl_tips: ['Richt het puntje in het midden van je beeld op iets. Verschijnt er een woord, dan kun je het gebruiken.', 'Sommige dingen openen een paneel, zoals een meterkast of een radio. Gebruik daar de muis, je vinger of de cijfertoetsen; E sluit het weer.', 'Luister goed. Met een koptelefoon hoor je waar een geluid vandaan komt.', 'Vast? Druk op Esc en open „Ik zit vast” voor een hint bij wat je nu moet doen.', 'Je voortgang wordt bewaard bij elk nieuw hoofdstuk.', 'Word je snel misselijk van bewegend beeld? Zet „Minder beweging” aan bij Instellingen.', 'De zaklamp houdt het niet eeuwig vol. Het balkje in de hoek laat zien hoeveel er nog in zit; uit laadt hij vanzelf weer op.'],
   about_p: ['Een nacht die niet wil ophouden, in een huis dat je kent.', 'Awaken’t is een korte verhalende horrorgame over slapen, wakker worden en wat je nog tegen iemand had willen zeggen. Je verkent het huis, vindt wat het je wil vertellen en lost puzzels op met wat er ligt.', 'Het spel draait helemaal in je browser. Alles wat je ziet en hoort wordt ter plekke gemaakt: geen video, geen opgenomen geluid.'],
   about_warn_h: 'Let op', about_warn: 'Bevat harde schrikmomenten, flikkerend licht, donkere scènes en thema’s als rouw en slaapverlamming.',
   about_tech_h: 'Gemaakt met', about_tech: 'three.js (MIT-licentie) · lettertypen IM Fell English, IBM Plex Mono en Reenie Beanie (SIL Open Font License)', about_ver: 'Versie 2',
@@ -1001,7 +1061,7 @@ Object.assign(STR.en, {
   ctl_kb_h: 'Keyboard and mouse', ctl_touch_h: 'Phone or tablet', ctl_tips_h: 'Good to know',
   ctl_kb: [['W|A|S|D', 'walk'], ['Mouse', 'look around'], ['E', 'use, pick up, read'], ['F', 'flashlight on or off'], ['Shift', 'walk faster'], ['Esc', 'pause, settings and hints'], ['P', 'performance meter']],
   ctl_touch: [['circle bottom left', 'walk (push far to run)'], ['drag', 'look around'], ['E', 'use'], ['F', 'flashlight'], ['II', 'pause and hints'], ['tilt', 'look around with your phone (on or off in the settings)']],
-  ctl_tips: ['Point the dot in the middle of the screen at something. If a word appears, you can use it.', 'Some things open a panel, like a fuse box or a radio. Use the mouse, your finger or the number keys there; E closes it again.', 'Listen. With headphones you can hear where a sound comes from.', 'Stuck? Press Esc and open "I\'m stuck" for a hint about what to do now.', 'Your progress is saved at the start of every chapter.', 'Motion sick easily? Turn on "Reduced motion" in Settings.'],
+  ctl_tips: ['Point the dot in the middle of the screen at something. If a word appears, you can use it.', 'Some things open a panel, like a fuse box or a radio. Use the mouse, your finger or the number keys there; E closes it again.', 'Listen. With headphones you can hear where a sound comes from.', 'Stuck? Press Esc and open "I\'m stuck" for a hint about what to do now.', 'Your progress is saved at the start of every chapter.', 'Motion sick easily? Turn on "Reduced motion" in Settings.', 'The flashlight does not last forever. The little bar in the corner shows how much is left; switched off, it charges up again by itself.'],
   about_p: ["A night that won't end, in a house you know.", "Awaken’t is a short narrative horror game about sleeping, waking up and what you still wanted to say to someone. You explore the house, find what it wants to tell you and solve puzzles with whatever is lying around.", 'It runs entirely in your browser. Everything you see and hear is made on the spot: no video, no recorded sound.'],
   about_warn_h: 'Please note', about_warn: 'Contains loud jump scares, flickering light, dark scenes and themes such as grief and sleep paralysis.',
   about_tech_h: 'Made with', about_tech: 'three.js (MIT licence) · typefaces IM Fell English, IBM Plex Mono and Reenie Beanie (SIL Open Font License)', about_ver: 'Version 2',
@@ -1028,6 +1088,25 @@ function setLang(l) {
   if (typeof Interact !== 'undefined') Interact.cur = undefined;
 }
 
+/* ---------- waking up in the night: a locked door, a key in mum's jewellery box ---------- */
+Object.assign(STR.nl, {
+  lbl_search: 'Doorzoeken', lbl_jewel: 'Sieradendoosje', lbl_takeKey: 'Sleutel pakken', lbl_unlock: 'Van het slot doen', hand_key: 'sleutel van je kamer',
+  t_night: 'Midden in de nacht.', t_doorShut: 'Mijn deur is dicht. Die laat ik altijd open.',
+  t_locked: 'Op slot? Ik doe hem nooit op slot.', t_noKey: 'En de sleutel zit er niet in.',
+  t_nightstand: 'Hier ligt hij altijd. Nu niet.', t_wardrobe: 'Alleen kleren.', t_drawers: 'Truien. Sokken. Geen sleutel.',
+  t_boxHint: 'Mama legde sleutels altijd in haar sieradendoosje.', t_boxOpen: 'Daar is hij.', t_boxKey: 'De sleutel van mijn kamer?', t_whoLocked: 'Wie heeft hem daar neergelegd?',
+  o_introWake: ['Ga je kamer uit.', 'De deur is aan de andere kant van de kamer, naast de ladekast. Het lichtknopje zit ernaast; je zaklamp gaat aan met F.'],
+  o_introKey: ['Zoek de sleutel van je kamerdeur.', 'Het sieradendoosje van mama staat op de ladekast, naast haar foto.'],
+});
+Object.assign(STR.en, {
+  lbl_search: 'Search', lbl_jewel: 'Jewellery box', lbl_takeKey: 'Take the key', lbl_unlock: 'Unlock', hand_key: 'key to your room',
+  t_night: 'The middle of the night.', t_doorShut: "My door's shut. I always leave it open.",
+  t_locked: 'Locked? I never lock it.', t_noKey: "And the key isn't in it.",
+  t_nightstand: "It's always here. Not now.", t_wardrobe: 'Just clothes.', t_drawers: 'Jumpers. Socks. No key.',
+  t_boxHint: 'Mum always kept keys in her jewellery box.', t_boxOpen: 'There it is.', t_boxKey: 'The key to my room?', t_whoLocked: 'Who put it there?',
+  o_introWake: ['Get out of your room.', 'The door is on the other side of the room, next to the chest of drawers. The light switch is beside it; F turns on your torch.'],
+  o_introKey: ['Find the key to your door.', "Mum's jewellery box is on the chest of drawers, next to her photo."],
+});
 /* ---- 02_tex.js ---- */
 /* ============================================================
    Procedural canvas textures
@@ -1581,7 +1660,7 @@ function langWorldTextures() {
    ============================================================ */
 const NL = 12;                 // light slots in the shader (packed per frame)
 const NAO = 6;                 // room boxes for the soft corner shading, nearest visible rooms only
-let renderer, camera, vCam, scene, mainRT, mirrorRT, mirrorHalf, mirrorQuarter, postMat, postScene, postCam;
+let renderer, camera, vCam, scene, mainRT, mirrorRT, postMat, postScene, postCam;
 let RW = 2, RH = 2;
 const frustum = new THREE.Frustum();
 const projScreen = new THREE.Matrix4();
@@ -1876,28 +1955,44 @@ function packAO(mask) {
 /* ---------- mirrors ---------- */
 const MIRRORS = [];
 const MIRROR_VS = `
-uniform mat4 textureMatrix; varying vec4 vTc; varying vec2 vUv;
-void main(){ vUv = uv; vTc = textureMatrix * vec4(position,1.0); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
+uniform mat4 textureMatrix; varying vec4 vTc; varying vec2 vUv; varying vec3 vW;
+void main(){ vUv = uv; vTc = textureMatrix * vec4(position,1.0); vW = (modelMatrix * vec4(position,1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
 const MIRROR_FS = `
 uniform sampler2D tMirror; uniform sampler2D tDirt; uniform float uActive; uniform float uTint; uniform float uDirt; uniform float uDark;
-uniform vec3 uFace; uniform float uFaceK; uniform float uAspect;
-varying vec4 vTc; varying vec2 vUv;
+uniform vec3 uFace; uniform float uFaceK; uniform float uAspect; uniform vec2 uTcMax;
+uniform sampler2D tCrack; uniform float uBreak; uniform float uFall;
+uniform vec3 uFlashPos; uniform vec3 uFlashDir; uniform float uFlashOn;
+varying vec4 vTc; varying vec2 vUv; varying vec3 vW;
 void main(){
   vec3 c = vec3(0.012, 0.013, 0.016);
+  // a broken mirror: r = which piece (0 on a crack), g = the crack, b = when the break reaches it, a = when it falls out
+  vec4 k = vec4(0.0, 0.0, 1.0, 1.0); float on = 0.0, sh = 0.0;
+  if (uBreak > 0.0) {
+    k = texture2D(tCrack, vUv);
+    on = 1.0 - smoothstep(uBreak - 0.012, uBreak + 0.012, k.b);
+    sh = on * smoothstep(0.002, 0.012, k.r);
+  }
   if(uActive > 0.5) {
     vec2 tc = vTc.xy / vTc.w;
+    if (sh > 0.0) {
+      // each piece has come to lie at its own small angle: its part of the picture slips and turns a little
+      float s = k.r * 211.0;
+      tc += (vec2(sin(s * 1.7), cos(s * 2.3)) * (0.01 + 0.03 * fract(s * 0.37)) + (vUv - 0.5) * 0.08 * vec2(sin(s * 3.1), cos(s * 2.9))) * sh * uTcMax;
+    }
+    tc = clamp(tc, vec2(0.0), uTcMax);
     c = texture2D(tMirror, tc).rgb * uTint;
+    if (sh > 0.0) c *= 1.0 + (fract(k.r * 53.0) - 0.5) * 0.55 * sh;   // and catches the light a little differently
     // where your own face would be, the glass has misted over
     if (uFaceK > 0.0) {
       vec2 d = tc - uFace.xy; d.x *= uAspect;
-      float k = uFaceK * (1.0 - smoothstep(uFace.z * 0.32, uFace.z * 0.8, length(d * vec2(1.0, 0.8))));
-      if (k > 0.002) {
+      float fk = uFaceK * (1.0 - smoothstep(uFace.z * 0.32, uFace.z * 0.8, length(d * vec2(1.0, 0.8))));
+      if (fk > 0.002) {
         vec3 b = vec3(0.0); float rr = uFace.z * 0.32;
-        for (int i = 0; i < 8; i++) { float a = float(i) * 0.785 + 0.3; vec2 o = vec2(cos(a) * 1.7 / uAspect, sin(a) * 0.8) * rr; b += texture2D(tMirror, tc + o).rgb; }
+        for (int i = 0; i < 8; i++) { float a = float(i) * 0.785 + 0.3; vec2 o = vec2(cos(a) * 1.7 / uAspect, sin(a) * 0.8) * rr; b += texture2D(tMirror, clamp(tc + o, vec2(0.0), uTcMax)).rgb; }
         b = b * (uTint / 8.0);
         float l = dot(b, vec3(0.3, 0.5, 0.2));
         b = mix(b, vec3(l), 0.6) * 1.06 + 0.003;
-        c = mix(c, b, k);
+        c = mix(c, b, fk);
       }
     }
   }
@@ -1905,6 +2000,16 @@ void main(){
   c = mix(c, c*0.72 + vec3(0.01), clamp(dt*uDirt*3.0, 0.0, 1.0));
   float e = smoothstep(0.0, 0.04, vUv.x)*smoothstep(1.0, 0.96, vUv.x)*smoothstep(0.0, 0.04, vUv.y)*smoothstep(1.0, 0.96, vUv.y);
   c *= mix(0.55, 1.0, e);
+  if (uBreak > 0.0) {
+    float l = dot(c, vec3(0.3, 0.5, 0.2)), g = k.g * on;
+    c *= 1.0 - 0.62 * smoothstep(0.12, 0.6, g);                                         // the break: a dark seam
+    // with the edge of the glass in it, lit by the room in the picture and glinting in your torch
+    vec3 L = vW - uFlashPos; float d2 = dot(L, L), fc = dot(L * inversesqrt(max(d2, 1e-6)), uFlashDir);
+    float glint = uFlashOn * (smoothstep(0.8, 0.95, fc) + smoothstep(0.55, 0.85, fc) * 0.15) / (1.0 + 0.2 * d2);
+    c += vec3(0.82, 0.86, 0.92) * smoothstep(0.7, 1.0, g) * (0.04 + l * 1.8 + glint * 0.9);
+    float hole = on * step(k.a, 0.985) * step(k.a, uFall);                              // pieces that have dropped out
+    c = mix(c, vec3(0.02, 0.017, 0.014) * (0.75 + 0.5 * dt), hole);                    // the dark board behind
+  }
   c *= 1.0 - uDark;
   gl_FragColor = vec4(c, 1.0);
 }`;
@@ -1912,7 +2017,7 @@ class Mirror {
   constructor(name, w, h, { parent, pos, ry, dirt = 0.18, tint = 0.86 }) {
     this.name = name; this.w = w; this.h = h;
     this.mat = new THREE.ShaderMaterial({
-      uniforms: { tMirror: { value: mirrorRT.texture }, tDirt: { value: T.dirt }, textureMatrix: { value: new THREE.Matrix4() }, uActive: { value: 0 }, uTint: { value: tint }, uDirt: { value: dirt }, uDark: { value: 0 }, uFace: { value: new THREE.Vector3(0.5, 0.5, 0.1) }, uFaceK: { value: 0 }, uAspect: { value: 1 } },
+      uniforms: { tMirror: { value: mirrorRT.texture }, tDirt: { value: T.dirt }, textureMatrix: { value: new THREE.Matrix4() }, uActive: { value: 0 }, uTint: { value: tint }, uDirt: { value: dirt }, uDark: { value: 0 }, uFace: { value: new THREE.Vector3(0.5, 0.5, 0.1) }, uFaceK: { value: 0 }, uAspect: { value: 1 }, uTcMax: { value: new THREE.Vector2(1, 1) }, tCrack: { value: T.dirt }, uBreak: { value: 0 }, uFall: { value: 0 }, uFlashPos: SU.uFlashPos, uFlashDir: SU.uFlashDir, uFlashOn: SU.uFlashOn },
       vertexShader: MIRROR_VS, fragmentShader: MIRROR_FS,
     });
     this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), this.mat);
@@ -1947,12 +2052,26 @@ function chooseMirror() {
   }
   return best;
 }
+/* The reflection is drawn every frame (a picture from the frame before lags behind as you turn), and only
+   for the part of the screen the glass covers: the reflected camera's view is narrowed to the mirror's
+   outline, so whatever the glass cannot show is culled, and the target holds just that many pixels. */
+const _mS = new THREE.Matrix4(), _mvp = new THREE.Matrix4(), _mc = new THREE.Vector4();
+function mirrorRect(m, cam) {
+  _mvp.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse);
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (let i = 0; i < 4; i++) {
+    _mc.set((i & 1 ? 0.5 : -0.5) * m.w, (i & 2 ? 0.5 : -0.5) * m.h, 0, 1).applyMatrix4(m.mesh.matrixWorld).applyMatrix4(_mvp);
+    if (_mc.w <= 0.02) return [-1, 1, -1, 1];   // a corner behind the eye: the glass may fill the screen
+    const x = _mc.x / _mc.w, y = _mc.y / _mc.w;
+    x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+  }
+  // a few pixels to spare, so the edge of the glass never samples past what was drawn
+  const px = 4 / RW, py = 4 / RH;
+  x0 = Math.max(-1, x0 - px); x1 = Math.min(1, x1 + px); y0 = Math.max(-1, y0 - py); y1 = Math.min(1, y1 + py);
+  return x1 - x0 > 0.004 && y1 - y0 > 0.004 ? [x0, x1, y0, y1] : null;
+}
 function renderMirror(m) {
-  const mesh = m.mesh, V = _mv;
-  // far away mirrors: half resolution, refreshed every other frame
-  const small = mirrorFrac < 0.75;
-  const rt = mirrorFrac < 0.22 ? mirrorQuarter : small ? mirrorHalf : mirrorRT;
-  if (small && m === lastMirror && m.lastRT === rt && (G.frame & 1)) { m.mat.uniforms.uActive.value = 1; return true; }
+  const mesh = m.mesh, V = _mv, rt = mirrorRT;
   mesh.updateMatrixWorld();
   V.mp.setFromMatrixPosition(mesh.matrixWorld);
   V.cp.setFromMatrixPosition(camera.matrixWorld);
@@ -1970,8 +2089,18 @@ function renderMirror(m) {
   vCam.far = Math.min(camera.far, 26); vCam.near = camera.near;
   vCam.updateMatrixWorld();
   vCam.projectionMatrix.copy(camera.projectionMatrix);
+  const r = mirrorRect(m, vCam); if (!r) return false;
+  // stretch the glass's outline over the whole target (an off-axis frustum through the frame of the mirror)
+  const [x0, x1, y0, y1] = r, sx = 2 / (x1 - x0), sy = 2 / (y1 - y0);
+  _mS.set(sx, 0, 0, -(x1 + x0) / (x1 - x0), 0, sy, 0, -(y1 + y0) / (y1 - y0), 0, 0, 1, 0, 0, 0, 0, 1);
+  vCam.projectionMatrix.premultiply(_mS);
+  // as many pixels as the glass covers on screen, drawn into the corner of the target
+  const pw = Math.max(8, Math.min(RW, Math.ceil((x1 - x0) * 0.5 * RW))), ph = Math.max(8, Math.min(RH, Math.ceil((y1 - y0) * 0.5 * RH)));
+  rt.viewport.set(0, 0, pw, ph); rt.scissor.set(0, 0, pw, ph); rt.scissorTest = true;
+  const tsx = pw / RW, tsy = ph / RH; m.tcScale = m.tcScale || new THREE.Vector2(); m.tcScale.set(tsx, tsy);
+  m.mat.uniforms.uTcMax.value.set(tsx - 0.5 / RW, tsy - 0.5 / RH);
   const tm = m.mat.uniforms.textureMatrix.value;
-  tm.set(0.5, 0, 0, 0.5, 0, 0.5, 0, 0.5, 0, 0, 0.5, 0.5, 0, 0, 0, 1);
+  tm.set(0.5 * tsx, 0, 0, 0.5 * tsx, 0, 0.5 * tsy, 0, 0.5 * tsy, 0, 0, 0.5, 0.5, 0, 0, 0, 1);
   tm.multiply(vCam.projectionMatrix); tm.multiply(vCam.matrixWorldInverse); tm.multiply(mesh.matrixWorld);
   V.plane.setFromNormalAndCoplanarPoint(V.n, V.mp); V.plane.applyMatrix4(vCam.matrixWorldInverse);
   V.clip.set(V.plane.normal.x, V.plane.normal.y, V.plane.normal.z, V.plane.constant);
@@ -2013,7 +2142,7 @@ function canSee(p, r = 0.35) { return inFrustum(p, r) && losClear(camera.positio
 
 /* ---------- post ---------- */
 const POST_FS = `
-uniform sampler2D tScene, tScare; uniform vec2 uRes, uScareOff; uniform float uTime, uGrain, uVig, uFade, uWarp0, uChroma, uDesat, uWhite, uGamma, uPulse0, uFear, uScare, uScareZ, uScareDim, uCalm; uniform vec4 uWob0;
+uniform sampler2D tScene, tScare; uniform vec2 uRes, uScareOff; uniform float uTime, uGrain, uVig, uFade, uWarp0, uChroma, uDesat, uWhite, uGamma, uPulse0, uFear, uScare, uScareZ, uScareDim, uCalm, uEdge; uniform vec4 uWob0; uniform vec2 uVigR;
 varying vec2 vUv;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y)*p3.z); }
 void main(){
@@ -2037,6 +2166,13 @@ void main(){
   float ca = (uChroma*0.004 + uWarp*0.012 + uPulse*0.012 + uWob.z*0.02) * dot(d,d) * 4.0;
   vec3 c;
   c.r = texture2D(tScene, uv + d*ca).r; c.g = texture2D(tScene, uv).g; c.b = texture2D(tScene, uv - d*ca).b;
+  // the edges of your sight going soft: a little smear outwards, more the further into the night
+  if(uEdge > 0.001){
+    float e = uEdge * smoothstep(0.3, 1.0, length(d * vec2(uRes.x / uRes.y, 1.0)));
+    vec2 o = d * e * 0.045, o2 = vec2(-o.y, o.x) * 0.6;
+    vec3 bl = (texture2D(tScene, uv + o).rgb + texture2D(tScene, uv - o).rgb + texture2D(tScene, uv + o2).rgb + texture2D(tScene, uv - o2).rgb) * 0.25;
+    c = mix(c, bl, min(1.0, e * 1.6));
+  }
   // the face, far too close: torn lines, colour fringes, the room gone dark around it
   if(uScare > 0.001){
     vec2 p = (vUv - 0.5 - uScareOff) * vec2(uRes.x/uRes.y, 1.0) / uScareZ;
@@ -2055,7 +2191,7 @@ void main(){
   float l = dot(c, vec3(0.299, 0.587, 0.114));
   c = mix(c, vec3(l), uDesat);
   vec2 q = d*vec2(uRes.x/uRes.y, 1.0);
-  c *= mix(1.0, smoothstep(1.05, 0.18, length(q)), uVig);
+  c *= mix(1.0, smoothstep(uVigR.x, uVigR.y, length(q)), uVig);   // the vignette: it closes in as the night goes on
   // fear narrows the view; each beat squeezes it a little more
   c *= 1.0 - clamp(uFear * 0.55 + uPulse * 0.4, 0.0, 0.85) * smoothstep(0.32, 1.0, length(q));
   c = pow(max(c, vec3(0.0)), vec3(uGamma));
@@ -2111,11 +2247,12 @@ function initRenderer() {
   camera.layers.set(0);
   vCam = new THREE.PerspectiveCamera(72, 16 / 9, 0.05, 90);
   vCam.layers.mask = 7;
-  const o = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, depthBuffer: true, stencilBuffer: false };
+  // depth AND stencil: three.js gives a target with only a depth buffer a 16-bit one, and at 16 bits
+  // everything a few metres off that lies close to something else (a rug on the floor, a frame on a
+  // wall, a skirting board) flickers through it. The packed depth-stencil buffer has 24 bits of depth.
+  const o = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, depthBuffer: true, stencilBuffer: true };
   mainRT = new THREE.WebGLRenderTarget(4, 4, o);
   mirrorRT = new THREE.WebGLRenderTarget(4, 4, o);
-  mirrorHalf = new THREE.WebGLRenderTarget(4, 4, o);
-  mirrorQuarter = new THREE.WebGLRenderTarget(4, 4, o);
   // tiling noise used for surface variation (one texture read instead of procedural noise)
   const N = 64, data = new Uint8Array(N * N * 4), r = seeded(99);
   const val = new Float32Array(N * N); for (let i = 0; i < N * N; i++) val[i] = r();
@@ -2127,7 +2264,7 @@ function initRenderer() {
   nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.magFilter = THREE.LinearFilter; nt.minFilter = THREE.LinearMipmapLinearFilter; nt.generateMipmaps = true; nt.needsUpdate = true;
   SU.uNoiseTex.value = nt;
   postMat = new THREE.ShaderMaterial({
-    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 }, tScare: { value: null }, uScare: { value: 0 }, uScareZ: { value: 1 }, uScareDim: { value: 0.9 }, uScareOff: { value: new THREE.Vector2() }, uWob: { value: new THREE.Vector4() }, uCalm: { value: 0 } },
+    uniforms: { tScene: { value: mainRT.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uGrain: { value: 0.055 }, uVig: { value: 0.6 }, uFade: { value: 1 }, uWarp: { value: 0 }, uChroma: { value: 0.35 }, uDesat: { value: 0.1 }, uWhite: { value: 0 }, uGamma: { value: 1 }, uPulse: { value: 0 }, uFear: { value: 0 }, tScare: { value: null }, uScare: { value: 0 }, uScareZ: { value: 1 }, uScareDim: { value: 0.9 }, uScareOff: { value: new THREE.Vector2() }, uWob: { value: new THREE.Vector4() }, uCalm: { value: 0 }, uVigR: { value: new THREE.Vector2(1.05, 0.18) }, uEdge: { value: 0 } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: POST_FS, depthTest: false, depthWrite: false,
   });
@@ -2144,7 +2281,7 @@ function resize() {
   const scale = Math.min(dpr, QLEVELS[Quality.idx] / h);   // never more pixels than the screen has
   RW = Math.max(2, Math.round(w * scale)); RH = Math.max(2, Math.round(h * scale));
   renderer.setSize(RW, RH, false);                            // canvas is stretched by CSS; the post pass runs at render size
-  mainRT.setSize(RW, RH); mirrorRT.setSize(RW, RH); mirrorHalf.setSize(Math.max(2, RW >> 1), Math.max(2, RH >> 1)); mirrorQuarter.setSize(Math.max(2, RW >> 2), Math.max(2, RH >> 2));
+  mainRT.setSize(RW, RH); mirrorRT.setSize(RW, RH);
   camera.aspect = w / h; camera.updateProjectionMatrix();
   postMat.uniforms.uRes.value.set(RW, RH);
 }
@@ -2188,6 +2325,7 @@ const DIGITALS = [];
 const VEST = { D: 0, cols: [], group: null }; // moving vestibule (long hall)
 const DYN = new Set();   // objects that move, toggle or change and must not be merged
 const WALLS = [];         // every wall as built: decor adds skirting boards and cornices to them
+const FLATS = [];         // every floor and ceiling as built (for fixWallCaps)
 const HATCH = { x0: 11.35, x1: 12.95, z0: 5.05, z1: 5.75 };   // the attic hatch in the hallway ceiling
 const AF = 2.62;          // attic floor
 
@@ -2219,8 +2357,8 @@ function plane(w, h, mat, x, y, z, rx, ry, parent) {
   m.position.set(x, y, z); m.rotation.set(rx || 0, ry || 0, 0, 'YXZ');
   return m;
 }
-function floorAt(x0, x1, z0, z1, y, mat, parent) { return plane(x1 - x0, z1 - z0, mat, (x0 + x1) / 2, y, (z0 + z1) / 2, -Math.PI / 2, 0, parent); }
-function ceilAt(x0, x1, z0, z1, y, mat, parent) { return plane(x1 - x0, z1 - z0, mat, (x0 + x1) / 2, y, (z0 + z1) / 2, Math.PI / 2, 0, parent); }
+function floorAt(x0, x1, z0, z1, y, mat, parent) { FLATS.push({ x0, x1, z0, z1, y, s: 1 }); return plane(x1 - x0, z1 - z0, mat, (x0 + x1) / 2, y, (z0 + z1) / 2, -Math.PI / 2, 0, parent); }
+function ceilAt(x0, x1, z0, z1, y, mat, parent) { FLATS.push({ x0, x1, z0, z1, y, s: -1 }); return plane(x1 - x0, z1 - z0, mat, (x0 + x1) / 2, y, (z0 + z1) / 2, Math.PI / 2, 0, parent); }
 function use(mesh, label, fn, extra = {}) {
   mesh.userData.use = Object.assign({ label, fn }, extra);
   interactables.push(mesh);
@@ -2230,7 +2368,7 @@ function use(mesh, label, fn, extra = {}) {
 /* walls: along x at z (faces: north = -z, south = +z) */
 function wallX(z, x0, x1, matN, matS, ops = [], o = {}) {
   const y0 = o.y0 ?? 0, y1 = o.y1 ?? WH, t = o.t ?? WT, parent = o.parent || scene;
-  WALLS.push({ axis: 'x', c: z, a0: x0, a1: x1, y0, y1, t, mats: [matN, matS], ops, parent });
+  const entry = { axis: 'x', c: z, a0: x0, a1: x1, y0, y1, t, mats: [matN, matS], ops, parent, meshes: [] }; WALLS.push(entry);
   const mats = [MT.trim, MT.trim, MT.trim, MT.trim, matS, matN];
   const pieces = []; let cur = x0;
   for (const op of [...ops].sort((a, b) => a.a - b.a)) {
@@ -2247,6 +2385,7 @@ function wallX(z, x0, x1, matN, matS, ops = [], o = {}) {
     if (b - a < 0.001 || yb - ya < 0.001) continue;
     const m = new THREE.Mesh(new THREE.BoxGeometry(b - a, yb - ya, t), mats);
     m.position.set((a + b) / 2, (ya + yb) / 2, z); parent.add(m);
+    m.userData.box = [a, b, ya, yb, z - t / 2, z + t / 2]; entry.meshes.push(m);
     occluders.push(m);
     m.userData.col = addCollider(a, b, z - t / 2, z + t / 2, ya, yb, { occ: true, tag: 'wall' });
     out.push(m);
@@ -2256,7 +2395,7 @@ function wallX(z, x0, x1, matN, matS, ops = [], o = {}) {
 /* walls: along z at x (faces: west = -x, east = +x) */
 function wallZ(x, z0, z1, matW, matE, ops = [], o = {}) {
   const y0 = o.y0 ?? 0, y1 = o.y1 ?? WH, t = o.t ?? WT, parent = o.parent || scene;
-  WALLS.push({ axis: 'z', c: x, a0: z0, a1: z1, y0, y1, t, mats: [matW, matE], ops, parent });
+  const entry = { axis: 'z', c: x, a0: z0, a1: z1, y0, y1, t, mats: [matW, matE], ops, parent, meshes: [] }; WALLS.push(entry);
   const mats = [matE, matW, MT.trim, MT.trim, MT.trim, MT.trim];
   const pieces = []; let cur = z0;
   for (const op of [...ops].sort((a, b) => a.a - b.a)) {
@@ -2273,6 +2412,7 @@ function wallZ(x, z0, z1, matW, matE, ops = [], o = {}) {
     if (b - a < 0.001 || yb - ya < 0.001) continue;
     const m = new THREE.Mesh(new THREE.BoxGeometry(t, yb - ya, b - a), mats);
     m.position.set(x, (ya + yb) / 2, (a + b) / 2); parent.add(m);
+    m.userData.box = [x - t / 2, x + t / 2, ya, yb, a, b]; entry.meshes.push(m);
     occluders.push(m);
     m.userData.col = addCollider(x - t / 2, x + t / 2, a, b, ya, yb, { occ: true, tag: 'wall' });
     out.push(m);
@@ -2322,6 +2462,43 @@ function casing(axis, cx, cz, w, h, mat, parent, t = WT) {
   }
 }
 
+/* Where two surfaces lie in one plane and face the same way, the depth test cannot choose between them and
+   they flicker through each other: a wall that runs on to stop flush with the far side of another, the jamb
+   of an opening flush with the wall beside it, the sill or head of an opening level with a floor or ceiling.
+   Each such end of a wall is pulled 2 mm back, into whatever it was flush with, out of sight.
+   Run once, when every wall is built and before the skirting boards follow them. */
+function fixWallCaps() {
+  const E = 1e-4, IN = 0.002, P = [], S = [];
+  for (const w of WALLS) for (const m of w.meshes) P.push({ w, m, b: m.userData.box.slice(), main: w.axis === 'x' ? 2 : 0 });
+  const other = (ax) => (ax === 0 ? [1, 2] : ax === 1 ? [0, 2] : [0, 1]);
+  const face = (b, ax, s) => { const o = other(ax); return { ax, s, v: b[ax * 2 + (s > 0 ? 1 : 0)], lo: [b[o[0] * 2], b[o[1] * 2]], hi: [b[o[0] * 2 + 1], b[o[1] * 2 + 1]] }; };
+  // what a cap can be flush with: the two big faces of every wall, every floor, every ceiling
+  for (const p of P) for (const s of [-1, 1]) S.push(Object.assign(face(p.b, p.main, s), { p }));
+  for (const f of FLATS) S.push({ ax: 1, s: f.s, v: f.y, lo: [f.x0, f.z0], hi: [f.x1, f.z1], p: null });
+  let n = 0;
+  for (const p of P) for (const ax of [0, 1, 2]) {
+    if (ax === p.main) continue;
+    for (const s of [-1, 1]) {
+      const f = face(p.b, ax, s);
+      const flush = S.some((q) => q.p !== p && q.ax === ax && q.s === s && Math.abs(q.v - f.v) < E
+        && Math.min(q.hi[0], f.hi[0]) - Math.max(q.lo[0], f.lo[0]) > E && Math.min(q.hi[1], f.hi[1]) - Math.max(q.lo[1], f.lo[1]) > E);
+      if (flush) { p.b[ax * 2 + (s > 0 ? 1 : 0)] -= s * IN; n++; }
+    }
+  }
+  for (const p of P) {
+    const o = p.m.userData.box, b = p.b;
+    if (b.every((v, i) => v === o[i])) continue;
+    p.m.geometry.dispose(); p.m.geometry = new THREE.BoxGeometry(b[1] - b[0], b[3] - b[2], b[5] - b[4]);
+    p.m.position.set((b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2);
+    // skirting boards and cornices stop where the wall now stops
+    const w = p.w, a = w.axis === 'x' ? 0 : 2;
+    if (Math.abs(o[a * 2] - w.a0) < E) w.a0 = b[a * 2];
+    if (Math.abs(o[a * 2 + 1] - w.a1) < E) w.a1 = b[a * 2 + 1];
+    p.m.userData.box = b;
+  }
+  return n;
+}
+
 /* ---------- doors ---------- */
 class Door {
   constructor(name, o) {
@@ -2329,11 +2506,23 @@ class Door {
     this.cx = o.cx; this.cz = o.cz; this.y = o.y || 0;
     this.pivot = new THREE.Group(); this.parent.add(this.pivot); DYN.add(this.pivot);
     const hinge = o.hinge, w = o.w;
-    if (o.axis === 'x') this.pivot.position.set(o.cx + hinge * w / 2, this.y, o.cz); else this.pivot.position.set(o.cx, this.y, o.cz + hinge * w / 2);
-    const lw = w - 0.006; // snug: no see-through cracks around a closed door
+    // the hinge sits on the face the door opens towards, like a real one: the leaf turns about its front
+    // corner, so its back corner swings clear of the jamb instead of cutting into the frame
+    const lw = w - 0.006, ht = 0.0225, sw = o.swing; // snug: no see-through cracks around a closed door
+    if (o.axis === 'x') this.pivot.position.set(o.cx + hinge * (w / 2 - 0.003), this.y, o.cz + sw * ht); else this.pivot.position.set(o.cx + sw * ht, this.y, o.cz + hinge * (w / 2 - 0.003));
     const geo = o.axis === 'x' ? new THREE.BoxGeometry(lw, this.h, 0.045) : new THREE.BoxGeometry(0.045, this.h, lw);
     this.leaf = new THREE.Mesh(geo, o.mat);
-    if (o.axis === 'x') this.leaf.position.set(-hinge * w / 2, this.h / 2, 0); else this.leaf.position.set(0, this.h / 2, -hinge * w / 2);
+    if (o.axis === 'x') this.leaf.position.set(-hinge * lw / 2, this.h / 2, -sw * ht); else this.leaf.position.set(-sw * ht, this.h / 2, -hinge * lw / 2);
+    // the stop: a strip round the frame on the side the door does not open to, over the crack at its edges,
+    // so a lit room beyond does not show through as a thread of light down the frame
+    { const sm = MT.trim, st = 0.012, sd = 0.017, oh = this.h + 0.004, n = -sw * (ht + st / 2), y = this.y;
+      if (o.axis === 'x') {
+        for (const s of [-1, 1]) box(sd, oh, st, sm, o.cx + s * (w / 2 - sd / 2), y, o.cz + n, { parent: this.parent });
+        box(w, 0.016, st, sm, o.cx, y + oh - 0.016, o.cz + n, { parent: this.parent });
+      } else {
+        for (const s of [-1, 1]) box(st, oh, sd, sm, o.cx + n, y, o.cz + s * (w / 2 - sd / 2), { parent: this.parent });
+        box(st, 0.016, w, sm, o.cx + n, y + oh - 0.016, o.cz, { parent: this.parent });
+      } }
     this.pivot.add(this.leaf);
     // lever handles on both faces, near the free edge of the leaf
     const hm = MT.brass, t2 = 0.0225, hx = -hinge * (w / 2 - 0.075), hy = 1.0 - this.h / 2;
@@ -2637,6 +2826,7 @@ function buildWorld() {
   buildDeep();
   buildLongHall();
   buildExterior();
+  fixWallCaps();
   buildDecor();
   buildAttic();
   buildPuzzleProps();
@@ -2774,7 +2964,7 @@ function buildStudy() {
   box(0.36, 2.1, 2.8, m.darkWood, 13.75, 0, 2.1, { collide: true, occ: true });
   W.books = [];
   for (let i = 0; i < 4; i++) {
-    box(0.3, 0.02, 2.7, m.midWood, 13.72, 0.3 + i * 0.48, 2.1);
+    box(0.3, 0.02, 2.7, m.midWood, 13.695, 0.3 + i * 0.48, 2.1);   // the shelves stand 2.5 cm proud of the case (flush, their fronts flickered through it)
     const bk = plane(2.64, 0.36, m.books, 13.56, 0.3 + i * 0.48 + 0.2, 2.1, 0, -Math.PI / 2); W.books.push(bk);
   }
   // record player cabinet (music box source)
@@ -2925,7 +3115,7 @@ function buildKitchen() {
 function buildStairsAndBasement() {
   const m = MT;
   // landing & stairwell walls
-  wallX(8.2, 14, 15.27, m.ext, m.stairWall, [], { y0: -0.2 });
+  wallX(8.2, 14, 15.2, m.ext, m.stairWall, [], { y0: -0.2 });   // to the landing's end wall's middle: past it, it would lie in the face of the deep stairs' wall once that end wall is gone
   W.landingEast = wallZ(15.2, 8.2, 9.5, m.stairWall, m.ext, [], { y0: -0.2 });
   wallZ(15.2, 9.5, 13.25, m.stairWall, m.ext, [], { y0: -3 });
   wallZ(14, 9.5, 11, m.ext, m.stairWall, [], { y0: -3, y1: 0 });
@@ -2994,7 +3184,7 @@ function buildDeep() {
   // final room: a giant, wrong bedroom
   const Y = -12.8, top = -5.8;
   const fw = M({ map: T.stripes, ts: [1 / 1.6, 1 / 1.6], color: '#8a8f80' });
-  floorAt(33.1, 47, 1.9, 15.8, Y, M({ map: T.wood, ts: [1 / 3, 1 / 3], color: '#8a8480' }), g);
+  floorAt(33.12, 47, 1.9, 15.8, Y, M({ map: T.wood, ts: [1 / 3, 1 / 3], color: '#8a8480' }), g);   // from where the last step ends
   ceilAt(33.1, 47, 1.9, 15.8, top, M({ map: T.plaster, ts: [1 / 3, 1 / 3], color: '#6a6660' }), g);
   wallZ(33.1, 1.9, 15.8, m.ext, fw, [{ a: 8.2, b: 9.5, y0: Y, y1: Y + 2.52 }], { parent: g, y0: Y - 0.2, y1: top + 0.2 });
   wallZ(47, 1.9, 15.8, fw, m.ext, [], { parent: g, y0: Y - 0.2, y1: top + 0.2 });
@@ -3627,8 +3817,10 @@ function wallTrim() {
     // faces that sit exactly behind the vestibule's own panels get theirs from the vestibule
     const skipFace = (side) => (w.axis === 'z' && Math.abs(w.c - 2.2) < 0.01 && w.a0 > 6.3 && side === 0) || (w.axis === 'x' && Math.abs(w.c - 8.2) < 0.01 && w.a1 < 2.3 && side === 0);
     const gaps = w.ops.filter((o) => (o.y0 ?? w.y0) <= w.y0 + 0.01).map((o) => [o.a, o.b]).sort((a, b) => a[0] - b[0]);
-    const segs = []; let cur = w.a0;
-    for (const [a, b] of gaps) { if (a > cur) segs.push([cur, a]); cur = Math.max(cur, b); }
+    // every doorway has a casing 7 cm wide round it: the board ends just inside it (ending at the opening
+    // itself would leave its end flush with the casing's inner face, and the two would flicker)
+    const K = 0.068, segs = []; let cur = w.a0;
+    for (const [a, b] of gaps) { if (a - K > cur) segs.push([cur, a - K]); cur = Math.max(cur, b + K); }
     if (w.a1 > cur) segs.push([cur, w.a1]);
     for (let side = 0; side < 2; side++) {
       const mat = w.mats[side]; if (noSkirt.has(mat) || skipFace(side)) continue;
@@ -3716,7 +3908,14 @@ function decorBedroom(m) {
   for (const y of [0.27, 0.53]) box(1.16, 0.006, 0.004, MT.black, 2.0, y, 3.879);
   for (const y of [0.14, 0.4, 0.66]) for (const x of [1.72, 2.28]) box(0.08, 0.018, 0.02, m.brass, x, y, 3.872);
   picture(1.72, 0.93, 4.2, Math.PI + 0.25, 0.14, 0.18, 5, DEC.frameGold);
-  box(0.18, 0.08, 0.12, m.darkWood, 2.2, 0.8, 4.16);                           // a jewellery box
+  jewelBox(2.2, 0.8, 4.16);                                                    // mum's jewellery box (the key to your door is in it, tonight)
+  // places to look for the key in the dark: the nightstand, the chest of drawers, the wardrobe
+  W.searchBoxes = [
+    searchBox(0.56, 0.62, 0.52, 3.45, 0, 0.33, 'nightstand'),
+    searchBox(1.24, 0.78, 0.2, 2.0, 0.02, 3.86, 'drawers'),
+    searchBox(0.2, 1.9, 1.9, 4.9, 0.1, 1.3, 'wardrobe'),
+  ];
+  doorLeak();
   plant(2.52, 0.8, 4.15, 0.55, 11);
   picture(2.0, 1.62, 4.33, Math.PI, 0.6, 0.42, 0, m.darkWood);
   // a laundry basket, slippers by the bed
@@ -3725,6 +3924,49 @@ function decorBedroom(m) {
   radiator(0.07, 1.95, 0.62, Math.PI / 2);
   outlet(0.8, 0.3, 0.07, 0); outlet(3.2, 0.3, 4.33, Math.PI);
   blob(2.3, 1.2, 1.95, 2.4); blob(3.45, 0.35, 0.6, 0.55); blob(1.15, 0.33, 0.6, 0.55); blob(0.55, 3.6, 0.6, 0.6); blob(5.18, 2.75, 0.5, 0.5); blob(2.0, 3.95, 1.3, 0.5);
+}
+/* a small dark box with a lid on a hinge at the back; red lining; a brass key in it */
+function jewelBox(x, y, z) {
+  const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = 0.12; scene.add(g); DYN.add(g);
+  const base = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.055, 0.12), MT.darkWood); base.position.y = 0.0275; g.add(base);
+  const lining = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.1), M({ color: '#5a1418', noise: 0.25 })); lining.rotation.x = -Math.PI / 2; lining.position.y = 0.0555; g.add(lining);
+  const hinge = new THREE.Group(); hinge.position.set(0, 0.055, 0.06); g.add(hinge);
+  const lid = new THREE.Mesh(new THREE.BoxGeometry(0.184, 0.024, 0.124), MT.darkWood); lid.position.set(0, 0.012, -0.062); hinge.add(lid);
+  const clasp = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.018, 0.004), MT.brass); clasp.position.set(0, 0.004, -0.125); hinge.add(clasp);
+  // the key, lying on the lining
+  const key = new THREE.Group(); key.position.set(0.01, 0.058, -0.005); key.rotation.y = 0.5; g.add(key);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.011, 0.0028, 6, 14), MT.brass); ring.rotation.x = Math.PI / 2; ring.position.x = -0.03; key.add(ring);
+  const shaft = new THREE.Mesh(new THREE.BoxGeometry(0.046, 0.004, 0.0045), MT.brass); shaft.position.x = 0.0; key.add(shaft);
+  const bit = new THREE.Mesh(new THREE.BoxGeometry(0.009, 0.004, 0.012), MT.brass); bit.position.set(0.019, 0, 0.007); key.add(bit);
+  W.jewel = { g, hinge, key, base, open: 0, target: 0 };
+  for (const o of [base, lid]) use(o, 'lbl_jewel', () => Story.jewelUse(), { cond: () => Story.stage === 'intro' && !F.hasKey });
+  base.userData.use.labelFn = lid.userData.use.labelFn = () => (W.jewel.target ? 'lbl_takeKey' : 'lbl_open');
+  use(shaft, 'lbl_takeKey', () => Story.jewelUse(), { cond: () => Story.stage === 'intro' && !F.hasKey && W.jewel.target > 0 });
+}
+/* an invisible box over a piece of furniture, to search it */
+function searchBox(w, h, d, x, y, z, what) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide }));
+  m.position.set(x, y + h / 2, z); scene.add(m); DYN.add(m); m.visible = false;
+  use(m, 'lbl_search', () => Story.search(what));
+  return m;
+}
+/* a line of light under a shut door, and a little of it on the floor, from a lamp on in the hall */
+function doorLeak() {
+  // the brightness is in the colour (added to what is there): black adds nothing
+  const c = document.createElement('canvas'); c.width = 64; c.height = 64; const x = c.getContext('2d'), img = x.createImageData(64, 64);
+  for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) {
+    const v = j / 63, u = i / 63, along = Math.min(1, Math.min(u, 1 - u) / 0.14);                 // v = 0 at the door
+    const k = (Math.exp(-v * 9) * 0.85 + Math.exp(-v * 3.2) * 0.15) * along * along * (3 - 2 * along);
+    const o = (j * 64 + i) * 4; img.data[o] = img.data[o + 1] = img.data[o + 2] = Math.round(255 * k); img.data[o + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  const mk = (eI) => { const m = M({ map: tex, world: false, emap: true, emissive: '#ffc98e', eI, color: '#000000', noise: 0, transparent: true, depthWrite: false }); m.blending = THREE.AdditiveBlending; m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -2; return m; };
+  const g = new THREE.Group(); scene.add(g); DYN.add(g);
+  const d = DOORS.bedroom, x0 = d.cx - d.w / 2 + 0.01, x1 = d.cx + d.w / 2 - 0.01;
+  const sliver = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, 0.014), mk(1.6)); sliver.position.set(d.cx, 0.007, 4.4 - 0.0225 - 0.0015); sliver.rotation.set(0, Math.PI, Math.PI); g.add(sliver);
+  const spill = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0 + 0.1, 0.55), mk(0.28)); spill.rotation.x = -Math.PI / 2; spill.rotation.z = Math.PI; spill.position.set(d.cx, 0.002, 4.4 - 0.0225 - 0.275); g.add(spill);
+  g.visible = false; W.doorLeak = g;
 }
 function decorBathroom(m) {
   // on the shelf under the mirror: a cup with toothbrushes, soap, a bottle
@@ -3739,7 +3981,7 @@ function decorBathroom(m) {
   // a tall cabinet in the corner
   box(0.45, 1.75, 0.34, MT.white, 8.5, 0, 3.86, { collide: true });
   box(0.004, 1.68, 0.3, MT.black, 8.273, 0.04, 3.86);
-  box(0.02, 0.12, 0.02, MT.metal, 8.265, 0.95, 3.72);
+  box(0.02, 0.12, 0.02, MT.metal, 8.262, 0.95, 3.735);
   box(0.3, 0.1, 0.22, DEC.wicker, 8.5, 1.75, 3.86);
   for (const [z, c] of [[3.72, '#3a7a8a'], [3.98, '#e8e4dc']]) dcyl(0.035, 0.035, 0.16, M({ color: c, noise: 0.05 }), 8.45, 1.75, z);
   // laundry basket with a towel, shampoo on the edge of the bath
@@ -3863,7 +4105,7 @@ function decorLiving(m) {
 function decorKitchen(m) {
   // doors and handles on the counters and the wall cabinets
   const seam = M({ color: '#6a665c', noise: 0.05 });
-  for (let x = 9.5; x < 13.9; x += 0.6) box(0.006, 0.78, 0.004, seam, x, 0.06, 10.326);
+  for (let x = 9.5; x < 13.9; x += 0.6) if (x < 12.38 || x > 13.02) box(0.006, 0.78, 0.004, seam, x, 0.06, 10.326);   // none across the oven door
   box(5.0, 0.07, 0.006, M({ color: '#3a3630', noise: 0.1 }), 11.4, 0, 10.326);   // the dark kick board
   for (let x = 9.2; x < 13.9; x += 0.6) if (Math.abs(x - 12.8) > 0.2) box(0.12, 0.014, 0.02, DEC.chrome, x, 0.74, 10.318);
   for (const [cx, w] of [[9.6, 1.4], [13.1, 1.6]]) { const n = Math.round(w / 0.5); for (let i = 1; i < n; i++) box(0.006, 0.66, 0.004, seam, cx - w / 2 + i * w / n, 1.47, 10.588); for (let i = 0; i < n; i++) box(0.014, 0.1, 0.02, DEC.chrome, cx - w / 2 + (i + 0.5) * w / n + 0.12, 1.5, 10.58); }
@@ -4504,15 +4746,20 @@ function makePerson(o) {
     ball(el, 0.037, mShirt);
     tube(el, fo, 0.036, 0.029, mShirt);
     tube(el, 0.03, 0.024, 0.023, mSkin, 8).position.y = -fo + 0.005;
-    ball(el, 0.034, mSkin, 0, -fo - 0.055, 0.004, 0.55, 1.25, 0.9); // hand
-    arms.push({ sh, el, fo });
+    const hand = ball(el, 0.034, mSkin, 0, -fo - 0.055, 0.004, 0.55, 1.25, 0.9); // hand
+    arms.push({ sh, el, fo, hand });
   }
+  /* the flashlight: gripped in the fist and running on along the forearm, so that the lens
+     points where the arm points (and where the beam goes); the fist closes round the barrel */
   let lens = null, torch = null;
   if (P.flash) {
-    const el = arms[1].el;
-    torch = new THREE.Group(); torch.position.set(0, -arms[1].fo - 0.05, 0.03); el.add(torch);
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.19, 10), M({ color: '#1e1f22', noise: 0.1 })); body.rotation.x = Math.PI / 2; torch.add(body);
-    lens = new THREE.Mesh(new THREE.CircleGeometry(0.022, 12), M({ color: '#000', emissive: '#fff6de', eI: 0, noise: 0 })); lens.position.z = 0.096; torch.add(lens);
+    const A = arms[1], el = A.el, mBody = M({ color: '#1e1f22', noise: 0.1 }), mRim = M({ color: '#3a3b3f', noise: 0.08 });
+    torch = new THREE.Group(); torch.position.set(0, -A.fo - 0.05, -0.004); el.add(torch);
+    const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.0165, 0.0165, 0.14, 10), mBody); barrel.position.y = -0.07; torch.add(barrel);   // from inside the fist to past the fingers
+    const head = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.0245, 0.05, 12, 1, true), mBody); head.position.y = -0.165; torch.add(head);       // flaring out to the lamp
+    const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.0255, 0.0255, 0.008, 12, 1, true), mRim); rim.position.y = -0.19; torch.add(rim);
+    lens = new THREE.Mesh(new THREE.CircleGeometry(0.0225, 12), M({ color: '#000', emissive: '#fff6de', eI: 0, noise: 0 }));
+    lens.rotation.x = Math.PI / 2; lens.position.y = -0.187; torch.add(lens);   // faces along the forearm, away from the hand
     torch.visible = false;
   }
   return { root, hips, chest, neck, head, headMesh, mFace: mHead, lHip, rHip, legs, arms, lens, torch, eyes: null, P, hipY };
@@ -4706,10 +4953,15 @@ function poseHuman(H, p) {
   H.arms[1].sh.rotation.set(-s * 0.32 * amp, 0, 0.06); H.arms[1].el.rotation.x = -0.15 - 0.15 * amp;
   H.chest.rotation.set(0.02 * amp + (p.hunch || 0), s * 0.06 * amp, p.lean || 0);
   if (p.flash) {
-    H.arms[1].sh.rotation.set(-1.25 + (p.pitch || 0) * -0.75, -0.25, 0.05);
-    H.arms[1].el.rotation.x = -0.35;
+    // the torch held the way people hold one: elbow bent, forearm level and pointing ahead, following
+    // where you look. Right up against the glass (tuck 1) it is drawn in across the body instead of
+    // running on into the mirror.
+    const pt = p.pitch || 0, k = p.tuck || 0;
+    H.arms[1].sh.rotation.set(lerp(-0.6, 0.1, k) - 0.3 * pt * (1 - k), lerp(-0.2, -0.9, k), 0.05);
+    H.arms[1].el.rotation.set(lerp(-1.0, -1.6, k) - 0.9 * pt * (1 - 0.5 * k), 0, 0);
   }
   if (H.torch) H.torch.visible = !!p.flash;
+  if (H.torch && H.arms[1].hand) { if (p.flash) H.arms[1].hand.scale.set(0.78, 0.95, 0.98); else H.arms[1].hand.scale.set(0.55, 1.25, 0.9); }   // a fist round the barrel
   if (H.lens) H.lens.material.uniforms.uEmissive.value.setScalar(p.flash ? 2.6 : 0);
   if (p.reach) { H.arms[1].sh.rotation.set(-1.45 * p.reach, 0.1, 0.05); H.arms[1].el.rotation.x = -0.1 * p.reach; }
   if (p.armsOut) { H.arms[0].sh.rotation.z = -0.12; H.arms[1].sh.rotation.z = 0.12; }
@@ -4740,8 +4992,40 @@ function poseHuman(H, p) {
       A.sh.rotation.z = lerp(A.sh.rotation.z, s * 0.62, cr);
       A.el.rotation.x = lerp(A.el.rotation.x, 0.95 - ph * 0.35, cr);
     }
+    if (H.smoke) crawlArms(H, p, cr);
   }
   H.head.rotation.set(-(p.pitch || 0) * 0.85 - (p.hunch || 0) * 0.6 - cr * 1.25, p.headYaw || 0, p.roll || 0);
+}
+
+/* On all fours its arms are far longer than the body is high. Bent any old way the hands went through the
+   floor (or, hanging from a ceiling, up through the ceiling). Instead each hand is put down on the surface,
+   a little ahead and out to the side, and the elbow folds up and outwards, the way a spider's knees stand
+   above its body. Worked out in the body's own frame, so the same does for floor and ceiling. */
+const _ik = { S: new THREE.Vector3(), T: new THREE.Vector3(), E: new THREE.Vector3(), u: new THREE.Vector3(), pl: new THREE.Vector3(), d1: new THREE.Vector3(), d2: new THREE.Vector3(),
+  qp: new THREE.Quaternion(), q1: new THREE.Quaternion(), q2: new THREE.Quaternion(), qi: new THREE.Quaternion(), DOWN: new THREE.Vector3(0, -1, 0) };
+function crawlArms(H, p, cr) {
+  const K = _ik, a = p.amp || 0, w = p.walk || 0;
+  H.hips.updateMatrix(); H.chest.updateMatrix();
+  K.qp.multiplyQuaternions(H.hips.quaternion, H.chest.quaternion);   // the chest, in the body's frame
+  for (let i = 0; i < 2; i++) {
+    const A = H.arms[i], s = i ? 1 : -1, L1 = A.el.position.length(), L2 = A.fo + 0.12;
+    K.S.copy(A.sh.position).applyMatrix4(H.chest.matrix).applyMatrix4(H.hips.matrix);
+    const step = (i ? 1 : -1) * Math.sin(w) * a, lift = Math.max(0, (i ? 1 : -1) * Math.cos(w)) * 0.07 * a;
+    K.T.set(K.S.x + s * 0.3, 0.015 + lift, K.S.z + 0.2 + step * 0.22);
+    K.u.subVectors(K.T, K.S); let d = K.u.length();
+    const reach = (L1 + L2) * 0.985;
+    if (d > reach) { K.u.multiplyScalar(reach / d); K.T.copy(K.S).add(K.u); d = reach; }
+    K.u.divideScalar(Math.max(d, 1e-4));
+    // the elbow: up and out, on the circle where both bones meet
+    const a1 = (L1 * L1 - L2 * L2 + d * d) / (2 * d), h1 = Math.sqrt(Math.max(0, L1 * L1 - a1 * a1));
+    K.pl.set(s * 0.8, 1, -0.15); K.pl.addScaledVector(K.u, -K.u.dot(K.pl)).normalize();
+    K.E.copy(K.S).addScaledVector(K.u, a1).addScaledVector(K.pl, h1);
+    K.d1.subVectors(K.E, K.S).normalize(); K.d2.subVectors(K.T, K.E).normalize();
+    K.q1.setFromUnitVectors(K.DOWN, K.d1); K.q2.setFromUnitVectors(K.DOWN, K.d2);
+    // into the joints' own frames, blended in with the crawl
+    K.qi.copy(K.qp).invert().multiply(K.q1); A.sh.quaternion.slerp(K.qi, cr);
+    K.qi.copy(K.q1).invert().multiply(K.q2); A.el.quaternion.slerp(K.qi, cr);
+  }
 }
 
 /* ---------- a hand round a door frame ----------
@@ -4764,7 +5048,7 @@ function makeFingers() {
   return { root: g, fingers, mat };
 }
 
-const _fc = new THREE.Vector3(), _fu = new THREE.Vector3(), _fc2 = new THREE.Vector3(), _fu2 = new THREE.Vector3();
+const _fc = new THREE.Vector3(), _fu = new THREE.Vector3(), _fc2 = new THREE.Vector3(), _fu2 = new THREE.Vector3(), _one2 = new THREE.Vector2(1, 1);
 const Actors = {
   avatar: null, double: null, ent: null,
   init() {
@@ -4785,9 +5069,10 @@ const Actors = {
     this.grin = false;
     let vis = true;
     switch (m.mode) {
-      case 'delay': pose = Player.poseAt(G.t - 0.5); break;
+      // it keeps up at first; after a second of looking it starts to fall behind you (Story snaps it back)
+      case 'delay': pose = Player.poseAt(G.t - 0.7 * sstep(1.0, 1.6, m.sessionT || 0)); break;
       case 'lookAway': extra.headYaw = 0.95; pose = Object.assign({}, pose, { pitch: -0.12 }); break;
-      case 'smile': pose = Player.poseAt(G.t - 0.15); A.mFace.uniforms.uMap.value = night ? T.headNoneSmile : T.headSmile; extra.roll = 0.14; this.grin = true; break;
+      case 'smile': A.mFace.uniforms.uMap.value = night ? T.headNoneSmile : T.headSmile; extra.roll = 0.14; this.grin = true; break;
       case 'stillHead': extra.headYaw = angNorm((m.sessionYaw ?? pose.yaw) - pose.yaw); break;
       case 'frozen': case 'frozenPose': pose = m.frozenPose || pose; break;
       case 'missing': vis = false; break;
@@ -4797,7 +5082,11 @@ const Actors = {
     A.root.visible = vis;
     A.root.position.set(pose.x, pose.y, pose.z);
     A.root.rotation.y = pose.yaw + Math.PI;
-    poseHuman(A, { walk: pose.phase, amp: pose.amp, pitch: pose.pitch, flash: pose.flash, headYaw: clamp(extra.headYaw, -1.2, 1.2), roll: extra.roll, wave: extra.wave, waveK: extra.waveK });
+    // how close the glass is in front of you: the torch is drawn in rather than pushed through it
+    const c = m.worldCenter(_fc), n = m.worldNormal(_fu), gap = (pose.x - c.x) * n.x + (pose.z - c.z) * n.z;
+    const toward = Math.max(0, (Math.sin(pose.yaw) * n.x + Math.cos(pose.yaw) * n.z));   // facing the glass: 1
+    const tuck = clamp((0.62 * toward + 0.08 - gap) / 0.34, 0, 1);
+    poseHuman(A, { walk: pose.phase, amp: pose.amp, pitch: pose.pitch, flash: pose.flash, tuck, headYaw: clamp(extra.headYaw, -1.2, 1.2), roll: extra.roll, wave: extra.wave, waveK: extra.waveK });
     // light bounce from the flashlight on the mirror onto the reflection
     const bounce = Player.flashOn && viewAngleTo(m.worldCenter(_tv3)) < 0.5 ? 0.5 : 0;
     A.mFace.uniforms.uEmissive.value.setScalar(bounce * 0.05);
@@ -4812,7 +5101,8 @@ const Actors = {
     const f = A.head.localToWorld(_fc.set(0, 0.1, 0.08)), up = A.head.localToWorld(_fu.set(0, 0.25, 0.08));
     const p = _fc2.copy(f).project(cam), q = _fu2.copy(up).project(cam);
     if (p.z > 1 || p.z < -1) { u.uFaceK.value = 0; return; }
-    u.uFace.value.set(p.x * 0.5 + 0.5, p.y * 0.5 + 0.5, Math.max(0.01, Math.abs(q.y - p.y) * 0.5));
+    const ts = m.tcScale || _one2;   // the picture only fills that corner of the target
+    u.uFace.value.set((p.x * 0.5 + 0.5) * ts.x, (p.y * 0.5 + 0.5) * ts.y, Math.max(0.002, Math.abs(q.y - p.y) * 0.5 * ts.y));
     u.uAspect.value = RW / RH;
     u.uFaceK.value = this.grin ? 0.55 : 0.92;
     this.faceWorld = f;
@@ -5025,6 +5315,37 @@ const Sound = {
     });
     B.rslam = this.rev(B.slam);
     B.rattle = this.buf(0.6, (d, sr, n) => { const bp = new BQ('bp', 3200, 4, sr), lp = new BQ('lp', 250, 0.8, sr); const hits = [0, 0.07, 0.12, 0.2, 0.26, 0.35, 0.41]; for (let i = 0; i < n; i++) { const t = i / sr; let v = 0; for (const a of hits) if (t > a) { const u = t - a; v += bp.p(wn()) * Math.exp(-u * 90) * 0.5 + Math.sin(TAU * 2400 * u) * Math.exp(-u * 120) * 0.2; } v += lp.p(wn()) * Math.exp(-t * 12) * 0.8; d[i] = v; } });
+    /* ---- the bedroom: a key, a lock, a drawer, a little box ---- */
+    // the key going in (a short scrape), turning, and the bolt going back with a clack
+    B.unlock = this.buf(0.75, (d, sr, n) => {
+      const bp = new BQ('bp', 3400, 2.2, sr);
+      for (let i = 0, i1 = Math.floor(0.13 * sr); i < i1; i++) { const t = i / sr; d[i] += bp.p(wn()) * Math.sin(Math.PI * t / 0.13) * (0.5 + 0.5 * Math.sin(t * 190)) * 0.35; }
+      strike(d, sr, n, 0.14, MODES_LATCH, 0.35, 0.6, 1.3);
+      for (let i = Math.floor(0.2 * sr), i1 = Math.floor(0.36 * sr); i < i1; i++) { const t = i / sr; d[i] += bp.p(wn()) * 0.12 * Math.sin(Math.PI * (t - 0.2) / 0.16); }
+      strike(d, sr, n, 0.37, MODES_LATCH, 0.9); burst(d, sr, n, 0.37, 0.006, 0.6, 7000, 900); thump(d, sr, n, 0.37, 140, 0.04, 0.35);
+      strike(d, sr, n, 0.4, MODES_DOOR.slice(2, 6), 0.25, 0.4, 1.2);
+    });
+    // a wooden drawer pulled out: it sticks and slips, and knocks against its stop
+    B.drawer = this.buf(0.65, (d, sr, n) => {
+      const bp = new BQ('bp', 700, 2.5, sr), lp = new BQ('lp', 300, 0.7, sr); let ph = 0;
+      for (let i = 0, i1 = Math.floor(0.45 * sr); i < i1; i++) {
+        const t = i / sr, u = t / 0.45, env = Math.sin(Math.PI * Math.min(1, u * 1.1));
+        if (i % 128 === 0) bp.set(600 + 500 * u + Math.random() * 120, 2.5);
+        ph += (35 + 25 * Math.sin(t * 17)) / sr; const imp = ph >= 1 ? (ph -= 1, 3 + Math.random() * 2) : 0;
+        d[i] += (bp.p(wn() * 0.4 + imp) * 0.6 + lp.p(wn()) * 0.3) * env;
+      }
+      strike(d, sr, n, 0.46, MODES_DOOR, 0.35, 0.3, 2.2); burst(d, sr, n, 0.46, 0.01, 0.35, 2500, 200);
+    });
+    // a small lid on a stiff hinge, and the catch letting go
+    B.lid = this.buf(0.5, (d, sr, n) => {
+      strike(d, sr, n, 0, [[3100, 0.02, 0.5], [4700, 0.014, 0.35]], 0.7); burst(d, sr, n, 0, 0.003, 0.5, 9000, 1500);
+      const bp = new BQ('bp', 2300, 9, sr); let ph = 0;
+      for (let i = Math.floor(0.05 * sr), i1 = Math.floor(0.38 * sr); i < i1; i++) { const t = i / sr; ph += (55 + 30 * Math.sin(t * 9)) / sr; const imp = ph >= 1 ? (ph -= 1, 6) : 0; if (i % 256 === 0) bp.set(2100 + 600 * (t - 0.05), 9); d[i] += bp.p(imp) * 0.5 * Math.sin(Math.PI * (t - 0.05) / 0.33); }
+    });
+    // a key picked up: a small bright jingle
+    B.keyPick = this.buf(0.5, (d, sr, n) => {
+      for (const [a, f, g] of [[0, 3900, 0.6], [0.045, 5200, 0.45], [0.11, 4400, 0.3]]) { burst(d, sr, n, a, 0.0015, g, 14000, 2500); strike(d, sr, n, a, [[f, 0.05, 0.5], [f * 1.48, 0.035, 0.35], [f * 2.3, 0.02, 0.2]], g); }
+    });
     B.knock = this.buf(0.25, (d, sr, n) => { const lp = new BQ('lp', 260, 1, sr), bp = new BQ('bp', 950, 2, sr); for (let i = 0; i < n; i++) { const t = i / sr; d[i] = lp.p(wn()) * Math.exp(-t * 32) * 1.2 + Math.sin(TAU * 115 * t) * Math.exp(-t * 28) * 0.7 + bp.p(wn()) * Math.exp(-t * 90) * 0.3; } });
     const breath = (dur, fa, fb, q = 1.3) => this.buf(dur, (d, sr, n) => { const bp = new BQ('bp', fa, q, sr), lp = new BQ('lp', 220, 0.7, sr); for (let i = 0; i < n; i++) { const t = i / sr, u = t / dur; if (i % 128 === 0) bp.set(lerp(fa, fb, u), q); const env = Math.pow(Math.sin(Math.PI * u), 1.6); d[i] = (bp.p(wn()) * 0.8 + lp.p(wn()) * 0.25) * env; } });
     B.breathIn = breath(1.3, 700, 1350); B.breathOut = breath(1.7, 1150, 620);
@@ -5207,6 +5528,63 @@ const Sound = {
       const bp = new BQ('bp', 3600, 2.5, sr), lp = new BQ('lp', 500, 0.8, sr);
       for (let i = 0; i < n; i++) { const t = i / sr; let e = 0; for (const [a, g] of hits) if (t >= a && t < a + 0.03) e += g * Math.exp(-(t - a) * 260); const nz = wn(); d[i] = Math.tanh((bp.p(nz) * e + lp.p(nz) * e * 0.5) * 5); }
     });
+    /* ---- glass: a mirror giving way ---- */
+    // the first tick: a hard little click and the glass ringing thinly for a moment
+    B.glassTick = [0, 1].map((k) => this.buf(0.22, (d, sr, n) => {
+      const r = seeded(300 + k);
+      burst(d, sr, n, 0, 0.0018, 1, 16000, 2500);
+      for (let j = 0; j < 3; j++) burst(d, sr, n, 0.006 + r() * 0.03, 0.0012, 0.25 + r() * 0.3, 14000, 3000);
+      strike(d, sr, n, 0.001, [[5200 + k * 300, 0.035, 0.35], [7900, 0.025, 0.28], [11200, 0.016, 0.2], [3100, 0.05, 0.12]], 1);
+    }));
+    // the break: a snap, the crack running out through the pane in a spray of tiny clicks, the glass
+    // ringing, the frame knocking once, and a last piece settling
+    B.glassCrack = this.buf(1.4, (d, sr, n) => {
+      const r = seeded(310), lp = new BQ('lp', 140, 0.8, sr);
+      burst(d, sr, n, 0, 0.004, 1.3, 15000, 800);
+      for (let i = 0, i1 = Math.floor(0.12 * sr); i < i1; i++) { const t = i / sr; d[i] += (lp.p(wn()) * 1.4 + Math.sin(TAU * 105 * t) * 0.5) * Math.exp(-t * 28); }
+      let t0 = 0.003; while (t0 < 0.42) { burst(d, sr, n, t0, 0.0009 + r() * 0.0014, (0.2 + r() * 0.8) * (1 - t0 * 1.6), 16000, 2200); t0 += 0.0015 + r() * r() * 0.022; }
+      strike(d, sr, n, 0.002, [[2900, 0.13, 0.3], [4350, 0.1, 0.28], [6100, 0.075, 0.24], [7700, 0.055, 0.2], [9900, 0.04, 0.15], [1630, 0.09, 0.12]], 1);
+      strike(d, sr, n, 0.004, MODES_DOOR.slice(0, 4), 0.5, 0.45, 1.3);
+      burst(d, sr, n, 0.52 + r() * 0.1, 0.002, 0.45, 14000, 2500); strike(d, sr, n, 0.53, [[6800, 0.03, 0.2], [9300, 0.02, 0.15]], 1);
+    });
+    // a piece of it landing: a bright ping, a smaller bounce, a skid
+    B.glassShard = [0, 1, 2].map((k) => this.buf(0.6, (d, sr, n) => {
+      const r = seeded(320 + k), f = 3200 + r() * 2600;
+      burst(d, sr, n, 0, 0.0015, 0.8, 15000, 2500);
+      strike(d, sr, n, 0.001, [[f, 0.06, 0.4], [f * 1.53, 0.04, 0.3], [f * 2.37, 0.025, 0.22]], 1);
+      const b = 0.07 + r() * 0.09; burst(d, sr, n, b, 0.001, 0.4, 15000, 3000); strike(d, sr, n, b, [[f * 1.1, 0.03, 0.25], [f * 1.8, 0.02, 0.18]], 0.6);
+      const b2 = b + 0.05 + r() * 0.05; burst(d, sr, n, b2, 0.0008, 0.18, 15000, 3500); strike(d, sr, n, b2, [[f * 1.25, 0.02, 0.2]], 0.35);
+      burst(d, sr, n, b2 + 0.02, 0.05, 0.05, 9000, 4000);
+    }));
+    // children crying, small ones: a thin high voice that climbs, holds, cracks, and gasps for air between
+    const cry = (dur, seed, f0base, form) => this.buf(dur, (d, sr, n) => {
+      const r = seeded(seed), plan = []; let t0 = 0.04 + r() * 0.15;
+      while (t0 < dur - 0.45) { const len = 0.65 + r() * 0.95; plan.push({ a: t0, b: Math.min(dur - 0.05, t0 + len), f0: f0base * (0.9 + r() * 0.25), rise: 0.12 + r() * 0.22, brk: r() < 0.5, sob: r() < 0.4 }); t0 += len + 0.2 + r() * 0.28; }
+      const F = form.map(([f, q]) => new BQ('bp', f, q, sr)), air = new BQ('bp', 5200, 1.5, sr), gasp = new BQ('bp', 2300, 2, sr);
+      let ph = 0, jit = 0, s = null, g = null;
+      for (let i = 0; i < n; i++) {
+        const t = i / sr; let v = 0;
+        if (!s || t >= s.b || t < s.a) s = null;
+        if (!s && i % 32 === 0) { s = plan.find((p) => t >= p.a && t < p.b) || null; g = s ? null : plan.find((p) => t >= p.b && t < p.b + 0.3) || null; }
+        if (s) {
+          const u = (t - s.a) / (s.b - s.a), arch = Math.sin(Math.PI * Math.min(1, u * 1.1));
+          jit = jit * 0.999 + wn() * 0.002;
+          let f0 = s.f0 * (1 + s.rise * arch + 0.035 * Math.sin(TAU * 7.5 * t) + jit);
+          if (s.brk && u > 0.55 && u < 0.68) f0 *= 1.55;                                   // the voice cracks
+          ph += f0 / sr; if (ph >= 1) ph -= 1;
+          const src = (ph * 2 - 1) - 0.35 * Math.sin(TAU * ph * 2);
+          let env = Math.min(1, u * 10) * Math.min(1, (1 - u) * 5);
+          if (s.sob) env *= 0.6 + 0.4 * Math.abs(Math.sin(TAU * 4.5 * t));                // hiccupping sobs
+          if (i % 64 === 0) { const m = 1 + 0.15 * arch; F[0].set(form[0][0] * m, form[0][1]); F[1].set(form[1][0] * (1 + 0.1 * Math.sin(TAU * 1.3 * t)), form[1][1]); }
+          v = (F[0].p(src) + F[1].p(src) * 0.8 + F[2].p(src) * 0.45) * env + air.p(wn()) * 0.07 * env;
+        } else {
+          for (const f of F) f.p(0);
+          v = g ? gasp.p(wn()) * Math.sin(Math.PI * Math.min(1, (t - g.b) / 0.3)) * 0.4 : gasp.p(0) * 0;   // the gasp between
+        }
+        d[i] = Math.tanh(v * 2.2);
+      }
+    });
+    B.cry = [cry(3.6, 201, 470, [[1100, 5], [2600, 6], [4100, 7]]), cry(4.2, 202, 520, [[1000, 5], [2400, 6], [3900, 7]]), cry(3.2, 203, 380, [[900, 5], [2100, 6], [3400, 7]])];
     B.scrape = this.buf(1.2, (d, sr, n) => { const bp = new BQ('bp', 900, 3, sr); for (let i = 0; i < n; i++) { const t = i / sr; if (i % 200 === 0) bp.set(700 + Math.random() * 600, 3); d[i] = bp.p(wn()) * Math.sin(Math.PI * t / 1.2) * (0.6 + 0.4 * Math.random()); } });
   },
 
@@ -5672,6 +6050,7 @@ const Player = {
     if (Input.fPress && this.enabled && !ClockUI.active && !UI.overlay && G.stage !== 'black') this.toggleFlash();
     this.flashK = damp(this.flashK, this.flashOn ? 1 : 0, 18, dt);
     Flash.update(dt);
+    Battery.update(dt);
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt);
     this.applyCamera(dt);
     this.room = roomOf(this.pos.x, this.pos.y + 1, this.pos.z);
@@ -5714,7 +6093,9 @@ const Player = {
   toggleFlash(force) {
     // dead in your hand: pressing the switch only gets you a knock against your palm
     if (force === undefined && this.flashOn && Flash.dead()) { Flash.tap(); return; }
-    this.flashOn = force === undefined ? !this.flashOn : force;
+    const want = force === undefined ? !this.flashOn : force;
+    if (want && !this.flashOn && Battery.locked && Battery.night()) { Battery.denied(); return; }   // flat: it has to recover first
+    this.flashOn = want;
     Sound.play('switch', null, { gain: 0.35, rate: this.flashOn ? 1.1 : 0.9 });
     if (this.flashOn) { Flash.mode = null; Flash.stutter(0.22, 0.5); }
     G.flags.usedFlash = true;
@@ -5738,12 +6119,74 @@ const Player = {
     const r = _tv2.set(1, 0, 0).applyQuaternion(camera.quaternion);
     SU.uFlashPos.value.copy(camera.position).addScaledVector(r, 0.16).y -= 0.14;
     SU.uFlashDir.value.copy(this.flashDir);
-    let k = this.flashK * Flash.mul;
+    let k = this.flashK * Flash.mul * Battery.beam();
     if (G.flags.flashWeak) k *= 0.55 + Math.random() * 0.1;
     SU.uFlashOn.value = k;
   },
 };
 const _up = new THREE.Vector3(0, 1, 0);
+
+/* ---------------- the flashlight's battery ----------------
+   It lasts a little over a minute. Low, the beam goes dim and unsteady; empty, it gutters and goes out,
+   and it will not come on again until it has had a while to recover (a quarter full). Switched off it
+   fills up again by itself. A thin bar in the corner shows how much is left. */
+const Battery = {
+  level: 1, locked: false, gutter: 0, shown: 0, deniedT: 0, lastW: -1, lastCls: '',
+  DRAIN: 1 / 80, CHARGE: 1 / 45, UNLOCK: 0.25,
+  reset() { this.level = 1; this.locked = false; this.gutter = 0; this.lastW = -1; },
+  night() { const s = G.stage; return G.running && s !== 'morning' && s !== 'end' && s !== 'black' && s !== 'title'; },
+  /* how bright the beam can be: full down to a fifth left, then it fades towards half, and shivers */
+  beam() {
+    if (!this.night()) return 1;
+    let k = 0.5 + 0.5 * sstep(0, 0.2, this.level);
+    if (this.level < 0.12 && Math.random() < 0.08) k *= rand(0.3, 0.8);
+    return k;
+  },
+  /* you press F and nothing comes: a click, a glow in the bulb, gone */
+  denied() {
+    Sound.play('switch', null, { gain: 0.3, rate: 0.75, pure: true });
+    Player.flashK = 0.12;
+    if (G.t > this.deniedT) { this.deniedT = G.t + 6; UI.thought(tr(G.flags.battTold ? 't_battNotYet' : 't_battEmpty'), 2.4); G.flags.battTold = true; }
+  },
+  update(dt) {
+    const P = Player, el = UI.el.batt;
+    if (!this.night()) { if (el && !el.hidden) el.hidden = true; return; }
+    const lit = P.flashOn && !Flash.dead();
+    // the descent has no light of its own: there it lasts longer
+    const drain = this.DRAIN * (Story.stage === 'descent' || Story.stage === 'final' ? 0.55 : 1);
+    if (lit) this.level = Math.max(0, this.level - drain * dt);
+    else if (!P.flashOn) this.level = Math.min(1, this.level + this.CHARGE * dt);
+    if (this.locked && this.level >= this.UNLOCK) { this.locked = false; Sound.play('switch', null, { gain: 0.12, rate: 1.5, pure: true }); }
+    // low: now and then it falters
+    if (lit && this.level < 0.12 && !Flash.mode && Math.random() < dt * 0.6) Flash.stutter(rand(0.15, 0.4), 0.7);
+    // empty: it gutters, and goes out
+    if (lit && this.level <= 0 && !this.gutter) { this.gutter = 0.9; Flash.stutter(0.9, 0.95); }
+    if (this.gutter > 0) {
+      this.gutter -= dt;
+      if (this.gutter <= 0) {
+        this.gutter = 0; this.locked = true;
+        if (P.flashOn) { P.flashOn = false; Sound.play('switch', null, { gain: 0.25, rate: 0.6, pure: true }); }
+        if (!G.flags.battTold) { G.flags.battTold = true; after(0.5, () => UI.thought(tr('t_battEmpty'), 3)); }
+      }
+    }
+    // the bar: there while the light is on, or not yet full again; gone a little after that
+    if (!el) return;
+    this.shown = (P.flashOn || this.level < 0.995 || this.locked) ? 2.5 : Math.max(0, this.shown - dt);
+    const show = this.shown > 0 && !UI.overlay && !ClockUI.active;
+    if (el.hidden) el.hidden = false;
+    el.classList.toggle('on', show);
+    const w = Math.round(this.level * 200) / 2;
+    if (w !== this.lastW) { this.lastW = w; UI.el.battFill.setAttribute('width', (47 * w / 100).toFixed(2)); }
+    // the little beam in front of it is the real one: on, off, faltering
+    const bo = Math.round(clamp(SU.uFlashOn.value, 0, 1) * 20) / 20;
+    if (bo !== this.lastB) { this.lastB = bo; UI.el.battBeam.style.opacity = bo; }
+    const cls = this.locked ? 'locked' : this.level < 0.2 ? 'low' : !P.flashOn && this.level < 0.995 ? 'charging' : '';
+    if (cls !== this.lastCls || this.lang !== LANG) {
+      el.classList.remove('locked', 'low', 'charging'); if (cls) el.classList.add(cls); this.lastCls = cls; this.lang = LANG;
+      UI.el.battLabel.textContent = this.locked || cls === 'charging' ? tr('batt_charge') : '';
+    }
+  },
+};
 
 /* ---------------- the flashlight that falters ----------------
    Fine while you are alone. When something is near it stutters, and
@@ -5966,6 +6409,10 @@ const F = G.flags;
 const HORROR = { intro: 0, p1: 0.1, p2: 0.25, p2b: 0.35, s1: 0.45, s2: 0.55, s3: 0.48, p3: 0.8, descent: 0.9, final: 1 };
 const HZ = { snap: 0.3, stinger: 0.4, near: 0.35, close: 0.45, hunt: 0.45, strobe: 0.5 };   // from where on each kind of scare may happen
 function horror() { return HORROR[Story.stage] ?? 0; }
+/* how far into the night you are (it only ever goes one way; the morning gives you your sight back) */
+const PROG = { intro: 0, p1: 0.08, p2: 0.2, p2b: 0.3, s1: 0.42, s2: 0.54, s3: 0.64, p3: 0.8, descent: 0.92, final: 1 };
+/* the vignette for a point in the night: the dark at the edges creeps inwards, a little at a time */
+function vigFor(p) { return { outer: 1.08 - 0.18 * p, inner: 0.2 + 0.04 * p, k: 0.45 + 0.27 * p, edge: 0.55 * p * p }; }
 // how far off the sound of the world is (warble, detune), stage by stage along the same curve
 const WRONG = { intro: 0, p1: 0.02, p2: 0.07, p2b: 0.12, s1: 0.17, s2: 0.22, s3: 0.2, p3: 0.38, descent: 0.5, final: 0.55 };
 
@@ -6452,6 +6899,8 @@ const Story = {
     Scare.init();
     DOORS.front.onUse = () => { this.frontDoor(); return true; };
     DOORS.basement.onUse = () => { if (!DOORS.basement.exists) return true; return false; };
+    DOORS.bedroom.onUse = () => this.bedroomDoor();
+    { const d = DOORS.bedroom; d.leaf.userData.use.labelFn = () => (d.locked && Hand.item === 'key' ? 'lbl_unlock' : d.target ? 'lbl_close' : 'lbl_open'); }
     LN.kitchen.onSwitch = () => { F.kitchenSwitched = true; };
   },
 
@@ -6491,6 +6940,8 @@ const Story = {
     L.bathroom.color = lin('#fff1dc'); L.bathroom.intensity = 4.2; L.floorlamp.color = lin('#ffb877'); L.floorlamp.intensity = 3.0;
     L.bedroom.color = lin('#ffc98e'); L.bedroom.intensity = 5.2;
     for (const k of ['study', 'hallA', 'hallB', 'vest', 'living', 'kitchen']) { L[k].color = lin(k === 'kitchen' ? '#fff0d8' : '#ffd29a'); L[k].intensity = { study: 4.2, hallA: 3.4, hallB: 3.4, vest: 3.2, living: 4.4, kitchen: 4.6 }[k]; }
+    // the moon through the bedroom curtains, all night
+    base.sun = 1; L.sun.color = lin('#9cb2e4'); L.sun.intensity = 2.3;
     if (at('p1')) { base.floorlamp = F.lampOff ? 0 : 1; if (F.stairPop) base.stairs = 0; }
     if (at('p2')) { base.vest = 0; base.living = 0; base.study = 0; base.bathroom = 1; L.bathroom.sw = 1; L.hallA.setFlicker('unstable'); L.hallA.keepFlicker = true; L.hallA.dim = 0.7; }
     if (at('p2b')) { base.study = 1; L.study.sw = 1; base.bathroom = 0; }
@@ -6511,7 +6962,7 @@ const Story = {
     if (at('final')) { base.final = 1; base.deepA = 0; base.deepB = 0; }
     if (morning) {
       for (const k in base) base[k] = 0;
-      base.sun = 1; L.sun.intensity = 9;
+      base.sun = 1; L.sun.intensity = 9; L.sun.color = lin('#ffe3b8');
       for (const k of ['bathroom', 'study', 'hallA', 'hallB', 'vest', 'living', 'kitchen']) { base[k] = 1; L[k].color = lin('#e6edf4'); L[k].intensity = 2.0; }
     }
     for (const k in base) L[k].on = base[k];
@@ -6521,7 +6972,8 @@ const Story = {
     // the picture itself: a little greyer, grainier, darker at the edges and more fringed the deeper you go
     { const h = HORROR[s] ?? 0, u = postMat.uniforms;
       u.uDesat.value = morning ? 0.04 : 0.06 + 0.2 * h; u.uGrain.value = 0.05 + 0.03 * h;
-      u.uVig.value = 0.5 + 0.2 * h; u.uChroma.value = 0.25 + 0.35 * h; }
+      u.uChroma.value = 0.25 + 0.35 * h;
+      const v = vigFor(PROG[s] ?? 0); u.uVig.value = v.k; u.uVigR.value.set(v.outer, v.inner); u.uEdge.value = v.edge; }
     Distort.reset();
     // props
     W.fridgeNote.visible = at('p1') && !at('descent');
@@ -6556,11 +7008,11 @@ const Story = {
     G.flags.silence = at('p2') && !morning;
     // mirrors
     for (const m of MIRRORS) { m.mode = 'normal'; m.frozenPose = null; m.queue = []; m.session = false; m.mat.uniforms.uDark.value = 0; }
-    if (s === 'p1') { W.hallMirror.queue = ['delay']; W.coatMirror.queue = ['delay']; }
-    if (s === 'p2') { W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['delay']; }
+    // (early on the mirrors are just mirrors: a reflection that runs behind you is kept for one moment in s1)
+    if (s === 'p2') { W.hallMirror.queue = ['lookAway']; }
     if (s === 'p2b') { W.hallMirror.queue = ['stillHead']; W.bathMirror.queue = ['smile']; W.coatMirror.queue = ['lookAway']; }
     if (s === 's1') { W.hallMirror.queue = ['delay']; W.bathMirror.queue = ['smile']; W.coatMirror.queue = ['lookAway']; }
-    if (s === 's2') { W.hallMirror.queue = ['stillHead']; W.coatMirror.queue = ['delay']; W.bathMirror.queue = ['lookAway']; }
+    if (s === 's2') { W.hallMirror.queue = ['stillHead']; W.bathMirror.queue = ['lookAway']; }
     if (s === 's3') { W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['stillHead']; }
     if (s === 'p3') { W.hallMirror.queue = ['frozen', 'behind', 'missing']; W.coatMirror.queue = ['missing']; W.bathMirror.queue = ['missing']; }
     if (at('p3')) W.hallMirror.mat.uniforms.uDark.value = 0.15;
@@ -6642,6 +7094,8 @@ const Story = {
     if (stage === 'descent') { F.baseOpen = true; F.frontDone = true; }
     if (stage === 's3') Object.assign(F, { radioCode: true, hatchOpen: true, atticIn: true, lockSeen: true, numThought: true });
     this.objKey = null; Hand.set(null);
+    Shatter.reset();
+    DOORS.bedroom.locked = false; this.jewelReset(stage === 'intro');
     this.applyState(stage);
     const spawns = {
       intro: [3.3, 0, 1.35, -0.36, -0.22, true], p1: [3.3, 0, 1.35, -0.36, -0.22, true], p2: [7, 0, 5.4, Math.PI / 2, 0, false], p2b: [7.2, 0, 3.4, Math.PI, 0, false],
@@ -6650,6 +7104,7 @@ const Story = {
     };
     const sp = spawns[stage] || spawns.intro;
     Player.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
+    Battery.reset();
     Player.flashOn = stage === 'descent' || stage === 's1'; Player.flashK = Player.flashOn ? 1 : 0;
     if (stage === 's1') DOORS.bathroom.set(true);
     if (stage === 's2') { DOORS.basement.set(true); after(1.0, () => { Radio.power(true, 97.9); UI.thought(tr('t_radioOn'), 3.4); }); }
@@ -6664,7 +7119,13 @@ const Story = {
     if (stage === 'p2b') { F.bathSlam = true; F.mirrorDone = true; }
     if (stage === 'p3') { after(1.5, () => UI.thought(tr('t_wakeUp'), 3.5)); }
     if (stage === 's1') { after(1.2, () => UI.thought(tr('t_powerOut'), 3)); after(4.8, () => UI.thought(tr('t_fuseWhere'), 3)); }
-    if (stage === 'intro') { this.fade = null; postMat.uniforms.uFade.value = 1; Player.enabled = false; Player.look = false; this.introPose(0); }
+    if (stage === 'intro') {
+      this.fade = null; postMat.uniforms.uFade.value = 1; Player.enabled = false; Player.look = false; this.introPose(0);
+      // the middle of the night: the lamp off, the door shut (and locked), a line of light under it from the hall
+      const bd = DOORS.bedroom; bd.set(false); bd.locked = true;
+      LN.bedroom.sw = 0; if (LN.bedroom.switchMesh) LN.bedroom.switchMesh.rotation.x = 0.35;
+      this.objKey = 'introWake'; UI.objective('intro');
+    }
     this.save();
   },
   fadeIn(dur) { this.fade = { from: 1, to: 0, t: 0, dur }; },
@@ -6690,6 +7151,8 @@ const Story = {
     Reveal.update(dt);
     Dir.update(dt);
     this.updateMirrors(dt);
+    Shatter.update(dt);
+    this.bedroomFx(dt);
     const si = SI(this.stage);
     if (si >= SI('p1') && si <= SI('p3')) this.updateUnseen();
     if (si >= SI('p2') && si <= SI('descent')) this.updateSpawns();
@@ -6702,9 +7165,11 @@ const Story = {
   },
 
   /* ---------- intro ---------- */
-  /* waking up: a date in the dark, eyes that will not stay open, the ceiling, the clock, sitting up,
-     and then someone knocking at the front door. Space, E or a click skips it. */
-  INTRO_END: 23,
+  /* waking up in the middle of the night: a date in the dark, eyes that will not stay open, the ceiling,
+     the clock, sitting up, and the door: shut, with light under it. Space, E or a click skips it.
+     Then the door is locked, and the key is in mum's jewellery box; only once the door is open does
+     someone knock at the front door. */
+  INTRO_END: 20.5,
   u_intro() {
     const T = this.st, P = Player;
     if (!F.introDone) {
@@ -6724,29 +7189,36 @@ const Story = {
       if (T > 10 && !F.it1) { F.it1 = true; UI.thought(tr('t_d1'), 2.2); }
       if (T > 12.4 && !F.it2) { F.it2 = true; UI.thought(tr('t_again2'), 2); }
       if (T > 14 && !F.isit) { F.isit = true; Sound.play('creaks', V3(2.8, 0.4, 0.9), { gain: 0.3, rate: 0.8 }); Sound.play('scrape', null, { gain: 0.05, rate: 0.55 }); }
-      if (T > 17.2 && !F.knock1) this.introKnock();
+      if (T > 14.6 && !F.it3) { F.it3 = true; UI.thought(tr('t_night'), 2.3); }
+      if (T > 18.1 && !F.it4) { F.it4 = true; UI.thought(tr('t_doorShut'), 3.4); }
       if (T > this.INTRO_END) this.endIntro();
       return;
     }
+    // too dark to look for anything: the torch
+    if (!F.lightHint && G.t - (F.ctrlT || 0) > 3 && !P.flashOn && !LN.bedroom.lit && P.room === 'bedroom') { F.lightHint = true; UI.hint('<kbd>F</kbd> ' + tr('k_flash'), 5); }
+    // searched a while and not found it: where mum kept keys
+    if (F.triedDoor && !F.hasKey && !F.boxHint && G.t - F.keyT > 35) { F.boxHint = true; UI.thought(tr('t_boxHint'), 3.4); }
+    if (!F.knock1) return;
     // walking to the door: it knocks once more, closer; then nothing
     if (!F.knock2 && ((P.room === 'hall' && P.pos.x < 5) || P.room === 'vestibule')) { F.knock2 = true; Sound.knock(V3(-0.25, 1.3, 7.375), 2, 0.5, 0.75); }
     if (F.knock2 && !F.hello && P.room === 'vestibule' && P.pos.x < 1.5 && P.pos.z > 6.4) { F.hello = true; UI.thought(tr('t_hello'), 2.2); }
-    if (this.st > 130 && !F.nudge) { F.nudge = true; UI.thought(tr('t_nudgeDoor'), 3.5); }
+    if (G.t - F.knockT > 110 && !F.nudge) { F.nudge = true; UI.thought(tr('t_nudgeDoor'), 3.5); }
   },
-  /* from lying on the pillow, to looking at the clock, to sitting on the edge of the bed */
+  /* from lying on the pillow, to looking at the clock, to sitting on the edge of the bed, to the door */
   introPose(T) {
     const P = Player, lie = { x: 2.72, z: 0.52, eye: 0.8, yaw: -1.2, pitch: 1.18, roll: 0.05 };
     const clock = { x: 2.72, z: 0.52, eye: 0.79, yaw: -1.41, pitch: -0.18, roll: 0.36 };
     const sit = { x: 3.3, z: 1.35, eye: 1.12, yaw: -0.36, pitch: -0.22, roll: 0 };
-    const k1 = sstep(8.2, 9.8, T), k2 = sstep(14, 16.2, T);
+    const door = { x: 3.3, z: 1.35, eye: 1.12, yaw: -2.72, pitch: -0.15, roll: 0 };
+    const k1 = sstep(8.2, 9.8, T), k2 = sstep(14, 16.2, T), k3 = sstep(16.5, 18.6, T);
     const mix = (a, b, k) => { const o = {}; for (const key in a) o[key] = lerp(a[key], b[key], k); return o; };
-    const q = k2 > 0 ? mix(clock, sit, k2) : mix(lie, clock, k1);
+    const q = k3 > 0 ? mix(sit, door, k3) : k2 > 0 ? mix(clock, sit, k2) : mix(lie, clock, k1);
     const cm = Comfort.on ? 0.25 : 1;   // with reduced motion: the head hardly tilts and does not drift
     const drift = (1 - k1) * Math.sin(T * 0.4) * 0.03 * cm;
     P.pos.set(q.x, 0, q.z); P.yaw = q.yaw + drift; P.pitch = q.pitch; P.eyeOverride = q.eye; P.rollOverride = q.roll * cm;
   },
   introKnock() {
-    F.knock1 = true;
+    F.knock1 = true; F.knockT = G.t;
     Sound.knock(V3(-0.25, 1.3, 7.375), 3, 0.42, 0.7);
     after(1.8, () => UI.thought(tr('t_knock1'), 2.6));
     after(4.8, () => UI.thought(tr('t_knock2'), 2.4));
@@ -6757,14 +7229,59 @@ const Story = {
     this.introPose(99);
     postMat.uniforms.uFade.value = 0; postMat.uniforms.uWarp.value = 0;
     this.endIntro();
-    if (!F.knock1) after(0.8, () => this.introKnock());
+    if (!F.it4) { F.it4 = true; after(0.6, () => UI.thought(tr('t_doorShut'), 3.4)); }
   },
   endIntro() {
-    F.introDone = true;
+    F.introDone = true; F.ctrlT = G.t;
     const P = Player; P.eyeOverride = null; P.rollOverride = null; P.enabled = true; P.look = true; P.seated = true; P.standT = 0;
     UI.el.introCard.classList.remove('on');
     App.controlsHint();
     this.st = Math.max(this.st, this.INTRO_END);
+  },
+  /* the bedroom door, in the night: locked, until you have the key */
+  bedroomDoor() {
+    const d = DOORS.bedroom;
+    if (!d.locked) return false;
+    if (Hand.item === 'key') {
+      Hand.set(null); d.locked = false; F.unlocked = true;
+      Sound.play('unlock', d.pos, { gain: 0.8 });
+      after(0.8, () => d.open(1.0, 'slow'));
+      // and only now, with the door open, someone at the front door
+      after(3.6, () => { if (this.stage === 'intro') { this.setObj(null); this.introKnock(); } });
+      return true;
+    }
+    Sound.play('rattle', d.pos, { gain: 0.6 }); d.shake = 0.35;
+    if (!F.triedDoor) {
+      F.triedDoor = true; F.keyT = G.t; this.setObj('introKey');
+      after(0.5, () => UI.thought(tr('t_locked'), 2.6)); after(3.4, () => UI.thought(tr('t_noKey'), 2.4));
+    }
+    return true;
+  },
+  /* looking for it: the nightstand, the drawers, the wardrobe */
+  search(what) {
+    const say = { nightstand: 't_nightstand', drawers: 't_drawers', wardrobe: 't_wardrobe' }[what];
+    if (F['sr_' + what]) { UI.thought(tr(say), 2); return; }
+    F['sr_' + what] = true; F.searched = (F.searched || 0) + 1;
+    const pos = { nightstand: V3(3.45, 0.4, 0.55), drawers: V3(2.0, 0.4, 3.85), wardrobe: V3(4.95, 1.0, 1.3) }[what];
+    if (what === 'wardrobe') Sound.play('creakLong', pos, { gain: 0.3, rate: 1.5 }); else Sound.play('drawer', pos, { gain: 0.55 });
+    after(0.8, () => UI.thought(tr(say), 2.4));
+    if (F.searched >= 2 && !F.boxHint) { F.boxHint = true; after(3.6, () => UI.thought(tr('t_boxHint'), 3.4)); }
+  },
+  /* mum's jewellery box: open it, and the key is lying in it */
+  jewelUse() {
+    const J = W.jewel, p = J.g.getWorldPosition(new THREE.Vector3());
+    if (!J.target) { J.target = 1; F.boxHint = true; Sound.play('lid', p, { gain: 0.5 }); after(0.8, () => UI.thought(tr(F.triedDoor ? 't_boxOpen' : 't_boxKey'), 2.2)); return; }
+    if (F.hasKey) return;
+    F.hasKey = true; J.key.visible = false; Hand.set('key'); Sound.play('keyPick', p, { gain: 0.45 });
+    if (F.triedDoor) after(1.0, () => UI.thought(tr('t_whoLocked'), 2.8));
+  },
+  jewelReset(intro) { const J = W.jewel; if (!J) return; J.target = 0; J.open = 0; J.hinge.rotation.x = 0; J.key.visible = intro; },
+  bedroomFx(dt) {
+    // light under the bedroom door while it is shut and the hall lamp is on
+    if (W.doorLeak) W.doorLeak.visible = Math.abs(DOORS.bedroom.ang) < 0.02 && LN.hallA.lit && this.stage !== 'morning';
+    const look = this.stage === 'intro' && !!F.triedDoor && !F.hasKey;
+    if (W.searchBoxes) for (const b of W.searchBoxes) b.visible = look;
+    const J = W.jewel; if (J && J.open !== J.target) { J.open = Math.min(J.target, J.open + dt * 1.6); J.hinge.rotation.x = 1.9 * sstep(0, 1, J.open); }
   },
   frontDoor() {
     const d = DOORS.front, s = this.stage;
@@ -6778,7 +7295,6 @@ const Story = {
       after(1.0, () => UI.thought(tr('t_doorFail'), 4));
       F.doorFailed = true; this.setStage('p1');
       W.fridgeNote.visible = true;
-      W.hallMirror.queue = ['delay']; W.coatMirror.queue = ['delay'];
       after(5.5, () => this.stepsIn([V3(1.2, 0.1, 3.2), V3(1.8, 0.1, 3.5), V3(2.4, 0.1, 3.7), V3(3.0, 0.1, 3.8), V3(3.6, 0.1, 3.9), V3(4.2, 0.1, 4.0)], 0.55, () => { const bd = DOORS.bedroom; if (bd.isOpen) bd.close(0.8, 'slow'); else bd.open(0.7, 'slow'); }));
       return;
     }
@@ -6886,7 +7402,7 @@ const Story = {
     after(4.6, () => UI.thought(tr('t_silent'), 3.5));
     SU.uAmbient.value.set(0.004, 0.0045, 0.0065); SU.uFogDensity.value = 0.04;
     postMat.uniforms.uDesat.value = 0.06 + 0.2 * HORROR.p2;
-    W.hallMirror.queue = ['lookAway']; W.coatMirror.queue = ['delay'];
+    W.hallMirror.queue = ['lookAway'];
   },
 
   /* ---------- phase 2: the mirror ---------- */
@@ -7331,10 +7847,13 @@ const Story = {
         if (!m.session) { m.session = true; m.sessionT = 0; m.sessionYaw = Player.yaw; this.startSession(m); }
         m.sessionT += dt; m.off = 0;
         if (m.mode === 'frozen' && !m.frozenPose && m.sessionT > 0.8) m.frozenPose = Player.pose();
+        // the reflection that fell behind you catches up all at once, with a click like a joint
+        if (m.mode === 'delay' && m.sessionT > 4.2) { m.mode = 'normal'; Sound.play('crack', m.worldCenter(_ev).clone(), { gain: 0.32, rate: 0.9, hrtf: true, pri: 2 }); Fear.kick(0.45); }
       } else if (m.session) {
         m.off = (m.off || 0) + dt;
         if (m.off > 1.2) { m.session = false; this.endSession(m); }
       }
+      Shatter.check(m, viewing);
     }
   },
   mirrorViewing(m) {
@@ -7466,7 +7985,7 @@ const Story = {
 
   /* ---------- small interactions ---------- */
   readNote(name) {
-    const n = this.notes[name]; UI.showNote(n.text); Run.read[name] = 1;
+    const n = this.notes[name]; UI.showNote(n.text); Run.found('doc', name);
     UI.onClose = () => {
       if (name === 'fridge' && !F.noteRead) { F.noteRead = true; after(0.4, () => UI.thought(tr('t_handwriting'), 3)); after(3.8, () => UI.thought(tr('t_dontRemember'), 3.5)); }
       if (name === 'study' && !F.studyNoteRead) { F.studyNoteRead = true; after(0.4, () => UI.thought(tr('t_again'), 3)); }
@@ -7603,7 +8122,15 @@ const Distort = {
     if (!(s in HORROR)) return;
     const h = HORROR[s], k = 1 - Math.exp(-dt / 5);
     u.uDesat.value += (0.06 + 0.2 * h - u.uDesat.value) * k; u.uGrain.value += (0.05 + 0.03 * h - u.uGrain.value) * k;
-    u.uVig.value += (0.5 + 0.2 * h - u.uVig.value) * k; u.uChroma.value += (0.25 + 0.35 * h - u.uChroma.value) * k;
+    u.uChroma.value += (0.25 + 0.35 * h - u.uChroma.value) * k;
+    // the vignette closes in with every part of the night, and creeps on a little while you are in one
+    const i = STAGES.indexOf(s), nx = PROG[STAGES[i + 1]] ?? PROG[s], p = PROG[s] + (nx - PROG[s]) * 0.6 * clamp(Story.st / 360, 0, 1);
+    const v = vigFor(p), kv = 1 - Math.exp(-dt / 8);
+    // (and it breathes, very slowly, once it has started to close: not with reduced motion)
+    const br = Comfort.on ? 0 : Math.sin(G.t * 0.55) * 0.025 * p;
+    u.uVig.value += (v.k - u.uVig.value) * kv;
+    u.uVigR.value.x += (v.outer + br - u.uVigR.value.x) * kv; u.uVigR.value.y += (v.inner - u.uVigR.value.y) * kv;
+    u.uEdge.value += (v.edge - u.uEdge.value) * kv;
   },
   update(dt) {
     if (!postMat || !postMat.uniforms.uWob) return;
@@ -7751,7 +8278,7 @@ const Lore = {
     at(t, () => { Sound.play('beep', pos, { gain: 0.28 }); UI.voice(tr('vm_end'), 2, true); });
     at(t + 2.4, () => {
       this.vm = null;
-      const first = !this.heard[key]; this.heard[key] = true; Run.msgs[key] = 1;
+      const first = !this.heard[key]; this.heard[key] = true; Run.found('msg', key);
       if (first) UI.thought(tr({ vm1: 't_vm1', vm2: 't_vm2', vm3: 't_vm3' }[key]), 3.2);
     });
   },
@@ -7772,7 +8299,7 @@ const Lore = {
       t += dur + (k === 's' ? 0.5 : 0.35);
     }
     at(t, () => { Sound.play('beep', pos, { gain: 0.26 }); UI.voice(tr('vm_end'), 2, true); if (hiss) hiss.stop(0.6); });
-    at(t + 2.2, () => { this.vm = null; Run.msgs.mom = 1; Sound.duckTo(1, 2); UI.thought(tr('t_slept'), 3); });
+    at(t + 2.2, () => { this.vm = null; Run.found('msg', 'mom'); Sound.duckTo(1, 2); UI.thought(tr('t_slept'), 3); });
     at(t + 6.0, () => UI.thought(tr('t_neverCalled'), 3.6));
     at(t + 10.4, () => Story.toP3());
   },
@@ -7789,7 +8316,7 @@ const Lore = {
   read(kind) {
     const el = (tag, cls, text, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; parent.appendChild(e); return e; };
     const once = (k, fn) => { if (F['lore_' + k]) return; F['lore_' + k] = true; UI.onClose = fn; };
-    Run.read[kind] = 1;
+    Run.found('doc', kind);
     if (kind === 'diary') {
       const morning = G.stage === 'morning';
       UI.showDoc('diary', (b) => {
@@ -8335,7 +8862,8 @@ const Scare = {
     const sp = st === 'descent' ? [14.5, 0, 8.85, -Math.PI / 2, -0.15, false] : [3.3, 0, 1.35, -0.36, -0.22, true];
     const flash = P.flashOn;
     P.reset(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5]);
-    P.flashOn = flash || st === 'descent'; P.flashK = P.flashOn ? 1 : 0; P.fovT = 72;
+    if (st === 'descent' && Battery.level < 0.4) { Battery.level = 0.4; Battery.locked = false; }   // down there you cannot do without it
+    P.flashOn = (flash && !Battery.locked) || st === 'descent'; P.flashK = P.flashOn ? 1 : 0; P.fovT = 72;
     Dir.reset(); Flash.reset(); Fear.reset(); Reveal.reset(); Fear.kick(0.55);
     Story.fadeIn(3); Sound.duckTo(1, 1.2); Sound.muffle(0.55, 0.01); after(0.3, () => Sound.muffle(0, 2.5));
     if (st !== 'descent') Sound.play('creaks', V3(2.8, 0.4, 0.9), { gain: 0.25, rate: 0.8 });
@@ -8730,6 +9258,215 @@ const Reveal = {
     if (this.sil) this.updateSil(dt);
   },
 };
+/* ---- 08i_shatter.js ---- */
+/* ============================================================
+   Mirrors that break once they have done their part of the story.
+   It happens while you look: a tick in the glass where your own face
+   is, a second one, then the crack runs out through the whole pane and
+   the pieces sit at their own small angles. A few from the middle drop
+   out onto the floor. The glass still shows you, in pieces.
+   ============================================================ */
+const Shatter = {
+  // which mirrors, and from when on (the hall mirror goes last, while your reflection is missing from it)
+  RULES: [
+    { name: 'base', from: 's1' },     // the basement clock is set: it has shown what it had to show
+    { name: 'study', from: 's1' },    // the alarm clock only it could see is gone
+    { name: 'bath', from: 's3' },     // after the last of its tricks
+    { name: 'hall', from: 'p3', when: (m) => m.mode === 'missing' && m.sessionT > 2.4 },
+  ],
+  seq: null, gens: new Map(), pieces: [], mat: null, told: false,
+
+  init() {
+    // a handful of loose pieces to fall: thin, pale and sharp
+    this.mat = M({ color: '#c3c9ce', noise: 0.03, side: THREE.DoubleSide });
+    for (let i = 0; i < 10; i++) {
+      const g = new THREE.BufferGeometry(), r = seeded(40 + i), pts = [];
+      const n = 3 + (r() < 0.4 ? 1 : 0); for (let j = 0; j < n; j++) { const a = (j / n) * TAU + (r() - 0.5) * 0.9, d = 0.55 + r() * 0.6; pts.push([Math.cos(a) * d, Math.sin(a) * d]); }
+      const pos = []; for (let j = 1; j < n - 1; j++) pos.push(pts[0][0], pts[0][1], 0, pts[j][0], pts[j][1], 0, pts[j + 1][0], pts[j + 1][1], 0);
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
+      const m = new THREE.Mesh(g, this.mat); m.visible = false; m.userData.noLand = true; scene.add(m); DYN.add(m);
+      this.pieces.push({ m, v: new THREE.Vector3(), w: new THREE.Vector3(), live: false, landed: false });
+    }
+  },
+  /* a fresh night: every mirror whole again */
+  reset() {
+    this.seq = null; this.gens.clear(); this.told = false;
+    for (const m of MIRRORS) { if (m.crack) m.crack.tex.dispose(); m.broken = false; m.crack = null; const u = m.mat.uniforms; u.uBreak.value = 0; u.uFall.value = 0; u.tCrack.value = T.dirt; }
+    for (const p of this.pieces) { p.live = false; p.m.visible = false; }
+  },
+
+  /* from Story.updateMirrors, every frame, for each mirror */
+  check(m, viewing) {
+    if (m.broken || (this.seq && this.seq.m === m)) return;
+    const rule = this.RULES.find((r) => r.name === m.name);
+    if (!rule || SI(Story.stage) < SI(rule.from) || Story.stage === 'morning') return;
+    // the pattern is worked out ahead, a few rows a frame, as soon as the mirror is in sight: centred where
+    // your eyes are reflected when you stand in front of it
+    if (!m.crack && !this.gens.has(m) && activeMirror === m) this.gens.set(m, this.pattern(m, this.hitPoint(m), (Math.random() * 1e6) | 0));
+    if (!viewing || (rule.when && !rule.when(m))) return;
+    if (m.crack && !this.seq && m.sessionT > (rule.when ? 0 : 1.1)) this.start(m);
+  },
+  /* where on the glass your own eyes are reflected: straight in front of them */
+  hitPoint(m) {
+    const p = m.mesh.worldToLocal(_sh1.copy(camera.position));
+    return [0.5 + (Math.random() - 0.5) * 0.16, clamp(p.y / m.h + 0.5, 0.3, 0.8)];
+  },
+
+  /* ---------- the crack pattern ----------
+     A spider's web from the point of impact: radial cracks that kink as they run (some stop short, most
+     reach the frame) and rings of short straight cracks between them, closer together near the middle.
+     Written into a small texture: r = the piece (every region the cracks close off gets its own value,
+     found by filling), g = the crack itself, b = how far out it lies (when the break reaches it),
+     a = the moment a loose piece in the middle drops out (255: never). */
+  *pattern(m, hit, seed) {
+    const r = seeded(seed), W = 384, H = m.h / m.w > 1.4 ? 768 : 384, w = m.w, h = m.h;
+    const hx = hit[0] * w, hy = hit[1] * h, psx = w / W, psy = h / H, px = Math.min(psx, psy);
+    const Rmax = Math.max(Math.hypot(hx, hy), Math.hypot(w - hx, hy), Math.hypot(hx, h - hy), Math.hypot(w - hx, h - hy));
+    // the radial cracks
+    const N = 9 + Math.floor(r() * 5), rot = r() * TAU, gap = TAU / N, lines = [];
+    for (let i = 0; i < N; i++) {
+      const step = 0.035 + r() * 0.05, K = Math.ceil(Rmax / step) + 2, off = new Float32Array(K); let o = 0;
+      for (let k = 1; k < K; k++) { o = clamp(o + (r() - 0.5) * 0.16, -gap * 0.32, gap * 0.32); off[k] = o; }
+      lines.push({ a0: rot + i * gap + (r() - 0.5) * gap * 0.5, L: r() < 0.62 ? 9 : 0.12 + r() * 0.55, step, off });
+    }
+    const ang = (l, rr) => { const f = rr / l.step, k = Math.min(l.off.length - 2, Math.floor(f)), t = f - k; return l.a0 + l.off[k] + (l.off[k + 1] - l.off[k]) * t; };
+    // the rings: short straight cracks from one radial crack to the next
+    const RING = [0.028, 0.06, 0.1, 0.155, 0.23, 0.32].map((x) => x * (0.85 + r() * 0.5)), PR = [0.95, 0.88, 0.72, 0.55, 0.4, 0.25], segBy = [];
+    for (let i = 0; i < N; i++) {
+      const segs = []; segBy.push(segs);
+      const A = lines[i], B = lines[(i + 1) % N];
+      RING.forEach((R, j) => {
+        if (r() > PR[j] || R > Math.min(A.L, B.L)) return;
+        const ra = R * (0.82 + r() * 0.36), rb = R * (0.82 + r() * 0.36), aa = ang(A, ra), ab = ang(B, rb);
+        segs.push({ x0: Math.cos(aa) * ra, y0: Math.sin(aa) * ra, x1: Math.cos(ab) * rb, y1: Math.sin(ab) * rb, R: Math.max(ra, rb) });
+      });
+    }
+    // 1. how far every pixel is from a crack
+    const n = W * H, dist = new Float32Array(n), rad = new Float32Array(n);
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const X = (x + 0.5) * psx - hx, Y = (y + 0.5) * psy - hy, rr = Math.hypot(X, Y), a = Math.atan2(Y, X);
+        let d = rr < 0.007 ? 0 : 1e9;   // crushed where it was struck
+        // only the cracks of this sector and its neighbours can be the nearest
+        let rel = (a - rot) / gap; rel -= N * Math.floor(rel / N); const k = Math.floor(rel);
+        for (let q = -1; q <= 2; q++) {
+          const l = lines[(k + q + N) % N];
+          if (rr <= l.L) { let da = a - ang(l, rr); da -= TAU * Math.round(da / TAU); if (Math.abs(da) < 1.3) d = Math.min(d, rr * Math.abs(Math.sin(da))); }
+          else { const ae = ang(l, l.L); d = Math.min(d, Math.hypot(X - Math.cos(ae) * l.L, Y - Math.sin(ae) * l.L)); }
+          if (q > 1) continue;
+          for (const s of segBy[(k + q + N) % N]) {
+            if (Math.abs(rr - s.R) > 0.08) continue;
+            const vx = s.x1 - s.x0, vy = s.y1 - s.y0, t = clamp(((X - s.x0) * vx + (Y - s.y0) * vy) / (vx * vx + vy * vy), 0, 1);
+            d = Math.min(d, Math.hypot(X - s.x0 - vx * t, Y - s.y0 - vy * t));
+          }
+        }
+        dist[y * W + x] = d; rad[y * W + x] = rr;
+      }
+      if ((y & 7) === 7) yield;
+    }
+    // 2. the pieces: every region the cracks close off (4-connected, so no piece leaks through a corner)
+    const cut = 1.3 * px, lab = new Int32Array(n).fill(-1), par = [], find = (i) => { while (par[i] !== i) { par[i] = par[par[i]]; i = par[i]; } return i; };
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const i = y * W + x; if (dist[i] < cut) continue;
+        const a = x > 0 ? lab[i - 1] : -1, b = y > 0 ? lab[i - W] : -1;
+        if (a < 0 && b < 0) { lab[i] = par.length; par.push(par.length); }
+        else if (a >= 0 && b >= 0) { const ra = find(a), rb = find(b); lab[i] = Math.min(ra, rb); if (ra !== rb) par[Math.max(ra, rb)] = Math.min(ra, rb); }
+        else lab[i] = a >= 0 ? a : b;
+      }
+      if ((y & 31) === 31) yield;
+    }
+    const P = new Map();
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x; if (lab[i] < 0) continue;
+      const id = find(lab[i]); lab[i] = id;
+      let p = P.get(id); if (!p) P.set(id, (p = { n: 0, sx: 0, sy: 0, maxR: 0, minR: 9, edge: false, v: 1 + Math.floor(r() * 253), fall: 255 }));
+      p.n++; p.sx += x; p.sy += y; p.maxR = Math.max(p.maxR, rad[i]); p.minR = Math.min(p.minR, rad[i]);
+      if (x === 0 || y === 0 || x === W - 1 || y === H - 1) p.edge = true;
+    }
+    yield;
+    // 3. a few loose pieces near the middle drop out, the innermost first
+    const area = psx * psy, loose = [...P.values()].filter((p) => !p.edge && p.n * area > 0.0005 && p.n * area < 0.02 && p.minR < 0.2 && r() < 0.55).sort((p, q) => p.minR - q.minR).slice(0, 2 + Math.floor(r() * 3));
+    loose.forEach((p, k) => { p.fall = 25 + k * 45; });
+    // 4. into the texture
+    const data = new Uint8Array(n * 4);
+    for (let i = 0; i < n; i++) {
+      const d = dist[i], g = d < 0.0013 ? 1 : Math.max(0, 1 - (d - 0.0013) / 0.0032), o = i * 4;   // a hairline, a few millimetres of shadow
+      data[o + 1] = Math.round(Math.pow(g, 1.3) * 255);
+      if (lab[i] < 0) { data[o] = 0; data[o + 2] = Math.round(clamp(rad[i] / Rmax, 0, 1) * 250); data[o + 3] = 255; }
+      else { const p = P.get(lab[i]); data[o] = p.v; data[o + 2] = Math.round(clamp(p.maxR / Rmax + 0.015, 0, 1) * 250); data[o + 3] = p.fall; }
+    }
+    const tex = new THREE.DataTexture(data, W, H, THREE.RGBAFormat);
+    tex.magFilter = THREE.LinearFilter; tex.minFilter = THREE.LinearMipmapLinearFilter; tex.generateMipmaps = true; tex.needsUpdate = true;
+    // the pieces that will fall: where they are on the glass, how big, and when
+    const falls = loose.map((p) => ({ u: (p.sx / p.n + 0.5) / W, v: (p.sy / p.n + 0.5) / H, size: Math.sqrt(p.n * area), at: p.fall / 255 }));
+    m.crack = { tex, falls, Rmax };
+  },
+
+  /* ---------- the break, in time ---------- */
+  start(m) {
+    const u = m.mat.uniforms; u.tCrack.value = m.crack.tex; u.uBreak.value = 0; u.uFall.value = 0;
+    this.seq = { m, t: 0, stage: 0, falls: m.crack.falls.map((f) => Object.assign({ done: false }, f)) };
+  },
+  update(dt) {
+    // pattern generation: a slice of work per frame
+    for (const [m, g] of this.gens) {
+      const t0 = performance.now();
+      while (performance.now() - t0 < 4) { if (g.next().done) { this.gens.delete(m); break; } }
+      break;   // one mirror at a time
+    }
+    const S = this.seq;
+    if (S) {
+      const m = S.m, u = m.mat.uniforms, c = m.worldCenter(_sh2);
+      S.t += dt;
+      if (S.stage === 0) { S.stage = 1; Sound.play('glassTick', c.clone(), { gain: 0.5, hrtf: true, pri: 2 }); }
+      if (S.stage === 1) { u.uBreak.value = 0.03 * sstep(0, 0.06, S.t); if (S.t > 0.75) { S.stage = 2; Sound.play('glassTick', c.clone(), { gain: 0.65, rate: 0.92, hrtf: true, pri: 2 }); } }
+      if (S.stage === 2) { u.uBreak.value = 0.03 + 0.05 * sstep(0.75, 0.82, S.t); if (S.t > 1.45) { S.stage = 3; S.t3 = S.t; this.bang(m, c); } }
+      if (S.stage === 3) {
+        const k = clamp((S.t - S.t3) / 0.24, 0, 1);
+        u.uBreak.value = 0.08 + 0.98 * (1 - Math.pow(1 - k, 2.2));
+        // then the loose pieces go, one after another
+        const f = clamp((S.t - S.t3 - 0.45) / 1.5, 0, 1); u.uFall.value = f;
+        for (const p of S.falls) if (!p.done && f >= p.at) { p.done = true; this.drop(m, p); }
+        if (f >= 1) { u.uBreak.value = 1.06; m.broken = true; this.seq = null; }
+      }
+    }
+    // the falling pieces
+    for (const p of this.pieces) {
+      if (!p.live || p.landed) continue;
+      p.v.y -= 9.8 * dt; p.m.position.addScaledVector(p.v, dt);
+      p.m.rotation.x += p.w.x * dt; p.m.rotation.y += p.w.y * dt; p.m.rotation.z += p.w.z * dt;
+      const fl = p.floor;
+      if (p.m.position.y <= fl + 0.004) {
+        p.landed = true; p.m.position.y = fl + 0.004 + Math.random() * 0.002; p.m.rotation.set(-Math.PI / 2 + (Math.random() - 0.5) * 0.08, 0, Math.random() * TAU);
+        Sound.play('glassShard', p.m.position.clone(), { gain: 0.35 + Math.random() * 0.25, rate: 0.9 + Math.random() * 0.25, hrtf: true });
+      }
+    }
+  },
+  bang(m, c) {
+    Sound.play('glassCrack', c.clone(), { gain: 0.95, hrtf: true, pri: 3 });
+    Fear.kick(0.85); Player.shake = Math.max(Player.shake || 0, 0.05);
+    if (!this.told) { this.told = true; after(1.8, () => UI.thought(tr('t_mirrorBroke'), 3)); }
+  },
+  drop(m, f) {
+    const p = this.pieces.find((q) => !q.live) || this.pieces[0];
+    const n = m.worldNormal(_sh3);
+    m.mesh.localToWorld(p.m.position.set((f.u - 0.5) * m.w, (f.v - 0.5) * m.h, 0.006));
+    p.m.scale.setScalar(clamp(f.size * 0.55, 0.02, 0.08));
+    p.m.quaternion.copy(m.mesh.getWorldQuaternion(_sh4));
+    p.v.copy(n).multiplyScalar(0.35 + Math.random() * 0.45); p.v.y += 0.2;
+    p.w.set((Math.random() - 0.5) * 9, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 9);
+    // where it will come down: on the floor, or on whatever stands under the mirror (a sink, a shelf)
+    const x0 = p.m.position.x, y0 = p.m.position.y, z0 = p.m.position.z, g0 = groundAt(x0, z0, y0) ?? y0 - 1.5;
+    const tf = (p.v.y + Math.sqrt(p.v.y * p.v.y + 2 * 9.8 * Math.max(0.05, y0 - g0))) / 9.8;
+    _shRay.set(_sh1.set(x0 + p.v.x * tf, y0 + 0.05, z0 + p.v.z * tf), _sh2.set(0, -1, 0)); _shRay.far = 4; _shRay.camera = camera;
+    const hit = _shRay.intersectObjects(scene.children, true).find((h) => h.object.visible && !h.object.userData.noLand && (h.object.layers.mask & ~6) !== 0 && h.face && Math.abs(h.face.normal.y) > 0.5 && !MIRRORS.some((q) => q.mesh === h.object) && isShown(h.object));
+    p.floor = hit ? Math.max(hit.point.y, g0) : g0;
+    p.live = true; p.landed = false; p.m.visible = true;
+  },
+};
+const _sh1 = new THREE.Vector3(), _sh2 = new THREE.Vector3(), _sh3 = new THREE.Vector3(), _sh4 = new THREE.Quaternion();
+const _shRay = (() => { const r = new THREE.Raycaster(); r.layers.mask = 0xffffffff | 0; return r; })();
 /* ---- 08e_power.js ---- */
 /* ============================================================
    The power cut: the fuse box on the landing, what hangs on each
@@ -9125,6 +9862,9 @@ const Attic = {
     this.lidT = this.lid = n >= SI('s3') && n <= SI('descent') ? 1 : 0;
     this.drawerT = this.drawer = n > SI('s3') && n <= SI('descent') ? 1 : 0;
     this.code = null; this.horseT = 0; this.dragNext = G.t + 20;
+    // (never carry a red bulb or crying over into a fresh start)
+    this.cryOn = false; this.red = null;
+    { const L = LN.attic; L.color = lin('#ffcf8c'); L.fixColor = lin('#ffe2b0'); L.intensity = 2.6; L._fk = -1; L.pos.set(7.2, 3.86, 5.4); L.radius = 7.5; }
     W.cassette.visible = false; W.lock.visible = this.lidT < 1;
     W.dress.rotation.y = 0; W.horse.rotation.z = 0;
     this.sync();
@@ -9356,7 +10096,72 @@ const Attic = {
     if (!W.cassette.visible || F.tapeTaken) return;
     F.tapeTaken = true; W.cassette.visible = false; Hand.set('tape');
     Sound.play('switch', V3(CHEST.x + 0.3, AF + 0.1, CHEST.z), { gain: 0.3, rate: 1.6 });
-    after(0.5, () => UI.thought(tr('t_tape'), 2.8));
+    this.redRoom();
+  },
+
+  /* ---------- the tape in your hand ----------
+     The song stops. The bulb goes red, the torch gives out, and the crawl space fills with small children
+     crying, from behind the boxes, from under the boards. At the top of the ladder, half out of the hatch,
+     it stands and looks at you. A few seconds, and it climbs back down, rung by rung. Then it is quiet. */
+  redRoom() {
+    const L = LN.attic, P = Player;
+    this.red = { keep: { color: L.color.clone(), i: L.intensity, fix: L.fixColor.clone(), kf: L.keepFlicker, pos: L.pos.clone(), r: L.radius }, cries: [] };
+    Sound.lullaby(false, { tc: 0.02 });
+    Sound.play('pop', L.pos, { gain: 0.5, rate: 0.7 }); Sound.wrongSpike(0.6, 2.5);
+    L.color = lin('#ff1405'); L.fixColor = lin('#ff2a10'); L.intensity = 4.6; L.pw = 1; L.on = 1; L._fk = -1;
+    L.pos.set(8.4, 3.95, 5.4); L.radius = 12;   // red all the way down to the far end, so it stands out black against the boards behind it
+    L.keepFlicker = true; L.setFlicker('buzz');
+    if (P.flashOn) Flash.die(40, 0.05);   // only the red now
+    Fear.kick(0.8);
+    // the crying: from behind the boxes, by the chest, under the boards, and one far too slow
+    const spots = [V3(4.6, AF + 0.25, 4.75), V3(9.4, AF + 0.25, 6.05), V3(6.6, AF - 0.6, 5.4), V3(3.1, AF + 0.45, 5.95)];
+    this.cryOn = true;
+    const cryLoop = (i) => {
+      if (!this.cryOn || !this.red) return;
+      const b = pick(Sound.B.cry || []); if (!b) return;
+      const rate = i === 3 ? 0.72 : rand(0.92, 1.08);
+      const src = Sound.playBuf(b, spots[i], { gain: i === 2 ? 0.55 : 0.42, rate, hrtf: true, rev: 0.6, pri: 2, pure: i !== 3 });
+      if (src) this.red.cries.push(src);
+      after(b.duration / rate + rand(0.15, 0.9), () => cryLoop(i));
+    };
+    spots.forEach((_, i) => after(0.45 + i * 0.6, () => cryLoop(i)));
+    after(0.35, () => this.redStand());
+  },
+  redStand() {
+    const P = Player, top = V3(11.62, 2.07, 5.4);
+    let seenT = 0, down = 0;
+    Ent.spawn({ id: 'ladderTop', pos: top, yaw: faceYaw(top, P.pos), pose: { hunch: 0.28, roll: 0.45, pitch: 0.12 }, persistent: true, flashKill: false, noFalter: true, eyesOn: true, fadeIn: 0.9, lunge: false,
+      update: (dt, E) => {
+        const r = E.H.root.position;
+        if (down > 0) {   // back down the ladder, rung by rung, and gone through the hole
+          down += dt; const y0 = r.y; r.y = top.y - Math.min(2.5, down * 1.6);
+          if (Math.floor(y0 / 0.32) !== Math.floor(r.y / 0.32)) Sound.step('stairs', V3(r.x, r.y + 0.15, r.z), { gain: 0.5, rate: 0.8, hrtf: true, pri: 2 });
+          if (down * 1.6 >= 2.5) { E.hide('unseen'); return false; }
+          return;
+        }
+        E.H.root.rotation.y = faceYaw(r, P.pos);
+        const head = E.H.head.getWorldPosition(_av);
+        if (canSee(head, 0.1)) { seenT += dt; if (!F.redSeen) { F.redSeen = true; Fear.kick(1); Player.shake = Math.max(Player.shake, 0.1); } }
+        const close = Math.hypot(r.x - P.pos.x, r.z - P.pos.z) < 2.6;
+        if (seenT > 3.2 || E.t > 13 || close) { down = 0.001; E.smT = 0; E.headSound('crack', 0.55); }
+      },
+      onHide: () => this.redEnd() });
+  },
+  /* and then it is quiet: the crying stops dead, the bulb stutters and is itself again */
+  redEnd() {
+    const R = this.red; if (!R) return;
+    this.cryOn = false;
+    const now = Sound.ctx ? Sound.ctx.currentTime : 0;
+    for (const s of R.cries) { try { s.stop(now + 0.03); } catch (e) { /* already done */ } }
+    const L = LN.attic;
+    L.setFlicker('unstable'); if (L.flick) L.flick.next = 0.05;
+    after(1.0, () => {
+      L.setFlicker(null); L.color.copy(R.keep.color); L.fixColor.copy(R.keep.fix); L.intensity = R.keep.i; L.keepFlicker = R.keep.kf; L._fk = -1; L.pos.copy(R.keep.pos); L.radius = R.keep.r;
+      Power.apply(false);
+      if (Flash.dead()) Flash.revive();
+      this.red = null;
+    });
+    after(1.8, () => UI.thought(tr('t_tape'), 2.8));
   },
 };
 /* ---- 08g_credits.js ---- */
@@ -9371,6 +10176,16 @@ const CREDITS = { by: '' };
 const Run = {
   t: 0, caught: 0, read: {}, msgs: {},
   reset() { this.t = 0; this.caught = 0; this.read = {}; this.msgs = {}; },
+  DOCS: 7, MSGS: 4,
+  /* a document read or a message heard for the first time: count it, and say so on screen for a moment */
+  found(kind, key) {
+    const o = kind === 'msg' ? this.msgs : this.read;
+    if (o[key]) return;
+    o[key] = 1;
+    const n = Math.min(Object.keys(o).length, kind === 'msg' ? this.MSGS : this.DOCS), of = kind === 'msg' ? this.MSGS : this.DOCS;
+    UI.toast(tr(n >= of ? (kind === 'msg' ? 'fnd_msgAll' : 'fnd_docAll') : (kind === 'msg' ? 'fnd_msg' : 'fnd_doc')), `${n} ${tr('fnd_of')} ${of}`);
+  },
+  line() { const n = (o) => Object.keys(o).length; return `${tr('fnd_h')}: ${Math.min(this.DOCS, n(this.read))} ${tr('st_of')} ${this.DOCS} ${tr('fnd_docs')} · ${Math.min(this.MSGS, n(this.msgs))} ${tr('st_of')} ${this.MSGS} ${tr('fnd_msgs')}`; },
   save() { Store.set('run', JSON.stringify({ t: Math.round(this.t), caught: this.caught, read: this.read, msgs: this.msgs })); },
   load() {
     this.reset();
@@ -9443,7 +10258,7 @@ const Credits = {
 const UI = {
   overlay: null, onClose: null, q: [], cur: null, tt: 0, gap: 0, el: {}, hintTO: 0, restartArm: 0,
   init() {
-    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard', 'stickzone', 'clockpad', 'clockDoneT', 'gyroSel', 'gyroSens', 'comfortSel', 'handItem', 'panel', 'panelBody', 'credits', 'credRoll', 'credSkip', 'endStats', 'endDigits']) this.el[id] = $(id);
+    for (const id of ['hud', 'prompt', 'promptText', 'thought', 'hint', 'clockPanel', 'clockTime', 'note', 'noteText', 'image', 'imgCanvas', 'imgCap', 'title', 'pause', 'end', 'objText', 'hintText', 'stuck', 'sens', 'vol', 'startBtn', 'contBtn', 'resumeBtn', 'restartBtn', 'againBtn', 'touch', 'dragNote', 'loading', 'digits', 'stick', 'nub', 'lookpad', 'tE', 'tF', 'tM', 'view', 'quality', 'bright', 'calib', 'calCanvas', 'calBright', 'calDone', 'perfSel', 'langSel', 'clockRing', 'clockDot', 'doc', 'docBody', 'voice', 'clockMirror', 'clockMirrorTime', 'introCard', 'stickzone', 'clockpad', 'clockDoneT', 'gyroSel', 'gyroSens', 'comfortSel', 'handItem', 'batt', 'battFill', 'battLabel', 'battBeam', 'toast', 'toastK', 'toastN', 'foundText', 'panel', 'panelBody', 'credits', 'credRoll', 'credSkip', 'endStats', 'endDigits']) this.el[id] = $(id);
     this.el.credits.addEventListener('pointerdown', (e) => { if (e.target !== this.el.credSkip) Credits.skip(); });
     this.el.credSkip.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); Credits.skip(); });
     this.el.credSkip.addEventListener('pointerdown', (e) => e.stopPropagation());
@@ -9456,8 +10271,8 @@ const UI = {
     this.el.vol.addEventListener('input', () => { Sound.setVolume(parseFloat(this.el.vol.value)); Store.set('vol', Sound.vol); });
     this.el.quality.value = Store.get('quality') || 'auto';
     this.el.quality.addEventListener('change', () => { if (renderer) Quality.set(this.el.quality.value); });
-    this.el.startBtn.addEventListener('click', () => { Gyro.request(); this.beforeStart('intro'); });
-    this.el.contBtn.addEventListener('click', () => { Gyro.request(); this.beforeStart(App.ckpt || 'intro'); });
+    this.el.startBtn.addEventListener('click', () => { Gyro.request(); App.fullscreen(); this.beforeStart('intro'); });
+    this.el.contBtn.addEventListener('click', () => { Gyro.request(); App.fullscreen(); this.beforeStart(App.ckpt || 'intro'); });
     // tilt to look (phones)
     Gyro.init();
     this.el.gyroSel.checked = Gyro.want; this.el.gyroSens.value = Gyro.sens;
@@ -9591,6 +10406,21 @@ const UI = {
     const mir = c === CLOCKS.basement && G.stage === 'p1';
     this.el.clockMirror.hidden = !mir;
     if (mir) { const mm = (720 - m) % 720; this.el.clockMirrorTime.textContent = fmt(mm); this.el.clockMirror.classList.toggle('ok', Math.abs(mm - TARGET_MIN) <= 1); }
+  },
+  /* a short line at the top of the screen: what you found, and how many of them */
+  toast(head, count) {
+    const q = this.toastQ || (this.toastQ = []);
+    q.push([head, count]);
+    if (!this.toastBusy) this.nextToast();
+  },
+  nextToast() {
+    const q = this.toastQ, el = this.el.toast;
+    if (!q.length) { this.toastBusy = false; return; }
+    const [head, count] = q.shift(); this.toastBusy = true;
+    this.el.toastK.textContent = head; this.el.toastN.textContent = count;
+    el.hidden = false; void el.offsetWidth; el.classList.add('on');
+    clearTimeout(this.toastTO);
+    this.toastTO = setTimeout(() => { el.classList.remove('on'); this.toastTO = setTimeout(() => { el.hidden = true; this.nextToast(); }, 700); }, 3400);
   },
   objective(stage) {
     const k = typeof Story !== 'undefined' && Story.objKey && stage === Story.stage ? Story.objKey : stage;
@@ -9735,6 +10565,36 @@ const Perf = {
    hallway, and a menu. Now and then someone stands in that doorway.
    Settings, controls and a word about the game open in a side sheet.
    ============================================================ */
+/* ---------- on the home screen of a phone ----------
+   Installed, it opens without the browser around it: the whole screen, on its side. On Android the
+   browser offers it (a button appears once it does); on an iPhone it goes through Share, so the button
+   explains how. Only when the game is on a web address: a file opened from the phone cannot be installed. */
+const Install = {
+  evt: null, ios: false, web: false,
+  init() {
+    this.web = /^https?:$/.test(location.protocol);
+    this.ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.evt = e; this.show(); });
+    addEventListener('appinstalled', () => { this.evt = null; this.hide(); });
+    $('installBtn').addEventListener('click', () => this.click());
+    if (this.web && !App.standalone() && (this.ios || isTouch)) this.show();
+  },
+  show() { if (!App.standalone()) $('installBtn').hidden = false; },
+  hide() { $('installBtn').hidden = true; },
+  click() {
+    if (this.evt) { const e = this.evt; e.prompt(); (e.userChoice || Promise.resolve()).then((c) => { if (c && c.outcome === 'accepted') { this.evt = null; this.hide(); } }).catch(() => {}); return; }
+    Title.open('install', $('installBtn'));
+  },
+  /* the words for the sheet: the steps for this phone first */
+  fill() {
+    const b = $('installBody'); if (!b) return; b.textContent = '';
+    mk('p', 'ap', b, tr('inst_lede'));
+    const steps = (head, list) => { const s = mk('section', 'ctl', b); mk('h3', null, s, head); const ol = mk('ol', null, s); for (const t of list) mk('li', null, ol, t); };
+    const ios = () => steps(tr('inst_ios_h'), tr('inst_ios')), and = () => steps(tr('inst_and_h'), tr('inst_and'));
+    if (this.ios) { ios(); and(); } else { and(); ios(); }
+    mk('p', 'ap', b, tr('inst_after'));
+  },
+};
 const CHAPTERS = { p2: 'ch_p2', p2b: 'ch_p2b', s1: 'ch_s1', s2: 'ch_s2', s3: 'ch_s3', p3: 'ch_p3', descent: 'ch_descent' };
 const Title = {
   ready: false, t: 0, sheet: null, opener: null, wipeArm: 0,
@@ -9748,6 +10608,7 @@ const Title = {
     this.el.tsheet.addEventListener('pointerdown', (e) => { if (e.target === this.el.tsheet) this.close(); });
     this.el.calibBtn.addEventListener('click', () => { this.close(); UI.calibrate('title'); });
     this.el.wipeBtn.addEventListener('click', () => this.wipe());
+    Install.init();
     addEventListener('keydown', (e) => this.key(e));
     this.fill();
     this.ready = true;
@@ -9777,6 +10638,7 @@ const Title = {
       if (CREDITS.by && String(CREDITS.by).trim()) { mk('h3', null, s, tr('cr_by')); mk('p', 'aby', s, String(CREDITS.by).trim()); }
       mk('h3', null, s, tr('about_tech_h')); mk('p', null, s, tr('about_tech'));
       mk('p', 'aver', s, tr('about_ver')); }
+    Install.fill();
     this.refresh();
   },
   /* which button leads: carry on where you were, or begin */
@@ -9804,7 +10666,7 @@ const Title = {
     this.sheet = kind; this.opener = from || null;
     const sh = this.el.tsheet;
     for (const b of sh.querySelectorAll('.sheetBody')) b.hidden = b.dataset.for !== kind;
-    this.el.tsheetTitle.textContent = tr({ settings: 'btn_settings', controls: 'btn_controls', about: 'btn_about' }[kind]);
+    this.el.tsheetTitle.textContent = tr({ settings: 'btn_settings', controls: 'btn_controls', about: 'btn_about', install: 'btn_install' }[kind]);
     if (kind === 'settings') { this.el.setSlot.appendChild(this.el.settingsRows); this.refresh(); }
     sh.hidden = false; sh.querySelector('.sheetBox').scrollTop = 0;
     document.body.classList.add('sheetOpen');
@@ -9829,7 +10691,7 @@ const Title = {
 
   /* ---------- the room behind the menu ---------- */
   /* the bedroom dark, the hallway lit beyond the open door (the game sets its own lights when it starts) */
-  place() { const c = this.cam; Player.reset(c.x, 0, c.z, c.yaw, c.pitch, false); LN.bedroom.on = 0; },
+  place() { const c = this.cam; Player.reset(c.x, 0, c.z, c.yaw, c.pitch, false); LN.bedroom.on = 0; LN.sun.on = 0; DOORS.bedroom.set(true); DOORS.bedroom.locked = false; },
   update(dt) {
     this.t += dt;
     const c = this.cam, t = this.t;
@@ -9894,6 +10756,7 @@ const App = {
       mergeWorld();
       buildPortals();
       assignRooms();
+      Shatter.init();
     } catch (e) {
       console.error(e);
       UI.el.loading.textContent = tr('webgl');
@@ -9930,6 +10793,20 @@ const App = {
     if (isTouch) UI.el.touch.hidden = false;
     lockPointer();
   },
+  standalone() { return matchMedia('(display-mode: fullscreen)').matches || matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; },
+  /* on a phone: the whole screen, on its side. In a browser tab that takes a tap, so it is asked for on
+     Begin and on Carry on. (An iPhone will not do it for a web page: there, putting it on the home screen
+     is the way, see Install.) */
+  fullscreen() {
+    if (!isTouch) return;
+    const d = document, el = d.documentElement;
+    const lock = () => { try { const o = screen.orientation; if (o && o.lock) o.lock('landscape').catch(() => {}); } catch (e) { /* not here */ } };
+    if (d.fullscreenElement || d.webkitFullscreenElement) { lock(); return; }
+    try {
+      const r = el.requestFullscreen ? el.requestFullscreen({ navigationUI: 'hide' }) : el.webkitRequestFullscreen ? el.webkitRequestFullscreen() : null;
+      if (r && r.then) r.then(lock).catch(() => {}); else lock();
+    } catch (e) { /* no fullscreen for pages here */ }
+  },
   controlsHint(dur = 12) {
     if (isTouch) { UI.hint(`<span>${tr('k_twalk')}</span><span>${tr('k_tlook')}${Gyro.ok && Gyro.want ? ' · ' + tr('k_tilt') : ''}</span><span><kbd>E</kbd> ${tr('k_use')}</span><span><kbd>F</kbd> ${tr('k_flash')}</span>`, dur); return; }
     UI.hint(`<span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> ${tr('k_walk')}</span><span><kbd>${tr('k_mouse')}</kbd> ${tr('k_look')}</span><span><kbd>E</kbd> ${tr('k_use')}</span><span><kbd>F</kbd> ${tr('k_flash')}</span><span><kbd>Esc</kbd> ${tr('k_menu')}</span>`, dur); },
@@ -9943,11 +10820,13 @@ const App = {
     Sound.suspend();
     UI.el.pause.hidden = false; UI.el.touch.hidden = true; UI.el.hud.hidden = true; UI.el.dragNote.hidden = true;
     UI.objective(G.stage);
+    UI.el.foundText.textContent = Run.line();
     if (document.pointerLockElement) document.exitPointerLock();
     setTimeout(() => UI.el.resumeBtn.focus({ preventScroll: true }), 30);
   },
   resume() {
     if (this.glLost) return;
+    this.fullscreen();
     this.resumedAt = performance.now();
     UI.el.pause.hidden = true; UI.el.hud.hidden = false; G.paused = false; Sound.resume();
     if (isTouch) UI.el.touch.hidden = false;
