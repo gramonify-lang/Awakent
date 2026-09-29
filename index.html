@@ -781,7 +781,7 @@ const STR = {
     lbl_light: 'Licht', lbl_lightOn: 'Licht aan', lbl_lightOff: 'Licht uit',
     // thoughts
     t_goOut: 'Ik moet naar buiten.', t_nudgeDoor: 'De voordeur. Aan het eind van de gang.', t_doorFail: 'Hij zit niet op slot. Hij gaat gewoon niet open.',
-    t_notFront: 'Niet de voordeur. Beneden.', t_stuck1: 'Hij beweegt niet.', t_stuck2: 'Nog steeds niet.',
+    t_notFront: 'Niet de voordeur. Beneden.', t_voidOut: 'Buiten is niets. Alleen donker, en wind.', t_stuck1: 'Hij beweegt niet.', t_stuck2: 'Nog steeds niet.',
     t_d1: '03:33.', t_d2: 'Nog steeds 3:33.', t_d3: 'Alles zegt 3:33. Behalve de klokken aan de muur.',
     t_clockStopped: 'Hij tikt niet meer.', t_oneMore: 'Nog één. Beneden.', t_clockOk: 'Die staat goed.', t_silent: 'Alles is stil.',
     t_water: 'Er loopt ergens water.', t_mirrorWriting: 'Spiegelschrift.', t_behind: 'Er stond iemand achter me.',
@@ -871,7 +871,7 @@ const STR = {
     lbl_tap: 'Tap', lbl_tapOff: 'Turn off tap', lbl_alarm: 'Alarm clock', lbl_chair: 'Chair', lbl_books: 'Books', lbl_lamp: 'Lamp', lbl_chain: 'Pull cord',
     lbl_light: 'Light', lbl_lightOn: 'Light on', lbl_lightOff: 'Light off',
     t_goOut: 'I need to get outside.', t_nudgeDoor: 'The front door. At the end of the hall.', t_doorFail: "It isn't locked. It just won't open.",
-    t_notFront: 'Not the front door. Downstairs.', t_stuck1: "It won't move.", t_stuck2: 'Still nothing.',
+    t_notFront: 'Not the front door. Downstairs.', t_voidOut: 'There is nothing outside. Only dark, and wind.', t_stuck1: "It won't move.", t_stuck2: 'Still nothing.',
     t_d1: '3:33.', t_d2: 'Still 3:33.', t_d3: 'Everything says 3:33. Except the clocks on the walls.',
     t_clockStopped: 'It stopped ticking.', t_oneMore: 'One more. Downstairs.', t_clockOk: "That one's right.", t_silent: 'Everything has gone quiet.',
     t_water: 'Water is running somewhere.', t_mirrorWriting: 'Mirror writing.', t_behind: 'Someone was standing behind me.',
@@ -6973,7 +6973,8 @@ const Story = {
     W.skyMat.uniforms.uMap.value = morning ? T.skyDay : T.sky;
     W.skyMat.uniforms.uEmissive.value.setScalar(morning ? 1.35 : s === 'intro' ? 1 : 0);
     MT.grass.uniforms.uEmissive.value.set(morning ? 0.05 : 0, morning ? 0.07 : 0, morning ? 0.04 : 0);
-    for (const g of W.frontGlass) g.material.uniforms.uEmissive.value.copy(morning ? lin('#fff4e0').multiplyScalar(1.2) : s === 'intro' ? lin('#ff9c55').multiplyScalar(0.25) : new THREE.Color(0, 0, 0));
+    // (in the dream after the tape: a cold light behind the front door's glass, until you have been through it)
+    for (const g of W.frontGlass) g.material.uniforms.uEmissive.value.copy(morning ? lin('#fff4e0').multiplyScalar(1.2) : s === 'intro' ? lin('#ff9c55').multiplyScalar(0.25) : s === 'p3' && !F.frontDone ? lin('#aebfff').multiplyScalar(0.35) : new THREE.Color(0, 0, 0));
     MT.glass.uniforms.uOpacity.value = morning ? 0.12 : 0.28;
     // lights
     const L = LN;
@@ -7164,7 +7165,7 @@ const Story = {
     if (stage === 'morning') { this.stage = 'morning'; }
     UI.objective(stage);
     if (stage === 'p2b') { F.bathSlam = true; F.mirrorDone = true; }
-    if (stage === 'p3') { after(1.5, () => UI.thought(tr('t_wakeUp'), 3.5)); }
+    if (stage === 'p3') { after(1.5, () => UI.thought(tr('t_wakeUp'), 3.5)); after(6, () => { if (this.stage === 'p3' && !F.frontVoid) { Sound.play('rattle', DOORS.front.pos, { gain: 0.65, hrtf: true }); DOORS.front.shake = 0.4; } }); }
     if (stage === 's1') { after(1.2, () => UI.thought(tr('t_powerOut'), 3)); after(4.8, () => UI.thought(tr('t_fuseWhere'), 3)); }
     if (stage === 'intro') {
       this.fade = null; postMat.uniforms.uFade.value = 1; Player.enabled = false; Player.look = false; this.introPose(0);
@@ -7352,11 +7353,13 @@ const Story = {
     }
     if (s === 'p3' && !F.frontDone && !F.frontVoid) {
       F.frontVoid = true; d.open(0.9, 'slow'); Sound.drone(0.2, 1);
+      for (const g of W.frontGlass) g.material.uniforms.uEmissive.value.setScalar(0);   // (open, there is no light behind it at all)
       this.voidL = Sound.loop('wind', V3(-VEST.D - 1.5, 1.4, 7.375), { rate: 0.55, gain: 0.6, hrtf: true, noOcc: true });
       after(1.4, () => Sound.play('rwhispers', V3(-VEST.D - 4, 1.6, 7.4), { gain: 0.55, hrtf: true, noOcc: true }));
       return;
     }
     if (s === 'morning') { if (!d.isOpen) this.endingOpen(); return; }
+    if (s === 'p3' && F.frontVoid && !F.frontDone) { if (!F.voidSeen) { F.voidSeen = true; UI.thought(tr('t_voidOut'), 3); } return; }   // it stands open: go through
     Sound.play('rattle', d.pos, { gain: 0.7 }); d.shake = 0.35;
     if (!F['fd_' + s]) { F['fd_' + s] = true; after(0.6, () => UI.thought(s === 'p3' || s === 'descent' ? tr('t_notFront') : pick([tr('t_stuck1'), tr('t_stuck2')]), 3)); }
   },
@@ -7650,16 +7653,20 @@ const Story = {
   u_s2() { this.darkHint(); },
   toS3() { this.setStage('s3'); },
   u_s3() { this.darkHint(); },
-  toP3() {
+  toP3(fromTape) {
     if (this.stage === 'p3') return;
     this.setStage('p3');
     this.applyState('p3');
     Hand.set(null);
     W.wekker.visible = false; W.studyNote.visible = false;
     W.alarm.mesh.visible = W.alarmBody.visible = true;
-    Sound.play('thud', V3(7, -0.5, 5.4), { gain: 0.8 });
-    after(2.5, () => UI.thought(tr('t_wakeUp'), 3.5));
-    after(7, () => UI.thought(tr('t_maybeDoor'), 3.5));
+    Sound.play('thud', V3(7, -0.5, 5.4), { gain: 0.8 }); Sound.wrongSpike(0.5, 1.6);
+    // (after the tape its two thoughts come first, then these: they queue up in this order)
+    if (fromTape) after(1.4, () => { UI.thought(tr('t_slept'), 3); UI.thought(tr('t_neverCalled'), 3.6); });
+    after(fromTape ? 1.5 : 2.5, () => UI.thought(tr('t_wakeUp'), 3.5));
+    after(fromTape ? 1.6 : 7, () => UI.thought(tr('t_maybeDoor'), 3.5));
+    // the front door: a cold light behind its glass now, and it rattles once, on its own
+    after(fromTape ? 9 : 5, () => { if (this.stage !== 'p3' || F.frontVoid) return; const d = DOORS.front; Sound.play('rattle', d.pos, { gain: 0.65, hrtf: true }); d.shake = 0.4; });
   },
 
   /* ---------- phase 3: dream logic ---------- */
@@ -7716,6 +7723,7 @@ const Story = {
       if (t > 1.4 && t < 2.6) { const k = (t - 1.4); H.root.position.x = -D + 0.4 - k * 1.1; poseHuman(H, { walk: k * 7, amp: 0.9 }); }
       if (t > 2.6 && H.root.visible) {
         H.root.visible = false; DOORS.front.slam(); W.frontNote.visible = true; b.on = false; this.dbl = null;
+        for (const g of W.frontGlass) g.material.uniforms.uEmissive.value.setScalar(0);
         if (this.voidL) { this.voidL.stop(0.02); this.voidL = null; }
         after(0.2, () => Sound.muffle(0, 2.5));
       }
@@ -8396,9 +8404,9 @@ const Lore = {
       t += dur + (k === 's' ? 0.5 : 0.35);
     }
     at(t, () => { Sound.play('beep', pos, { gain: 0.26 }); UI.voice(tr('vm_end'), 2, true); if (hiss) hiss.stop(0.6); });
-    at(t + 2.2, () => { this.vm = null; Run.found('msg', 'mom'); Sound.duckTo(1, 2); UI.thought(tr('t_slept'), 3); });
-    at(t + 6.0, () => UI.thought(tr('t_neverCalled'), 3.6));
-    at(t + 10.4, () => Story.toP3());
+    // and straight away the house changes: no quiet stretch in which the front door is still just a door
+    // (toP3 resets this module, so nothing of the tape may be left waiting on this.vmId after it)
+    at(t + 0.9, () => { this.vm = null; Run.found('msg', 'mom'); Sound.duckTo(1, 2); Story.toP3(true); });
   },
   lineAudio(k, pos, dur) {
     const o = { lp: 2900, ref: 0.8, pri: 2 };
