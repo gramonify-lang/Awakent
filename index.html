@@ -796,7 +796,9 @@ const STR = {
     t_basement: 'Beneden. De kelder.', t_brick: 'Er zit niets achter. Alleen muur.', t_paintingBelongs: 'Het schilderij hoort hier wel.',
     t_someone: 'Is daar iemand?', t_notAlone: 'Ik ben niet alleen.',
     t_baseMirrorNew: 'Die spiegel hing hier nooit.', t_mirrorBroke: 'Ik heb hem niet eens aangeraakt.', t_baseDisbelief: 'Hij loopt gewoon door.', t_mirrorClock: 'In de spiegel wijst hij iets anders aan.', t_mirrorRight: 'In de spiegel is het 3:33.',
-    t_loopMirror: 'In de spiegel staat er iets op het bureau.', t_onlyMirror: 'Daar staat niets. Alleen in de spiegel.',
+    t_loopMirror: 'In de spiegel staat mijn wekker. Op het bureau.', t_onlyMirror: 'Daar staat niets. Alleen in de spiegel.',
+    t_deskReach: 'Maar in de spiegel staat hij precies hier.', t_loopMirrorHint: 'De spiegel naast het schilderij… staat daar iets op het bureau?',
+    t_beep: 'Piept daar iets? Bij het bureau.', t_beepMirror: 'Mijn wekker. Hij piept.', t_alarmGone: 'Mijn wekker staat er niet.', lbl_takeAlarm: 'Wekker pakken',
     cap_photo0: 'Zandvoort. Dat was een goede zomer.', cap_photo1: 'Wie staat daar, achteraan?', cap_photo2: 'Waar zijn wij?',
     cap_hall0: 'Dat schilderij hangt hier al jaren.', cap_hall1: 'Stond daar altijd al iemand in het veld?',
     cap_sea0: 'De zee bij Zandvoort.', cap_sea1: 'Dat was de zee.',
@@ -809,7 +811,7 @@ const STR = {
     o_intro: ['Kijk wie er aan de deur is.', 'De voordeur zit aan het eind van de gang, links, tegenover de spiegel bij de kapstok.'],
     o_p1: ['De voordeur gaat niet open. Zoek uit wat er niet klopt.', 'Alle digitale klokken zeggen 3:33. Zet de vier wandklokken ook op 3:33: in de gang, de woonkamer, de keuken en in de kelder (de deur in de keuken). Kijk naar een klok, druk op E en draai de wijzers met de muis. De kelderklok telt zoals de spiegel tegenover hem hem laat zien. Als je hem verzet, staat onder de tijd ook wat de spiegel ziet: draai tot daar 3:33 staat (echt staat hij dan op 8:27).'],
     o_p2: ['Het is stil. Er loopt ergens water.', 'Ga naar de badkamer. Op de muur naast de deur staat iets in spiegelschrift. Ga voor de spiegel boven de wastafel staan en lees het daar.'],
-    o_p2b: ['Er speelt muziek in de kleine kamer.', 'De kleine kamer blijft je terugsturen. Wat verandert hoort er wél. Er staat iets dat uit een andere kamer komt, maar je ziet het alleen in de spiegel naast de deur. Kijk in de spiegel, zoek die plek op het bureau en gebruik het daar.'],
+    o_p2b: ['Er speelt muziek in de kleine kamer.', 'De kleine kamer blijft je terugsturen. Wat verandert hoort er wél. Er staat iets dat uit een andere kamer komt, maar je ziet het alleen in de spiegel naast het schilderij. Ga midden in de kamer staan en kijk in die spiegel: op het bureau achter je staat je wekker. Loop naar die plek op het bureau en druk daar op E.'],
     o_p3: ['Word wakker.', 'De kelderdeur in de keuken bestaat alleen in het donker. Doe het keukenlicht uit (schakelaar bij de deuropening), doe je zaklamp uit en kijk naar de muur waar de deur zat.'],
     o_descent: ['Naar beneden.', 'Blijf de trap afdalen.'],
     o_final: ['…', 'Deze keer moet je niet wegkijken. Loop naar hem toe.'],
@@ -884,7 +886,9 @@ const STR = {
     t_basement: 'Downstairs. The basement.', t_brick: "There's nothing behind it. Just wall.", t_paintingBelongs: 'The painting belongs here.',
     t_someone: 'Is someone there?', t_notAlone: "I'm not alone.",
     t_baseMirrorNew: 'That mirror was never here.', t_mirrorBroke: "I didn't even touch it.", t_baseDisbelief: 'It just keeps going.', t_mirrorClock: 'In the mirror it shows a different time.', t_mirrorRight: "In the mirror it's 3:33.",
-    t_loopMirror: "In the mirror, there's something on the desk.", t_onlyMirror: "There's nothing there. Only in the mirror.",
+    t_loopMirror: 'In the mirror, my alarm clock. On the desk.', t_onlyMirror: "There's nothing there. Only in the mirror.",
+    t_deskReach: 'But in the mirror it is right here.', t_loopMirrorHint: 'The mirror by the painting… is there something on the desk?',
+    t_beep: 'Is something beeping? By the desk.', t_beepMirror: 'My alarm clock. It is beeping.', t_alarmGone: "My alarm clock isn't here.", lbl_takeAlarm: 'Take the alarm clock',
     cap_photo0: 'Zandvoort. That was a good summer.', cap_photo1: 'Who is that, in the back?', cap_photo2: 'Where are we?',
     cap_hall0: "That painting has hung here for years.", cap_hall1: 'Was someone always standing in that field?',
     cap_sea0: 'The sea at Zandvoort.', cap_sea1: 'That used to be the sea.',
@@ -896,7 +900,7 @@ const STR = {
     o_intro: ["See who's at the door.", 'The front door is at the end of the hallway, on the left, across from the mirror by the coat rack.'],
     o_p1: ["The front door won't open. Find out what's wrong.", 'Every digital clock says 3:33. Set the four wall clocks to 3:33 as well: in the hallway, the living room, the kitchen and the basement (the door in the kitchen). Look at a clock, press E and turn the hands with the mouse. The basement clock counts the way the mirror opposite shows it. While you turn it, the time the mirror sees is shown under the real time: turn until that says 3:33 (the clock itself then shows 8:27).'],
     o_p2: ['It has gone quiet. Water is running somewhere.', 'Go to the bathroom. Something is written in mirror writing on the wall next to the door. Stand in front of the mirror above the sink and read it there.'],
-    o_p2b: ['Music is playing in the small room.', 'The small room keeps sending you back. What changes does belong there. Something from another room is there, but you only see it in the mirror next to the door. Look in the mirror, find that spot on the desk and use it there.'],
+    o_p2b: ['Music is playing in the small room.', 'The small room keeps sending you back. What changes does belong there. Something from another room is there, but you only see it in the mirror next to the painting. Stand in the middle of the room and look into that mirror: on the desk behind you is your alarm clock. Walk to that spot on the desk and press E there.'],
     o_p3: ['Wake up.', "The basement door in the kitchen only exists in the dark. Turn off the kitchen light (switch by the doorway), turn off your flashlight and look at the wall where the door used to be."],
     o_descent: ['Go down.', 'Keep going down the stairs.'],
     o_final: ['…', "This time, don't look away. Walk up to it."],
@@ -951,7 +955,10 @@ Object.assign(STR.nl, {
   t_fuse6: 'Wat is er op zolder dat niet aan mag?', t_fuseOk: 'Alles staat aan.',
   t_powerBack: 'Alles doet het weer.', t_radioOn: 'De radio staat aan. Die zet ik nooit aan.', t_radioOff: 'Hij doet het niet. Geen stroom.', t_radioOld: 'Mama’s oude radio.',
   t_numbers: 'Iemand leest cijfers voor.', t_code: 'Nul, zeven, één, vier.', t_radioDead: 'Stil.', t_overhead: 'Er loopt iemand boven de gang.', t_attic: 'De vliering.',
-  t_hatchNo: 'Daar ga ik niet naar boven. Niet vannacht.', t_hatchPole: 'Ik kan er niet bij. De haakstok staat in de kelder.', t_hatchShut: 'Dicht.',
+  t_hatchNo: 'Daar ga ik niet naar boven. Niet vannacht.', t_hatchPole: 'Ik kan er niet bij. Ik heb de haakstok nodig: die is in de kelder, bij de ketel.',
+  t_hatchLook: 'Het luik naar de vliering.', t_hatchHook: 'Het ringetje in het luik. Daar gaat de haak in.', lbl_hookHatch: 'Luik openhaken',
+  t_poleSeen: 'De haakstok.', lbl_stepladder: 'Trapje', lbl_carpet: 'Kleed', t_stepladder0: 'Een trapje.', t_carpet0: 'Een opgerold kleed.',
+  t_stepladder: 'Daar heb ik niks aan. Het luik gaat naar beneden open: ik moet het omlaag trekken, met de haakstok.', t_carpet: 'Een opgerold kleed. Niet de haakstok.', t_poleFallen: 'De haakstok. Hij is omgevallen.', t_poleGo: 'De haakstok. Nu het luik in de gang.', t_hatchShut: 'Dicht.',
   t_pole: 'De haakstok. Voor het luik.', t_poleNot: 'De haakstok. Voor het luik naar de vliering.',
   t_atticIn: 'Mama’s spullen.', t_dress: 'Haar jurk.', t_dressTurn: 'Stond die zo?', t_horse: 'Mijn hobbelpaard.', t_chest: 'Er zit een cijferslot op.', t_lockOpen: 'Open.',
   t_xylo: 'Mijn xylofoon. En het liedje.', t_xyloWrong: 'Zo ging het niet.', t_xyloHelp: 'Ik ken dit liedje. Ze zong het elke avond.',
@@ -962,14 +969,14 @@ Object.assign(STR.nl, {
   o_s1: ['De stroom is uitgevallen.', 'De meterkast hangt op de overloop: de deur achter in de keuken, naast de keldertrap. Druk op E om hem te openen en zet de hoofdschakelaar om. Springt hij er steeds weer uit? Zet de groepen één voor één uit tot hij blijft staan. De groep die het doet, wijst je naar het probleem.'],
   o_s1b: ['De badkamer blijft donker.', 'Groep 4 is de badkamer. Daar ligt iets dat kortsluiting maakt. Neem je zaklamp mee (F), trek de stekker uit het stopcontact naast de spiegel en zet daarna groep 4 in de meterkast weer aan.'],
   o_s2: ['De radio in de keuken staat aan.', 'Loop naar de radio op het aanrecht en druk op E. Draai langzaam over de hele schaal (slepen, pijltjes of scrollwiel). Tussen de ruis zitten drie zenders. Op één ervan leest iemand cijfers voor: onthoud ze.'],
-  o_s2b: ['Er loopt iemand op de vliering.', 'Het luik zit in het plafond van de gang, boven de radiator. Het gaat alleen open met de haakstok, en die staat beneden in de kelder, tegen de muur naast de ketel. Pak hem, kijk naar het ringetje in het luik en druk op E.'],
+  o_s2b: ['Er loopt iemand op de vliering.', 'Het luik zit in het plafond van de gang, boven de radiator. Er brandt licht achter. Het gaat alleen open met de haakstok, en die is beneden in de kelder, bij de ketel (rechts als je van de trap komt). Pak hem, loop terug naar de gang, kijk omhoog naar het ringetje in het luik en druk op E.'],
   o_s2c: ['Een kist met een cijferslot.', 'Achter op de vliering staat een kist met een slot van vier cijfers. Gebruik de cijfers die je op de radio hoorde (103,3), in dezelfde volgorde.'],
   o_s3: ['Een slaapliedje, met drie vlekken.', 'Speel het liedje uit het boekje na op de xylofoon (toetsen 1–7 of klikken). Elke kleur is een staafje: hoe hoger de stip, hoe hoger de toon. Drie stippen zijn grijze vlekken geworden, maar ze staan nog op de goede hoogte. Het is het liedje dat je de hele nacht al hoort.'],
   o_s3b: ['Een bandje uit het antwoordapparaat.', 'Het antwoordapparaat staat op het tafeltje aan het eind van de gang. Kijk ernaar, druk op E en speel het bandje af.'],
   o_descent: ['Naar beneden.', 'De trap herhaalt zich zolang je hem je rug toekeert. Lees de muren. Draai je om naar wat achter je loopt, blijf ernaar kijken en loop zo achteruit de trap af (S-toets, of de stick naar achteren).'],
   wall_l0: ['3:33', 'nacht 41', 'de trap houdt niet op'], wall_l1: ['hij loopt achter je', 'draai je om', 'kijk hem aan'],
   wall_l2: ['hou hem in het oog', 'loop achteruit', 'blijf kijken'], wall_l3: ['achteruit', 'naar beneden', 'niet wegkijken'],
-  r918: [['m', 8.6], ['d', 'Radio Nachtlicht, 91,8. Voor iedereen die nog wakker is.'], ['d', 'Het is… drie uur drieëndertig.'], ['m', 8.6], ['d', 'Kunt u niet slapen? U bent niet de enige.'], ['d', 'Blijf maar luisteren. Wij blijven wakker met u.']],
+  r918: [['m', 8.6], ['d', 'Radio Nachtlicht, 91,8. Voor iedereen die nog wakker is.'], ['d', 'Het is… drie uur drieëndertig.'], ['m', 8.6], ['d', 'Hoort u soms iemand cijfers voorlezen, tussen de zenders?'], ['d', 'Verderop op de schaal, rond de honderddrie. Elke nacht.'], ['d', 'Niemand weet wie het is.'], ['m', 8.6], ['d', 'Kunt u niet slapen? U bent niet de enige.'], ['d', 'Blijf maar luisteren. Wij blijven wakker met u.']],
   r974: [['a', 'U ligt in bed. U kunt niet bewegen. En er staat iemand in de kamer.'], ['b', 'Elke nacht. Aan het voeteneind. Hij kijkt alleen maar.'], ['a', 'Dat horen we vaker. Het heet slaapverlamming.'], ['b', 'Mijn moeder zei altijd: kijk hem gewoon aan. Dan gaat hij weg.'], ['a', 'Wijze vrouw. …We gaan even naar de muziek.'], ['p', 3]],
   nums: ['nul…', 'zeven…', 'één…', 'vier…'], r_awake: '…ben je wakker?',
   vmMom: [['s', 'Bericht één. Donderdag 14 maart, 3:31.'], ['m', '„Hoi lieverd, met mama. Ik weet het, het is midden in de nacht.”'], ['m', '„Ik kan niet slapen. Hij staat er weer, bij de deur. Net als vroeger bij jou.”'], ['m', '„Ik doe wat ik jou altijd zei. Ik kijk hem gewoon aan.”'], ['m', '„Hij is niet eng, hoor. Hij let alleen op.”'], ['m', '„…Ik ben zo moe. Bel je me morgen? Slaap maar, lieverd.”']],
@@ -1003,7 +1010,10 @@ Object.assign(STR.en, {
   t_fuse6: "What's in the attic that mustn't be turned on?", t_fuseOk: "Everything's on.",
   t_powerBack: 'Everything works again.', t_radioOn: 'The radio is on. I never turn it on.', t_radioOff: "It's dead. No power.", t_radioOld: "Mom's old radio.",
   t_numbers: 'Someone is reading out numbers.', t_code: 'Zero, seven, one, four.', t_radioDead: 'Silence.', t_overhead: 'Someone is walking above the hallway.', t_attic: 'The attic.',
-  t_hatchNo: "I'm not going up there. Not tonight.", t_hatchPole: "I can't reach it. The hook pole is in the basement.", t_hatchShut: 'Shut.',
+  t_hatchNo: "I'm not going up there. Not tonight.", t_hatchPole: "I can't reach it. I need the hook pole: it's in the basement, by the boiler.",
+  t_hatchLook: 'The hatch to the attic.', t_hatchHook: 'The ring in the hatch. The hook goes in there.', lbl_hookHatch: 'Hook the hatch open',
+  t_poleSeen: 'The hook pole.', lbl_stepladder: 'Stepladder', lbl_carpet: 'Rug', t_stepladder0: 'A stepladder.', t_carpet0: 'A rolled-up rug.',
+  t_stepladder: 'That is no use. The hatch opens downwards: I have to pull it down, with the hook pole.', t_carpet: 'A rolled-up rug. Not the hook pole.', t_poleFallen: 'The hook pole. It fell over.', t_poleGo: 'The hook pole. Now the hatch in the hallway.', t_hatchShut: 'Shut.',
   t_pole: 'The hook pole. For the hatch.', t_poleNot: 'The hook pole. For the attic hatch.',
   t_atticIn: "Mom's things.", t_dress: 'Her dress.', t_dressTurn: 'Was it facing this way?', t_horse: 'My rocking horse.', t_chest: "There's a combination lock on it.", t_lockOpen: 'Open.',
   t_xylo: 'My xylophone. And the song.', t_xyloWrong: "That's not how it went.", t_xyloHelp: 'I know this song. She sang it every night.',
@@ -1014,14 +1024,14 @@ Object.assign(STR.en, {
   o_s1: ['The power went out.', 'The fuse box is on the landing: the door at the back of the kitchen, next to the basement stairs. Press E to open it and flip the main switch. Does it keep tripping? Turn the groups off one by one until it stays on. The group that does it points you to the problem.'],
   o_s1b: ['The bathroom stays dark.', 'Group 4 is the bathroom. Something in there is causing a short. Take your flashlight (F), pull the plug out of the socket next to the mirror, then switch group 4 back on in the fuse box.'],
   o_s2: ['The radio in the kitchen is on.', 'Walk to the radio on the counter and press E. Tune slowly across the whole dial (drag, arrow keys or scroll wheel). Between the static there are three stations. On one of them someone reads out numbers: remember them.'],
-  o_s2b: ['Someone is walking in the attic.', 'The hatch is in the hallway ceiling, above the radiator. It only opens with the hook pole, which is down in the basement, against the wall next to the boiler. Take it, look at the ring in the hatch and press E.'],
+  o_s2b: ['Someone is walking in the attic.', 'The hatch is in the hallway ceiling, above the radiator. There is light behind it. It only opens with the hook pole, which is down in the basement, by the boiler (on your right as you come down the stairs). Take it, go back to the hallway, look up at the ring in the hatch and press E.'],
   o_s2c: ['A chest with a combination lock.', 'At the back of the attic there is a chest with a four-digit lock. Use the numbers you heard on the radio (103.3), in the same order.'],
   o_s3: ['A lullaby, with three smudges.', "Play the song from the little book on the xylophone (keys 1–7 or click). Each colour is a bar: the higher the dot, the higher the note. Three dots have become grey smudges, but they are still at the right height. It's the song you've been hearing all night."],
   o_s3b: ['A tape from the answering machine.', 'The answering machine is on the table at the end of the hallway. Look at it, press E and play the tape.'],
   o_descent: ['Go down.', 'The stairs repeat for as long as you turn your back on them. Read the walls. Turn round to what is walking behind you, keep looking at it and walk down the stairs backwards like that (S key, or pull the stick back).'],
   wall_l0: ['3:33', 'night 41', "the stairs don't end"], wall_l1: ["he's walking behind you", 'turn round', 'look at him'],
   wall_l2: ['keep him in sight', 'walk backwards', 'keep looking'], wall_l3: ['backwards', 'down', "don't look away"],
-  r918: [['m', 8.6], ['d', 'Radio Nightlight, 91.8. For everyone still awake.'], ['d', "It's… three thirty-three."], ['m', 8.6], ['d', "Can't sleep? You're not the only one."], ['d', "Stay with us. We'll stay awake with you."]],
+  r918: [['m', 8.6], ['d', 'Radio Nightlight, 91.8. For everyone still awake.'], ['d', "It's… three thirty-three."], ['m', 8.6], ['d', 'Ever hear someone reading out numbers, between the stations?'], ['d', 'Further up the dial, around one-oh-three. Every night.'], ['d', 'Nobody knows who it is.'], ['m', 8.6], ['d', "Can't sleep? You're not the only one."], ['d', "Stay with us. We'll stay awake with you."]],
   r974: [['a', "You're lying in bed. You can't move. And someone is standing in the room."], ['b', 'Every night. At the foot of the bed. He only watches.'], ['a', 'We hear that a lot. It is called sleep paralysis.'], ['b', 'My mother always said: just look at him. Then he goes away.'], ['a', 'A wise woman. …Let us go to some music.'], ['p', 3]],
   nums: ['zero…', 'seven…', 'one…', 'four…'], r_awake: '…are you awake?',
   vmMom: [['s', 'Message one. Thursday 14 March, 3:31 a.m.'], ['m', '"Hi sweetheart, it\'s mom. I know, it\'s the middle of the night."'], ['m', '"I can\'t sleep. He\'s there again, by the door. Just like with you, when you were little."'], ['m', '"I\'m doing what I always told you. I\'m just looking at him."'], ['m', '"He\'s not scary, you know. He\'s only keeping watch."'], ['m', '"…I\'m so tired. Will you call me tomorrow? Go to sleep, sweetheart."']],
@@ -2991,8 +3001,8 @@ function buildStudy() {
   { const b = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.1, 0.2), MT.black); W.wekker.add(b);
     const d = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.064), M({ map: T.d333r, world: false, emap: true, emissive: '#ffffff', eI: 1.6, color: '#000000', noise: 0 }));
     d.position.x = -0.047; d.rotation.y = -Math.PI / 2; W.wekker.add(d); W.wekkerDisp = d;
-    use(b, 'lbl_alarm', () => Story.loopObject('wekker')); use(d, 'lbl_alarm', () => Story.loopObject('wekker')); }
-  W.wekker.position.set(13.5, 0.78 + 0.05 + 0.02, 1.4); W.wekker.visible = false;
+    for (const o of [b, d]) { use(o, 'lbl_alarm', () => Story.loopObject('wekker')); o.userData.use.labelFn = () => (Story.stage === 'p2b' ? 'lbl_takeAlarm' : 'lbl_alarm'); } }
+  W.wekker.position.set(13.5, 0.78 + 0.05 + 0.02, 1.4); W.wekker.visible = false; W.wekker.scale.setScalar(1.2);   // a little big, so its digits read in the mirror
   W.studyNote = plane(0.2, 0.15, M({ color: '#ffffff', noise: 0 }), 11.95, 0.753, 0.45, -Math.PI / 2, 0.15);
   W.studyNote.visible = false;
   use(W.studyNote, 'lbl_read', () => Story.readNote('study'));
@@ -4147,8 +4157,10 @@ function decorBasement(m) {
   for (const [x, z, h] of [[11.45, 17.72, 0.2], [11.62, 17.78, 0.2], [11.55, 17.55, 0.14]]) { dcyl(0.09, 0.09, h, DEC.paint, x, Y, z, 14); dcyl(0.092, 0.092, 0.012, MT.metal, x, Y + h, z, 14); }
   { const lg = new THREE.Group(); lg.position.set(12.9, Y, 13.86); lg.rotation.x = -0.24; scene.add(lg);
     for (const s of [-1, 1]) { const r = new THREE.Mesh(new THREE.BoxGeometry(0.04, 2.1, 0.06), m.lightWood); r.position.set(s * 0.21, 1.05, 0); lg.add(r); }
-    for (let i = 0; i < 7; i++) { const r = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.03, 0.05), m.lightWood); r.position.set(0, 0.2 + i * 0.28, 0); lg.add(r); } }
-  { const cp = dcyl(0.11, 0.11, 1.9, M({ color: '#6a3a2e', noise: 0.4 }), 11.8, Y, 13.7, 12); cp.rotation.x = -0.12; }
+    for (let i = 0; i < 7; i++) { const r = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.03, 0.05), m.lightWood); r.position.set(0, 0.2 + i * 0.28, 0); lg.add(r); }
+    // (people reach for these when they are after the hook pole: say what they are, and why they will not do)
+    for (const o of lg.children) use(o, 'lbl_stepladder', () => Attic.decoy('stepladder')); }
+  { const cp = dcyl(0.11, 0.11, 1.9, M({ color: '#6a3a2e', noise: 0.4 }), 11.8, Y, 13.7, 12); cp.rotation.x = -0.12; use(cp, 'lbl_carpet', () => Attic.decoy('carpet')); }
   // an old suitcase, a bucket, the fuse box, pipes along the walls
   box(0.24, 0.62, 0.46, M({ color: '#5a3a2a', noise: 0.25 }), 14.98, Y, 17.05); box(0.1, 0.03, 0.03, MT.black, 14.98, Y + 0.64, 17.05);
   dcyl(0.15, 0.12, 0.3, M({ color: '#4a6a8a', noise: 0.15 }), 14.15, Y, 18.08, 14);
@@ -4544,10 +4556,14 @@ function buildPuzzleProps() {
     for (const o of [W.plugIn, W.cordIn]) use(o, 'lbl_unplug', () => Props.unplug()); }
   // the hook pole, against the basement wall by the boiler
   { const g = new THREE.Group(); g.position.set(9.68, -2.7, 14.66); g.rotation.z = 0.05; scene.add(g); DYN.add(g); W.pole = g;
-    const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.016, 1.95, 8), M({ color: '#8a6a44', noise: 0.2 })); sh.position.y = 0.975; g.add(sh);
-    const ft = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.05, 8), MT.darkMetal); ft.position.y = 1.95; g.add(ft);
-    const hk = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.006, 6, 12, Math.PI * 1.3), MT.darkMetal); hk.position.set(0, 2.0, 0); hk.rotation.y = Math.PI / 2; g.add(hk);
-    for (const o of [sh, ft, hk]) use(o, 'lbl_pole', () => Attic.takePole()); }
+    // pale varnished wood, a red grip and a brass hook: it catches the torch in the dark down there
+    const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.017, 1.95, 8), M({ color: '#c9a878', noise: 0.15 })); sh.position.y = 0.975; g.add(sh);
+    const gr = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.3, 8), M({ color: '#a3322a', noise: 0.12 })); gr.position.y = 0.25; g.add(gr);
+    const ft = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.05, 8), MT.brass); ft.position.y = 1.95; g.add(ft);
+    const hk = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.0065, 6, 12, Math.PI * 1.3), MT.brass); hk.position.set(0, 2.0, 0); hk.rotation.y = Math.PI / 2; g.add(hk);
+    // (a thin pole is hard to point at, standing or lying on the floor: an invisible sleeve round it takes the look)
+    const hit = new THREE.Mesh(new THREE.BoxGeometry(0.2, 2.1, 0.2), new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide })); hit.position.y = 1.02; g.add(hit);
+    for (const o of [hit, sh, gr, ft, hk]) use(o, 'lbl_pole', () => Attic.takePole()); }
 }
 
 /* ---------- paper and paint for the new things ---------- */
@@ -6874,6 +6890,7 @@ const Dir = {
     return false;
   },
 };
+const _wk1 = new THREE.Vector3(), _wk2 = new THREE.Vector3(), _wk3 = new THREE.Vector3();
 const _ev = new THREE.Vector3(), _ev2 = new THREE.Vector3(), _gz1 = new THREE.Vector3(), _gz2 = new THREE.Vector3(), _gz3 = new THREE.Vector3(), _gz4 = new THREE.Vector3();
 function nearestLight(p) { let b = null, bd = 1e9; for (const l of LIGHTS) { const d = l.pos.distanceTo(p); if (d < bd && l.intensity > 0) { bd = d; b = l; } } return bd < 6 ? b : null; }
 function faceYaw(from, to) { return Math.atan2(to.x - from.x, to.z - from.z); }
@@ -7016,7 +7033,7 @@ const Story = {
     W.cabDoor.visible = at('p2'); W.mug.visible = !at('p2'); W.hallMug.visible = at('p2');
     W.livingChair.rotation.y = 0; W.livingChair.position.x = 3.4;
     W.wekker.visible = s === 'p2b'; mirrorOnly(W.wekker, s === 'p2b'); W.studyNote.visible = s === 'p2b';
-    W.wekker.position.set(11.15, 0.77 + 0.05, 0.62); W.wekker.rotation.y = 1.25;
+    W.wekker.position.set(11.15, 0.77 + 0.06, 0.62); W.wekker.rotation.y = 0.32;   // its display turned to the mirror
     W.alarm.mesh.visible = W.alarmBody.visible = s !== 'p2b';
     W.alarm.mesh.material.uniforms.uMap.value = morning ? T.d714r : at('p3') ? T.d334r : T.d333r;
     W.micro.mesh.material.uniforms.uMap.value = morning ? T.d714g : T.d333g; W.micro.blink = !morning;
@@ -7114,9 +7131,10 @@ const Story = {
     for (const l of LIGHTS) if (l.switchMesh) l.switchMesh.rotation.x = l.sw ? 0 : 0.35;
     this.stage = stage; G.stage = stage; this.st = 0; this.loopIter = 0; this.mirrorAcc = 0;
     this.ending = null; this.endSilent = false; this.dbl = null; this.inBase = 0; this.inKitchen = 0; this.digSeen = 0; this.finLook = 0; this.flAcc = 0; this.textAcc = 0; this.darkT = 0; this.birdNext = 0; this.breathNext = 0; this.echo = 0;
+    this.studyT = 0; this.beepNext = 0; this.wkAcc = 0; this.hsAcc = 0; this.psAcc = 0;
     Player.onStep = null; W.coatMirror.keep = false; W.tvOn = false; W.tvScreen.material.uniforms.uEmissive.value.setScalar(0);
     if (W.endBar) W.endBar.on = false; if (W.barrier) W.barrier.on = false;
-    LN.special.on = 0; LN.special.dim = 1; W.brickDoorPivot.rotation.y = 0; W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(1.6);
+    LN.special.on = 0; LN.special.dim = 1; W.brickDoorPivot.rotation.y = 0; W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(2.4);
     for (const d of DIGITALS) d.seen = false;
     if (SI(stage) >= SI('p2') && SI(stage) <= SI('descent')) Object.assign(F, { doorFailed: true, bathSlam: SI(stage) >= SI('p2b'), waterStarted: stage === 'p2', mirrorDone: SI(stage) >= SI('p2b'), loopDone: SI(stage) >= SI('s1') });
     if (stage === 'p1') F.doorFailed = true;
@@ -7505,7 +7523,7 @@ const Story = {
     DOORS.study.set(false); LN.study.on = 1; LN.study.sw = 1; if (LN.study.switchMesh) LN.study.switchMesh.rotation.x = 0; W.studyStrip.visible = true;
     Sound.musicBox(true);
     W.wekker.visible = true; mirrorOnly(W.wekker, true); W.studyNote.visible = true; W.alarm.mesh.visible = false; W.alarmBody.visible = false;
-    W.wekker.position.set(11.15, 0.77 + 0.05, 0.62); W.wekker.rotation.y = 1.25;
+    W.wekker.position.set(11.15, 0.77 + 0.06, 0.62); W.wekker.rotation.y = 0.32;   // its display turned to the mirror
     W.hallMirror.queue = ['stillHead']; W.bathMirror.queue = ['smile']; W.coatMirror.queue = ['lookAway'];
     LN.hallB.dim = 0.6;
   },
@@ -7517,6 +7535,48 @@ const Story = {
     if (!DOORS.study.isOpen) W.studyStrip.visible = true; else W.studyStrip.visible = false;
     if (!F.loopActive && P.room === 'study' && P.pos.z < 3.9) F.loopActive = true;
     if (F.loopActive && !F.loopDone && P.pos.z > 4.46 && P.pos.z < 5.2 && P.pos.x > 9.4 && P.pos.x < 10.35 && (this.prevZ ?? 0) <= 4.46) this.loopTeleport();
+    if (!F.loopDone) this.wekkerClues(dt);
+  },
+  /* what points you at the clock that is only in the mirror: it beeps on the desk (and its red digits flare
+     in the glass), you are told once you really see it there, and again when you turn to the empty desk.
+     Next door, the bedside table has nothing on it. */
+  wekkerClues(dt) {
+    const P = Player, wp = W.wekker.getWorldPosition(_wk1);
+    if (P.room === 'study') {
+      this.studyT = (this.studyT || 0) + dt;
+      if ((this.loopIter >= 2 || this.studyT > 18) && G.t > (this.beepNext || 0)) {
+        this.beepNext = G.t + rand(9, 13);
+        for (let i = 0; i < 2; i++) Sound.play('beep', wp, { gain: 0.26, rate: 1.9, delay: i * 0.21, ref: 1.2, hrtf: true, pri: 1 });
+        const d = W.wekkerDisp.material.uniforms.uEmissive.value; d.setScalar(5.5); after(0.5, () => { if (!F.loopDone) d.setScalar(this.wekGlow()); });
+        if (!F.beepHeard) { F.beepHeard = true; after(1.1, () => UI.thought(tr(F.wekkerSeen ? 't_beepMirror' : 't_beep'), 3)); }
+      }
+      // seen in the mirror, for real (the reflection of its display inside the glass, and you looking at it)
+      if (!F.wekkerSeen && this.wekkerInMirror(wp)) { this.wkAcc = (this.wkAcc || 0) + dt; if (this.wkAcc > 0.35) { F.wekkerSeen = true; UI.thought(tr('t_loopMirror'), 3.4); } } else this.wkAcc = 0;
+      // and then the desk itself: nothing there
+      if (F.wekkerSeen && !F.deskEmpty && wp.distanceTo(camera.position) < 3 && viewAngleTo(wp) < 0.3 && losClear(camera.position, wp, 0.04)) {
+        F.deskEmpty = true; UI.thought(tr('t_onlyMirror'), 3.2); UI.thought(tr('t_deskReach'), 3.2);
+      }
+    }
+    // the bedside table: the alarm clock is not there
+    if (!F.alarmGone && P.room === 'bedroom') {
+      const a = _wk2.set(3.34, 0.63, 0.39);
+      if (a.distanceTo(camera.position) < 3.2 && viewAngleTo(a) < 0.3 && losClear(camera.position, a, 0.04)) { F.alarmGone = true; UI.thought(tr('t_alarmGone'), 3); }
+    }
+  },
+  wekGlow() { return this.loopIter >= 5 ? 3.6 : 2.4; },
+  /* is the clock's reflection inside the study mirror, right where you are looking? */
+  wekkerInMirror(wp) {
+    const m = W.studyMirror; if (activeMirror !== m) return false;
+    const c = m.worldCenter(_wk2), n = m.worldNormal(_wk3), cam = camera.position;
+    const side = (cam.x - c.x) * n.x + (cam.y - c.y) * n.y + (cam.z - c.z) * n.z;
+    if (side < 0.3 || side > 5.5) return false;
+    const dw = (wp.x - c.x) * n.x + (wp.y - c.y) * n.y + (wp.z - c.z) * n.z;
+    const rx = wp.x - 2 * dw * n.x, ry = wp.y - 2 * dw * n.y, rz = wp.z - 2 * dw * n.z;   // where it seems to be, behind the glass
+    const t = side / (side + dw); if (!(t > 0 && t < 1)) return false;
+    const hx = cam.x + (rx - cam.x) * t, hy = cam.y + (ry - cam.y) * t, hz = cam.z + (rz - cam.z) * t;
+    const ux = hx - c.x, uy = hy - c.y, uz = hz - c.z;
+    if (Math.abs(ux * n.z - uz * n.x) > m.w / 2 - 0.04 || Math.abs(uy) > m.h / 2 - 0.04) return false;
+    return viewAngleTo(_wk3.set(hx, hy, hz)) < 0.32;
   },
   loopTeleport() {
     const P = Player, cx = 9.875, cz = 4.4;
@@ -7525,13 +7585,16 @@ const Story = {
     const i = ++this.loopIter;
     Sound.mbSkip(); Sound.wrongSpike(0.65, 1.2);
     if (!DOORS.study.isOpen) DOORS.study.set(true);
+    // (the hints come quicker now: what changes is not it, it comes from another room, look in the mirror)
     if (i === 1) { W.studyChair.rotation.y = Math.PI; after(1.0, () => UI.thought(tr('t_loop1'), 3)); }
     if (i === 2) { W.studyPainting.material.uniforms.uMap.value = T.sea1; after(0.8, () => UI.thought(tr('t_loop2'), 3)); }
-    if (i === 3) { W.deskLamp.position.set(12.1, 0.1, 1.1); W.deskLamp.rotation.set(1.2, 0.6, 0); LN.study.on = 0; const s = LN.special; s.pos.set(12.1, 0.25, 1.1); s.color = lin('#ffb070'); s.intensity = 3.2; s.radius = 6; s.box = [8.8, -0.3, 0, 14, 4.5, 4.4]; s.box2 = null; s.on = 1; }
-    if (i === 4) { W.books.forEach((b) => (b.visible = false)); after(0.9, () => UI.thought(tr('t_loop4'), 4)); }
-    if (i === 5) { Ent.spawn({ id: 'loopChair', pos: V3(13.05, 0, 3.72), yaw: -2.3, pose: { sit: true, roll: 0.3 }, minDist: 2.2, timeout: 30 }); }
-    if (i === 6) { LN.special.dim = 0.55; after(0.8, () => UI.thought(tr('t_loop6'), 3.5)); }
-    if (i >= 7 && i % 2 === 1) { W.wekker.children[1].material.uniforms.uEmissive.value.setScalar(3); after(0.8, () => UI.thought(tr(i === 7 ? 't_loopMirror' : 't_loop7'), 3.5)); }
+    if (i === 3) { W.deskLamp.position.set(12.1, 0.1, 1.1); W.deskLamp.rotation.set(1.2, 0.6, 0); LN.study.on = 0; const s = LN.special; s.pos.set(12.1, 0.25, 1.1); s.color = lin('#ffb070'); s.intensity = 3.2; s.radius = 6; s.box = [8.8, -0.3, 0, 14, 4.5, 4.4]; s.box2 = null; s.on = 1; after(0.9, () => UI.thought(tr('t_loop4'), 3.6)); }
+    if (i === 4) { W.books.forEach((b) => (b.visible = false)); after(0.9, () => UI.thought(tr('t_loop6'), 3.5)); }
+    if (i === 5) { Ent.spawn({ id: 'loopChair', pos: V3(13.05, 0, 3.72), yaw: -2.3, pose: { sit: true, roll: 0.3 }, minDist: 2.2, timeout: 30 }); if (!F.wekkerSeen) after(1.2, () => UI.thought(tr('t_loopMirrorHint'), 3.6)); }
+    if (i === 6) { LN.special.dim = 0.55; }
+    if (i >= 5) W.wekkerDisp.material.uniforms.uEmissive.value.setScalar(this.wekGlow());
+    if (i >= 7 && i % 2 === 1) after(0.8, () => UI.thought(tr(F.wekkerSeen ? 't_loop7' : 't_loopMirrorHint'), 3.5));
+    this.beepNext = Math.min(this.beepNext || 0, G.t + 2.5);   // and back in the room, it beeps again soon
   },
   loopObject(name) {
     if (this.stage !== 'p2b') return;
@@ -9689,6 +9752,7 @@ const Props = {
     W.dryer.visible = on; W.sinkWater.visible = on; W.puddle.visible = on;
     this.setPlug(s === 's1');
     W.pole.visible = s !== 's3' && !(SI(s) > SI('s3') && SI(s) <= SI('descent'));
+    W.pole.position.y = -2.7; W.pole.rotation.z = 0.05;   // standing against the wall again (it falls over in s2)
     W.radioDial.material.uniforms.uEmissive.value.copy(lin('#ffb55a')).multiplyScalar(0.05);
   },
   setPlug(inSocket) {
@@ -9854,7 +9918,9 @@ const Radio = {
       this.power(false); Sound.play('pop', W.radioPos, { gain: 0.45 }); Sound.play('switch', W.radioPos, { gain: 0.4, rate: 0.6 });
       UI.thought(tr('t_radioDead'), 2);
     });
-    after(8.2, () => { Attic.dragging(); UI.thought(tr('t_overhead'), 3.2); Story.setObj('s2b'); });
+    after(8.2, () => { Attic.dragging(); UI.thought(tr('t_overhead'), 3.2); Story.setObj('s2b'); F.codeT = G.t; });
+    // and up there someone switches the bulb on: a line of light round the hatch in the hallway ceiling
+    after(7.4, () => { Sound.play('switch', V3(7.2, 3.7, 5.4), { gain: 0.3, lp: 1400, rate: 0.9 }); if (!Power.g[6]) { Power.g[6] = true; Power.render(); } Power.apply(false); });
   },
   openPanel() {
     Panel.open('radio', (el, P) => {
@@ -9902,6 +9968,67 @@ const Radio = {
   },
 };
 
+/* ---------- dust, sifting down through the cracks round the hatch when it is knocked on ----------
+   Lit like the smoke round the shade: by the room lights and the torch, so it only shows where there is light. */
+const Dust = {
+  N: 150, pts: null, mat: null, pos: null, size: null, alpha: null, p: [], live: 0,
+  init() {
+    if (this.pts) return;
+    const n = this.N;
+    this.pos = new Float32Array(n * 3); this.size = new Float32Array(n); this.alpha = new Float32Array(n);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(this.pos, 3)); geo.setAttribute('aSize', new THREE.BufferAttribute(this.size, 1)); geo.setAttribute('aAlpha', new THREE.BufferAttribute(this.alpha, 1));
+    this.mat = new THREE.ShaderMaterial({
+      uniforms: { uLPos: SU.uLPos, uLCol: SU.uLCol, uLMin: SU.uLMin, uLMax: SU.uLMax, uLMin2: SU.uLMin2, uLMax2: SU.uLMax2, uNumLights: SU.uNumLights, uAmbient: SU.uAmbient,
+        uFlashPos: SU.uFlashPos, uFlashDir: SU.uFlashDir, uFlashOn: SU.uFlashOn, uFlashCol: SU.uFlashCol, uFogColor: SU.uFogColor, uFogDensity: SU.uFogDensity, uExposure: SU.uExposure,
+        uSFade: { value: 1 }, uScale: { value: 500 }, uAlbedo: { value: 2.6 } },
+      vertexShader: SMOKE_VS, fragmentShader: SMOKE_FS, transparent: true, depthWrite: false,
+    });
+    const pts = new THREE.Points(geo, this.mat); pts.frustumCulled = false; pts.visible = false; scene.add(pts); DYN.add(pts);
+    this.pts = pts;
+    for (let i = 0; i < n; i++) this.p.push({ on: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, term: 0.3, age: 0, life: 1, s: 0.01, ph: 0 });
+  },
+  clear() {
+    for (const q of this.p) q.on = false;
+    this.live = 0;
+    if (this.pts) { this.alpha.fill(0); this.pts.geometry.attributes.aAlpha.needsUpdate = true; this.pts.visible = false; }
+  },
+  /* a puff of it along the seam round the shut hatch */
+  hatch(n) {
+    this.init();
+    const H = HATCH, a = H.x1 - H.x0, b = H.z1 - H.z0;
+    for (let k = 0; k < n; k++) {
+      const q = this.p.find((o) => !o.on); if (!q) return;
+      let u = Math.random() * 2 * (a + b), x, z;
+      if (u < a) { x = H.x0 + u; z = H.z0; } else if ((u -= a) < b) { x = H.x1; z = H.z0 + u; } else if ((u -= b) < a) { x = H.x1 - u; z = H.z1; } else { u -= a; x = H.x0; z = H.z1 - u; }
+      Object.assign(q, { on: true, x: x + rand(-0.02, 0.02), y: CEIL - 0.04, z: z + rand(-0.02, 0.02), vx: rand(-0.05, 0.05), vy: -rand(0.02, 0.12), vz: rand(-0.05, 0.05),
+        term: rand(0.16, 0.42), age: 0, life: rand(4, 7.5), s: rand(0.012, 0.026) * (Math.random() < 0.15 ? 1.5 : 1), ph: rand(0, TAU) });
+    }
+  },
+  update(dt) {
+    if (!this.pts) return;
+    let live = 0;
+    for (let i = 0; i < this.N; i++) {
+      const q = this.p[i];
+      if (q.on) {
+        q.age += dt;
+        if (q.age > q.life || q.y < 0.03) q.on = false;
+      }
+      if (!q.on) { this.alpha[i] = 0; continue; }
+      live++;
+      q.vy += (-q.term - q.vy) * Math.min(1, dt * 1.6);
+      q.x += (q.vx + 0.045 * Math.sin(q.age * 2.3 + q.ph)) * dt; q.y += q.vy * dt; q.z += (q.vz + 0.045 * Math.cos(q.age * 1.9 + q.ph)) * dt;
+      this.pos[i * 3] = q.x; this.pos[i * 3 + 1] = q.y; this.pos[i * 3 + 2] = q.z; this.size[i] = q.s;
+      this.alpha[i] = 0.85 * Math.min(1, q.age / 0.15) * Math.min(1, (q.life - q.age) / 0.9) * Math.min(1, q.y / 0.35);
+    }
+    if (live || this.live) {
+      const A = this.pts.geometry.attributes; A.position.needsUpdate = A.aSize.needsUpdate = A.aAlpha.needsUpdate = true;
+      this.mat.uniforms.uScale.value = RH / (2 * Math.tan(camera.fov * DEG * 0.5));
+    }
+    this.live = live; this.pts.visible = live > 0;
+  },
+};
+
 /* ---------- the attic ---------- */
 const _av = new THREE.Vector3(), _av2 = new THREE.Vector3();
 const Attic = {
@@ -9912,7 +10039,8 @@ const Attic = {
     this.target = this.ang = s === 's3' ? 1 : 0;
     this.lidT = this.lid = n >= SI('s3') && n <= SI('descent') ? 1 : 0;
     this.drawerT = this.drawer = n > SI('s3') && n <= SI('descent') ? 1 : 0;
-    this.code = null; this.horseT = 0; this.dragNext = G.t + 20;
+    this.code = null; this.horseT = 0; this.dragNext = G.t + 20; this.shake = 0; this.fall = null; this.hsAcc = this.psAcc = 0;
+    Dust.clear();
     // (never carry a red bulb or crying over into a fresh start)
     this.cryOn = false; this.red = null;
     { const L = LN.attic; L.color = lin('#ffcf8c'); L.fixColor = lin('#ffe2b0'); L.intensity = 2.6; L._fk = -1; L.pos.set(7.2, 3.86, 5.4); L.radius = 7.5; }
@@ -9922,7 +10050,9 @@ const Attic = {
   },
   sync() {
     const k = sstep(0, 1, this.ang);
-    W.hatchPivot.rotation.z = -LADDER_ANG * k;
+    // (knocked on from above, the shut hatch jumps in its frame)
+    const sh = this.shake > 0 && this.ang < 0.02 ? -0.012 * Math.abs(Math.sin(this.shake * 48)) * Math.min(1, this.shake / 0.12) : 0;
+    W.hatchPivot.rotation.z = -LADDER_ANG * k + sh;
     W.ladder.visible = this.ang > 0.12; W.ladder.scale.x = lerp(0.56, 1, sstep(0.25, 1, this.ang));
     W.ladderCol.on = this.ang > 0.9 && !this.climb;
     W.chestLid.rotation.z = 1.95 * sstep(0, 1, this.lid);
@@ -9934,7 +10064,10 @@ const Attic = {
     this.ang = this.move(this.ang, this.target, dt, 1.5, 0.5);
     this.lid = this.move(this.lid, this.lidT, dt, 1.3, 0.6);
     this.drawer = this.move(this.drawer, this.drawerT, dt, 0.8, 0.8);
+    if (this.shake > 0) this.shake = Math.max(0, this.shake - dt);
     this.sync();
+    this.poleUpdate(dt); Dust.update(dt);
+    this.hatchClues(dt); this.poleClues(dt);
     const P = Player;
     if (!P.hold) P.crouchT = P.room === 'attic' ? 1 : 0;
     // walk into the ladder and you climb it; walk into the hole from above and you go down.
@@ -9985,18 +10118,88 @@ const Attic = {
       },
       onHide: (why) => { if (why === 'look' || why === 'flash') after(1.3, () => UI.thought(tr('t_downThere'), 3)); } });
   },
+  /* something is dragged across the boards over the hallway, towards the hatch, and then it knocks on it
+     from above: the hatch shudders and dust sifts down through the cracks */
   dragging() {
-    const x0 = rand(5, 9);
+    const x0 = rand(7.6, 8.8);
     Sound.play('scrape', V3(x0, AF + 0.1, 5.4), { gain: 0.75, lp: 750, rate: 0.7 });
-    for (let i = 0; i < 4; i++) after(0.5 + i * 0.62, () => Sound.step('wood', V3(x0 + 0.5 + i * 0.55, AF + 0.05, 5.4), { gain: 0.65, lp: 650 }));
+    for (let i = 0; i < 5; i++) after(0.5 + i * 0.62, () => Sound.step('wood', V3(x0 + 0.5 + i * 0.55, AF + 0.05, 5.4), { gain: 0.65, lp: 650 }));
+    if (this.ang < 0.02 && this.target === 0) after(4.0, () => this.hatchKnock());
   },
-  hatchLabel() { return this.ang > 0.9 ? (Player.room === 'attic' ? 'lbl_climbDown' : 'lbl_climbUp') : 'lbl_hatch'; },
+  hatchKnock() {
+    if (this.ang > 0.02 || this.target > 0 || Player.room === 'attic') return;
+    const hp = V3((HATCH.x0 + HATCH.x1) / 2, CEIL + 0.06, 5.4);
+    Sound.knock(hp, 2, 0.5, 0.75, { lp: 1500, rate: 0.9, rev: 0.4 });
+    for (let i = 0; i < 2; i++) after(i * 0.5, () => { this.shake = 0.28; Dust.hatch(36); });
+    after(1.4, () => Dust.hatch(22));
+  },
+  hatchLabel() {
+    if (this.ang > 0.9) return Player.room === 'attic' ? 'lbl_climbDown' : 'lbl_climbUp';
+    return Story.stage === 's2' && F.radioCode && Hand.item === 'pole' ? 'lbl_hookHatch' : 'lbl_hatch';
+  },
   useHatch() {
     const s = Story.stage;
     if (this.ang > 0.9) { this.useLadder(); return; }
     if (this.target > 0) return;
-    if (s === 's2' && F.radioCode) { if (Hand.item === 'pole') this.open(); else UI.thought(tr('t_hatchPole'), 3); return; }
+    if (s === 's2' && F.radioCode) { F.hatchSeen = true; if (Hand.item === 'pole') this.open(); else UI.thought(tr('t_hatchPole'), 3.6); return; }
     UI.thought(tr(SI(s) > SI('s3') ? 't_hatchShut' : 't_hatchNo'), 2.8);
+  },
+  /* the hatch, seen from the hallway once something is up there: say what it is, and what you need */
+  hatchClues(dt) {
+    const P = Player;
+    if (Story.stage !== 's2' || !F.radioCode || F.hatchOpen || F.hatchSeen || P.room !== 'hall' || this.ang > 0.02) { this.hsAcc = 0; return; }
+    const hc = _av.set((HATCH.x0 + HATCH.x1) / 2, CEIL - 0.02, 5.4);
+    if (hc.distanceTo(camera.position) < 5 && viewAngleTo(hc) < 0.42 && losClear(camera.position, hc, 0.05)) {
+      this.hsAcc = (this.hsAcc || 0) + dt;
+      if (this.hsAcc > 0.35) {
+        F.hatchSeen = true;
+        UI.thought(tr('t_hatchLook'), 2.6);
+        UI.thought(tr(Hand.item === 'pole' ? 't_hatchHook' : 't_hatchPole'), 3.6);
+      }
+    } else this.hsAcc = 0;
+  },
+  /* the pole in the basement: it falls over when you come down, and you are told what it is once you see it */
+  poleClues(dt) {
+    const P = Player;
+    if (Story.stage !== 's2' || !W.pole.visible || Hand.item === 'pole' || P.room !== 'basement') { this.psAcc = 0; return; }
+    if (!F.poleFell && P.pos.y < -2.2) { F.poleFell = true; after(0.7, () => this.poleFall()); }
+    if (F.poleSeen || this.fall) return;
+    const pp = W.pole.localToWorld(_av.set(0, 1.0, 0));
+    const lit = flashHits(pp, 9, 30 * DEG) || lightLevel(pp) > 0.25;
+    if (lit && pp.distanceTo(camera.position) < 6 && viewAngleTo(pp) < 0.45 && losClear(camera.position, pp, 0.05)) {
+      this.psAcc = (this.psAcc || 0) + dt;
+      if (this.psAcc > 0.3) { F.poleSeen = true; UI.thought(tr(F.poleFell ? 't_poleFallen' : 't_poleSeen'), 2.8); }
+    } else this.psAcc = 0;
+  },
+  decoy(what) {
+    const s2 = Story.stage === 's2';
+    if (what === 'stepladder') UI.thought(tr(s2 ? 't_stepladder' : 't_stepladder0'), 3.4);
+    else UI.thought(tr(s2 ? 't_carpet' : 't_carpet0'), 2.6);
+  },
+  poleFall() {
+    if (!W.pole.visible || Hand.item === 'pole' || this.fall) return;
+    this.fall = { t: 0, a0: W.pole.rotation.z, hit: false };
+    const foot = W.pole.position;
+    Sound.play('scrape', V3(foot.x + 0.1, -1.6, foot.z), { gain: 0.25, rate: 1.7, hrtf: true });
+  },
+  poleUpdate(dt) {
+    const f = this.fall; if (!f) return;
+    f.t += dt;
+    const g = W.pole, a1 = -Math.PI / 2 + 0.004, T = 0.62, k = Math.min(1, f.t / T);
+    let a = lerp(f.a0, a1, k * k * k);
+    if (k >= 1) {
+      if (!f.hit) {
+        f.hit = true;
+        const mid = V3(g.position.x + 1.0, -2.62, g.position.z), end = V3(g.position.x + 2.0, -2.64, g.position.z);
+        Sound.play('clank', end, { gain: 0.3, rate: 1.9, hrtf: true, pri: 2 });
+        [[0, 0.8], [0.13, 0.45], [0.22, 0.22]].forEach(([d, gn]) => Sound.play('knock', mid, { gain: gn, rate: 2.3, delay: d, hrtf: true, pri: 2 }));
+        Fear.kick(0.25);
+      }
+      const b = f.t - T; a = a1 + 0.06 * Math.exp(-b * 9) * Math.abs(Math.sin(b * 22));   // it bounces once and lies still
+      if (b > 0.8) { a = a1; this.fall = null; }
+    }
+    g.rotation.z = a;
+    g.position.y = -2.7 + 0.02 * sstep(0.5, 1, k);
   },
   open() {
     this.target = 1; Hand.set(null); F.hatchOpen = true;
@@ -10043,9 +10246,9 @@ const Attic = {
   },
   takePole() {
     if (Story.stage !== 's2') { UI.thought(tr('t_poleNot'), 2.8); return; }
-    W.pole.visible = false; Hand.set('pole');
-    Sound.play('scrape', V3(9.65, -1.8, 14.66), { gain: 0.3, rate: 1.5 });
-    after(0.4, () => UI.thought(tr('t_pole'), 2.6));
+    W.pole.visible = false; Hand.set('pole'); this.fall = null; F.poleSeen = true;
+    Sound.play('scrape', V3(9.65, -2.2, 14.66), { gain: 0.3, rate: 1.5 });
+    after(0.4, () => UI.thought(tr(F.radioCode ? 't_poleGo' : 't_pole'), 3));
   },
 
   /* ---------- the chest ---------- */
